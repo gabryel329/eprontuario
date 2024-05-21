@@ -27,7 +27,7 @@
       </div>
     @endif
     <div class="row">
-        <div class="col-md-6"> 
+        <div class="col-md-6">
             <div class="tile">
               <h3 class="tile-title">Novo</h3>
               <div class="tile-body">
