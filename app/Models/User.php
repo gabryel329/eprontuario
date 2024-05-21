@@ -24,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'permisoes_id',
+        'especialidade_id',
         'nasc',
         'cpf',
         'crm',
@@ -61,5 +62,10 @@ class User extends Authenticatable
     public function permisao()
     {
         return $this->belongsTo(Permisoes::class, 'permisoes_id');
+    }
+
+    public function especialidade()
+    {
+        return $this->belongsTo(Especialidade::class, 'especialidade_id');
     }
 }

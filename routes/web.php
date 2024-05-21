@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EspecialidadeController;
 use App\Http\Controllers\PermisoesController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -25,9 +26,16 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 #Permisões
 
-Route::get('/permisoes', [App\Http\Controllers\PermisoesController::class, 'index'])->name('permisao.index');
-Route::post('/permisoes', [App\Http\Controllers\PermisoesController::class, 'store'])->name('permisao.store');
-Route::put('/permisoes/{id}', [App\Http\Controllers\PermisoesController::class, 'update'])->name('permisao.update');
+Route::get('/permisoes', [PermisoesController::class, 'index'])->name('permisao.index');
+Route::post('/permisoes', [PermisoesController::class, 'store'])->name('permisao.store');
+Route::put('/permisoes/{id}', [PermisoesController::class, 'update'])->name('permisao.update');
 Route::delete('/permisoes/{id}', [PermisoesController::class, 'destroy'])->name('permisao.destroy');
-Route::get('/permisoes/{id}', [App\Http\Controllers\PermisoesController::class, 'show'])->name('permisao.show');
+Route::get('/permisoes/{id}', [PermisoesController::class, 'show'])->name('permisao.show');
 
+#Especialidades
+
+Route::get('/especialidades', [EspecialidadeController::class, 'index'])->name('especialidade.index');
+Route::post('/especialidades', [EspecialidadeController::class, 'store'])->name('especialidade.store');
+Route::put('/especialidades/{id}', [EspecialidadeController::class, 'update'])->name('especialidade.update');
+Route::delete('/especialidades/{id}', [EspecialidadeController::class, 'destroy'])->name('especialidade.destroy');
+Route::get('/especialidades/{id}', [EspecialidadeController::class, 'show'])->name('especialidade.show');

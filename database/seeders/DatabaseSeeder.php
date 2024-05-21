@@ -19,14 +19,19 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         DB::table('permisoes')->insert([
-            'cargo' => 'recepcao',
+            'cargo' => 'Recepção',
+        ]);
+
+        DB::table('especialidades')->insert([
+            'especialidade' => 'Clinico Geral',
         ]);
 
         DB::table('users')->insert([
             'name' => 'Admin',
             'email' => 'admin@anb.com',
             'password' => bcrypt('12345678'),
-            'permisoes_id' => 1
+            'permisoes_id' => 1,
+            'especialidade_id' => 1,
         ]);
     }
 }
