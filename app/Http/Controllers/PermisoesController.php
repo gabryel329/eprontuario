@@ -43,7 +43,7 @@ class PermisoesController extends Controller
         $existePermisao = Permisoes::where('cargo', $permisao)->first();
     
         if ($existePermisao) {
-            return redirect()->route('permisao.index')->with('error', 'Permissão já cadastrada!');
+            return redirect()->route('permisao.index')->with('error', 'Permissão já existe!');
         } 
     
         // Create a new permission
@@ -78,7 +78,7 @@ class PermisoesController extends Controller
         $permisao = Permisoes::find($id);
 
         if (!$permisao){
-            return redirect()->back()->with('error', 'Permissão não encontrada');
+            return redirect()->back()->with('error', 'Permissão não encontrada!');
         }
 
         $permisao->cargo=ucfirst($request->input('cargo'));
@@ -97,6 +97,6 @@ class PermisoesController extends Controller
     
         $permisao->delete();
     
-        return redirect()->route('permisao.index')->with('success', 'Permissão excluída com sucesso!');
+        return redirect()->route('permisao.index')->with('error', 'Permissão excluída com sucesso!');
     }    
 }   

@@ -41,7 +41,7 @@ class EspecialidadeController extends Controller
             $existeEspecialidade = Especialidade::where('especialidade', $especialidade)->first();
         
             if ($existeEspecialidade) {
-                return redirect()->route('especialidade.index')->with('error', 'Especialidade já cadastrada!');
+                return redirect()->route('especialidade.index')->with('error', 'Especialidade já existe!');
             } 
         
             // Create a new permission
@@ -76,7 +76,7 @@ class EspecialidadeController extends Controller
             $especialidade = Especialidade::find($id);
     
             if (!$especialidade){
-                return redirect()->back()->with('error', '$especialidade não encontrada');
+                return redirect()->back()->with('error', 'Especialidade não encontrada!');
             }
     
             $especialidade->especialidade=ucfirst($request->input('especialidade'));
@@ -95,6 +95,6 @@ class EspecialidadeController extends Controller
     
         $especialidade->delete();
     
-        return redirect()->route('especialidade.index')->with('success', 'Especialidade excluída com sucesso!');
+        return redirect()->route('especialidade.index')->with('error', 'Especialidade excluída com sucesso!');
     } 
 }
