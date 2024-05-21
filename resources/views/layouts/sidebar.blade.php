@@ -1,8 +1,13 @@
 <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
     <aside class="app-sidebar">
-      <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="images/{{ asset(Auth::user()->imagem) }}" alt="User Image">
+      <div class="app-sidebar__user">
+        @if(Auth::user()->imagem)
+            <img class="app-sidebar__user-avatar" src="images/{{ asset(Auth::user()->imagem) }}" alt="User Image" class="user-image">
+        @else
+            <img class="app-sidebar__user-avatar" src="https://randomuser.me/api/portraits/men/1.jpg" alt="User Image">
+        @endif
         <div>
-          <p class="app-sidebar__user-name">{{ Auth::user()->name }} {{ Auth::user()->sobrenome }}</p>
+          <p class="app-sidebar__user-name">{{ Auth::user()->name }} {{ Auth::user()->name }}</p>
           <p class="app-sidebar__user-designation">{{ optional(Auth::user()->especialidade)->especialidade }}</p>
         </div>
       </div>
