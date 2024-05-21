@@ -17,8 +17,20 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->rememberToken();
+            $table->integer('permisoes_id')->nullable();
+            $table->foreign('permisoes_id')->references('id')->on('permisoes')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
+            $table->date('nasc')->nullable();
+            $table->string('cpf')->nullable();
+            $table->string('crm')->nullable();
+            $table->string('cep')->nullable();
+            $table->string('rua')->nullable();
+            $table->string('bairro')->nullable();
+            $table->string('cidade')->nullable();
+            $table->string('uf')->nullable();
+            $table->string('numero')->nullable();
+            $table->string('complemento')->nullable();
         });
     }
 
