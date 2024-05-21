@@ -14,6 +14,16 @@
         <li class="breadcrumb-item"><a href="#">Especialidades</a></li>
       </ul>
     </div>
+    @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+  @endif
+  @if(session('error'))
+    <div class="alert alert-warning">
+        {{ session('error') }}
+    </div>
+  @endif
     <div class="row">
         <div class="col-md-6">
             <div class="tile">

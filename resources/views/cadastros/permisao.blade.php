@@ -16,7 +16,6 @@
         <li class="breadcrumb-item"><a href="#">Permissões</a></li>
       </ul>
     </div>
-      
     @if(session('success'))
       <div class="alert alert-success">
           {{ session('success') }}
