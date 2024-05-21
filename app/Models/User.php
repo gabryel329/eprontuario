@@ -37,6 +37,8 @@ class User extends Authenticatable
         'complemento',
         'genero',
         'imagem',
+        'sobrenome',
+        'corem',
     ];
     protected $dates=['deleted_at'];
 

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\EspecialidadeController;
 use App\Http\Controllers\PermisoesController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -39,3 +40,11 @@ Route::post('/especialidades', [EspecialidadeController::class, 'store'])->name(
 Route::put('/especialidades/{id}', [EspecialidadeController::class, 'update'])->name('especialidade.update');
 Route::delete('/especialidades/{id}', [EspecialidadeController::class, 'destroy'])->name('especialidade.destroy');
 Route::get('/especialidades/{id}', [EspecialidadeController::class, 'show'])->name('especialidade.show');
+
+#Usuarios
+
+Route::get('/usuarios', [UserController::class, 'index'])->name('usuario.index');
+Route::post('/usuarios', [UserController::class, 'store'])->name('usuario.store');
+Route::put('/usuarios/{id}', [UserController::class, 'update'])->name('usuario.update');
+Route::delete('/usuarios/{id}', [UserController::class, 'destroy'])->name('usuario.destroy');
+Route::get('/usuarios/{id}', [UserController::class, 'show'])->name('usuario.show');
