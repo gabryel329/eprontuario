@@ -34,6 +34,7 @@
               <a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i>Cadastros</a>
               <ul>
                 <li><a class="treeview-item" href="{{route('permisao.index')}}"><i class="icon bi bi-circle-fill"></i> Permissões</a></li>
+                <li><a class="treeview-item" href="{{route('especialidade.index')}}"><i class="icon bi bi-circle-fill"></i> Especialidades</a></li>
               </ul>
             </li>
             <li><a class="treeview-item" href="page-login.html"><i class="icon bi bi-circle-fill"></i> Login Page</a></li>
