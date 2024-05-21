@@ -31,7 +31,7 @@
         <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi-file-earmark"></i><span class="app-menu__label">Administração</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
           <ul class="treeview-menu">
             <ul><a class="treeview-item" href="blank-page.html"><i class="icon bi bi-circle-fill"></i> Cadastros</a>
-              <li><a class="treeview-item" href="{{route('permisao.index')}}"><i class="icon bi bi-circle-fill"></i> Permisões</a></li>
+              <li><a class="treeview-item" href="{{route('permisao.index')}}"><i class="icon bi bi-circle-fill"></i> Permissões</a></li>
             </ul>
             <li><a class="treeview-item" href="page-login.html"><i class="icon bi bi-circle-fill"></i> Login Page</a></li>
             <li><a class="treeview-item" href="page-lockscreen.html"><i class="icon bi bi-circle-fill"></i> Lockscreen Page</a></li>

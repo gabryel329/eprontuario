@@ -78,14 +78,14 @@ class PermisoesController extends Controller
         $permisao = Permisoes::find($id);
 
         if (!$permisao){
-            return redirect()->back()->with('error', 'Permisão não encontrada');
+            return redirect()->back()->with('error', 'Permissão não encontrada');
         }
 
         $permisao->cargo=ucfirst($request->input('cargo'));
 
         $permisao->save();
 
-        return redirect()->back()->with('success', 'Permisão Atualizada com sucesso!');
+        return redirect()->back()->with('success', 'Permissão Atualizada com sucesso!');
     }
 
     /**

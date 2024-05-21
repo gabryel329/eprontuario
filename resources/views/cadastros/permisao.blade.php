@@ -3,17 +3,30 @@
 @section('content')
 
 <main class="app-content">
+
+
     <div class="app-title">
       <div>
-        <h1><i class="bi bi-ui-checks"></i> Cadastro de Permisões</h1>
+        <h1><i class="bi bi-ui-checks"></i> Cadastro de Permissões</h1>
       </div>
       <ul class="app-breadcrumb breadcrumb">
         <li class="breadcrumb-item"><i class="bi bi-house-door fs-6"></i></li>
         <li class="breadcrumb-item">Administração</li>
         <li class="breadcrumb-item">Cadastros</li>
-        <li class="breadcrumb-item"><a href="#">Permisões</a></li>
+        <li class="breadcrumb-item"><a href="#">Permissões</a></li>
       </ul>
     </div>
+      
+    @if(session('success'))
+      <div class="alert alert-success">
+          {{ session('success') }}
+      </div>
+    @endif
+    @if(session('error'))
+      <div class="alert alert-warning">
+          {{ session('error') }}
+      </div>
+    @endif
     <div class="row">
         <div class="col-md-6">
             <div class="tile">
@@ -22,7 +35,7 @@
                 <form method="POST" action="{{route('permisao.store')}}" class="form-horizontal">
                 @csrf
                   <div class="mb-3 row">
-                    <label class="form-label col-md-3">Nome da Permisão</label>
+                    <label class="form-label col-md-3">Nome da Permissão</label>
                     <div class="col-md-8">
                       <input name="cargo" id="cargo" class="form-control" type="text" placeholder="">
                     </div>
@@ -40,12 +53,12 @@
         </div>
         <div class="col-md-6">
             <div class="tile">
-              <h3 class="tile-title">Lista de Permisões</h3>
+              <h3 class="tile-title">Lista de Permissões</h3>
               <table class="table table-striped">
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>Permisões</th>
+                    <th>Permissões</th>
                     <th>Editar</th>
                     <th>Excluir</th>
                   </tr>

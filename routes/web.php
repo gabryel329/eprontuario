@@ -23,7 +23,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-#Permisões
+#Permissões
 
 Route::get('/permisoes', [App\Http\Controllers\PermisoesController::class, 'index'])->name('permisao.index');
 Route::post('/permisoes', [App\Http\Controllers\PermisoesController::class, 'store'])->name('permisao.store');
