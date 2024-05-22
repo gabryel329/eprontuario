@@ -132,7 +132,7 @@ class UserController extends Controller
             ]);
         }
 
-        return redirect()->route('usuario.index')->with('success', 'Usuário cadastrado com Sucesso!');
+        return redirect()->route('usuario.index1')->with('success', 'Usuário cadastrado com Sucesso!');
     }
 
 
@@ -167,7 +167,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         // Capitalize the input
-        $nome = ucfirst($request->input('nome'));
+        $nome = ucfirst($request->input('name'));
         $sobrenome = ucfirst($request->input('sobrenome'));
     
         // Get the other inputs
@@ -197,7 +197,7 @@ class UserController extends Controller
         }
     
         // Update user fields
-        $user->nome = $nome;
+        $user->name = $nome;
         $user->sobrenome = $sobrenome;
         $user->email = $email;
         if ($password) {

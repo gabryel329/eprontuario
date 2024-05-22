@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('content')
     <main class="app-content">
         <div class="app-title">
@@ -50,9 +51,10 @@
                                                 </form>
                                             </td>
                                         </tr>
+                                        <!-- Modal for Editing -->
                                         <div class="modal fade" id="editModal{{ $item->id }}" tabindex="-1"
                                             aria-labelledby="editModalLabel{{ $item->id }}" aria-hidden="true">
-                                            <div class="modal-dialog modal-lg">
+                                            <div class="modal-dialog modal-xl">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="editModalLabel{{ $item->id }}">
@@ -61,163 +63,108 @@
                                                             aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form method="POST"
-                                                            action="{{ route('usuario.update', $item->id) }}"
-                                                            enctype="multipart/form-data">
-                                                            @csrf
-                                                            @method('PUT')
-                                                            <div class="row">
-                                                                <div class="mb-3 col-md-3">
-                                                                    <label class="form-label">Nome</label>
-                                                                    <input class="form-control"
-                                                                        id="name{{ $item->id }}" name="name"
-                                                                        type="text" value="{{ $item->name }}">
+                                                      <form method="POST" action="{{ route('usuario.update', $item->id) }}" enctype="multipart/form-data">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <div class="row">
+                                                            <div class="mb-3 col-md-3">
+                                                                <label class="form-label">Nome</label>
+                                                                <input class="form-control" id="name" name="name" type="text" value="{{ $item->name }}">
+                                                            </div>
+                                                            <div class="mb-3 col-md-3">
+                                                                <label class="form-label">Sobrenome</label>
+                                                                <input class="form-control" id="sobrenome" name="sobrenome" type="text" value="{{ $item->sobrenome }}">
+                                                            </div>
+                                                            <div class="mb-3 col-md-3">
+                                                                <label class="form-label">E-mail</label>
+                                                                <input class="form-control" id="email" name="email" type="email" value="{{ $item->email }}">
+                                                            </div>
+                                                            <div class="mb-3 col-md-3">
+                                                                <label class="form-label">Nova Senha</label>
+                                                                <input class="form-control" id="password" name="password" type="password" onmousedown="showPassword()" onmouseup="hidePassword()" onmouseleave="hidePassword()">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="mb-3 col-md-3">
+                                                                <label class="form-label">Nascimento</label>
+                                                                <input class="form-control" id="nasc" name="nasc" type="date" value="{{ $item->nasc }}">
+                                                            </div>
+                                                            <div class="mb-3 col-md-3">
+                                                                <label class="form-label">CPF</label>
+                                                                <input class="form-control" id="cpf" name="cpf" type="text" value="{{ $item->cpf }}">
+                                                            </div>
+                                                            <div class="mb-3 col-md-2">
+                                                                <label class="form-label">Gênero</label>
+                                                                <div class="form-check">
+                                                                    <label class="form-check-label">
+                                                                        <input class="form-check-input" type="radio" id="genero" name="genero" value="M" {{ $item->genero == 'M' ? 'checked' : '' }}>Masculino
+                                                                    </label>
                                                                 </div>
-                                                                <div class="mb-3 col-md-3">
-                                                                    <label class="form-label">Sobrenome</label>
-                                                                    <input class="form-control" id="sobrenome"
-                                                                        name="sobrenome" type="text"
-                                                                        value="{{ $item->sobrenome }}">
-                                                                </div>
-                                                                <div class="mb-3 col-md-3">
-                                                                    <label class="form-label">E-mail</label>
-                                                                    <input class="form-control" id="email"
-                                                                        name="email" type="email"
-                                                                        value="{{ $item->email }}">
-                                                                </div>
-                                                                <div class="mb-3 col-md-3">
-                                                                    <label class="form-label">Senha</label>
-                                                                    <input class="form-control" id="password"
-                                                                        name="password" type="password"
-                                                                        onmouseover="showPassword()"
-                                                                        onmouseout="hidePassword()">
+                                                                <div class="form-check">
+                                                                    <label class="form-check-label">
+                                                                        <input class="form-check-input" type="radio" id="genero" name="genero" value="F" {{ $item->genero == 'F' ? 'checked' : '' }}>Feminino
+                                                                    </label>
                                                                 </div>
                                                             </div>
-                                                            <div class="row">
-                                                                <div class="mb-3 col-md-3">
-                                                                    <label class="form-label">Nascimento</label>
-                                                                    <input class="form-control" id="nasc"
-                                                                        name="nasc" type="date"
-                                                                        value="{{ $item->nasc }}">
-                                                                </div>
-                                                                <div class="mb-3 col-md-3">
-                                                                    <label class="form-label">CPF</label>
-                                                                    <input class="form-control" id="cpf"
-                                                                        name="cpf" type="text"
-                                                                        value="{{ $item->cpf }}">
-                                                                </div>
-                                                                <div class="mb-3 col-md-3">
-                                                                    <label class="form-label">Gênero</label>
-                                                                    <div class="form-check">
-                                                                        <label class="form-check-label">
-                                                                            <input class="form-check-input" type="radio"
-                                                                                id="genero" name="genero" value="M"
-                                                                                {{ $item->genero == 'M' ? 'checked' : '' }}>Masculino
-                                                                        </label>
-                                                                    </div>
-                                                                    <div class="form-check">
-                                                                        <label class="form-check-label">
-                                                                            <input class="form-check-input" type="radio"
-                                                                                id="genero" name="genero"
-                                                                                value="F"
-                                                                                {{ $item->genero == 'F' ? 'checked' : '' }}>Feminino
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="mb-3 col-md-3">
-                                                                    <label class="form-label">Foto</label>
-                                                                    <input class="form-control" type="file"
-                                                                        name="imagem">
-                                                                </div>
+                                                            <div class="mb-3 col-md-4">
+                                                                <label class="form-label">Foto</label>
+                                                                <input class="form-control" type="file" name="imagem">
                                                             </div>
-                                                            <div class="row">
-                                                                <div class="mb-3 col-md-4">
-                                                                    <label class="form-label">Permissão</label>
-                                                                    <select class="form-control"
-                                                                        id="permisoes_id{{ $item->id }}"
-                                                                        name="permisoes_id">
-                                                                        <option disabled selected
-                                                                            style="font-size:18px;color: black;">Escolha
-                                                                        </option>
-                                                                        @foreach ($permissoes as $permissao)
-                                                                            <option value="{{ $permissao->id }}"
-                                                                                {{ $item->permisoes_id == $permissao->id ? 'selected' : '' }}>
-                                                                                {{ $permissao->cargo }}</option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </div>
-                                                                <div id="especialidade-div{{ $item->id }}"
-                                                                    class="mb-3 col-md-4 hidden">
-                                                                    <label class="form-label">Especialidades</label>
-                                                                    <select class="form-control"
-                                                                        id="especialidade_id{{ $item->id }}"
-                                                                        name="especialidade_id">
-                                                                        <option disabled selected
-                                                                            style="font-size:18px;color: black;">Escolha
-                                                                        </option>
-                                                                        @foreach ($especialidades as $especialidade)
-                                                                            <option value="{{ $especialidade->id }}"
-                                                                                {{ $item->especialidade_id == $especialidade->id ? 'selected' : '' }}>
-                                                                                {{ $especialidade->especialidade }}
-                                                                            </option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </div>
-                                                                <div id="crm-div{{ $item->id }}"
-                                                                    class="mb-3 col-md-4 hidden">
-                                                                    <label class="form-label">CRM</label>
-                                                                    <input class="form-control"
-                                                                        id="crm{{ $item->id }}" name="crm"
-                                                                        type="text" value="{{ $item->crm }}">
-                                                                </div>
-                                                                <div id="corem-div{{ $item->id }}"
-                                                                    class="mb-3 col-md-4 hidden">
-                                                                    <label class="form-label">COREM</label>
-                                                                    <input class="form-control"
-                                                                        id="corem{{ $item->id }}" name="corem"
-                                                                        type="text" value="{{ $item->corem }}">
-                                                                </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="mb-3 col-md-4">
+                                                                <label class="form-label">Permissão</label>
+                                                                <select class="form-control" id="permisoes_id" name="permisoes_id">
+                                                                    <option disabled selected style="font-size:18px;color: black;">Escolha</option>
+                                                                    @foreach ($permissoes as $permissao)
+                                                                        <option value="{{ $permissao->id }}" {{ $item->permisoes_id == $permissao->id ? 'selected' : '' }}>{{ $permissao->cargo }}</option>
+                                                                    @endforeach
+                                                                </select>
                                                             </div>
-                                                            <div class="row">
-                                                                <div class="mb-3 col-md-3">
-                                                                    <label class="form-label">CEP</label>
-                                                                    <input class="form-control" name="cep"
-                                                                        type="text" id="cep"
-                                                                        value="{{ $item->cep }}" size="10"
-                                                                        maxlength="9" onblur="pesquisacep(this.value);">
-                                                                </div>
-                                                                <div class="mb-3 col-md-3">
-                                                                    <label class="form-label">Rua</label>
-                                                                    <input class="form-control" name="rua"
-                                                                        type="text" id="rua"
-                                                                        value="{{ $item->rua }}" size="60">
-                                                                </div>
-                                                                <div class="mb-3 col-md-2">
-                                                                    <label class="form-label">Bairro</label>
-                                                                    <input class="form-control" name="bairro"
-                                                                        type="text" id="bairro"
-                                                                        value="{{ $item->bairro }}" size="40">
-                                                                </div>
-                                                                <div class="mb-3 col-md-3">
-                                                                    <label class="form-label">Cidade</label>
-                                                                    <input class="form-control" name="cidade"
-                                                                        type="text" id="cidade"
-                                                                        value="{{ $item->cidade }}" size="40">
-                                                                </div>
-                                                                <div class="mb-3 col-md-1">
-                                                                    <label class="form-label">Estado</label>
-                                                                    <input class="form-control" name="uf"
-                                                                        type="text" id="uf"
-                                                                        value="{{ $item->uf }}" size="2">
-                                                                </div>
+                                                            <div id="especialidade-div" class="mb-3 col-md-4 {{ $item->permisoes_id == 2 ? '' : 'hidden' }}">
+                                                                <label class="form-label">Especialidades</label>
+                                                                <select class="form-control" id="especialidade_id" name="especialidade_id">
+                                                                    <option disabled selected style="font-size:18px;color: black;">Escolha</option>
+                                                                    @foreach ($especialidades as $especialidade)
+                                                                        <option value="{{ $especialidade->id }}" {{ $item->especialidade_id == $especialidade->id ? 'selected' : '' }}>{{ $especialidade->especialidade }}</option>
+                                                                    @endforeach
+                                                                </select>
                                                             </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">Cancelar</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-primary">Salvar</button>
+                                                            <div id="crm-div" class="mb-3 col-md-4 {{ $item->permisoes_id == 2 ? '' : 'hidden' }}">
+                                                                <label class="form-label">CRM</label>
+                                                                <input class="form-control" id="crm" name="crm" type="text" value="{{ $item->crm }}">
                                                             </div>
-                                                        </form>
+                                                            <div id="corem-div" class="mb-3 col-md-4 {{ $item->permisoes_id == 3 ? '' : 'hidden' }}">
+                                                                <label class="form-label">COREM</label>
+                                                                <input class="form-control" id="corem" name="corem" type="text" value="{{ $item->corem }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="mb-3 col-md-3">
+                                                                <label class="form-label">CEP</label>
+                                                                <input class="form-control" name="cep" type="text" id="cep" value="{{ $item->cep }}" size="10" maxlength="9" onblur="pesquisacep(this.value);">
+                                                            </div>
+                                                            <div class="mb-3 col-md-3">
+                                                                <label class="form-label">Rua</label>
+                                                                <input class="form-control" name="rua" type="text" id="rua" value="{{ $item->rua }}" size="60">
+                                                            </div>
+                                                            <div class="mb-3 col-md-2">
+                                                                <label class="form-label">Bairro</label>
+                                                                <input class="form-control" name="bairro" type="text" id="bairro" value="{{ $item->bairro }}" size="40">
+                                                            </div>
+                                                            <div class="mb-3 col-md-3">
+                                                                <label class="form-label">Cidade</label>
+                                                                <input class="form-control" name="cidade" type="text" id="cidade" value="{{ $item->cidade }}" size="40">
+                                                            </div>
+                                                            <div class="mb-3 col-md-1">
+                                                                <label class="form-label">Estado</label>
+                                                                <input class="form-control" name="uf" type="text" id="uf" value="{{ $item->uf }}" size="2">
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-primary">Salvar</button>
+                                                        </div>
+                                                    </form>
                                                     </div>
                                                 </div>
                                             </div>
@@ -232,38 +179,62 @@
         </div>
     </main>
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-          var permissoesSelect = document.getElementById('permisoes_id{{ $item->id }}');
-          var especialidadeDiv = document.getElementById('especialidade-div{{ $item->id }}');
-          var crmDiv = document.getElementById('crm-div{{ $item->id }}');
-          var coremDiv = document.getElementById('corem-div{{ $item->id }}');
-  
-          permissoesSelect.addEventListener('change', function() {
-              var selectedOption = permissoesSelect.options[permissoesSelect.selectedIndex].text.toLowerCase();
-              if (selectedOption === 'médico') {
-                  especialidadeDiv.classList.remove('hidden');
-                  crmDiv.classList.remove('hidden');
-                  coremDiv.classList.add('hidden');
-              } else if (selectedOption === 'enfermeiro') {
-                  especialidadeDiv.classList.add('hidden');
-                  crmDiv.classList.add('hidden');
-                  coremDiv.classList.remove('hidden');
-              } else {
-                  especialidadeDiv.classList.add('hidden');
-                  crmDiv.classList.add('hidden');
-                  coremDiv.classList.add('hidden');
-              }
-          });
-      });
-  
       function showPassword() {
           var passwordField = document.getElementById('password');
           passwordField.type = 'text';
       }
-  
+
       function hidePassword() {
           var passwordField = document.getElementById('password');
           passwordField.type = 'password';
+      }
+
+      function closeEditFrame() {
+          var frameContainer = window.parent.document.getElementById('editFrameContainer');
+          frameContainer.style.display = 'none';
+      }
+      
+      function limpa_formulário_cep() {
+          document.getElementById('rua').value = "";
+          document.getElementById('bairro').value = "";
+          document.getElementById('cidade').value = "";
+          document.getElementById('uf').value = "";
+      }
+
+      function meu_callback(conteudo) {
+          if (!("erro" in conteudo)) {
+              document.getElementById('rua').value = conteudo.logradouro;
+              document.getElementById('bairro').value = conteudo.bairro;
+              document.getElementById('cidade').value = conteudo.localidade;
+              document.getElementById('uf').value = conteudo.uf;
+          } else {
+              limpa_formulário_cep();
+              alert("CEP não encontrado.");
+          }
+      }
+
+      function pesquisacep(valor) {
+          var cep = valor.replace(/\D/g, '');
+
+          if (cep !== "") {
+              var validacep = /^[0-9]{8}$/;
+
+              if (validacep.test(cep)) {
+                  document.getElementById('rua').value = "...";
+                  document.getElementById('bairro').value = "...";
+                  document.getElementById('cidade').value = "...";
+                  document.getElementById('uf').value = "...";
+
+                  var script = document.createElement('script');
+                  script.src = 'https://viacep.com.br/ws/' + cep + '/json/?callback=meu_callback';
+                  document.body.appendChild(script);
+              } else {
+                  limpa_formulário_cep();
+                  alert("Formato de CEP inválido.");
+              }
+          } else {
+              limpa_formulário_cep();
+          }
       }
   </script>
 @endsection
