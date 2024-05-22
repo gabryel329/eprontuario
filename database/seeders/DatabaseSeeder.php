@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('12345678'),
             'permisoes_id' => 1,
             'especialidade_id' => 1,
+            'imagem' => 'CamaraoEmpanado.jpg'
         ]);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EspecialidadeController;
+use App\Http\Controllers\PacientesController;
 use App\Http\Controllers\PermisoesController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -49,3 +50,12 @@ Route::post('/usuarios', [UserController::class, 'store'])->name('usuario.store'
 Route::put('/usuarios/{id}', [UserController::class, 'update'])->name('usuario.update');
 Route::delete('/usuarios/{id}', [UserController::class, 'destroy'])->name('usuario.destroy');
 Route::get('/usuarios/{id}', [UserController::class, 'show'])->name('usuario.show');
+
+#Pacientes
+
+Route::get('/pacientes', [PacientesController::class, 'index'])->name('paciente.index');
+Route::get('/lista', [PacientesController::class, 'index1'])->name('paciente.index1');
+Route::post('/pacientes', [PacientesController::class, 'store'])->name('paciente.store');
+Route::put('/pacientes/{id}', [PacientesController::class, 'update'])->name('paciente.update');
+Route::delete('/pacientes/{id}', [PacientesController::class, 'destroy'])->name('paciente.destroy');
+Route::get('/pacientes/{id}', [PacientesController::class, 'show'])->name('paciente.show');
