@@ -21,6 +21,14 @@ class UserController extends Controller
         return view('cadastros.usuarios', compact(['users', 'permissoes', 'especialidades']));
     }
 
+    public function index1()
+    {
+        $users = User::all();
+        $permissoes = Permisoes::all();
+        $especialidades = Especialidade::all(); // Corrigido o nome da variável
+
+        return view('cadastros.listausuarios', compact(['users', 'permissoes', 'especialidades']));
+    }
 
     /**
      * Show the form for creating a new resource.

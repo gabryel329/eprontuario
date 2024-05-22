@@ -22,13 +22,26 @@
         <li class="breadcrumb-item"><i class="bi bi-house-door fs-6"></i></li>
         <li class="breadcrumb-item">Administração</li>
         <li class="breadcrumb-item">Cadastros</li>
-        <li class="breadcrumb-item"><a href="#">usuários</a></li>
+        <li class="breadcrumb-item"><a href="#">Usuários</a></li>
       </ul>
     </div>
+    @if(session('success'))
+      <div class="alert alert-success">
+          {{ session('success') }}
+      </div>
+    @endif
+    @if(session('error'))
+      <div class="alert alert-warning">
+          {{ session('error') }}
+      </div>
+    @endif
     <div class="row">
       <div class="col-md-12">
         <div class="tile">
-          <h3 class="tile-title">Novo</h3>
+          <h3 class="tile-title">Novo Usuário</h3>
+          <div class="mb-3 col-md-4 align-self-end">
+            <a class="btn btn-primary" href="{{route('usuario.index1')}}">Lista de Usuários</a>
+          </div>
           <div class="tile-body">
             <form action="{{route('usuario.store')}}" method="POST" enctype="multipart/form-data">
                 @csrf

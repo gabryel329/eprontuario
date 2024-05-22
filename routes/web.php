@@ -44,6 +44,7 @@ Route::get('/especialidades/{id}', [EspecialidadeController::class, 'show'])->na
 #Usuarios
 
 Route::get('/usuarios', [UserController::class, 'index'])->name('usuario.index');
+Route::get('/lista', [UserController::class, 'index1'])->name('usuario.index1');
 Route::post('/usuarios', [UserController::class, 'store'])->name('usuario.store');
 Route::put('/usuarios/{id}', [UserController::class, 'update'])->name('usuario.update');
 Route::delete('/usuarios/{id}', [UserController::class, 'destroy'])->name('usuario.destroy');
