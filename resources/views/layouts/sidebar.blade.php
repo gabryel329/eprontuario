@@ -15,24 +15,21 @@
         <li><a class="app-menu__item active" href="/home"><i class="app-menu__icon bi bi-speedometer"></i><span class="app-menu__label">Dashboard</span></a></li>
         <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi-laptop"></i><span class="app-menu__label">Atendimento</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
           <ul class="treeview-menu">
-            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Lista</a></li>
-            <li><a class="treeview-item" href="#" target="_blank" rel="noopener"><i class="icon bi bi-circle-fill"></i> Histórico</a></li>
-            {{-- <li><a class="treeview-item" href="ui-cards.html"><i class="icon bi bi-circle-fill"></i> Cards</a></li>
-            <li><a class="treeview-item" href="widgets.html"><i class="icon bi bi-circle-fill"></i> Widgets</a></li> --}}
+            <li><a class="treeview-item" href="{{route('anamnese.index')}}"><i class="icon bi bi-circle-fill"></i> Anamnese</a></li>
+            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Histórico de <br> Anamnese</a></li>
+            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Agenda Médica</a></li>
+            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Histórico de <br> Atendimentos</a></li>
           </ul>
         </li>
-        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi-ui-checks"></i><span class="app-menu__label">Forms</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi-ui-checks"></i><span class="app-menu__label">Agenda</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
           <ul class="treeview-menu">
-            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Form Components</a></li>
-            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Form Samples</a></li>
+            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Marcação</a></li>
+            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Criar Agenda</a></li>
+            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Agenda do dia</a></li>
+
           </ul>
         </li>
-        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi-table"></i><span class="app-menu__label">Pacientes</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
-          <ul class="treeview-menu">
-            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Novo</a></li>
-            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Lista</a></li>
-          </ul>
-        </li>
+        <li><a class="app-menu__item" href="{{route('paciente.index')}}"><i class="app-menu__icon bi bi-table"></i><span class="app-menu__label">Pacientes</span></a></li>
         <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi-file-earmark"></i><span class="app-menu__label">Administração</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
           <ul class="treeview-menu">
             <li>
@@ -43,14 +40,8 @@
                 <li><a class="treeview-item" href="{{route('usuario.index')}}"><i class="icon bi bi-circle-fill"></i> Usuários</a></li>
               </ul>
             </li>
-            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Login Page</a></li>
-            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Lockscreen Page</a></li>
-            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> User Page</a></li>
-            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Invoice Page</a></li>
-            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Mailbox</a></li>
-            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Error Page</a></li>
           </ul>
         </li>
-        {{-- <li><a class="app-menu__item" href="docs.html"><i class="app-menu__icon bi bi-code-square"></i><span class="app-menu__label">Docs</span></a></li> --}}
+        <li><a class="app-menu__item" href="#"><i class="app-menu__icon bi bi-code-square"></i><span class="app-menu__label">Empresa</span></a></li>
       </ul>
     </aside>
