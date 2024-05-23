@@ -47,4 +47,9 @@ class Pacientes extends Model
         'cor',
     ];
     protected $dates=['deleted_at'];
+
+    public function anamneses()
+    {
+        return $this->hasMany(Anamnese::class, 'paciente_id');
+    }
 }

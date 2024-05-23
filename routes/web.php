@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnamneseController;
 use App\Http\Controllers\EmpresasController;
 use App\Http\Controllers\EspecialidadeController;
 use App\Http\Controllers\PacientesController;
@@ -61,11 +62,12 @@ Route::put('/pacientes/{id}', [PacientesController::class, 'update'])->name('pac
 Route::delete('/pacientes/{id}', [PacientesController::class, 'destroy'])->name('paciente.destroy');
 Route::get('/pacientes/{id}', [PacientesController::class, 'show'])->name('paciente.show');
 
-#Empresas
 
-Route::get('/empresas', [EmpresasController::class, 'index'])->name('empresa.index');
-// Route::get('/listaempresas', [EmpresasController::class, 'index1'])->name('empresa.index1');
-Route::post('/empresas', [EmpresasController::class, 'store'])->name('empresa.store');
-Route::put('/empresas/{id}', [EmpresasController::class, 'update'])->name('empresa.update');
-Route::delete('/empresas/{id}', [EmpresasController::class, 'destroy'])->name('empresa.destroy');
-Route::get('/empresas/{id}', [EmpresasController::class, 'show'])->name('empresa.show');
+#Anamnese
+
+Route::get('/anamnese', [AnamneseController::class, 'index'])->name('anamnese.index');
+Route::get('/listaanamnese', [AnamneseController::class, 'index1'])->name('anamnese.index1');
+Route::post('/anamnese', [AnamneseController::class, 'store'])->name('anamnese.store');
+Route::put('/anamnese/{id}', [AnamneseController::class, 'update'])->name('anamnese.update');
+Route::delete('/anamnese/{id}', [AnamneseController::class, 'destroy'])->name('anamnese.destroy');
+Route::get('/anamnese/{id}', [AnamneseController::class, 'show'])->name('anamnese.show');

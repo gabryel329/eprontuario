@@ -10,6 +10,16 @@
                 <li class="breadcrumb-item active"><a href="#">Pacientes</a></li>
             </ul>
         </div>
+        @if(session('success'))
+      <div class="alert alert-success">
+          {{ session('success') }}
+      </div>
+    @endif
+    @if(session('error'))
+      <div class="alert alert-warning">
+          {{ session('error') }}
+      </div>
+    @endif
         <div class="">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
                 Novo
