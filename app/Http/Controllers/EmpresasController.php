@@ -12,103 +12,41 @@ class EmpresasController extends Controller
      */
     public function index()
     {
-        $empresa = Empresas::all();
-
-        return view('cadastros.empresas', compact(['empresa']));
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        // Capitalize the input
-        $nome = ucfirst($request->input('name'));
-
-        // Get the other inputs
-        $email = $request->input('email');
-        $cnpj = $request->input('cnpj');    
-        $cep = $request->input('cep');
-        $rua = $request->input('rua');
-        $bairro = $request->input('bairro');
-        $cidade = $request->input('cidade');
-        $uf = $request->input('uf');
-        $numero = $request->input('numero');
-        $complemento = $request->input('complemento');
-        $celular = $request->input('celular');
-
-        // Check if the user already exists
-        $existeEmpresa = Empresas::where('cnpj', $cnpj)->first();
-
-        if ($existeEmpresa) {
-            return redirect()->route('empresa.index')->with('error', 'Empresa já existente!');
-        } 
-
-        // Create a new user
-            Empresas::create([
-                'name' => $nome,
-                'email' => $email,
-                'cnpj' => $cnpj,
-                'cep' => $cep,
-                'rua' => $rua,
-                'bairro' => $bairro,
-                'cidade' => $cidade,
-                'uf' => $uf,
-                'numero' => $numero,
-                'complemento' => $complemento,
-                'celular' => $celular,
-            ]);
-
-        return redirect()->route('empresa.index')->with('success', 'Empresa cadastrada com Sucesso!');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        // Find the user by ID
-        $empresa = Empresas::find($id);
-
-        if (!$empresa) {
-            return redirect()->route('empresa.index')->with('error', 'Empresa não encontrada!');
-        }
-
-        // Return the view with the user data
-        return view('empresa.show', compact('empresa'));
+        // Get the company with ID 1
+        $empresa = Empresas::find(1);
+        return view('cadastros.empresas', compact('empresa'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Empresas $empresas)
+    public function edit()
     {
-        //
+        // Get the company with ID 1
+        $empresa = Empresas::find(1);
+
+        if (!$empresa) {
+            return redirect()->route('empresa.index')->with('error', 'Empresa não encontrada!');
+        }
+
+        return view('empresa.edit', compact('empresa'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        // Encontrar o paciente pelo ID
-        $empresa = Empresas::findOrFail($id);
-    
-        // Capitalizar os campos de nome e sobrenome
-        $nome = ucfirst($request->input('name'));
-    
-        // Atualizar os campos do paciente
+        // Get the company with ID 1
+        $empresa = Empresas::find(1);
+
+        if (!$empresa) {
+            return redirect()->back()->with('error', 'Empresa não encontrada!');
+        }
+
+        // Update the company's details
         $empresa->update([
-            'name' => $nome,
+            'name' => $request->input('name'),
             'email' => $request->input('email'),
             'cnpj' => $request->input('cnpj'),
             'cep' => $request->input('cep'),
@@ -118,26 +56,10 @@ class EmpresasController extends Controller
             'uf' => $request->input('uf'),
             'numero' => $request->input('numero'),
             'celular' => $request->input('celular'),
+            'medico' => $request->input('medico'),
+            'crm' => $request->input('crm'),
         ]);
-    
-        return redirect()->route('empresa.index')->with('success', 'Empresa atualizada com sucesso!');
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        // Find the user by ID
-        $empresa = Empresas::find($id);
-
-        if (!$empresa) {
-            return redirect()->route('empresa.index')->with('error', 'Empresa não encontrada!');
-        }
-
-        // Delete the user
-        $empresa->delete();
-
-        return redirect()->route('empresa.index')->with('success', 'Empresa excluída com Sucesso!');
+        return redirect()->back()->with('success', 'Empresa atualizada com sucesso!');
     }
 }

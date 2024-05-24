@@ -71,3 +71,14 @@ Route::post('/anamnese', [AnamneseController::class, 'store'])->name('anamnese.s
 Route::put('/anamnese/{id}', [AnamneseController::class, 'update'])->name('anamnese.update');
 Route::delete('/anamnese/{id}', [AnamneseController::class, 'destroy'])->name('anamnese.destroy');
 Route::get('/anamnese/{id}', [AnamneseController::class, 'show'])->name('anamnese.show');
+
+#Empresas
+
+// Route to display the company data
+Route::get('/empresa', [EmpresasController::class, 'index'])->name('empresa.index');
+
+// Route to show the form for editing the company with ID 1
+Route::get('/empresa/edit', [EmpresasController::class, 'edit'])->name('empresa.edit');
+
+// Route to update the company with ID 1
+Route::put('/empresa/update', [EmpresasController::class, 'update'])->name('empresa.update');
