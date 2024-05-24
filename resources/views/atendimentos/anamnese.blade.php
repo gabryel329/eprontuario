@@ -49,7 +49,7 @@
                         <div class="row">
                             <div class="mb-3 col-md-3">
                                 <label class="form-label"><strong>Nascimento:</strong></label>
-                                <input class="form-control" id="nasc" name="nasc" type="date" disabled>
+                                <input class="form-control" id="nasc" name="nasc" type="date" onchange="calculateAge()" disabled>
                             </div>
                             <div class="mb-3 col-md-3">
                                 <label class="form-label"><strong>Idade:</strong></label>
@@ -66,7 +66,7 @@
                         </div>
                         <div class="row">
                             <div class="mb-3 col-md-3">
-                                <label class="form-label"><strong>Raça/Cor:</strong></label>
+                                <label class="form-label"><strong>Etnia:</strong></label>
                                 <input class="form-control" id="cor" name="cor" type="text" disabled>
                             </div>
                             <div class="mb-3 col-md-3">
@@ -254,6 +254,38 @@
     </div>
 </div>
 <script>
+
+    document.getElementById('pacienteSearch').addEventListener('keyup', function() {
+        var input = this.value.toLowerCase();
+        var rows = document.getElementById('pacienteTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+        for (var i = 0; i < rows.length; i++) {
+            var name = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
+            var cpf = rows[i].getElementsByTagName('td')[2].textContent.toLowerCase();
+            if (name.indexOf(input) > -1 || cpf.indexOf(input) > -1) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+    });
+    
+        function calculateAge() {
+        var birthDate = document.getElementById('nasc').value;
+        if (birthDate) {
+            var today = new Date();
+            var birthDate = new Date(birthDate);
+            var age = today.getFullYear() - birthDate.getFullYear();
+            var monthDifference = today.getMonth() - birthDate.getMonth();
+
+            if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+
+            document.getElementById('idade').value = age;
+        }
+    }
+
     function selectPaciente(id, name, sobrenome, nasc, genero, sus, cor, cpf, telefone, celular, nome_mae, rua, bairro, cidade, cep) {
         document.getElementById('name').value = name;
         document.getElementById('paciente_id').value = id;
@@ -271,24 +303,11 @@
         document.getElementById('cidade').value = cidade;
         document.getElementById('cep').value = cep;
 
+        calculateAge();
+        
         // Fecha o modal
         var modal = bootstrap.Modal.getInstance(document.getElementById('pacienteModal'));
         modal.hide();
     }
-
-    document.getElementById('pacienteSearch').addEventListener('keyup', function() {
-        var input = this.value.toLowerCase();
-        var rows = document.getElementById('pacienteTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-        for (var i = 0; i < rows.length; i++) {
-            var name = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
-            var cpf = rows[i].getElementsByTagName('td')[2].textContent.toLowerCase();
-            if (name.indexOf(input) > -1 || cpf.indexOf(input) > -1) {
-                rows[i].style.display = "";
-            } else {
-                rows[i].style.display = "none";
-            }
-        }
-    });
-</script>
+    </script>
 @endsection

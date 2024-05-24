@@ -58,85 +58,243 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="editModalLabel{{ $item->id }}">
-                                                            Editar Usuário</h5>
+                                                            Editar Anamnese</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                      <form method="POST" action="{{ route('anamnese.update', $item->id) }}" enctype="multipart/form-data">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <div class="row">
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">Nome</label>
-                                                                <input class="form-control" id="name" name="name" type="text" value="{{ $item->name }}">
-                                                            </div>
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">Sobrenome</label>
-                                                                <input class="form-control" id="sobrenome" name="sobrenome" type="text" value="{{ $item->sobrenome }}">
-                                                            </div>
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">E-mail</label>
-                                                                <input class="form-control" id="email" name="email" type="email" value="{{ $item->email }}">
-                                                            </div>
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">Nova Senha</label>
-                                                                <input class="form-control" id="password" name="password" type="password" onmousedown="showPassword()" onmouseup="hidePassword()" onmouseleave="hidePassword()">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">Nascimento</label>
-                                                                <input class="form-control" id="nasc" name="nasc" type="date" value="{{ $item->nasc }}">
-                                                            </div>
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">CPF</label>
-                                                                <input class="form-control" id="cpf" name="cpf" type="text" value="{{ $item->cpf }}">
-                                                            </div>
-                                                            <div class="mb-3 col-md-2">
-                                                                <label class="form-label">Gênero</label>
-                                                                <div class="form-check">
-                                                                    <label class="form-check-label">
-                                                                        <input class="form-check-input" type="radio" id="genero" name="genero" value="M" {{ $item->genero == 'M' ? 'checked' : '' }}>Masculino
-                                                                    </label>
+                                                        <form method="POST"
+                                                            action="{{ route('anamnese.update', $item->id) }}"
+                                                            enctype="multipart/form-data">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <div class="row">
+                                                                <div class="mb-3 col-md-6">
+                                                                    <label class="form-label"><strong>Nome:</strong></label>
+                                                                    <input class="form-control" id="name"
+                                                                        name="name" type="text" value="{{ $item->paciente->name }}" disabled>
                                                                 </div>
-                                                                <div class="form-check">
-                                                                    <label class="form-check-label">
-                                                                        <input class="form-check-input" type="radio" id="genero" name="genero" value="F" {{ $item->genero == 'F' ? 'checked' : '' }}>Feminino
-                                                                    </label>
+                                                                <div class="mb-3 col-md-6">
+                                                                    <label
+                                                                        class="form-label"><strong>Sobrenome:</strong></label>
+                                                                    <input class="form-control" id="sobrenome"
+                                                                        name="sobrenome" type="text" value="{{ $item->paciente->sobrenome }}" disabled>
                                                                 </div>
                                                             </div>
-                                                            <div class="mb-3 col-md-4">
-                                                                <label class="form-label">Foto</label>
-                                                                <input class="form-control" type="file" name="imagem">
+                                                            <div class="row">
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label class="form-label"><strong>Nascimento:</strong></label>
+                                                                    <input class="form-control" id="nasc" name="nasc" type="date" onchange="calculateAge()" value="{{ $item->paciente->nasc }}" disabled>
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label class="form-label"><strong>Idade:</strong></label>
+                                                                    <input class="form-control" id="idade" name="idade" type="text" disabled>
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label class="form-label"><strong>Sexo:</strong></label>
+                                                                    <input class="form-control" id="genero" name="genero" type="text" value="{{ $item->paciente->genero == 'M' ? 'Masculino' : 'Feminino' }}" disabled>
+                                                                </div>
+                                                                
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label class="form-label"><strong>CNS:</strong></label>
+                                                                    <input class="form-control" id="sus"
+                                                                        name="sus" type="text" value="{{ $item->paciente->sus }}" disabled>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">CEP</label>
-                                                                <input class="form-control" name="cep" type="text" id="cep" value="{{ $item->cep }}" size="10" maxlength="9" onblur="pesquisacep(this.value);">
+                                                            <div class="row">
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label
+                                                                        class="form-label"><strong>Etnia:</strong></label>
+                                                                    <input class="form-control" id="cor"
+                                                                        name="cor" type="text" value="{{ $item->paciente->cor }}" disabled>
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label class="form-label"><strong>CPF:</strong></label>
+                                                                    <input class="form-control" id="cpf"
+                                                                        name="cpf" type="text" value="{{ $item->paciente->cpf }}" disabled>
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label
+                                                                        class="form-label"><strong>Telefone:</strong></label>
+                                                                    <input class="form-control" id="telefone"
+                                                                        name="telefone" type="text" value="{{ $item->paciente->telefone }}" disabled>
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label
+                                                                        class="form-label"><strong>Celular:</strong></label>
+                                                                    <input class="form-control" id="celular"
+                                                                        name="celular" type="text" value="{{ $item->paciente->celular }}" disabled>
+                                                                </div>
                                                             </div>
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">Rua</label>
-                                                                <input class="form-control" name="rua" type="text" id="rua" value="{{ $item->rua }}" size="60">
+                                                            <div class="row">
+                                                                <div class="mb-3 col-md-12">
+                                                                    <label class="form-label"><strong>Mãe:</strong></label>
+                                                                    <input class="form-control" id="nome_mae"
+                                                                        name="nome_mae" type="text" value="{{ $item->paciente->nome_mae }}" disabled>
+                                                                </div>
                                                             </div>
-                                                            <div class="mb-3 col-md-2">
-                                                                <label class="form-label">Bairro</label>
-                                                                <input class="form-control" name="bairro" type="text" id="bairro" value="{{ $item->bairro }}" size="40">
+                                                            <div class="row">
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label
+                                                                        class="form-label"><strong>Endereço:</strong></label>
+                                                                    <input class="form-control" id="rua"
+                                                                        name="rua" type="text" value="{{ $item->paciente->rua }}" disabled>
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label
+                                                                        class="form-label"><strong>Bairro:</strong></label>
+                                                                    <input class="form-control" id="bairro"
+                                                                        name="bairro" type="text" value="{{ $item->paciente->bairro }}" disabled>
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label
+                                                                        class="form-label"><strong>Município:</strong></label>
+                                                                    <input class="form-control" id="cidade"
+                                                                        name="cidade" type="text" value="{{ $item->paciente->cidade }}" disabled>
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label class="form-label"><strong>CEP:</strong></label>
+                                                                    <input class="form-control" id="cep"
+                                                                        name="cep" type="text" value="{{ $item->paciente->cep }}" disabled>
+                                                                </div>
                                                             </div>
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">Cidade</label>
-                                                                <input class="form-control" name="cidade" type="text" id="cidade" value="{{ $item->cidade }}" size="40">
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label class="form-label"><strong>PA
+                                                                            mmHg:</strong></label>
+                                                                    <input class="form-control" id="pa"
+                                                                        name="pa" type="text" value="{{ $item->pa }}">
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label
+                                                                        class="form-label"><strong>Temp(ºC):</strong></label>
+                                                                    <input class="form-control" id="temp"
+                                                                        name="temp" type="text" value="{{ $item->temp }}">
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label
+                                                                        class="form-label"><strong>Peso(Kg):</strong></label>
+                                                                    <input class="form-control" id="peso"
+                                                                        name="peso" type="text" value="{{ $item->peso }}">
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label
+                                                                        class="form-label"><strong>Altura(cm):</strong></label>
+                                                                    <input class="form-control" id="altura"
+                                                                        name="altura" type="text" value="{{ $item->altura }}">
+                                                                </div>
                                                             </div>
-                                                            <div class="mb-3 col-md-1">
-                                                                <label class="form-label">Estado</label>
-                                                                <input class="form-control" name="uf" type="text" id="uf" value="{{ $item->uf }}" size="2">
+                                                            <div class="row">
+                                                                <div class="mb-3 col-md-2">
+                                                                    <label
+                                                                        class="form-label"><strong>Gestante:</strong></label>
+                                                                    <div class="form-check">
+                                                                        <label class="form-check-label">
+                                                                            <input class="form-check-input" type="radio"
+                                                                                name="gestante"
+                                                                                value="S"{{ $item->gestante == 'S' ? 'checked' : '' }}>Sim
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="form-check">
+                                                                        <label class="form-check-label">
+                                                                            <input class="form-check-input" type="radio"
+                                                                                name="gestante"
+                                                                                value="N"{{ $item->gestante == 'N' ? 'checked' : '' }}>Não
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label class="form-label"><strong>Dextro
+                                                                            (mg/dL):</strong></label>
+                                                                    <input class="form-control" id="dextro"
+                                                                        name="dextro" type="text" value="{{ $item->dextro }}">
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label
+                                                                        class="form-label"><strong>SpO2:</strong></label>
+                                                                    <input class="form-control" id="spo2"
+                                                                        name="spo2" type="text" value="{{ $item->spo2 }}">
+                                                                </div>
+                                                                <div class="mb-3 col-md-2">
+                                                                    <label
+                                                                        class="form-label"><strong>F.C.:</strong></label>
+                                                                    <input class="form-control" id="fc"
+                                                                        name="fc" type="text" value="{{ $item->fc }}">
+                                                                </div>
+                                                                <div class="mb-3 col-md-2">
+                                                                    <label
+                                                                        class="form-label"><strong>F.R.:</strong></label>
+                                                                    <input class="form-control" id="fr"
+                                                                        name="fr" type="text" value="{{ $item->fr }}">
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="submit" class="btn btn-primary">Salvar</button>
-                                                        </div>
-                                                    </form>
+                                                            <hr>
+                                                            <div class="row" style="text-align: center">
+                                                                <div class="mb-3 col-md-12">
+                                                                    <label
+                                                                        class="form-label"><strong>Acolhimento</strong></label>
+                                                                    <input class="form-control" id="acolhimento"
+                                                                        name="acolhimento" type="text" value="{{ $item->acolhimento }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row" style="text-align: center">
+                                                                <div class="mb-3 col-md-12">
+                                                                    <label class="form-label"><strong>Queixas Principais do
+                                                                            Acolhimento</strong></label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="mb-3 col-md-3">
+                                                                    <input class="form-control" id="acolhimento1"
+                                                                        name="acolhimento1" type="text" value="{{ $item->acolhimento1 }}">
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <input class="form-control" id="acolhimento2"
+                                                                        name="acolhimento2" type="text" value="{{ $item->acolhimento2 }}">
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <input class="form-control" id="acolhimento3"
+                                                                        name="acolhimento3" type="text" value="{{ $item->acolhimento3 }}">
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <input class="form-control" id="acolhimento4"
+                                                                        name="acolhimento4" type="text" value="{{ $item->acolhimento4 }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row" style="text-align: center">
+                                                                <div class="mb-3 col-md-12">
+                                                                    <label
+                                                                        class="form-label"><strong>Alergias</strong></label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="mb-3 col-md-4">
+                                                                    <input class="form-control" id="alergia1"
+                                                                        name="alergia1" type="text" value="{{ $item->alergia1 }}">
+                                                                </div>
+                                                                <div class="mb-3 col-md-4">
+                                                                    <input class="form-control" id="alergia2"
+                                                                        name="alergia2" type="text" value="{{ $item->alergia2 }}">
+                                                                </div>
+                                                                <div class="mb-3 col-md-4">
+                                                                    <input class="form-control" id="alergia3"
+                                                                        name="alergia3" type="text" value="{{ $item->alergia3 }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="mb-3">
+                                                                    <label class="form-label"><strong>Anamnese / Exame
+                                                                            Fisico:</strong></label>
+                                                                    <textarea class="form-control" rows="5" id="anamnese" name="anamnese">{{ $item->anamnese }}</textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="tile-footer">
+                                                                <button class="btn btn-primary" type="submit"><i
+                                                                        class="bi bi-check-circle-fill me-2"></i>Salvar</button>
+                                                            </div>
+                                                        </form>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -150,4 +308,27 @@
             </div>
         </div>
     </main>
+    <script>
+        function calculateAge() {
+            var birthDate = document.getElementById('nasc').value;
+            if (birthDate) {
+                var today = new Date();
+                var birthDate = new Date(birthDate);
+                var age = today.getFullYear() - birthDate.getFullYear();
+                var monthDifference = today.getMonth() - birthDate.getMonth();
+    
+                if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+    
+                document.getElementById('idade').value = age;
+            }
+        }
+    
+        // Call the function when the page loads to set the initial value
+        window.onload = function() {
+            calculateAge();
+        }
+    </script>
+    
 @endsection
