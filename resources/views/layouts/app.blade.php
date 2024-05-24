@@ -11,6 +11,21 @@
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css"
     href="{{ asset('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css') }}">
+
+    <style>
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%; /* Ajuste a altura conforme necessário */
+        }
+    
+        .image-container img {
+            max-width: 48%; /* Garante que a imagem não ultrapasse a largura da tela */
+            max-height: 100%; /* Garante que a imagem não ultrapasse a altura da tela */
+        }
+    </style>
+    
     @stack('css')
 </head>
 
