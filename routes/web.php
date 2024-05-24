@@ -74,11 +74,5 @@ Route::get('/anamnese/{id}', [AnamneseController::class, 'show'])->name('anamnes
 
 #Empresas
 
-// Route to display the company data
 Route::get('/empresa', [EmpresasController::class, 'index'])->name('empresa.index');
-
-// Route to show the form for editing the company with ID 1
-Route::get('/empresa/edit', [EmpresasController::class, 'edit'])->name('empresa.edit');
-
-// Route to update the company with ID 1
-Route::put('/empresa/update', [EmpresasController::class, 'update'])->name('empresa.update');
+Route::put('/empresa/{id}', [EmpresasController::class, 'update'])->name('empresa.update');

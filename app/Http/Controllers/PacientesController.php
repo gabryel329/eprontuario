@@ -35,74 +35,89 @@ class PacientesController extends Controller
      */
     public function store(Request $request)
     {
-        // Capitalize the input
-        $nome = ucfirst($request->input('name'));
+        // Validate the inputs
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'sobrenome' => 'required|string|max:255',
+            // Add validation rules for other fields...
+        ]);
+
+        // Capitalize the input where appropriate
+        $name = ucfirst($request->input('name'));
         $sobrenome = ucfirst($request->input('sobrenome'));
 
         // Get the other inputs
         $email = $request->input('email');
         $nasc = $request->input('nasc');
         $cpf = $request->input('cpf');
-        $genero = $request->input('genero');
         $cep = $request->input('cep');
         $rua = $request->input('rua');
         $bairro = $request->input('bairro');
         $cidade = $request->input('cidade');
-        $rg = $request->input('rg');
         $uf = $request->input('uf');
         $numero = $request->input('numero');
         $complemento = $request->input('complemento');
-        $nomepai = $request->input('nome_pai');
-        $nomemae = $request->input('nome_mae');
+        $telefone = $request->input('telefone');
+        $celular = $request->input('celular');
+        $nome_social = $request->input('nome_social');
+        $nome_pai = $request->input('nome_pai');
+        $nome_mae = $request->input('nome_mae');
+        $acompanhante = $request->input('acompanhante');
+        $genero = $request->input('genero');
+        $rg = $request->input('rg');
+        $certidao = $request->input('certidao');
         $sus = $request->input('sus');
         $convenio = $request->input('convenio');
         $matricula = $request->input('matricula');
         $cor = $request->input('cor');
-        $acompanhante = $request->input('acompanhante');
-        $celular = $request->input('celular');
-        $telefone = $request->input('telefone');
-        $certidao = $request->input('certidao');
-        $nomesocial = $request->input('nome_social');
+        $imagem = $request->file('imagem');
 
-        // Check if the user already exists
-        $existePacientes = Pacientes::where('cpf', $cpf)->first();
+        if ($imagem && $imagem->isValid()) {
+            $filenameWithExt = $imagem->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $imagem->getClientOriginalExtension();
+            $imageName = $filename . '.' . $extension;
 
-        if ($existePacientes) {
-            return redirect()->route('paciente.index')->with('error', 'Paciente já existe!');
-        } 
+            // Upload Image to the 'public/images/' directory
+            $imagem->move(public_path('images/'), $imageName);
+        } else {
+            $imageName = null; // Set image name to null if no image is provided
+        }
 
-        // Create a new user
-            Pacientes::create([
-                'name' => $nome,
-                'sobrenome' => $sobrenome,
-                'email' => $email,
-                'nasc' => $nasc,
-                'cpf' => $cpf,
-                'genero' => $genero,
-                'cep' => $cep,
-                'rua' => $rua,
-                'bairro' => $bairro,
-                'cidade' => $cidade,
-                'uf' => $uf,
-                'numero' => $numero,
-                'complemento' => $complemento,
-                'nome_pai' => $nomepai,
-                'nome_social' => $nomesocial,
-                'nome_mae' => $nomemae,
-                'sus' => $sus,
-                'convenio' => $convenio,
-                'matricula' => $matricula,
-                'cor' => $cor,
-                'acompanhante' => $acompanhante,
-                'celular' => $celular,
-                'telefone' => $telefone,
-                'rg' => $rg,
-                'certidao' => $certidao,
-            ]);
+        // Create the Paciente
+        $paciente = Pacientes::create([
+            'name' => $name,
+            'sobrenome' => $sobrenome,
+            'email' => $email,
+            'nasc' => $nasc,
+            'cpf' => $cpf,
+            'cep' => $cep,
+            'rua' => $rua,
+            'bairro' => $bairro,
+            'cidade' => $cidade,
+            'uf' => $uf,
+            'numero' => $numero,
+            'complemento' => $complemento,
+            'telefone' => $telefone,
+            'celular' => $celular,
+            'nome_social' => $nome_social,
+            'nome_pai' => $nome_pai,
+            'nome_mae' => $nome_mae,
+            'acompanhante' => $acompanhante,
+            'genero' => $genero,
+            'rg' => $rg,
+            'certidao' => $certidao,
+            'sus' => $sus,
+            'convenio' => $convenio,
+            'matricula' => $matricula,
+            'cor' => $cor,
+            'imagem' => $imageName, // Store the image name
+            // Add other fields...
+        ]);
 
-        return redirect()->route('paciente.index')->with('success', 'Paciente cadastrado com Sucesso!');
+        // Redirect with success message
+        return redirect()->back()->with('success', 'Paciente criado com sucesso')->with('paciente', $paciente);
     }
-
     /**
      * Display the specified resource.
      */
@@ -132,43 +147,89 @@ class PacientesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Encontrar o paciente pelo ID
+        // Find the paciente by ID
         $paciente = Pacientes::findOrFail($id);
-    
-        // Capitalizar os campos de nome e sobrenome
-        $nome = ucfirst($request->input('name'));
+
+        // Capitalize the input where appropriate
+        $name = ucfirst($request->input('name'));
         $sobrenome = ucfirst($request->input('sobrenome'));
-    
-        // Atualizar os campos do paciente
-        $paciente->update([
-            'name' => $nome,
-            'sobrenome' => $sobrenome,
-            'email' => $request->input('email'),
-            'nasc' => $request->input('nasc'),
-            'cpf' => $request->input('cpf'),
-            'genero' => $request->input('genero'),
-            'cep' => $request->input('cep'),
-            'rua' => $request->input('rua'),
-            'bairro' => $request->input('bairro'),
-            'cidade' => $request->input('cidade'),
-            'uf' => $request->input('uf'),
-            'rg' => $request->input('rg'),
-            'numero' => $request->input('numero'),
-            'complemento' => $request->input('complemento'),
-            'nome_pai' => $request->input('nome_pai'),
-            'nome_mae' => $request->input('nome_mae'),
-            'sus' => $request->input('sus'),
-            'convenio' => $request->input('convenio'),
-            'matricula' => $request->input('matricula'),
-            'cor' => $request->input('cor'),
-            'acompanhante' => $request->input('acompanhante'),
-            'celular' => $request->input('celular'),
-            'telefone' => $request->input('telefone'),
-            'certidao' => $request->input('certidao'),
-            'nome_social' => $request->input('nome_social'),
-        ]);
-    
-        return redirect()->route('paciente.index')->with('success', 'Paciente atualizado com sucesso!');
+
+        // Get the other inputs
+        $email = $request->input('email');
+        $nasc = $request->input('nasc');
+        $cpf = $request->input('cpf');
+        $cep = $request->input('cep');
+        $rua = $request->input('rua');
+        $bairro = $request->input('bairro');
+        $cidade = $request->input('cidade');
+        $uf = $request->input('uf');
+        $numero = $request->input('numero');
+        $complemento = $request->input('complemento');
+        $telefone = $request->input('telefone');
+        $celular = $request->input('celular');
+        $nome_social = $request->input('nome_social');
+        $nome_pai = $request->input('nome_pai');
+        $nome_mae = $request->input('nome_mae');
+        $acompanhante = $request->input('acompanhante');
+        $genero = $request->input('genero');
+        $rg = $request->input('rg');
+        $certidao = $request->input('certidao');
+        $sus = $request->input('sus');
+        $convenio = $request->input('convenio');
+        $matricula = $request->input('matricula');
+        $cor = $request->input('cor');
+        $imagem = $request->file('imagem');
+
+        if ($imagem && $imagem->isValid()) {
+            $filenameWithExt = $imagem->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $imagem->getClientOriginalExtension();
+            $imageName = $filename . '.' . $extension;
+
+            // Upload Image to the 'public/images/' directory
+            $imagem->move(public_path('images/'), $imageName);
+
+            // Remove the old image if exists
+            if ($paciente->imagem && file_exists(public_path('images/') . $paciente->imagem)) {
+                unlink(public_path('images/') . $paciente->imagem);
+            }
+
+            // Update the paciente with the new image
+            $paciente->imagem = $imageName;
+        }
+
+        // Update paciente attributes
+        $paciente->name = $name;
+        $paciente->sobrenome = $sobrenome;
+        $paciente->email = $email;
+        $paciente->nasc = $nasc;
+        $paciente->cpf = $cpf;
+        $paciente->cep = $cep;
+        $paciente->rua = $rua;
+        $paciente->bairro = $bairro;
+        $paciente->cidade = $cidade;
+        $paciente->uf = $uf;
+        $paciente->numero = $numero;
+        $paciente->complemento = $complemento;
+        $paciente->telefone = $telefone;
+        $paciente->celular = $celular;
+        $paciente->nome_social = $nome_social;
+        $paciente->nome_pai = $nome_pai;
+        $paciente->nome_mae = $nome_mae;
+        $paciente->acompanhante = $acompanhante;
+        $paciente->genero = $genero;
+        $paciente->rg = $rg;
+        $paciente->certidao = $certidao;
+        $paciente->sus = $sus;
+        $paciente->convenio = $convenio;
+        $paciente->matricula = $matricula;
+        $paciente->cor = $cor;
+
+        // Save the updated paciente data
+        $paciente->save();
+
+        // Redirect with success message
+        return redirect()->back()->with('success', 'Paciente atualizado com sucesso')->with('paciente', $paciente);
     }
     
 

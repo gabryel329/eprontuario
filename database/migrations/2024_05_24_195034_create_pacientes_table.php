@@ -42,6 +42,7 @@ return new class extends Migration
             $table->string('convenio')->nullable();
             $table->string('matricula')->nullable();
             $table->string('cor')->nullable();
+            $table->string('imagem')->nullable();
         });
     }
 

@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->nullable();
-            $table->softDeletes();
-            $table->timestamps();
             $table->string('cnpj')->nullable();
             $table->string('cep')->nullable();
             $table->string('rua')->nullable();
@@ -26,7 +24,13 @@ return new class extends Migration
             $table->string('numero')->nullable();
             $table->string('complemento')->nullable();
             $table->string('celular')->nullable();
-            $table->string('acompanhante')->nullable();
+            $table->string('telefone')->nullable();
+            $table->string('crm')->nullable();
+            $table->string('fantasia')->nullable();
+            $table->string('medico')->nullable();
+            $table->string('imagem')->nullable();
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
 

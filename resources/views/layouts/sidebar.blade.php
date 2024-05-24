@@ -48,6 +48,6 @@
             </li>
           </ul>
         </li>
-        <li><a class="app-menu__item" href="#"><i class="app-menu__icon bi bi-code-square"></i><span class="app-menu__label">Empresa</span></a></li>
+        <li><a class="app-menu__item" href="{{route('empresa.index')}}"><i class="app-menu__icon bi bi-code-square"></i><span class="app-menu__label">Empresa</span></a></li>
       </ul>
     </aside>

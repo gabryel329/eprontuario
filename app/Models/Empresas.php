@@ -29,6 +29,11 @@ class Empresas extends Model
         'numero',
         'complemento',
         'celular',
+        'telefone',
+        'medico',
+        'crm',
+        'fantasia',
+        'imagem'
     ];
     protected $dates=['deleted_at'];
 }
