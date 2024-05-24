@@ -106,13 +106,13 @@
                                 <div class="row">
                                     <div class="mb-3 col-md-12">
                                         <label class="form-label">Logo</label>
-                                        <input class="form-control" type="file" name="imagem">
+                                        <input class="form-control" type="file" name="imagem" value="{{$empresa->imagem}}">
                                     </div>
                                 </div>
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <button class="btn btn-primary" type="submit"><i class="bi bi-check-circle-fill me-2"></i> Edit</button>
+                                        <button class="btn btn-primary" type="submit"><i class="bi bi-check-circle-fill me-2"></i> Editar</button>
                                     </div>
                                 </div>
                             </form>

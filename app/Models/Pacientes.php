@@ -45,6 +45,7 @@ class Pacientes extends Model
         'certidao',
         'rg',
         'cor',
+        'imagem',
     ];
     protected $dates=['deleted_at'];
 

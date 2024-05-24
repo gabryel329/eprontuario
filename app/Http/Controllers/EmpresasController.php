@@ -14,7 +14,7 @@ class EmpresasController extends Controller
     public function index()
     {
         // Get the company with ID 1
-        $empresa = Empresas::find(1);
+        $empresa = Empresas::all();
         return view('empresas', compact('empresa'));
     }
 

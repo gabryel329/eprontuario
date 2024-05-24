@@ -35,12 +35,6 @@ class PacientesController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the inputs
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'sobrenome' => 'required|string|max:255',
-            // Add validation rules for other fields...
-        ]);
 
         // Capitalize the input where appropriate
         $name = ucfirst($request->input('name'));
@@ -72,51 +66,88 @@ class PacientesController extends Controller
         $cor = $request->input('cor');
         $imagem = $request->file('imagem');
 
+        // Check if the user already exists
+        $existePaciente = Pacientes::where('cpf', $cpf)->first();
+
+        if ($existePaciente) {
+            return redirect()->route('paciente.index')->with('error', 'Paciente já existe!');
+        }
+
         if ($imagem && $imagem->isValid()) {
             $filenameWithExt = $imagem->getClientOriginalName();
+            // Get just filename
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just ext
             $extension = $imagem->getClientOriginalExtension();
+            // Filename to store
             $imageName = $filename . '.' . $extension;
 
             // Upload Image to the 'public/images/' directory
             $imagem->move(public_path('images/'), $imageName);
+
+            // Create the Paciente
+            $paciente = Pacientes::create([
+                'name' => $name,
+                'sobrenome' => $sobrenome,
+                'email' => $email,
+                'nasc' => $nasc,
+                'cpf' => $cpf,
+                'cep' => $cep,
+                'rua' => $rua,
+                'bairro' => $bairro,
+                'cidade' => $cidade,
+                'uf' => $uf,
+                'numero' => $numero,
+                'complemento' => $complemento,
+                'telefone' => $telefone,
+                'celular' => $celular,
+                'nome_social' => $nome_social,
+                'nome_pai' => $nome_pai,
+                'nome_mae' => $nome_mae,
+                'acompanhante' => $acompanhante,
+                'genero' => $genero,
+                'rg' => $rg,
+                'certidao' => $certidao,
+                'sus' => $sus,
+                'convenio' => $convenio,
+                'matricula' => $matricula,
+                'cor' => $cor,
+                'imagem' => $imageName, // Store the image name
+                // Add other fields...
+            ]);
         } else {
-            $imageName = null; // Set image name to null if no image is provided
+            $paciente = Pacientes::create([
+                'name' => $name,
+                'sobrenome' => $sobrenome,
+                'email' => $email,
+                'nasc' => $nasc,
+                'cpf' => $cpf,
+                'cep' => $cep,
+                'rua' => $rua,
+                'bairro' => $bairro,
+                'cidade' => $cidade,
+                'uf' => $uf,
+                'numero' => $numero,
+                'complemento' => $complemento,
+                'telefone' => $telefone,
+                'celular' => $celular,
+                'nome_social' => $nome_social,
+                'nome_pai' => $nome_pai,
+                'nome_mae' => $nome_mae,
+                'acompanhante' => $acompanhante,
+                'genero' => $genero,
+                'rg' => $rg,
+                'certidao' => $certidao,
+                'sus' => $sus,
+                'convenio' => $convenio,
+                'matricula' => $matricula,
+                'cor' => $cor,
+            ]);
         }
 
-        // Create the Paciente
-        $paciente = Pacientes::create([
-            'name' => $name,
-            'sobrenome' => $sobrenome,
-            'email' => $email,
-            'nasc' => $nasc,
-            'cpf' => $cpf,
-            'cep' => $cep,
-            'rua' => $rua,
-            'bairro' => $bairro,
-            'cidade' => $cidade,
-            'uf' => $uf,
-            'numero' => $numero,
-            'complemento' => $complemento,
-            'telefone' => $telefone,
-            'celular' => $celular,
-            'nome_social' => $nome_social,
-            'nome_pai' => $nome_pai,
-            'nome_mae' => $nome_mae,
-            'acompanhante' => $acompanhante,
-            'genero' => $genero,
-            'rg' => $rg,
-            'certidao' => $certidao,
-            'sus' => $sus,
-            'convenio' => $convenio,
-            'matricula' => $matricula,
-            'cor' => $cor,
-            'imagem' => $imageName, // Store the image name
-            // Add other fields...
-        ]);
+        $paciente = Pacientes::first();
 
-        // Redirect with success message
-        return redirect()->back()->with('success', 'Paciente criado com sucesso')->with('paciente', $paciente);
+        return redirect()->route('paciente.index')->with('success', 'Paciente criado com sucesso')->with('paciente', $paciente);
     }
     /**
      * Display the specified resource.
