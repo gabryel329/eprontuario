@@ -17,9 +17,14 @@ class PacientesController extends Controller
 
         return view('cadastros.pacientes', compact(['paciente']));
     }
-    /**
-     * Show the form for creating a new resource.
-     */
+
+    public function index1()
+    {
+        $paciente = Pacientes::all();
+
+        return view('cadastros.listapacientes', compact(['paciente']));
+    }
+
     public function create()
     {
         //

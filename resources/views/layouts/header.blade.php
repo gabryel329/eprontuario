@@ -10,13 +10,13 @@
             <ul class="dropdown-menu settings-menu dropdown-menu-right">
                 {{-- <li><a class="dropdown-item" href="page-user.html"><i class="bi bi-gear me-2 fs-5"></i> Settings</a>
                 </li> --}}
-                <li><a class="dropdown-item" href="page-user.html"><i class="bi bi-person me-2 fs-5"></i> Profile</a>
-                </li>
+                {{-- <li><a class="dropdown-item" href="page-user.html"><i class="bi bi-person me-2 fs-5"></i> Perfil</a>
+                </li> --}}
                 <li>
                     <a class="dropdown-item" href="{{ route('logout') }}"
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <i class="bi bi-box-arrow-right me-2 fs-5">
-                        </i> Logout
+                        </i> Sair
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                         @csrf
