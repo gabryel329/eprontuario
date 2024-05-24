@@ -32,8 +32,8 @@
         <li>
           <li class="treeview"><a class="app-menu__item" href="{{route('paciente.index')}}" data-toggle="treeview"><i class="app-menu__icon bi bi-table"></i><span class="app-menu__label">Pacientes</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
           <ul class="treeview-menu">
-            <li><a class="treeview-item" href="{{route('paciente.index1')}}"><i class="icon bi bi-circle-fill"></i> Novo</a></li>
-            <li><a class="treeview-item" href="{{route('paciente.index')}}"><i class="icon bi bi-circle-fill"></i> Lista de Pacientes</a></li>
+            <li><a class="treeview-item" href="{{route('paciente.index')}}"><i class="icon bi bi-circle-fill"></i> Novo</a></li>
+            <li><a class="treeview-item" href="{{route('paciente.index1')}}"><i class="icon bi bi-circle-fill"></i> Lista de Pacientes</a></li>
           </ul>
         </li>
         <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi-file-earmark"></i><span class="app-menu__label">Administração</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
