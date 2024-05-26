@@ -74,6 +74,12 @@ class UserController extends Controller
             return redirect()->route('usuario.index')->with('error', 'Usuário já existe!');
         }
 
+        $existeEmail = User::where('email', $email)->first();
+
+        if ($existeEmail) {
+            return redirect()->route('usuario.index')->with('error', 'Email já cadastrado!');
+        }
+
         if ($imagem && $imagem->isValid()) {
             $filenameWithExt = $imagem->getClientOriginalName();
             // Get just filename
