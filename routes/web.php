@@ -5,6 +5,7 @@ use App\Http\Controllers\EmpresasController;
 use App\Http\Controllers\EspecialidadeController;
 use App\Http\Controllers\PacientesController;
 use App\Http\Controllers\PermisoesController;
+use App\Http\Controllers\ProfissionalController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -76,3 +77,12 @@ Route::get('/anamnese/{id}', [AnamneseController::class, 'show'])->name('anamnes
 
 Route::get('/empresa', [EmpresasController::class, 'index'])->name('empresa.index');
 Route::put('/empresa/{id}', [EmpresasController::class, 'update'])->name('empresa.update');
+
+#Profissional
+
+Route::get('/profissional', [ProfissionalController::class, 'index'])->name('profissional.index');
+Route::get('/listaprofissional', [ProfissionalController::class, 'index1'])->name('profissional.index1');
+Route::post('/profissional', [ProfissionalController::class, 'store'])->name('profissional.store');
+Route::put('/profissional/{id}', [ProfissionalController::class, 'update'])->name('profissional.update');
+Route::delete('/profissional/{id}', [ProfissionalController::class, 'destroy'])->name('profissional.destroy');
+Route::get('/profissional/{id}', [ProfissionalController::class, 'show'])->name('profissional.show');

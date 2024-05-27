@@ -44,6 +44,7 @@
                 <li><a class="treeview-item" href="{{route('permisao.index')}}"><i class="icon bi bi-circle-fill"></i> Permissões</a></li>
                 <li><a class="treeview-item" href="{{route('especialidade.index')}}"><i class="icon bi bi-circle-fill"></i> Especialidades</a></li>
                 <li><a class="treeview-item" href="{{route('usuario.index')}}"><i class="icon bi bi-circle-fill"></i> Usuários</a></li>
+                <li><a class="treeview-item" href="{{route('profissional.index')}}"><i class="icon bi bi-circle-fill"></i> Profissional</a></li>
               </ul>
             </li>
           </ul>

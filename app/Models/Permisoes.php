@@ -17,4 +17,9 @@ class Permisoes extends Model
     {
         return $this->hasMany(User::class, 'permisoes_id');
     }
+
+    public function profissional()
+    {
+        return $this->hasMany(Profissional::class, 'permisoes_id');
+    }
 }
