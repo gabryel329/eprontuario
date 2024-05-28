@@ -42,4 +42,9 @@ class Profissional extends Model
     {
         return $this->belongsTo(Especialidade::class, 'especialidade_id');
     }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'profissional_id');
+    }
 }

@@ -34,7 +34,7 @@
                   <div class="mb-3 row">
                     <label class="form-label col-md-3">Nome da Especialidade</label>
                     <div class="col-md-8">
-                      <input name="especialidade" id="especialidade" class="form-control" type="text" placeholder="">
+                      <input name="especialidade" id="especialidade" class="form-control" type="text" placeholder="" required>
                     </div>
                   </div>
                   <div class="tile-footer">

@@ -13,11 +13,6 @@ class Especialidade extends Model
     protected $fillable=['especialidade'];
     protected $dates=['deleted_at'];
 
-    public function users()
-    {
-        return $this->hasMany(User::class, 'especialidade_id');
-    }
-
     public function profissional()
     {
         return $this->hasMany(Profissional::class, 'especialidade_id');

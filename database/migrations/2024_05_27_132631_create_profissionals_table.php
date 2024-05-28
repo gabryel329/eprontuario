@@ -37,8 +37,8 @@ return new class extends Migration
             $table->string('imagem')->nullable();
             $table->integer('permisoes_id')->nullable();
             $table->foreign('permisoes_id')->references('id')->on('permisoes')->onDelete('cascade');
-            $table->integer('especialidades_id')->nullable();
-            $table->foreign('especialidades_id')->references('id')->on('especialidades')->onDelete('cascade');
+            $table->integer('especialidade_id')->nullable();
+            $table->foreign('especialidade_id')->references('id')->on('especialidades')->onDelete('cascade');
         });
     }
 

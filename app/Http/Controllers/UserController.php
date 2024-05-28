@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Especialidade;
 use App\Models\Permisoes;
+use App\Models\Profissional;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -15,19 +16,17 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-        $permissoes = Permisoes::all();
-        $especialidades = Especialidade::all(); // Corrigido o nome da variável
+        $profissioanls = Profissional::all();
 
-        return view('cadastros.usuarios', compact(['users', 'permissoes', 'especialidades']));
+        return view('cadastros.usuarios', compact(['users', 'profissioanls']));
     }
 
     public function index1()
     {
         $users = User::all();
-        $permissoes = Permisoes::all();
-        $especialidades = Especialidade::all(); // Corrigido o nome da variável
+        $profissioanls = Profissional::all();
 
-        return view('cadastros.listausuarios', compact(['users', 'permissoes', 'especialidades']));
+        return view('cadastros.listausuarios', compact(['users', 'profissioanls']));
     }
 
     /**
@@ -51,34 +50,9 @@ class UserController extends Controller
         // Get the other inputs
         $email = $request->input('email');
         $password = bcrypt($request->input('password')); // Encrypt the password
-        $nasc = $request->input('nasc');
-        $cpf = $request->input('cpf');
-        $genero = $request->input('genero');
+        $profissional_id = $request->input('id');
+        $permissoes = $request->input('permisao_id');
         $imagem = $request->file('imagem');
-        $permisoes_id = $request->input('permisoes_id');
-        $especialidade_id = $request->input('especialidade_id');
-        $crm = $request->input('crm');
-        $corem = $request->input('corem');
-        $cep = $request->input('cep');
-        $rua = $request->input('rua');
-        $bairro = $request->input('bairro');
-        $cidade = $request->input('cidade');
-        $uf = $request->input('uf');
-        $numero = $request->input('numero');
-        $complemento = $request->input('complemento');
-
-        // Check if the user already exists
-        $existeUser = User::where('cpf', $cpf)->first();
-
-        if ($existeUser) {
-            return redirect()->route('usuario.index')->with('error', 'Usuário já existe!');
-        }
-
-        $existeEmail = User::where('email', $email)->first();
-
-        if ($existeEmail) {
-            return redirect()->route('usuario.index')->with('error', 'Email já cadastrado!');
-        }
 
         if ($imagem && $imagem->isValid()) {
             $filenameWithExt = $imagem->getClientOriginalName();
@@ -98,21 +72,8 @@ class UserController extends Controller
                 'sobrenome' => $sobrenome,
                 'email' => $email,
                 'password' => $password,
-                'nasc' => $nasc,
-                'cpf' => $cpf,
-                'genero' => $genero,
+                'profissional_id' => $profissional_id,
                 'imagem' => $imageName,
-                'permisoes_id' => $permisoes_id,
-                'especialidade_id' => $especialidade_id,
-                'crm' => $crm,
-                'corem' => $corem,
-                'cep' => $cep,
-                'rua' => $rua,
-                'bairro' => $bairro,
-                'cidade' => $cidade,
-                'uf' => $uf,
-                'numero' => $numero,
-                'complemento' => $complemento,
             ]);
         } else {
             // Se nenhuma imagem foi enviada, crie o produto sem o campo de imagem
@@ -121,23 +82,9 @@ class UserController extends Controller
                 'sobrenome' => $sobrenome,
                 'email' => $email,
                 'password' => $password,
-                'nasc' => $nasc,
-                'cpf' => $cpf,
-                'genero' => $genero,
-                'permisoes_id' => $permisoes_id,
-                'especialidade_id' => $especialidade_id,
-                'crm' => $crm,
-                'corem' => $corem,
-                'cep' => $cep,
-                'rua' => $rua,
-                'bairro' => $bairro,
-                'cidade' => $cidade,
-                'uf' => $uf,
-                'numero' => $numero,
-                'complemento' => $complemento,
+                'profissional_id' => $profissional_id
             ]);
         }
-
         // Retrieve the company data, including the logo, after it has been saved
         $user = User::first();
 
@@ -173,8 +120,8 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-
-    public function update(Request $request, $id)
+    
+     public function update(Request $request, $id)
     {
         // Find the user by ID
         $user = User::findOrFail($id);
@@ -182,25 +129,9 @@ class UserController extends Controller
         // Capitalize the input
         $nome = ucfirst($request->input('name'));
         $sobrenome = ucfirst($request->input('sobrenome'));
-
-        // Get the other inputs
         $email = $request->input('email');
-        $password = $request->input('password') ? bcrypt($request->input('password')) : $user->password;
-        $nasc = $request->input('nasc');
-        $cpf = $request->input('cpf');
-        $genero = $request->input('genero');
         $imagem = $request->file('imagem');
-        $permisoes_id = $request->input('permisoes_id');
-        $especialidade_id = $request->input('especialidade_id');
-        $crm = $request->input('crm');
-        $corem = $request->input('corem');
-        $cep = $request->input('cep');
-        $rua = $request->input('rua');
-        $bairro = $request->input('bairro');
-        $cidade = $request->input('cidade');
-        $uf = $request->input('uf');
-        $numero = $request->input('numero');
-        $complemento = $request->input('complemento');
+        $password = $request->input('password') ? bcrypt($request->input('password')) : $user->password;
 
         if ($imagem && $imagem->isValid()) {
             $filenameWithExt = $imagem->getClientOriginalName();
@@ -225,29 +156,12 @@ class UserController extends Controller
         $user->sobrenome = $sobrenome;
         $user->email = $email;
         $user->password = $password;
-        $user->nasc = $nasc;
-        $user->cpf = $cpf;
-        $user->genero = $genero;
-        $user->permisoes_id = $permisoes_id;
-        $user->especialidade_id = $especialidade_id;
-        $user->crm = $crm;
-        $user->corem = $corem;
-        $user->cep = $cep;
-        $user->rua = $rua;
-        $user->bairro = $bairro;
-        $user->cidade = $cidade;
-        $user->uf = $uf;
-        $user->numero = $numero;
-        $user->complemento = $complemento;
 
         // Save the updated user data
         $user->save();
 
         return redirect()->back()->with('success', 'Usuário atualizado com sucesso')->with('user', $user);
     }
-
-
-
 
     //     /**
 //      * Remove the specified resource from storage.

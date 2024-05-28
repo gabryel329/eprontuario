@@ -23,22 +23,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'permisoes_id',
-        'especialidade_id',
-        'nasc',
-        'cpf',
-        'crm',
-        'cep',
-        'rua',
-        'bairro',
-        'cidade',
-        'uf',
-        'numero',
-        'complemento',
-        'genero',
-        'imagem',
+        'profissional_id',
         'sobrenome',
-        'corem',
+        'imagem',
     ];
     protected $dates=['deleted_at'];
 
@@ -61,13 +48,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function permisao()
+    public function profissional()
     {
-        return $this->belongsTo(Permisoes::class, 'permisoes_id');
-    }
-
-    public function especialidade()
-    {
-        return $this->belongsTo(Especialidade::class, 'especialidade_id');
+        return $this->belongsTo(Profissional::class, 'profissional_id');
     }
 }
