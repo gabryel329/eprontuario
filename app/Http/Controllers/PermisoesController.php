@@ -30,29 +30,36 @@ class PermisoesController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        // Validate the request data
-        $request->validate([
-            'cargo' => 'required|string|max:15',
-        ]);
-    
-        // Capitalize the input
-        $permisao = ucfirst($request->input('cargo'));
-    
-        // Check if the permission already exists
-        $existePermisao = Permisoes::where('cargo', $permisao)->first();
-    
-        if ($existePermisao) {
-            return redirect()->route('permisao.index')->with('error', 'Permissão já existe!');
-        } 
-    
-        // Create a new permission
-        Permisoes::create([
-            'cargo' => $permisao,
-        ]);
-    
-        return redirect()->route('permisao.index')->with('success', 'Permissão cadastrada!');
-    } 
+{
+    // Custom validation messages
+    $messages = [
+        'cargo.max' => 'O cargo não pode ter mais que 15 caracteres!',
+    ];
+
+    // Validate the request data
+    $request->validate([
+        'cargo' => 'required|string|max:15',
+    ], $messages);
+
+    // Capitalize the input
+    $permisao = ucfirst($request->input('cargo'));
+
+    // Check if the permission already exists
+    $existePermisao = Permisoes::where('cargo', $permisao)->first();
+
+    if ($existePermisao) {
+        return redirect()->route('permisao.index')->with('error', 'Permissão já existe!');
+    }
+
+    // Create a new permission
+    Permisoes::create([
+        'cargo' => $permisao,
+    ]);
+
+    return redirect()->route('permisao.index')->with('success', 'Permissão cadastrada!');
+}
+
+
 
     /**
      * Display the specified resource.

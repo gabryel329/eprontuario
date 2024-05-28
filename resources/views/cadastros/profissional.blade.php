@@ -48,7 +48,7 @@
                 <div class="row">
                     <div class="mb-3 col-md-4">
                         <label class="form-label">Nome </label>
-                        <input class="form-control" id="name" name="name" type="text">
+                        <input class="form-control" id="name" name="name" type="text" require>
                     </div>
                     <div class="mb-3 col-md-4">
                         <label class="form-label">Sobrenome </label>
@@ -56,7 +56,7 @@
                     </div>
                     <div class="mb-3 col-md-4">
                         <label class="form-label">E-mail</label>
-                        <input class="form-control" id="email" name="email" type="email">
+                        <input class="form-control" id="email" name="email" type="email" require>
                     </div>
                 </div>
                 <div class="row">
@@ -66,7 +66,7 @@
                     </div>
                     <div class="mb-3 col-md-3">
                         <label class="form-label">CPF </label>
-                        <input class="form-control" id="cpf" name="cpf" type="text">
+                        <input class="form-control" id="cpf" name="cpf" type="text" requires>
                     </div>
                     <div class="mb-3 col-md-3">
                         <label class="form-label">Gênero</label>

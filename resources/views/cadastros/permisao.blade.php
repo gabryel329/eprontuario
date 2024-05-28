@@ -3,8 +3,6 @@
 @section('content')
 
 <main class="app-content">
-
-
     <div class="app-title">
       <div>
         <h1><i class="bi bi-ui-checks"></i> Cadastro de Permissões</h1>
@@ -16,6 +14,15 @@
         <li class="breadcrumb-item"><a href="#">Permissões</a></li>
       </ul>
     </div>
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
     @if(session('success'))
       <div class="alert alert-success">
           {{ session('success') }}
@@ -31,7 +38,7 @@
             <div class="tile">
               <h3 class="tile-title">Novo</h3>
               <div class="tile-body">
-                <form method="POST" action="{{route('permisao.store')}}" class="form-horizontal">
+                <form method="POST" action="{{route('permisao.store')}}" class="form-horizontal" id="permissionForm">
                 @csrf
                   <div class="mb-3 row">
                     <label class="form-label col-md-3">Nome da Permissão</label>
@@ -114,5 +121,6 @@
             </div>
         </div>
     </div>
-</main>    
+</main>
+
 @endsection

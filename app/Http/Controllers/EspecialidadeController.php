@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Especialidade;
+use App\Models\Permisoes;
 use Illuminate\Http\Request;
 
 class EspecialidadeController extends Controller
@@ -27,29 +28,35 @@ class EspecialidadeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
     public function store(Request $request)
     {
-            // Validate the request data
-            $request->validate([
-                'especialidade' => 'required|string|max:30',
-            ]);
-        
-            // Capitalize the input
-            $especialidade = ucfirst($request->input('especialidade'));
-        
-            // Check if the permission already exists
-            $existeEspecialidade = Especialidade::where('especialidade', $especialidade)->first();
-        
-            if ($existeEspecialidade) {
-                return redirect()->route('especialidade.index')->with('error', 'Especialidade já existe!');
-            } 
-        
-            // Create a new permission
-            Especialidade::create([
-                'especialidade' => $especialidade,
-            ]);
-        
-            return redirect()->route('especialidade.index')->with('success', 'Especialidade cadastrada!');
+        // Custom validation messages
+        $messages = [
+            'especialidade.max' => 'A especialidade não pode ter mais que 20 caracteres!',
+        ];
+    
+        // Validate the request data
+        $request->validate([
+            'especialidade' => 'required|string|max:20',
+        ], $messages);
+    
+        // Capitalize the input
+        $especialidade = ucfirst($request->input('especialidade'));
+    
+        // Check if the permission already exists
+        $existeEspecialidade = Permisoes::where('especialidade', $especialidade)->first();
+    
+        if ($existeEspecialidade) {
+            return redirect()->route('especialidade.index')->with('error', 'Especialidade já existe!');
+        }
+    
+        // Create a new permission
+        Especialidade::create([
+            'especialidade' => $especialidade,
+        ]);
+    
+        return redirect()->route('especialidade.index')->with('success', 'Especialidade cadastrada!');
     }
 
     /**

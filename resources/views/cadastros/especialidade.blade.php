@@ -14,16 +14,25 @@
         <li class="breadcrumb-item"><a href="#">Especialidades</a></li>
       </ul>
     </div>
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
     @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-  @endif
-  @if(session('error'))
-    <div class="alert alert-warning">
-        {{ session('error') }}
-    </div>
-  @endif
+      <div class="alert alert-success">
+          {{ session('success') }}
+      </div>
+    @endif
+    @if(session('error'))
+      <div class="alert alert-warning">
+          {{ session('error') }}
+      </div>
+    @endif
     <div class="row">
         <div class="col-md-6">
             <div class="tile">
@@ -112,5 +121,37 @@
             </div>
         </div>
     </div>
-</main>    
+</main>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var permisaoForm = document.getElementById('permisaoForm');
+    
+    permisaoForm.addEventListener('submit', function(event) {
+        var requiredFields = permisaoForm.querySelectorAll('[required]');
+        var isValid = true;
+
+        requiredFields.forEach(function(field) {
+            if (!field.value) {
+                field.setCustomValidity('Por favor, preencha este campo.');
+                field.reportValidity();
+                isValid = false;
+            } else {
+                field.setCustomValidity(''); // Limpa a mensagem personalizada
+            }
+        });
+
+        if (!isValid) {
+            event.preventDefault(); // Impede o envio do formulário
+        }
+    });
+
+    // Adiciona um evento de input para limpar a mensagem personalizada quando o usuário começa a digitar
+    permisaoForm.querySelectorAll('[required]').forEach(function(field) {
+        field.addEventListener('input', function() {
+            field.setCustomValidity('');
+        });
+    });
+});
+</script>
+
 @endsection
