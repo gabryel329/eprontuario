@@ -145,7 +145,7 @@ class PacientesController extends Controller
             ]);
         }
 
-        $paciente = Pacientes::first();
+        $paciente->save();
 
         return redirect()->route('paciente.index')->with('success', 'Paciente criado com sucesso')->with('paciente', $paciente);
     }

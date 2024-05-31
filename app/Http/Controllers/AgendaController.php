@@ -31,28 +31,29 @@ class AgendaController extends Controller
     }
 
     public function index1(Request $request)
-{
-    $profissionals = Profissional::all();
-    $agendas = collect();
+    {
+        $pacientes = Pacientes::all();
+        $profissionals = Profissional::all();
+        $agendas = collect();
 
-    // Store form values in the session
-    if ($request->has('data') && $request->has('profissional_id')) {
-        session([
-            'data' => $request->data,
-            'profissional_id' => $request->profissional_id
-        ]);
+        // Store form values in the session
+        if ($request->has('data') && $request->has('profissional_id')) {
+            session([
+                'data' => $request->data,
+                'profissional_id' => $request->profissional_id
+            ]);
 
-        $agendas = Agenda::where('profissional_id', $request->profissional_id)
-            ->where('data', $request->data)
-            ->orderBy('hora', 'asc')
-            ->get();
-    } else {
-        // Clear session data if no filter is applied
-        session()->forget(['data', 'profissional_id']);
+            $agendas = Agenda::where('profissional_id', $request->profissional_id)
+                ->where('data', $request->data)
+                ->orderBy('hora', 'asc')
+                ->get();
+        } else {
+            // Clear session data if no filter is applied
+            session()->forget(['data', 'profissional_id']);
+        }
+
+        return view('agenda.lista', compact('profissionals', 'agendas', 'pacientes'));
     }
-
-    return view('agenda.lista', compact('profissionals', 'agendas'));
-}
 
     /**
      * Store a newly created resource in storage.
@@ -120,6 +121,9 @@ class AgendaController extends Controller
     {
         $agenda = Agenda::find($request->id);
         if ($agenda) {
+            if ($request->status == 'CHEGOU' && is_null($agenda->paciente_id)) {
+                return response()->json(['error' => 'Paciente não tem Cadastro.'], 400);
+            }
             $agenda->status = $request->status;
             $agenda->save();
             return response()->json(['success' => 'Status atualizado com sucesso.']);
@@ -128,6 +132,26 @@ class AgendaController extends Controller
         }
     }
 
+    public function update(Request $request, $id)
+    {
+            // Encontrar a agenda pelo ID
+        $agenda = Agenda::findOrFail($id);
+
+        // Atualizar os dados da agenda
+        $agenda->profissional_id = $request->profissional_id;
+        $agenda->data = $request->data;
+        $agenda->hora = $request->hora;
+        $agenda->paciente_id = $request->paciente_id;
+        $agenda->name = $request->name;
+        $agenda->sobrenome = $request->sobrenome;
+        $agenda->consulta_id = $request->consulta_id;
+
+        // Salvar as mudanças
+        $agenda->save();
+
+        // Redirecionar de volta com uma mensagem de sucesso
+        return redirect()->back()->with('success', 'Agenda atualizada com sucesso.');
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -139,7 +163,7 @@ class AgendaController extends Controller
         $agenda->delete();
 
         // Retornar uma resposta JSON com uma mensagem de sucesso
-        return response()->json(['success' => 'Consulta deletada com sucesso.']);
+        return redirect()->back()->with('success', 'Agenda atualizada com sucesso.');
     }
 
 }
