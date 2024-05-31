@@ -65,8 +65,8 @@
                         <input class="form-control" id="nasc" name="nasc" type="date">
                     </div>
                     <div class="mb-3 col-md-3">
-                        <label class="form-label">CPF </label>
-                        <input class="form-control" id="cpf" name="cpf" type="text" requires>
+                        <label class="form-label">CPF: </label>
+                        <input class="form-control" id="cpf" name="cpf" type="text" required>
                     </div>
                     <div class="mb-3 col-md-3">
                         <label class="form-label">Gênero</label>
@@ -148,49 +148,42 @@
         </div>
       </div>
     </div>
-  </main>
-  <script>
-    function showPassword() {
-        var passwordField = document.getElementById('password');
-        passwordField.type = 'text';
-    }
+</main>
 
-    function hidePassword() {
-        var passwordField = document.getElementById('password');
-        passwordField.type = 'password';
-    }
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
-    document.addEventListener('DOMContentLoaded', function() {
-        var permissoesSelect = document.getElementById('permisoes_id');
-        var especialidadeDiv = document.getElementById('especialidade-div');
-        var crmDiv = document.getElementById('crm-div');
-        var coremDiv = document.getElementById('corem-div');
-
-        permissoesSelect.addEventListener('change', function() {
-            var selectedValue = permissoesSelect.value;
-
-            if (selectedValue == '2') { // Certifique-se de que '2' é o ID correspondente a 'médico'
-                especialidadeDiv.classList.remove('hidden');
-                crmDiv.classList.remove('hidden');
-                coremDiv.classList.add('hidden');
-            } else if (selectedValue == '3') { // Certifique-se de que '3' é o ID correspondente a 'enfermeiro'
-                especialidadeDiv.classList.remove('hidden');
-                crmDiv.classList.add('hidden');
-                coremDiv.classList.remove('hidden');
-            } else {
-                especialidadeDiv.classList.add('hidden');
-                crmDiv.classList.add('hidden');
-                coremDiv.classList.add('hidden');
-            }
-        });
+<script>
+$(document).ready(function(){
+    $('#cpf').mask('000.000.000-00');
+    $('#telefone').mask('(00) 0000-0000');
+    $('#celular').mask('(00) 00000-0000');
+    $('#corem').mask('0000000-AA', {
+        translation: {
+            'A': { pattern: /[A-Za-z]/ },
+            '0': { pattern: /\d/, optional: true }
+        },
+        onKeyPress: function(cep, event, currentField, options){
+            var masks = ['000000-AA', '0000000-AA'];
+            var mask = (cep.length > 5) ? masks[1] : masks[0];
+            $('#corem').mask(mask, options);
+        }
+    });
+    $('#crm').mask('000000-AA', {
+        translation: {
+            'A': { pattern: /[A-Za-z]/ }
+        }
     });
     
+});
+
+
     function limpa_formulário_cep() {
-            //Limpa valores do formulário de cep.
-            document.getElementById('rua').value=("");
-            document.getElementById('bairro').value=("");
-            document.getElementById('cidade').value=("");
-            document.getElementById('uf').value=("");
+        //Limpa valores do formulário de cep.
+        document.getElementById('rua').value=("");
+        document.getElementById('bairro').value=("");
+        document.getElementById('cidade').value=("");
+        document.getElementById('uf').value=("");
     }
 
     function meu_callback(conteudo) {
@@ -200,28 +193,24 @@
             document.getElementById('bairro').value=(conteudo.bairro);
             document.getElementById('cidade').value=(conteudo.localidade);
             document.getElementById('uf').value=(conteudo.uf);
-        } //end if.
-        else {
+        } else {
             //CEP não Encontrado.
             limpa_formulário_cep();
             alert("CEP não encontrado.");
         }
     }
-        
-    function pesquisacep(valor) {
 
+    function pesquisacep(valor) {
         //Nova variável "cep" somente com dígitos.
         var cep = valor.replace(/\D/g, '');
 
         //Verifica se campo cep possui valor informado.
         if (cep != "") {
-
             //Expressão regular para validar o CEP.
             var validacep = /^[0-9]{8}$/;
 
             //Valida o formato do CEP.
             if(validacep.test(cep)) {
-
                 //Preenche os campos com "..." enquanto consulta webservice.
                 document.getElementById('rua').value="...";
                 document.getElementById('bairro').value="...";
@@ -236,19 +225,15 @@
 
                 //Insere script no documento e carrega o conteúdo.
                 document.body.appendChild(script);
-
-            } //end if.
-            else {
+            } else {
                 //cep é inválido.
                 limpa_formulário_cep();
                 alert("Formato de CEP inválido.");
             }
-        } //end if.
-        else {
+        } else {
             //cep sem valor, limpa formulário.
             limpa_formulário_cep();
         }
-    };
-
+    }
 </script>
 @endsection

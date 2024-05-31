@@ -51,5 +51,12 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Clinico',
             'sobrenome' => 'suzart'],
         ]);
+
+        DB::table('empresas')->insert([
+            ['name' => 'A&B',
+            'cnpj' => '0000000000',
+            'imagem' => 'icone.png'],
+        ]);
+
     }
 }

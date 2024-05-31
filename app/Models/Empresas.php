@@ -33,7 +33,7 @@ class Empresas extends Model
         'medico',
         'crm',
         'fantasia',
-        'imagem'
+        'imagem',
     ];
     protected $dates=['deleted_at'];
 }

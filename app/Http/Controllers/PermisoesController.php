@@ -33,7 +33,7 @@ class PermisoesController extends Controller
 {
     // Custom validation messages
     $messages = [
-        'cargo.max' => 'O cargo não pode ter mais que 15 caracteres!',
+        'cargo.max' => 'A permissão não pode ter mais que 15 caracteres!',
     ];
 
     // Validate the request data
@@ -42,7 +42,7 @@ class PermisoesController extends Controller
     ], $messages);
 
     // Capitalize the input
-    $permisao = ucfirst($request->input('cargo'));
+    $permisao = ucfirst(trim($request->input('cargo')));
 
     // Check if the permission already exists
     $existePermisao = Permisoes::where('cargo', $permisao)->first();
@@ -88,7 +88,7 @@ class PermisoesController extends Controller
             return redirect()->back()->with('error', 'Permissão não encontrada!');
         }
 
-        $permisao->cargo=ucfirst($request->input('cargo'));
+        $permisao->cargo = ucfirst(trim($request->input('cargo')));
 
         $permisao->save();
 

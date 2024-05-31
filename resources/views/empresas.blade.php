@@ -25,12 +25,12 @@
             </div>
         </div>
         <div class="col-md-8">
-            <div class="tab-content">        
+            <div class="tab-content">
                 <div class="tab-pane active" id="user-timeline">
                     <div class="tile user-timeline">
                         <h4 class="line">Dados</h4>
                         @if ($empresa)
-                            <form method="POST" action="{{ route('empresa.update', $empresa->id) }}">
+                            <form method="POST" action="{{ route('empresa.update', $empresa->id) }}" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <div class="row">
@@ -106,7 +106,7 @@
                                 <div class="row">
                                     <div class="mb-3 col-md-12">
                                         <label class="form-label">Logo</label>
-                                        <input class="form-control" type="file" name="imagem" value="{{$empresa->imagem}}">
+                                        <input class="form-control" type="file" name="imagem">
                                     </div>
                                 </div>
                                 <hr>

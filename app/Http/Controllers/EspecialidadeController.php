@@ -42,7 +42,7 @@ class EspecialidadeController extends Controller
         ], $messages);
     
         // Capitalize the input
-        $especialidade = ucfirst($request->input('especialidade'));
+        $especialidade = ucfirst(trim($request->input('especialidade')));
     
         // Check if the permission already exists
         $existeEspecialidade = Permisoes::where('especialidade', $especialidade)->first();
@@ -86,7 +86,7 @@ class EspecialidadeController extends Controller
                 return redirect()->back()->with('error', 'Especialidade não encontrada!');
             }
     
-            $especialidade->especialidade=ucfirst($request->input('especialidade'));
+            $especialidade->especialidade=ucfirst(trim($request->input('especialidade')));
     
             $especialidade->save();
     

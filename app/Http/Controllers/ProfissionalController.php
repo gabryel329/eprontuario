@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Especialidade;
 use App\Models\Permisoes;
 use App\Models\Profissional;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
@@ -77,7 +76,7 @@ class ProfissionalController extends Controller
             return redirect()->route('profissional.index')->with('error', 'Profissional já existe!');
         }
 
-        $existeEmail = User::where('email', $email)->first();
+        $existeEmail = Profissional::where('email', $email)->first();
 
         if ($existeEmail) {
             return redirect()->route('usuario.index')->with('error', 'Email já cadastrado!');
@@ -146,7 +145,7 @@ class ProfissionalController extends Controller
         // Retrieve the company data, including the logo, after it has been saved
         $profissional = Profissional::first();
 
-        return redirect()->route('profissional.index')->with('success', 'Profissional criado(a) com sucesso')->with('user', $profissional);
+        return redirect()->route('profissional.index')->with('success', 'Profissional criado(a) com sucesso')->with('profissional', $profissional);
     }
     /**
      * Display the specified resource.
@@ -246,14 +245,24 @@ class ProfissionalController extends Controller
         // Save the updated user data
         $profissional->save();
 
-        return redirect()->back()->with('success', 'Profissional atualizado com sucesso')->with('user', $profissional);
+        return redirect()->back()->with('success', 'Profissional atualizado com sucesso')->with('profissional', $profissional);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Profissional $profissional)
+    public function destroy($id)
     {
-        //
+        // Find the user by ID
+        $profissional = Profissional::find($id);
+
+        if (!$profissional) {
+            return redirect()->route('profissional.index1')->with('error', 'Profissional não encontrado!');
+        }
+
+        // Delete the user
+        $profissional->delete();
+
+        return redirect()->route('profissional.index1')->with('success', 'Profissional excluído com Sucesso!');
     }
 }

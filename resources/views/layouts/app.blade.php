@@ -11,7 +11,9 @@
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css"
     href="{{ asset('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css') }}">
-
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/LOGO_01_VERDE.png') }}">
+    
     <style>
         .image-container {
             display: flex;
@@ -41,6 +43,7 @@
 
     <!-- Essential javascripts for application to work-->
     <script src="js/jquery-3.7.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/main.js"></script>
     <!-- Page specific javascripts-->
