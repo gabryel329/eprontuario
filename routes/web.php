@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\AnamneseController;
 use App\Http\Controllers\EmpresasController;
 use App\Http\Controllers\EspecialidadeController;
@@ -86,3 +87,12 @@ Route::post('/profissional', [ProfissionalController::class, 'store'])->name('pr
 Route::put('/profissional/{id}', [ProfissionalController::class, 'update'])->name('profissional.update');
 Route::delete('/profissional/{id}', [ProfissionalController::class, 'destroy'])->name('profissional.destroy');
 Route::get('/profissional/{id}', [ProfissionalController::class, 'show'])->name('profissional.show');
+
+#Agenda
+
+Route::get('/agenda', [AgendaController::class, 'index'])->name('agenda.index');
+Route::get('/lista', [AgendaController::class, 'index1'])->name('agenda.index1');
+Route::post('/agenda', [AgendaController::class, 'store'])->name('agenda.store');
+Route::put('/agenda/{id}', [AgendaController::class, 'update'])->name('agenda.update');
+Route::delete('/agenda/{id}', [AgendaController::class, 'destroy'])->name('agenda.destroy');
+Route::post('/agenda/update-status', [AgendaController::class, 'updateStatus'])->name('agenda.updateStatus');

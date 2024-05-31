@@ -17,15 +17,14 @@
           <ul class="treeview-menu">
             <li><a class="treeview-item" href="{{route('anamnese.index')}}"><i class="icon bi bi-circle-fill"></i> Anamnese</a></li>
             <li><a class="treeview-item" href="{{route('anamnese.index1')}}"><i class="icon bi bi-circle-fill"></i> Histórico de <br> Anamnese</a></li>
-            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Agenda Médica</a></li>
+            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Atendimentos</a></li>
             <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Histórico de <br> Atendimentos</a></li>
           </ul>
         </li>
         <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi-ui-checks"></i><span class="app-menu__label">Agenda</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
           <ul class="treeview-menu">
-            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Marcação</a></li>
-            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Criar Agenda</a></li>
-            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Agenda do dia</a></li>
+            <li><a class="treeview-item" href="{{route('agenda.index')}}"><i class="icon bi bi-circle-fill"></i> Criar Agenda</a></li>
+            <li><a class="treeview-item" href="{{route('agenda.index1')}}"><i class="icon bi bi-circle-fill"></i> Consultar Agenda</a></li>
 
           </ul>
         </li>

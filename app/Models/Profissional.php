@@ -31,6 +31,8 @@ class Profissional extends Model
         'imagem',
         'sobrenome',
         'corem',
+        'telefone',
+        'celular',
     ];
     protected $dates=['deleted_at'];
     public function permisao()
@@ -46,5 +48,10 @@ class Profissional extends Model
     public function users()
     {
         return $this->belongsTo(User::class, 'profissional_id');
+    }
+
+    public function agenda()
+    {
+        return $this->hasMany(Agenda::class, 'profissional_id');
     }
 }
