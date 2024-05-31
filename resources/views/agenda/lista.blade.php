@@ -51,7 +51,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label class="form-label">Data</label>
-                                    <input name="data" id="data" class="form-control" type="date" placeholder="">
+                                    <input name="data" id="data" class="form-control" type="date" value="{{ session('data', \Carbon\Carbon::now()->format('Y-m-d')) }}">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Médico</label>
