@@ -24,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'profissional_id',
+        'permisao_id',
         'sobrenome',
         'imagem',
     ];
@@ -51,5 +52,10 @@ class User extends Authenticatable
     public function profissional()
     {
         return $this->belongsTo(Profissional::class, 'profissional_id');
+    }
+
+    public function permisao()
+    {
+        return $this->belongsTo(Permisoes::class, 'permisao_id');
     }
 }

@@ -30,7 +30,10 @@
     
     @stack('css')
 </head>
-
+<?php
+// Obter a data atual no formato Y-m-d
+$currentDate = date('Y-m-d');
+?>
 <body class="app sidebar-mini">
     @php
         @session_start();

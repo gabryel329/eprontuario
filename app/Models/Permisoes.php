@@ -13,8 +13,10 @@ class Permisoes extends Model
     protected $fillable=['cargo'];
     protected $dates=['deleted_at'];
 
-    public function profissional()
+    public function user()
     {
-        return $this->hasMany(Profissional::class, 'permisoes_id');
+        return $this->hasMany(User::class, 'permisao_id');
     }
+
+    
 }

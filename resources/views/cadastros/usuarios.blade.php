@@ -36,14 +36,23 @@
                     <form method="POST" action="{{ route('usuario.store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
-                            <div class="mb-3 col-md-6">
+                            <div class="mb-3 col-md-4">
                                 <label class="form-label"><strong>Nome:</strong></label>
                                 <input class="form-control" id="id" name="id" type="text" hidden>
                                 <input class="form-control" id="name" name="name" type="text" readonly>
                             </div>
-                            <div class="mb-3 col-md-6">
+                            <div class="mb-3 col-md-4">
                                 <label class="form-label"><strong>Sobrenome:</strong></label>
                                 <input class="form-control" id="sobrenome" name="sobrenome" type="text" readonly>
+                            </div>
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">Permisão:</label>
+                                <select class="form-control" id="permisao_id" name="permisao_id">
+                                    <option disabled selected style="font-size:18px;color: black;">Escolha</option>
+                                    @foreach ($permissoes as $item)
+                                        <option value="{{ $item->id }}">{{ $item->cargo }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="row">

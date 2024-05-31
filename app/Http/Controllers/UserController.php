@@ -17,16 +17,18 @@ class UserController extends Controller
     {
         $users = User::all();
         $profissioanls = Profissional::all();
+        $permissoes = Permisoes::all();
 
-        return view('cadastros.usuarios', compact(['users', 'profissioanls']));
+        return view('cadastros.usuarios', compact(['users', 'profissioanls', 'permissoes']));
     }
 
     public function index1()
     {
         $users = User::all();
         $profissioanls = Profissional::all();
+        $permissoes = Permisoes::all();
 
-        return view('cadastros.listausuarios', compact(['users', 'profissioanls']));
+        return view('cadastros.listausuarios', compact(['users', 'profissioanls', 'permissoes']));
     }
 
     /**
@@ -49,7 +51,6 @@ class UserController extends Controller
              'sobrenome' => 'required|string|max:255',
              'email' => 'required|email|unique:users,email',
              'password' => 'required|string|min:8',
-             'imagem' => 'nullable|image|mimes:jpg,jpeg,png|max:204800', // Max size 200MB (204800 KB)
          ]);
      
          // Capitalize the input
@@ -64,13 +65,16 @@ class UserController extends Controller
          $imagem = $request->file('imagem');
      
          if ($imagem && $imagem->isValid()) {
-             $filenameWithExt = $imagem->getClientOriginalName();
-             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-             $extension = $imagem->getClientOriginalExtension();
-             $imageName = $filename . '.' . $extension;
-     
-             // Upload Image to the 'public/images/' directory
-             $imagem->move(public_path('images/'), $imageName);
+            $filenameWithExt = $imagem->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just ext
+            $extension = $imagem->getClientOriginalExtension();
+            // Filename to store
+            $imageName = $filename . '.' . $extension;
+
+            // Upload Image to the 'public/images/' directory
+            $imagem->move(public_path('images/'), $imageName);
      
              // Create a new user
              $user = User::create([
@@ -80,6 +84,7 @@ class UserController extends Controller
                  'password' => $password,
                  'profissional_id' => $profissional_id,
                  'imagem' => $imageName,
+                 'permisao_id' => $permissoes,
              ]);
          } else {
              $user = User::create([
@@ -87,7 +92,8 @@ class UserController extends Controller
                  'sobrenome' => $sobrenome,
                  'email' => $email,
                  'password' => $password,
-                 'profissional_id' => $profissional_id
+                 'profissional_id' => $profissional_id,
+                 'permisao_id' => $permissoes,
              ]);
          }
      
@@ -141,6 +147,8 @@ class UserController extends Controller
     // Capitalize the input
     $nome = ucfirst($request->input('name'));
     $sobrenome = ucfirst($request->input('sobrenome'));
+    $profissional_id = $request->input('profissional_id');
+    $permissoes = $request->input('permisao_id');
     $email = $request->input('email');
     $imagem = $request->file('imagem');
     $password = $request->input('password') ? bcrypt($request->input('password')) : $user->password;
@@ -168,8 +176,10 @@ class UserController extends Controller
     $user->sobrenome = $sobrenome;
     $user->email = $email;
     $user->password = $password;
+    $user->permisao_id = $permissoes;
+    $user->profissional_id = $profissional_id;
 
-    // Save the updated user data
+    // oesthe updated user data
     $user->save();
 
     return redirect()->back()->with('success', 'Usuário atualizado com sucesso')->with('user', $user);
