@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
 
         DB::table('especialidades')->insert([
             ['especialidade' => 'Clinico Geral'],
-            ['especialidade' => 'Clinico'],
+            ['especialidade' => 'Ortopedista'],
         ]);
         
 
@@ -33,23 +33,22 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Admin',
             'email' => 'admin@anb.com',
             'password' => bcrypt('12345678'),
-            'imagem' => 'CamaraoEmpanado.jpg'],
+            'imagem' => 'favicon.png'],
         ]);
 
         DB::table('profissionals')->insert([
-            ['name' => 'leko',
-            'email' => 'leko@anb.com',
-            'sobrenome' => 'suzart'],
-            ['name' => 'matheus',
+            ['name' => 'Admin',
+            'email' => 'admin@anb.com'],
+            ['name' => 'Matheus',
             'email' => 'leko2@anb.com',
-            'sobrenome' => 'suzart2']
+            'sobrenome' => 'Lima']
         ]);
 
         DB::table('pacientes')->insert([
-            ['name' => 'Clinico Geral',
-            'sobrenome' => 'suzart'],
-            ['name' => 'Clinico',
-            'sobrenome' => 'suzart'],
+            ['name' => 'Rafael',
+            'sobrenome' => 'Souza'],
+            ['name' => 'Igor',
+            'sobrenome' => 'Tavares'],
         ]);
 
         DB::table('empresas')->insert([

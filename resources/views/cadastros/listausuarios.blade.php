@@ -13,15 +13,15 @@
             </ul>
         </div>
         @if(session('success'))
-      <div class="alert alert-success">
-          {{ session('success') }}
-      </div>
-    @endif
-    @if(session('error'))
-      <div class="alert alert-warning">
-          {{ session('error') }}
-      </div>
-    @endif
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="alert alert-warning">
+                {{ session('error') }}
+            </div>
+        @endif
         <div class="row">
             <div class="col-md-12">
                 <div class="tile">
@@ -72,23 +72,32 @@
                                                             @csrf
                                                             @method('PUT')
                                                             <div class="row">
-                                                                <div class="mb-3 col-md-6">
+                                                                <div class="mb-3 col-md-5">
                                                                     <label class="form-label">Nome</label>
-                                                                    <input class="form-control" id="name" name="name" type="text" value="{{ $p->name }}" readonly>
+                                                                    <input class="form-control" name="name" type="text" value="{{ $p->name }}" readonly>
                                                                 </div>
-                                                                <div class="mb-3 col-md-6">
+                                                                <div class="mb-3 col-md-4">
                                                                     <label class="form-label">Sobrenome</label>
-                                                                    <input class="form-control" id="sobrenome" name="sobrenome" type="text" value="{{ $p->sobrenome }}" readonly>
+                                                                    <input class="form-control" name="sobrenome" type="text" value="{{ $p->sobrenome }}" readonly>
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label class="form-label">Permissão</label>
+                                                                    <select class="form-control" name="permissao_id">
+                                                                        <option disabled selected>{{ $p->permisao->cargo }}</option>
+                                                                        @foreach ($permissoes as $permissao)
+                                                                            <option value="{{ $permissao->id }}">{{ $permissao->cargo }}</option>
+                                                                        @endforeach
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
                                                                 <div class="mb-3 col-md-4">
                                                                     <label class="form-label">E-mail</label>
-                                                                    <input class="form-control" id="email" name="email" type="email" value="{{ $p->email }}">
+                                                                    <input class="form-control" name="email" type="email" value="{{ $p->email }}">
                                                                 </div>
                                                                 <div class="mb-3 col-md-4">
                                                                     <label class="form-label">Nova Senha</label>
-                                                                    <input class="form-control" id="password" name="password" type="password" onmousedown="showPassword()" onmouseup="hidePassword()" onmouseleave="hidePassword()">
+                                                                    <input class="form-control" id="password{{ $p->id }}" name="password" type="password" onmousedown="togglePassword({{ $p->id }}, true)" onmouseup="togglePassword({{ $p->id }}, false)" onmouseleave="togglePassword({{ $p->id }}, false)">
                                                                 </div>
                                                                 <div class="mb-3 col-md-4">
                                                                     <label class="form-label">Foto</label>
@@ -113,62 +122,9 @@
         </div>
     </main>
     <script>
-        function showPassword() {
-            var passwordField = document.getElementById('password');
-            passwordField.type = 'text';
-        }
-
-        function hidePassword() {
-            var passwordField = document.getElementById('password');
-            passwordField.type = 'password';
-        }
-
-        function closeEditFrame() {
-            var frameContainer = window.parent.document.getElementById('editFrameContainer');
-            frameContainer.style.display = 'none';
-        }
-
-        function limpa_formulário_cep() {
-            document.getElementById('rua').value = "";
-            document.getElementById('bairro').value = "";
-            document.getElementById('cidade').value = "";
-            document.getElementById('uf').value = "";
-        }
-
-        function meu_callback(conteudo) {
-            if (!("erro" in conteudo)) {
-                document.getElementById('rua').value = conteudo.logradouro;
-                document.getElementById('bairro').value = conteudo.bairro;
-                document.getElementById('cidade').value = conteudo.localidade;
-                document.getElementById('uf').value = conteudo.uf;
-            } else {
-                limpa_formulário_cep();
-                alert("CEP não encontrado.");
-            }
-        }
-
-        function pesquisacep(valor) {
-            var cep = valor.replace(/\D/g, '');
-
-            if (cep !== "") {
-                var validacep = /^[0-9]{8}$/;
-
-                if (validacep.test(cep)) {
-                    document.getElementById('rua').value = "...";
-                    document.getElementById('bairro').value = "...";
-                    document.getElementById('cidade').value = "...";
-                    document.getElementById('uf').value = "...";
-
-                    var script = document.createElement('script');
-                    script.src = 'https://viacep.com.br/ws/' + cep + '/json/?callback=meu_callback';
-                    document.body.appendChild(script);
-                } else {
-                    limpa_formulário_cep();
-                    alert("Formato de CEP inválido.");
-                }
-            } else {
-                limpa_formulário_cep();
-            }
+        function togglePassword(id, show) {
+            var passwordField = document.getElementById('password' + id);
+            passwordField.type = show ? 'text' : 'password';
         }
     </script>
 @endsection

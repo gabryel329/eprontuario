@@ -46,7 +46,7 @@
                                 <input class="form-control" id="sobrenome" name="sobrenome" type="text" readonly>
                             </div>
                             <div class="mb-3 col-md-4">
-                                <label class="form-label">Permisão:</label>
+                                <label class="form-label">Permissão:</label>
                                 <select class="form-control" id="permisao_id" name="permisao_id">
                                     <option disabled selected style="font-size:18px;color: black;">Escolha</option>
                                     @foreach ($permissoes as $item)

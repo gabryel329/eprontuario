@@ -131,59 +131,59 @@ class UserController extends Controller
      */
     
      public function update(Request $request, $id)
-{
-    // Validate the request inputs, including the image size
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'sobrenome' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . $id,
-        'password' => 'nullable|string|min:8',
-        'imagem' => 'nullable|image|mimes:jpg,jpeg,png|max:204800', // Max size 200MB (204800 KB)
-    ]);
+    {
+        // Validate the request inputs, including the image size
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'sobrenome' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'nullable|string|min:8',
+            'imagem' => 'nullable|image|mimes:jpg,jpeg,png|max:204800', // Max size 200MB (204800 KB)
+        ]);
 
-    // Find the user by ID
-    $user = User::findOrFail($id);
+        // Find the user by ID
+        $user = User::findOrFail($id);
 
-    // Capitalize the input
-    $nome = ucfirst($request->input('name'));
-    $sobrenome = ucfirst($request->input('sobrenome'));
-    $profissional_id = $request->input('profissional_id');
-    $permissoes = $request->input('permisao_id');
-    $email = $request->input('email');
-    $imagem = $request->file('imagem');
-    $password = $request->input('password') ? bcrypt($request->input('password')) : $user->password;
+        // Capitalize the input
+        $nome = ucfirst($request->input('name'));
+        $sobrenome = ucfirst($request->input('sobrenome'));
+        $profissional_id = $request->input('profissional_id');
+        $permissoes = $request->input('permisao_id');
+        $email = $request->input('email');
+        $imagem = $request->file('imagem');
+        $password = $request->input('password') ? bcrypt($request->input('password')) : $user->password;
 
-    if ($imagem && $imagem->isValid()) {
-        $filenameWithExt = $imagem->getClientOriginalName();
-        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-        $extension = $imagem->getClientOriginalExtension();
-        $imageName = $filename . '.' . $extension;
+        if ($imagem && $imagem->isValid()) {
+            $filenameWithExt = $imagem->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $imagem->getClientOriginalExtension();
+            $imageName = $filename . '.' . $extension;
 
-        // Upload Image to the 'public/images/' directory
-        $imagem->move(public_path('images/'), $imageName);
+            // Upload Image to the 'public/images/' directory
+            $imagem->move(public_path('images/'), $imageName);
 
-        // Remove the old image if exists
-        if ($user->imagem && file_exists(public_path('images/') . $user->imagem)) {
-            unlink(public_path('images/') . $user->imagem);
+            // Remove the old image if exists
+            if ($user->imagem && file_exists(public_path('images/') . $user->imagem)) {
+                unlink(public_path('images/') . $user->imagem);
+            }
+
+            // Update the user with the new image
+            $user->imagem = $imageName;
         }
 
-        // Update the user with the new image
-        $user->imagem = $imageName;
+        // Update user attributes
+        $user->name = $nome;
+        $user->sobrenome = $sobrenome;
+        $user->email = $email;
+        $user->password = $password;
+        $user->permisao_id = $permissoes;
+        $user->profissional_id = $profissional_id;
+
+        // oesthe updated user data
+        $user->save();
+
+        return redirect()->back()->with('success', 'Usuário atualizado com sucesso')->with('user', $user);
     }
-
-    // Update user attributes
-    $user->name = $nome;
-    $user->sobrenome = $sobrenome;
-    $user->email = $email;
-    $user->password = $password;
-    $user->permisao_id = $permissoes;
-    $user->profissional_id = $profissional_id;
-
-    // oesthe updated user data
-    $user->save();
-
-    return redirect()->back()->with('success', 'Usuário atualizado com sucesso')->with('user', $user);
-}
 
     //     /**
 //      * Remove the specified resource from storage.
