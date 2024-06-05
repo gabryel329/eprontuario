@@ -15,6 +15,7 @@
             <ul class="dropdown-menu settings-menu dropdown-menu-right">
                 {{-- <li><a class="dropdown-item" href="page-user.html"><i class="bi bi-gear me-2 fs-5"></i> Settings</a></li> --}}
                 {{-- <li><a class="dropdown-item" href="page-user.html"><i class="bi bi-person me-2 fs-5"></i> Perfil</a></li> --}}
+                <li><a class="dropdown-item" href="#"><i class="bi bi-headset"></i> Suporte</a></li>
                 <li>
                     <a class="dropdown-item" href="{{ route('logout') }}"
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

@@ -17,42 +17,42 @@
     @endif
       </div>
       <ul class="app-menu">
-        <li><a class="app-menu__item active" href="/home"><i class="app-menu__icon bi bi-speedometer"></i><span class="app-menu__label">Dashboard</span></a></li>
-        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi-laptop"></i><span class="app-menu__label">Atendimento</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
+        <li><a class="app-menu__item active" href="/home"><i class="app-menu__icon bi bi-speedometer"></i><span class="app-menu__label">Página Inicial</span></a></li>
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi-person-workspace"></i><span class="app-menu__label">Recepção</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
           <ul class="treeview-menu">
-            <li><a class="treeview-item" href="{{route('anamnese.index')}}"><i class="icon bi bi-circle-fill"></i> Anamnese</a></li>
-            <li><a class="treeview-item" href="{{route('anamnese.index1')}}"><i class="icon bi bi-circle-fill"></i> Histórico de <br> Anamnese</a></li>
-            <li><a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i> Atendimentos</a></li>
-            <li><a class="treeview-item" href="{{route('agenda.agendaMedica')}}"><i class="icon bi bi-circle-fill"></i> Agenda Medica</a></li>
-          </ul>
-        </li>
-        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi-ui-checks"></i><span class="app-menu__label">Agenda</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
-          <ul class="treeview-menu">
-            <li><a class="treeview-item" href="{{route('agenda.index')}}"><i class="icon bi bi-circle-fill"></i> Criar Agenda</a></li>
-            <li><a class="treeview-item" href="{{route('agenda.index1')}}"><i class="icon bi bi-circle-fill"></i> Consultar Agenda</a></li>
-
-          </ul>
-        </li>
-        <li>
-          <li class="treeview"><a class="app-menu__item" href="{{route('paciente.index')}}" data-toggle="treeview"><i class="app-menu__icon bi bi-table"></i><span class="app-menu__label">Pacientes</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
-          <ul class="treeview-menu">
-            <li><a class="treeview-item" href="{{route('paciente.index')}}"><i class="icon bi bi-circle-fill"></i> Novo</a></li>
-            <li><a class="treeview-item" href="{{route('paciente.index1')}}"><i class="icon bi bi-circle-fill"></i> Lista de Pacientes</a></li>
-          </ul>
-        </li>
-        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi-file-earmark"></i><span class="app-menu__label">Administração</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
-          <ul class="treeview-menu">
+            <li><a class="treeview-item" href="{{route('agenda.index')}}"><i class="icon bi bi-calendar-plus"></i> Criar Agenda</a></li>
+            <li><a class="treeview-item" href="{{route('agenda.index1')}}"><i class="icon bi bi-search"></i> Consultar Agenda</a></li>
+            <li><a class="treeview-item" href="{{route('anamnese.index')}}"><i class="icon bi bi-ui-checks"></i> Anamnese</a></li>
+            <li><a class="treeview-item" href="{{route('anamnese.index1')}}"><i class="icon bi bi bi-list-ul"></i> Histórico de Anamnese</a></li>
             <li>
-              <a class="treeview-item" href="#"><i class="icon bi bi-circle-fill"></i>Cadastros</a>
+              <a class="treeview-item" href="#"><i class="icon bi bi-person-add"></i>Pacientes</a>
               <ul>
-                <li><a class="treeview-item" href="{{route('permisao.index')}}"><i class="icon bi bi-circle-fill"></i> Permissões</a></li>
-                <li><a class="treeview-item" href="{{route('especialidade.index')}}"><i class="icon bi bi-circle-fill"></i> Especialidades</a></li>
-                <li><a class="treeview-item" href="{{route('usuario.index')}}"><i class="icon bi bi-circle-fill"></i> Usuários</a></li>
-                <li><a class="treeview-item" href="{{route('profissional.index')}}"><i class="icon bi bi-circle-fill"></i> Profissional</a></li>
+                <li><a class="treeview-item" href="{{route('paciente.index')}}"><i class="icon bi bi-plus-circle"></i> Novo</a></li>
+                <li><a class="treeview-item" href="{{route('paciente.index1')}}"><i class="icon bi bi-person-lines-fill"></i> Lista de Pacientes</a></li>
               </ul>
             </li>
           </ul>
         </li>
-        <li><a class="app-menu__item" href="{{route('empresa.index')}}"><i class="app-menu__icon bi bi-code-square"></i><span class="app-menu__label">Empresa</span></a></li>
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi-heart-pulse"></i><span class="app-menu__label">Atendimento</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
+          <ul class="treeview-menu">
+            <li><a class="treeview-item" href="#"><i class="icon bi bi-pencil-square"></i> Prontuarios</a></li>
+            <li><a class="treeview-item" href="{{route('agenda.agendaMedica')}}"><i class="icon bi bi-calendar2-check"></i> Agenda Medica</a></li>
+          </ul>
+        </li>
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi-calendar-date"></i><span class="app-menu__label">Agenda</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
+          <ul class="treeview-menu">
+            <li><a class="treeview-item" href="{{route('agenda.index')}}"><i class="icon bi bi-calendar-plus"></i> Criar Agenda</a></li>
+            <li><a class="treeview-item" href="{{route('agenda.index1')}}"><i class="icon bi bi-search"></i> Consultar Agenda</a></li>
+          </ul>
+        </li>
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi bi-gear"></i><span class="app-menu__label">Administração</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
+          <ul class="treeview-menu">
+                <li><a class="treeview-item" href="{{route('permisao.index')}}"><i class="icon bi bi-arrow-bar-right"></i> Permissões</a></li>
+                <li><a class="treeview-item" href="{{route('especialidade.index')}}"><i class="icon bi bi-eyeglasses"></i> Especialidades</a></li>
+                <li><a class="treeview-item" href="{{route('usuario.index')}}"><i class="icon bi bi-people"></i> Usuários</a></li>
+                <li><a class="treeview-item" href="{{route('profissional.index')}}"><i class="icon bi bi-briefcase"></i> Profissional</a></li>
+          </ul>
+        </li>
+        <li><a class="app-menu__item" href="{{route('empresa.index')}}"><i class="app-menu__icon bi bi-buildings"></i><span class="app-menu__label">Empresa</span></a></li>
       </ul>
     </aside>
