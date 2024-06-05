@@ -133,32 +133,36 @@ class AgendaController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        // Validar os dados do request (opcional, mas recomendado)
-        $request->validate([
-            'profissional_id' => 'required|exists:profissionals,id',
-            'data' => 'required|date',
-            'hora' => 'required|date_format:H:i',
-            
-            'consulta_id' => 'required|integer',
-        ]);
+{
+    // Validar os dados do request (opcional, mas recomendado)
+    $request->validate([
+        'profissional_id' => 'required|exists:profissionals,id',
+        'data' => 'required|date',
+        'hora' => 'required|date_format:H:i',
+        'paciente_id' => 'required|integer',
+        'name' => 'required|string|max:255',
+        'sobrenome' => 'required|string|max:255',
+        'consulta_id' => 'required|integer',
+    ]);
 
-        // Encontrar a agenda pelo ID
-        $agenda = Agenda::findOrFail($id);
+    // Encontrar a agenda pelo ID
+    $agenda = Agenda::findOrFail($id);
 
-        // Atualizar os dados da agenda
-        $agenda->profissional_id = $request->profissional_id;
-        $agenda->data = $request->data;
-        $agenda->hora = $request->hora;
-        $agenda->paciente_id = $request->paciente_id;
-        $agenda->consulta_id = $request->consulta_id;
+    // Atualizar os dados da agenda
+    $agenda->profissional_id = $request->profissional_id;
+    $agenda->data = $request->data;
+    $agenda->hora = $request->hora;
+    $agenda->paciente_id = $request->paciente_id;
+    $agenda->name = $request->name;
+    $agenda->sobrenome = $request->sobrenome;
+    $agenda->consulta_id = $request->consulta_id;
 
-        // Salvar as mudanças
-        $agenda->save();
+    // Salvar as mudanças
+    $agenda->save();
 
-        // Redirecionar de volta com uma mensagem de sucesso
-        return redirect()->back()->with('success', 'Agenda atualizada com sucesso.');
-    }
+    // Redirecionar de volta com uma mensagem de sucesso
+    return redirect()->back()->with('success', 'Agenda atualizada com sucesso.');
+}
 
 
     /**

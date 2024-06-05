@@ -147,7 +147,7 @@ class PacientesController extends Controller
 
         $paciente->save();
 
-        return redirect()->route('paciente.index')->with('success', 'Paciente criado com sucesso')->with('paciente', $paciente);
+        return redirect()->route('agenda.index1')->with('success', 'Paciente criado com sucesso')->with('paciente', $paciente);
     }
     /**
      * Display the specified resource.
