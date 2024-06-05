@@ -168,14 +168,15 @@
                                     <label class="form-label">Médico</label>
                                     <select class="form-control" id="edit-profissional-id-{{ $item->id }}" name="profissional_id">
                                         <option disabled selected style="font-size:18px;color: black;">
-                                            {{ $item->profissional->name }} {{ $item->profissional->sobrenome }}</option>
+                                            {{ $item->profissional->name }} {{ $item->profissional->sobrenome }}
+                                        </option>
                                         @foreach ($profissionals as $profissional)
-                                            <option value="{{ $profissional->id }}">{{ $profissional->name }}
-                                                {{ $profissional->sobrenome }}</option>
+                                            <option value="{{ $profissional->id }}">
+                                                {{ $profissional->name }} {{ $profissional->sobrenome }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <input type="hidden" name="profissional_id" value="{{ $item->profissional_id }}">
                             </div>
                             <div class="row">
                                 <div class="mb-3 col-md-6">

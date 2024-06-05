@@ -134,7 +134,16 @@ class AgendaController extends Controller
 
     public function update(Request $request, $id)
     {
-            // Encontrar a agenda pelo ID
+        // Validar os dados do request (opcional, mas recomendado)
+        $request->validate([
+            'profissional_id' => 'required|exists:profissionals,id',
+            'data' => 'required|date',
+            'hora' => 'required|date_format:H:i',
+            
+            'consulta_id' => 'required|integer',
+        ]);
+
+        // Encontrar a agenda pelo ID
         $agenda = Agenda::findOrFail($id);
 
         // Atualizar os dados da agenda
@@ -142,8 +151,6 @@ class AgendaController extends Controller
         $agenda->data = $request->data;
         $agenda->hora = $request->hora;
         $agenda->paciente_id = $request->paciente_id;
-        $agenda->name = $request->name;
-        $agenda->sobrenome = $request->sobrenome;
         $agenda->consulta_id = $request->consulta_id;
 
         // Salvar as mudanças
@@ -152,6 +159,7 @@ class AgendaController extends Controller
         // Redirecionar de volta com uma mensagem de sucesso
         return redirect()->back()->with('success', 'Agenda atualizada com sucesso.');
     }
+
 
     /**
      * Remove the specified resource from storage.
