@@ -1,15 +1,20 @@
 <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
     <aside class="app-sidebar">
       <div class="app-sidebar__user">
+    @if(auth()->check())
         @if(Auth::user()->imagem)
-            <img class="app-sidebar__user-avatar" src="images/{{ asset(Auth::user()->imagem) }}" alt="User Image" class="user-image">
+            <img class="app-sidebar__user-avatar" src="{{ asset('images/' . Auth::user()->imagem) }}" alt="User Image" class="user-image">
         @else
             <img class="app-sidebar__user-avatar" src="https://randomuser.me/api/portraits/men/1.jpg" alt="User Image">
         @endif
         <div>
           <p class="app-sidebar__user-name">{{ Auth::user()->name }}</p>
-          <p class="app-sidebar__user-designation">{{ optional(Auth::user()->especialidade)->especialidade }}</p>
-        </div>
+      </div>
+    @else
+      @php
+          abort(419);
+      @endphp
+    @endif
       </div>
       <ul class="app-menu">
         <li><a class="app-menu__item active" href="/home"><i class="app-menu__icon bi bi-speedometer"></i><span class="app-menu__label">Dashboard</span></a></li>
