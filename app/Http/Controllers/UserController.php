@@ -61,7 +61,7 @@ class UserController extends Controller
          $email = $request->input('email');
          $password = bcrypt($request->input('password')); // Encrypt the password
          $profissional_id = $request->input('id');
-         $permissoes = $request->input('permisao_id');
+         $permissoes = $request->input('permissao_id');
          $imagem = $request->file('imagem');
      
          if ($imagem && $imagem->isValid()) {

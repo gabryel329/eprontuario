@@ -32,16 +32,14 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->insert([
             ['name' => 'Admin',
             'email' => 'admin@anb.com',
+            'permisao_id' => 1,
             'password' => bcrypt('12345678'),
             'imagem' => 'favicon.png'],
         ]);
 
         DB::table('profissionals')->insert([
-            ['name' => 'Admin',
-            'email' => 'admin@anb.com'],
-            ['name' => 'Matheus',
-            'email' => 'leko2@anb.com',
-            'sobrenome' => 'Lima']
+            ['name' => 'Admin2','sobrenome' => 'Souza', 'email' => 'admin@anb.com'],
+            ['name' => 'Matheus','sobrenome' => 'Silva', 'email' => 'cando@gmail.com']
         ]);
 
         DB::table('pacientes')->insert([
