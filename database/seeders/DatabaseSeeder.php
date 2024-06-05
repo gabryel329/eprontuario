@@ -28,18 +28,18 @@ class DatabaseSeeder extends Seeder
             ['especialidade' => 'Ortopedista'],
         ]);
         
+        DB::table('profissionals')->insert([
+            ['name' => 'Admin2','sobrenome' => 'Souza', 'email' => 'admin@anb.com'],
+            ['name' => 'Matheus','sobrenome' => 'Silva', 'email' => 'cando@gmail.com']
+        ]);
 
         DB::table('users')->insert([
             ['name' => 'Admin',
             'email' => 'admin@anb.com',
             'permisao_id' => 1,
+            'profissional_id' => 1,
             'password' => bcrypt('12345678'),
             'imagem' => 'favicon.png'],
-        ]);
-
-        DB::table('profissionals')->insert([
-            ['name' => 'Admin2','sobrenome' => 'Souza', 'email' => 'admin@anb.com'],
-            ['name' => 'Matheus','sobrenome' => 'Silva', 'email' => 'cando@gmail.com']
         ]);
 
         DB::table('pacientes')->insert([
