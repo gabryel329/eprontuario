@@ -166,4 +166,46 @@ class AgendaController extends Controller
         return redirect()->back()->with('success', 'Agenda atualizada com sucesso.');
     }
 
+    public function agendaMedica(Request $request)
+    {
+        $pacientes = Pacientes::all();
+
+        // Get the currently logged-in user
+        $user = auth()->user();
+
+        // Check if user has a linked professional ID
+        if ($user && $user->profissional_id) {
+            $profissionalId = $user->profissional_id;
+        } else {
+            // Handle the case where user doesn't have a linked professional ID
+            // (consider returning an appropriate error message or view)
+            return view('agenda.error', [ // Replace 'error' with appropriate view name
+                'message' => 'Usuário não possui vínculo com um profissional'
+            ]);
+        }
+
+        $agendas = collect();
+
+        // Filter agendas based on logged-in user's linked professional ID
+        if ($request->has('data')) {
+            $agendas = Agenda::where('profissional_id', $profissionalId)
+                ->where('data', $request->data)
+                ->whereNotNull('paciente_id')
+                ->orderBy('hora', 'asc')
+                ->get();
+
+            // Store form values in the session (optional, adjust based on your needs)
+            session([
+                'data' => $request->data,
+            ]);
+        } else {
+            // Clear session data if no filter is applied (optional)
+            session()->forget('data');
+        }
+
+        return view('agenda.agendamedica', compact('agendas', 'pacientes'));
+    }
+
+
+
 }

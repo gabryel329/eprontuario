@@ -58,4 +58,8 @@ class Pacientes extends Model
     {
         return $this->hasMany(Agenda::class, 'paciente_id');
     }
+    public function atendimento()
+    {
+        return $this->hasMany(Atendimentos::class, 'paciente_id');
+    }
 }

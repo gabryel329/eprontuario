@@ -30,7 +30,8 @@ class Anamnese extends Model
         'alergia1',
         'alergia2',
         'alergia3',
-        'anamnese'
+        'anamnese',
+        'profissional_id'
     ];
 
     protected $dates=['deleted_at'];
@@ -38,5 +39,9 @@ class Anamnese extends Model
     public function paciente()
     {
         return $this->belongsTo(Pacientes::class, 'paciente_id');
+    }
+    public function profissional()
+    {
+        return $this->belongsTo(Profissional::class, 'profissional_id');
     }
 }

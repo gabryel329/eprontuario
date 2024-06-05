@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\AnamneseController;
+use App\Http\Controllers\AtendimentosController;
 use App\Http\Controllers\EmpresasController;
 use App\Http\Controllers\EspecialidadeController;
 use App\Http\Controllers\PacientesController;
@@ -86,11 +87,23 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::delete('/profissional/{id}', [ProfissionalController::class, 'destroy'])->name('profissional.destroy');
     Route::get('/profissional/{id}', [ProfissionalController::class, 'show'])->name('profissional.show');
 
-    // Agenda
-    Route::get('/agenda', [AgendaController::class, 'index'])->name('agenda.index');
-    Route::get('/lista', [AgendaController::class, 'index1'])->name('agenda.index1');
-    Route::post('/agenda', [AgendaController::class, 'store'])->name('agenda.store');
-    Route::put('/agenda/{id}', [AgendaController::class, 'update'])->name('agenda.update');
-    Route::delete('/agenda/{id}', [AgendaController::class, 'destroy'])->name('agenda.destroy');
-    Route::post('/agenda/update-status', [AgendaController::class, 'updateStatus'])->name('agenda.updateStatus');
+
+#Agenda
+
+Route::get('/agenda', [AgendaController::class, 'index'])->name('agenda.index');
+Route::get('/lista', [AgendaController::class, 'index1'])->name('agenda.index1');
+Route::get('/agendamedica', [AgendaController::class, 'agendaMedica'])->name('agenda.agendaMedica');
+Route::post('/agenda', [AgendaController::class, 'store'])->name('agenda.store');
+Route::put('/agenda/{id}', [AgendaController::class, 'update'])->name('agenda.update');
+Route::delete('/agenda/{id}', [AgendaController::class, 'destroy'])->name('agenda.destroy');
+Route::post('/agenda/update-status', [AgendaController::class, 'updateStatus'])->name('agenda.updateStatus');
+
+#Atendimentos
+
+Route::get('/atendimento/{agenda_id}/{paciente_id}/medico', [AtendimentosController::class, 'index'])->name('atendimento.index');
+Route::post('/atendimentos/store', [AtendimentosController::class, 'storeAtendimento']);
+Route::get('/atendimentos/{agenda_id}/{paciente_id}', [AtendimentosController::class, 'verificarAtendimento']);
+Route::post('/anamneses/store', [AtendimentosController::class, 'storeAnamnese']);
+Route::get('/anamneses/check/{paciente_id}', [AtendimentosController::class, 'verificarAnamnese']);
+
 });

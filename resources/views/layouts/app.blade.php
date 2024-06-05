@@ -6,11 +6,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/main.css') }}">
     <!-- Font-icon css-->
-    <link rel="stylesheet" type="text/css"
-    href="{{ asset('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css') }}">
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/LOGO_01_VERDE.png') }}">
     
@@ -45,10 +45,10 @@ $currentDate = date('Y-m-d');
     @yield('content')
 
     <!-- Essential javascripts for application to work-->
-    <script src="js/jquery-3.7.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{ asset('js/jquery-3.7.0.min.js') }}"></script>
+    <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js')}}"></script>
+    <script src="{{ asset('js/bootstrap.min.js')}}"></script>
+    <script src="{{ asset('js/main.js')}}"></script>
     <!-- Page specific javascripts-->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
 
@@ -130,8 +130,8 @@ $currentDate = date('Y-m-d');
     <!-- Page specific javascripts-->
     <link rel="stylesheet" href="{{ asset('https://cdn.datatables.net/v/bs5/dt-1.13.4/datatables.min.css')}}">
     <!-- Data table plugin-->
-    <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/jquery.dataTables.min.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/dataTables.bootstrap.min.js')}}"></script>
     <script type="text/javascript">
         $('#sampleTable').DataTable();
     </script>

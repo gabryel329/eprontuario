@@ -6,35 +6,35 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Agenda extends Model
+class Atendimentos extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table='agendas';
+    protected $table='atendimentos';
     protected $fillable = [
-        'hora',
-        'data',
-        'name',
-        'sobrenome',
+        'queixas',
+        'exame',
+        'plano',
+        'hipoteses',
         'paciente_id',
+        'agenda_id',
         'profissional_id',
-        'consulta_id',
-        'status',
+        'condicao',
     ];
     protected $dates=['deleted_at'];
 
-    public function profissional()
+    public function agenda()
     {
-        return $this->belongsTo(Profissional::class, 'profissional_id');
+        return $this->belongsTo(Agenda::class, 'agenda_id');
     }
 
     public function paciente()
     {
         return $this->belongsTo(Pacientes::class, 'paciente_id');
     }
-
-    public function atendimento()
+    
+    public function profissional()
     {
-        return $this->belongsTo(Atendimentos::class, 'agenda_id');
+        return $this->belongsTo(Profissional::class, 'profissional_id');
     }
 }

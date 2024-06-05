@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->integer('paciente_id')->nullable();
             $table->foreign('paciente_id')->references('id')->on('pacientes')->onDelete('cascade');
+            $table->integer('profissional_id')->nullable();
+            $table->foreign('profissional_id')->references('id')->on('profissionals')->onDelete('cascade');
             $table->string('pa')->nullable();
             $table->string('temp')->nullable();
             $table->softDeletes();

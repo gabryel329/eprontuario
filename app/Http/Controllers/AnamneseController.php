@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Anamnese;
 use App\Models\Pacientes;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AnamneseController extends Controller
 {
@@ -36,33 +37,42 @@ class AnamneseController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request, Anamnese $anamnese)
-    {
-        $validatedData = $request->validate([
-            'paciente_id' => 'nullable|integer|exists:pacientes,id',
-            'pa' => 'nullable|string',
-            'temp' => 'nullable|string',
-            'peso' => 'nullable|string',
-            'altura' => 'nullable|string',
-            'gestante' => 'nullable|string',
-            'dextro' => 'nullable|string',
-            'spo2' => 'nullable|string',
-            'fc' => 'nullable|string',
-            'fr' => 'nullable|string',
-            'acolhimento' => 'nullable|string',
-            'acolhimento1' => 'nullable|string',
-            'acolhimento2' => 'nullable|string',
-            'acolhimento3' => 'nullable|string',
-            'acolhimento4' => 'nullable|string',
-            'alergia1' => 'nullable|string',
-            'alergia2' => 'nullable|string',
-            'alergia3' => 'nullable|string',
-            'anamnese' => 'nullable|string',
-        ]);
+{
+    // Validação dos dados do formulário
+    $validatedData = $request->validate([
+        'paciente_id' => 'nullable|integer|exists:pacientes,id',
+        'pa' => 'nullable|string',
+        'temp' => 'nullable|string',
+        'peso' => 'nullable|string',
+        'altura' => 'nullable|string',
+        'gestante' => 'nullable|string',
+        'dextro' => 'nullable|string',
+        'spo2' => 'nullable|string',
+        'fc' => 'nullable|string',
+        'fr' => 'nullable|string',
+        'acolhimento' => 'nullable|string',
+        'acolhimento1' => 'nullable|string',
+        'acolhimento2' => 'nullable|string',
+        'acolhimento3' => 'nullable|string',
+        'acolhimento4' => 'nullable|string',
+        'alergia1' => 'nullable|string',
+        'alergia2' => 'nullable|string',
+        'alergia3' => 'nullable|string',
+        'anamnese' => 'nullable|string',
+    ]);
 
-        $anamnese = Anamnese::create($validatedData);
+    // Obter o ID do profissional atualmente autenticado
+    $profissionalId = Auth::user()->profissional_id;
 
-        return redirect()->route('anamnese.index')->with('success', 'Anamnese criada com sucesso.');
-    }
+    // Adiciona o ID do profissional aos dados validados
+    $validatedData['profissional_id'] = $profissionalId;
+
+    // Cria uma nova anamnese com os dados validados, incluindo o ID do profissional
+    $anamnese = Anamnese::create($validatedData);
+
+    // Redireciona com uma mensagem de sucesso
+    return redirect()->route('anamnese.index')->with('success', 'Anamnese criada com sucesso.');
+}
 
 
     public function update(Request $request, $id)
