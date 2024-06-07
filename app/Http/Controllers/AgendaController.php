@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Agenda;
 use App\Models\Pacientes;
+use App\Models\Painel;
+use App\Models\Procedimentos;
 use App\Models\Profissional;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AgendaController extends Controller
 {
@@ -17,21 +20,23 @@ class AgendaController extends Controller
     {
         if ($request->ajax()) {
             $agendas = Agenda::where('profissional_id', $request->profissional_id)
-                             ->where('data', $request->data)
-                             ->get();
-    
+                ->where('data', $request->data)
+                ->get();
+
             return response()->json(['agendas' => $agendas]);
         }
 
         $agendas = Agenda::all();
         $pacientes = Pacientes::all();
         $profissional = Profissional::all();
+        $procedimentos = Procedimentos::all();
 
-        return view('agenda.criar', compact(['agendas', 'pacientes', 'profissional']));
+        return view('agenda.criar', compact(['agendas', 'pacientes', 'profissional', 'procedimentos']));
     }
 
     public function index1(Request $request)
     {
+        $procedimentos = Procedimentos::all();
         $pacientes = Pacientes::all();
         $profissionals = Profissional::all();
         $agendas = collect();
@@ -52,7 +57,7 @@ class AgendaController extends Controller
             session()->forget(['data', 'profissional_id']);
         }
 
-        return view('agenda.lista', compact('profissionals', 'agendas', 'pacientes'));
+        return view('agenda.lista', compact('profissionals', 'agendas', 'pacientes', 'procedimentos'));
     }
 
     /**
@@ -65,14 +70,14 @@ class AgendaController extends Controller
         $hora = $request->input('hora');
         $name = ucfirst($request->input('name'));
         $sobrenome = ucfirst($request->input('sobrenome'));
-        $consulta_id = $request->input('consulta_id');
+        $procedimento_id = $request->input('procedimento_id');
         $profissional_id = $request->input('profissional_id');
         $paciente_id = $request->input('paciente_id');
 
         // Check if the agenda already exists
         $existeAgenda = Agenda::where('data', $data)
-                            ->where('hora', $hora)
-                            ->first();
+            ->where('hora', $hora)
+            ->first();
 
         if ($existeAgenda) {
             if ($request->ajax()) {
@@ -88,7 +93,7 @@ class AgendaController extends Controller
             'hora' => $hora,
             'name' => $name,
             'sobrenome' => $sobrenome,
-            'consulta_id' => $consulta_id,
+            'procedimento_id' => $procedimento_id,
             'profissional_id' => $profissional_id,
             'status' => "MARCADO",
         ];
@@ -133,36 +138,36 @@ class AgendaController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    // Validar os dados do request (opcional, mas recomendado)
-    $request->validate([
-        'profissional_id' => 'required|exists:profissionals,id',
-        'data' => 'required|date',
-        'hora' => 'required|date_format:H:i',
-        'paciente_id' => 'required|integer',
-        'name' => 'required|string|max:255',
-        'sobrenome' => 'required|string|max:255',
-        'consulta_id' => 'required|integer',
-    ]);
+    {
+        // Validar os dados do request (opcional, mas recomendado)
+        $request->validate([
+            'profissional_id' => 'required|exists:profissionals,id',
+            'data' => 'required|date',
+            'hora' => 'required|date_format:H:i',
+            'paciente_id' => 'required|integer',
+            'name' => 'required|string|max:255',
+            'sobrenome' => 'required|string|max:255',
+            'procedimento_id' => 'required|integer',
+        ]);
 
-    // Encontrar a agenda pelo ID
-    $agenda = Agenda::findOrFail($id);
+        // Encontrar a agenda pelo ID
+        $agenda = Agenda::findOrFail($id);
 
-    // Atualizar os dados da agenda
-    $agenda->profissional_id = $request->profissional_id;
-    $agenda->data = $request->data;
-    $agenda->hora = $request->hora;
-    $agenda->paciente_id = $request->paciente_id;
-    $agenda->name = $request->name;
-    $agenda->sobrenome = $request->sobrenome;
-    $agenda->consulta_id = $request->consulta_id;
+        // Atualizar os dados da agenda
+        $agenda->profissional_id = $request->profissional_id;
+        $agenda->data = $request->data;
+        $agenda->hora = $request->hora;
+        $agenda->paciente_id = $request->paciente_id;
+        $agenda->name = $request->name;
+        $agenda->sobrenome = $request->sobrenome;
+        $agenda->procedimento_id = $request->procedimento_id;
 
-    // Salvar as mudanças
-    $agenda->save();
+        // Salvar as mudanças
+        $agenda->save();
 
-    // Redirecionar de volta com uma mensagem de sucesso
-    return redirect()->back()->with('success', 'Agenda atualizada com sucesso.');
-}
+        // Redirecionar de volta com uma mensagem de sucesso
+        return redirect()->back()->with('success', 'Agenda atualizada com sucesso.');
+    }
 
 
     /**
@@ -218,6 +223,26 @@ class AgendaController extends Controller
         return view('agenda.agendamedica', compact('agendas', 'pacientes'));
     }
 
+    public function storeConsultorioPainel(Request $request)
+    {
+        // Recupere os dados do pedido AJAX
+        $pacienteId = $request->input('paciente_id');
+        $agendaId = $request->input('agenda_id');
 
+        // Recupere o usuário logado
+        $user = Auth::user();
+        $userId = $user->id;
+        $sala = $user->sala;
+
+        // Criar um novo registro na tabela painels
+        $painel = new Painel();
+        $painel->paciente_id = $pacienteId;
+        $painel->agenda_id = $agendaId;
+        $painel->user_id = $userId;
+        $painel->sala_id = $sala; // Supondo que o campo na tabela se chame sala_id
+        $painel->save();
+
+        return response()->json(['success' => true, 'message' => 'Dados salvos com sucesso']);
+    }
 
 }

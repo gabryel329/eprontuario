@@ -6,6 +6,7 @@ use App\Http\Controllers\AtendimentosController;
 use App\Http\Controllers\EmpresasController;
 use App\Http\Controllers\EspecialidadeController;
 use App\Http\Controllers\PacientesController;
+use App\Http\Controllers\PainelController;
 use App\Http\Controllers\PermisoesController;
 use App\Http\Controllers\ProfissionalController;
 use App\Http\Controllers\UserController;
@@ -88,22 +89,33 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::get('/profissional/{id}', [ProfissionalController::class, 'show'])->name('profissional.show');
 
 
-#Agenda
+    #Agenda
 
-Route::get('/agenda', [AgendaController::class, 'index'])->name('agenda.index');
-Route::get('/lista', [AgendaController::class, 'index1'])->name('agenda.index1');
-Route::get('/agendamedica', [AgendaController::class, 'agendaMedica'])->name('agenda.agendaMedica');
-Route::post('/agenda', [AgendaController::class, 'store'])->name('agenda.store');
-Route::put('/agenda/{id}', [AgendaController::class, 'update'])->name('agenda.update');
-Route::delete('/agenda/{id}', [AgendaController::class, 'destroy'])->name('agenda.destroy');
-Route::post('/agenda/update-status', [AgendaController::class, 'updateStatus'])->name('agenda.updateStatus');
+    Route::get('/agenda', [AgendaController::class, 'index'])->name('agenda.index');
+    Route::get('/lista', [AgendaController::class, 'index1'])->name('agenda.index1');
+    Route::get('/agendamedica', [AgendaController::class, 'agendaMedica'])->name('agenda.agendaMedica');
+    Route::post('/agenda', [AgendaController::class, 'store'])->name('agenda.store');
+    Route::put('/agenda/{id}', [AgendaController::class, 'update'])->name('agenda.update');
+    Route::delete('/agenda/{id}', [AgendaController::class, 'destroy'])->name('agenda.destroy');
+    Route::post('/agenda/update-status', [AgendaController::class, 'updateStatus'])->name('agenda.updateStatus');
 
-#Atendimentos
+    #Atendimentos
 
-Route::get('/atendimento/{agenda_id}/{paciente_id}/medico', [AtendimentosController::class, 'index'])->name('atendimento.index');
-Route::post('/atendimentos/store', [AtendimentosController::class, 'storeAtendimento']);
-Route::get('/atendimentos/{agenda_id}/{paciente_id}', [AtendimentosController::class, 'verificarAtendimento']);
-Route::post('/anamneses/store', [AtendimentosController::class, 'storeAnamnese']);
-Route::get('/anamneses/check/{paciente_id}', [AtendimentosController::class, 'verificarAnamnese']);
+    Route::get('/atendimento/{agenda_id}/{paciente_id}/medico', [AtendimentosController::class, 'index'])->name('atendimento.index');
+    
+    Route::post('/atendimentos/store', [AtendimentosController::class, 'storeAtendimento']);
+    Route::get('/atendimentos/{agenda_id}/{paciente_id}', [AtendimentosController::class, 'verificarAtendimento']);
 
+    Route::post('/anamneses/store', [AtendimentosController::class, 'storeAnamnese']);
+    Route::get('/anamneses/check/{paciente_id}', [AtendimentosController::class, 'verificarAnamnese']);
+
+    Route::post('/remedios/store', [AtendimentosController::class, 'storeRemedio']);
+    Route::get('/remedios/{agenda_id}/{paciente_id}', [AtendimentosController::class, 'verificarRemedio']);
+
+    Route::post('/exames/store', [AtendimentosController::class, 'storeExame'])->name('exames.store');
+    Route::get('/exames/{agenda_id}/{paciente_id}', [AtendimentosController::class, 'verificarExame']);
+
+    Route::post('/consultorio/painel', [AgendaController::class, 'storeConsultorioPainel'])->name('consultorioPainel.store');
+
+    Route::get('/consultorio', [PainelController::class, 'index'])->name('painelConsultorio.index');
 });

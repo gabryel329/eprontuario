@@ -108,7 +108,7 @@
                                 <td>{{ $item->hora }}</td>
                                 <td>{{ $item->name }} {{ $item->sobrenome }}</td>
                                 <td>{{ $item->paciente->cpf }}</td>
-                                <td>{{ $item->consulta_id }}</td>
+                                <td>{{ $item->procedimento_id }}</td>
                                 <td>
                                     <select class="form-control status-select" data-id="{{ $item->id }}" data-paciente-id="{{ $item->paciente_id }}">
                                         <option value="MARCADO" {{ $item->status == 'MARCADO' ? 'selected' : '' }}>MARCADO</option>
@@ -192,9 +192,15 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="mb-3 col-md-6">
-                                <label class="form-label">Consulta</label>
-                                <input type="text" class="form-control" name="consulta_id" value="{{ $item->consulta_id }}">
+                            <div class="mb-3 col-md-12">
+                                <label class="form-label">Procedimento</label>
+                                <select class="form-control" id="edit-procedimento-id-{{ $item->id }}" name="procedimento_id">
+                                    @foreach ($procedimentos as $procedimento)
+                                        <option value="{{ $procedimento->procedimento }}" {{ $item->procedimento_id == $procedimento->procedimento ? 'selected' : '' }}>
+                                            {{ $procedimento->procedimento }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Atualizar</button>

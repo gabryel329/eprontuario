@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('atendimentos', function (Blueprint $table) {
+        Schema::create('remedios', function (Blueprint $table) {
             $table->id();
-            $table->string('queixas')->nullable();
-            $table->string('exame')->nullable();
-            $table->string('plano')->nullable();
-            $table->string('hipoteses')->nullable();
-            $table->string('condicao')->nullable();
+            $table->string('remedio')->nullable();
+            $table->string('dose')->nullable();
+            $table->string('horas')->nullable();
             $table->integer('paciente_id')->nullable();
             $table->foreign('paciente_id')->references('id')->on('pacientes')->onDelete('cascade');
+            $table->integer('medicamento_id')->nullable();
+            $table->foreign('medicamento_id')->references('id')->on('medicamentos')->onDelete('cascade');
             $table->integer('agenda_id')->nullable();
             $table->foreign('agenda_id')->references('id')->on('agendas')->onDelete('cascade');
             $table->integer('profissional_id')->nullable();
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('atendimentos');
+        Schema::dropIfExists('remedios');
     }
 };

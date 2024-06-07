@@ -6,19 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Atendimentos extends Model
+class Exames extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table='atendimentos';
+    protected $table='exames';
     protected $fillable = [
-        'queixas',
-        'atestado',
-        'evolucao',
         'paciente_id',
         'agenda_id',
         'profissional_id',
-        'condicao',
+        'procedimento_id',
     ];
     protected $dates=['deleted_at'];
 
@@ -35,5 +32,10 @@ class Atendimentos extends Model
     public function profissional()
     {
         return $this->belongsTo(Profissional::class, 'profissional_id');
+    }
+
+    public function procedimento()
+    {
+        return $this->hasMany(Procedimentos::class, 'procedimento_id');
     }
 }

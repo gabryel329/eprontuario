@@ -1,10 +1,19 @@
 @extends('layouts.app')
+<style>
+    .actions {
+        display: flex;
+        gap: 5px;
+    }
+</style>
 @section('content')
     <main class="app-content">
         <div class="app-title">
             <div>
                 <h1><i class="bi bi-receipt"></i> Atendimento</h1>
-                <p>{{ $paciente->name }} {{ $paciente->sobrenome }}</p>
+                <div class="actions">
+                    <label class="form-label"><strong>Paciente:</strong></label>
+                    <p>{{ $paciente->name }} {{ $paciente->sobrenome }}</p>
+                </div>
             </div>
             <ul class="app-breadcrumb breadcrumb">
                 <li class="breadcrumb-item"><i class="bi bi-house-door fs-6"></i></li>
@@ -21,10 +30,6 @@
                                 data-bs-toggle="tab">Atendimento</a></li>
                         <li class="nav-item"><a class="nav-link" href="#atendimento-prescricao"
                                 data-bs-toggle="tab">Prescrição</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#atendimento-evolucao"
-                                data-bs-toggle="tab">Evolução</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#atendimento-atestado"
-                                data-bs-toggle="tab">Atestado</a></li>
                     </ul>
                 </div>
             </div>
@@ -162,9 +167,9 @@
                                                     </div>
                                                 </div>
                                                 <div class="tile-footer">
-                                                    <button id="saveAnamneseButton" class="btn btn-primary"
+                                                    <button id="saveAnamneseButton" class="btn btn-danger"
                                                         type="button"><i
-                                                            class="bi bi-check-circle-fill me-2"></i>Salvar</button>
+                                                            class="bi bi-check-circle-fill me-2"></i>Salvar/Atualizar</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -180,12 +185,10 @@
                                 <ul class="nav nav-tabs user-tabs">
                                     <li class="nav-item"><a class="nav-link active" href="#atendimento-queixa"
                                             data-bs-toggle="tab">Queixa Principal</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="#atendimento-exame"
-                                            data-bs-toggle="tab">Exame Fisico</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="#atendimento-plano"
-                                            data-bs-toggle="tab">Plano Terapêutico</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="#atendimento-hipoteses"
-                                            data-bs-toggle="tab">Hipóteses Diagnósticas</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#atendimento-evolucao"
+                                            data-bs-toggle="tab">Evolução</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#atendimento-atestado"
+                                            data-bs-toggle="tab">Atestato</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#atendimento-condicao"
                                             data-bs-toggle="tab">Condição Fisica</a></li>
                                 </ul>
@@ -211,32 +214,22 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane fade" id="atendimento-exame">
+                                        <div class="tab-pane fade" id="atendimento-evolucao">
                                             <div class="timeline-post">
-                                                <h4 class="line-head">Exame Fisico</h4>
+                                                <h4 class="line-head">Evolução</h4>
                                                 <div class="row mb-12">
                                                     <div class="col-md-12">
-                                                        <textarea class="form-control" rows="15" id="exame" name="exame"></textarea>
+                                                        <textarea class="form-control" rows="15" id="evolucao" name="evolucao"></textarea>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane fade" id="atendimento-plano">
+                                        <div class="tab-pane fade" id="atendimento-atestado">
                                             <div class="timeline-post">
-                                                <h4 class="line-head">Plano Terapêutico</h4>
+                                                <h4 class="line-head">Atestado</h4>
                                                 <div class="row mb-12">
                                                     <div class="col-md-12">
-                                                        <textarea class="form-control" rows="15" id="plano" name="plano"></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="tab-pane fade" id="atendimento-hipoteses">
-                                            <div class="timeline-post">
-                                                <h4 class="line-head">Hipóteses Diagnósticas</h4>
-                                                <div class="row mb-12">
-                                                    <div class="col-md-12">
-                                                        <textarea class="form-control" rows="15" id="hipoteses" name="hipoteses"></textarea>
+                                                        <textarea class="form-control" rows="15" id="atestado" name="atestado"></textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -272,86 +265,116 @@
                                             data-bs-toggle="tab">Remedio</a></li>
                                 </ul>
                             </div>
-                            <form method="POST" action="#">
-                                @csrf
-                                <input class="form-control" id="paciente_id" name="paciente_id" type="text"
-                                    value="{{ $paciente->id }}" hidden>
-                                <input class="form-control" id="agenda_id" name="agenda_id" type="text"
-                                    value="{{ $agenda->id }}" hidden>
-                                <div class="col-md-12">
-                                    <div class="tab-content">
-                                        <div class="tab-pane active" id="prescricao-exame">
+                            <div class="col-md-12">
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="prescricao-exame">
+                                        <form id="exameForm" method="POST" action="{{ route('exames.store') }}">
+                                            @csrf
+                                            <input type="hidden" id="paciente_id" name="paciente_id"
+                                                value="{{ $paciente->id }}">
+                                            <input type="hidden" id="agenda_id" name="agenda_id"
+                                                value="{{ $agenda->id }}">
+                                            <input type="hidden" id="profissional_id" name="profissional_id"
+                                                value="{{ $agenda->profissional_id }}">
                                             <div class="timeline-post">
-                                                <h4 class="line-head">Exame</h4>
-                                                <div class="row mb-12">
-                                                    <div class="col-md-12">
-                                                        <textarea class="form-control" rows="15" id="atestado" name="atestado"></textarea>
-                                                    </div>
+                                                <div id="exame-container">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Procedimento</th>
+                                                                <th>Ações</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="exame-table-body">
+                                                            <tr class="exame-row">
+                                                                <td>
+                                                                    <select class="form-control procedimento_id"
+                                                                        name="procedimento_id[]">
+                                                                        <option value="">Selecione o Procedimento
+                                                                        </option>
+                                                                        @foreach ($procedimento as $item)
+                                                                            <option value="{{ $item->id }}">
+                                                                                {{ $item->procedimento }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
+                                                                <td class="actions">
+                                                                    <button type="button"
+                                                                        class="btn btn-success plus-row">+</button>
+                                                                    <button type="button"
+                                                                        class="btn btn-danger delete-row">-</button>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="tab-pane fade" id="prescricao-remedio">
+                                            <div class="tile-footer">
+                                                <button class="btn btn-primary" id="saveExameButton" type="submit">
+                                                    <i class="bi bi-check-circle-fill me-2"></i>Salvar/Atualizar
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane fade" id="prescricao-remedio">
+                                        <form id="remedioForm" method="POST" action="#">
+                                            @csrf
+                                            <input class="form-control" id="paciente_id" name="paciente_id"
+                                                type="text" value="{{ $paciente->id }}" hidden>
+                                            <input class="form-control" id="agenda_id" name="agenda_id" type="text"
+                                                value="{{ $agenda->id }}" hidden>
+                                            <input class="form-control" id="profissional_id" name="profissional_id"
+                                                type="text" value="{{ $agenda->profissional_id }}" hidden>
                                             <div class="timeline-post">
-                                                <h4 class="line-head">Remedio</h4>
-                                                <div class="row mb-12">
-                                                    <div class="col-md-12">
-                                                        <textarea class="form-control" rows="15" id="atestado" name="atestado"></textarea>
-                                                    </div>
+                                                <div id="prescricao-container">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Remédio</th>
+                                                                <th>Dose</th>
+                                                                <th>Horas</th>
+                                                                <th>Ações</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="prescricao-table-body">
+                                                            <tr class="prescricao-row">
+                                                                <td>
+                                                                    <select class="form-control medicamento_id"
+                                                                        name="medicamento_id[]">
+                                                                        <option value="">Selecione o remédio</option>
+                                                                        @foreach ($medicamento as $item)
+                                                                            <option value="{{ $item->id }}">
+                                                                                {{ $item->nome }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" class="form-control dose"
+                                                                        name="dose[]" placeholder="Dose">
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" class="form-control horas"
+                                                                        name="horas[]" placeholder="Horas">
+                                                                </td>
+                                                                <td>
+                                                                    <button type="button"
+                                                                        class="btn btn-success add-row">+</button>
+                                                                    <button type="button"
+                                                                        class="btn btn-danger remove-row">-</button>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
-                                        </div>
+                                            <div class="tile-footer">
+                                                <button class="btn btn-primary" id="saveRemedioButton" type="button"><i
+                                                        class="bi bi-check-circle-fill me-2"></i>Salvar/Atualizar</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                                <hr>
-                                <div class="tile-footer">
-                                    <button class="btn btn-primary" type="submit"><i
-                                            class="bi bi-check-circle-fill me-2"></i>Salvar</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="atendimento-evolucao">
-                        <div class="timeline-post">
-                            <h4 class="line-head">Evolução</h4>
-                            <form method="POST" action="#">
-                                @csrf
-                                <input class="form-control" id="paciente_id" name="paciente_id" type="text"
-                                    value="{{ $paciente->id }}" hidden>
-                                <input class="form-control" id="agenda_id" name="agenda_id" type="text"
-                                    value="{{ $agenda->id }}" hidden>
-                                <div class="row mb-12">
-                                    <div class="col-md-12">
-                                        <textarea class="form-control" rows="15" id="atestado" name="atestado"></textarea>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="tile-footer">
-                                    <button class="btn btn-primary" type="submit"><i
-                                            class="bi bi-check-circle-fill me-2"></i>Salvar</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="atendimento-atestado">
-                        <div class="timeline-post">
-                            <h4 class="line-head">Atestado</h4>
-                            <form method="POST" action="#">
-                                @csrf
-                                <input class="form-control" id="paciente_id" name="paciente_id" type="text"
-                                    value="{{ $paciente->id }}" hidden>
-                                <input class="form-control" id="agenda_id" name="agenda_id" type="text"
-                                    value="{{ $agenda->id }}" hidden>
-                                <div class="row mb-12">
-                                    <div class="col-md-12">
-                                        <textarea class="form-control" rows="15" id="atestado" name="atestado"></textarea>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="tile-footer">
-                                    <button class="btn btn-primary" type="submit"><i
-                                            class="bi bi-check-circle-fill me-2"></i>Salvar</button>
-                                </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -373,14 +396,14 @@
                     // Se houver dados no banco, preencha o formulário
                     if (response.data) {
                         $('#queixas').val(response.data.queixas);
-                        $('#exame').val(response.data.exame);
-                        $('#plano').val(response.data.plano);
-                        $('#hipoteses').val(response.data.hipoteses);
+                        $('#evolucao').val(response.data.evolucao);
+                        $('#atestado').val(response.data.atestado);
                         $('#condicao').val(response.data.condicao);
                     }
                 },
                 error: function(response) {
-                    alert('Erro ao carregar dados do banco.');
+                    // alert('Erro ao carregar dados do banco.');
+                    pass();
                 }
             });
 
@@ -388,9 +411,8 @@
                 // Salvar dados do formulário no localStorage
                 var formData = {
                     queixas: $('#queixas').val(),
-                    exame: $('#exame').val(),
-                    plano: $('#plano').val(),
-                    hipoteses: $('#hipoteses').val(),
+                    evolucao: $('#evolucao').val(),
+                    atestado: $('#atestado').val(),
                     condicao: $('#condicao').val(),
                 };
                 localStorage.setItem('formData', JSON.stringify(formData));
@@ -450,7 +472,8 @@
                     }
                 },
                 error: function(response) {
-                    alert('Ocorreu um erro ao carregar os dados da anamnese. Tente novamente.');
+                    // alert('Ocorreu um erro ao carregar os dados da anamnese. Tente novamente.');
+                    pass();
                 }
             });
 
@@ -489,6 +512,191 @@
                     },
                     success: function(response) {
                         alert('Anamnese cadastrada/atualizada com sucesso');
+                    },
+                    error: function(response) {
+                        alert('Ocorreu um erro. Tente novamente.');
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function() {
+            var agenda_id = "{{ $agenda->id }}";
+            var paciente_id = "{{ $paciente->id }}";
+
+            function addPrescricaoRow() {
+                var newRow = `
+        <tr class="prescricao-row">
+            <td>
+                <select class="form-control medicamento_id" name="medicamento_id[]">
+                    <option value="">Selecione o remédio</option>
+                    @foreach ($medicamento as $item)
+                        <option value="{{ $item->id }}">{{ $item->nome }}</option>
+                    @endforeach
+                </select>
+            </td>
+            <td>
+                <input type="number" class="form-control dose" name="dose[]" placeholder="Dose">
+            </td>
+            <td>
+                <input type="number" class="form-control horas" name="horas[]" placeholder="Horas">
+            </td>
+            <td>
+                <button type="button" class="btn btn-success add-row">+</button>
+                <button type="button" class="btn btn-danger remove-row">-</button>
+            </td>
+        </tr>`;
+                $('#prescricao-table-body').append(newRow);
+            }
+
+            $(document).on('click', '.add-row', function() {
+                addPrescricaoRow();
+            });
+
+            $(document).on('click', '.remove-row', function() {
+                $(this).closest('.prescricao-row').remove();
+            });
+
+            // Verificar se existem dados no banco antes de carregar o formulário
+            $.ajax({
+                url: '/remedios/' + agenda_id + '/' + paciente_id,
+                type: 'GET',
+                success: function(response) {
+                    if (response.data && response.data.length > 0) {
+                        // Se houver dados no banco, preencha o formulário
+                        response.data.forEach(function(remedio) {
+                            addPrescricaoRow();
+                            $('#prescricao-table-body').find('.prescricao-row:last').find(
+                                '.medicamento_id').val(remedio.medicamento_id);
+                            $('#prescricao-table-body').find('.prescricao-row:last').find(
+                                '.dose').val(remedio.dose);
+                            $('#prescricao-table-body').find('.prescricao-row:last').find(
+                                '.horas').val(remedio.horas);
+                        });
+                    }
+                },
+                error: function(response) {
+                    //alert('Erro ao carregar dados do banco.');
+                }
+            });
+
+            $('#saveRemedioButton').on('click', function() {
+                var formData = {
+                    medicamento_id: [],
+                    dose: [],
+                    horas: []
+                };
+
+                $('.medicamento_id').each(function() {
+                    formData.medicamento_id.push($(this).val());
+                });
+
+                $('.dose').each(function() {
+                    formData.dose.push($(this).val());
+                });
+
+                $('.horas').each(function() {
+                    formData.horas.push($(this).val());
+                });
+
+                localStorage.setItem('formData', JSON.stringify(formData));
+
+                var url = '/remedios/store';
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: $('#remedioForm').serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        alert('Prescrição de remédios cadastrada/atualizada com sucesso');
+                    },
+                    error: function(response) {
+                        alert('Ocorreu um erro. Tente novamente.');
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function() {
+            var agenda_id = "{{ $agenda->id }}"; // Valor correto para a agenda_id
+            var paciente_id = "{{ $paciente->id }}"; // Valor correto para o paciente_id
+
+            function addExameRow() {
+                var newRow = `
+        <tr class="exame-row">
+            <td>
+                <select class="form-control procedimento_id" name="procedimento_id[]">
+                    <option value="">Selecione o Procedimento</option>
+                    @foreach ($procedimento as $item)
+                        <option value="{{ $item->id }}">{{ $item->procedimento }}</option>
+                    @endforeach
+                </select>
+            </td>
+            <td class="actions">
+                <button type="button" class="btn btn-success plus-row">+</button>
+                <button type="button" class="btn btn-danger delete-row">-</button>
+            </td>
+        </tr>`;
+                $('#exame-table-body').append(newRow);
+            }
+
+            // Adiciona uma nova linha de procedimento quando o botão '+' é clicado
+            $(document).on('click', '.plus-row', function() {
+                addExameRow();
+            });
+
+            // Remove a linha de procedimento quando o botão '-' é clicado
+            $(document).on('click', '.delete-row', function() {
+                $(this).closest('.exame-row').remove();
+            });
+
+            // Verificar se existem dados no banco antes de carregar o formulário
+            $.ajax({
+                url: '/exames/' + agenda_id + '/' + paciente_id, // Ajuste a rota conforme necessário
+                type: 'GET',
+                success: function(response) {
+                    // Se houver dados no banco, preencha o formulário
+                    if (response.data && response.data.length > 0) {
+                        response.data.forEach(function(item) {
+                            addExameRow();
+                            $('#exame-table-body').find('.exame-row:last').find(
+                                '.procedimento_id').val(item.procedimento_id);
+                        });
+                    }
+                },
+                error: function(response) {
+                    // alert('Erro ao carregar dados do banco.');
+                }
+            });
+
+            $('#saveExameButton').on('click', function() {
+                // Salvar dados do formulário no localStorage
+                var formData = {
+                    procedimento_id: []
+                };
+
+                $('.procedimento_id').each(function() {
+                    formData.procedimento_id.push($(this).val());
+                });
+
+                localStorage.setItem('formData', JSON.stringify(formData));
+
+                // Definir a URL com base no atendimentoId
+                var url = '/exames/store';
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: $('#exameForm').serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        alert('Exame cadastrado/atualizado com sucesso');
+                        // Atualize o campo atendimento_id com o ID retornado pelo servidor
                     },
                     error: function(response) {
                         alert('Ocorreu um erro. Tente novamente.');

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('hora')->nullable();
             $table->date('data')->nullable();
-            $table->string('consulta_id')->nullable();
+            $table->string('procedimento_id')->nullable();
             $table->string('status')->nullable();
             $table->string('name')->nullable();
             $table->string('sobrenome')->nullable();

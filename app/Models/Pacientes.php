@@ -62,4 +62,16 @@ class Pacientes extends Model
     {
         return $this->hasMany(Atendimentos::class, 'paciente_id');
     }
+    public function remedio()
+    {
+        return $this->hasMany(Remedio::class, 'paciente_id');
+    }
+    public function procedimento()
+    {
+        return $this->hasMany(Procedimentos::class, 'agenda_id');
+    }
+    public function painel()
+    {
+        return $this->belongsTo(Painel::class, 'paciente_id');
+    }
 }

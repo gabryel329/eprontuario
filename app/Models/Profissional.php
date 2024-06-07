@@ -58,8 +58,16 @@ class Profissional extends Model
     {
         return $this->hasMany(Atendimentos::class, 'profissional_id');
     }
+    public function remedio()
+    {
+        return $this->hasMany(Remedio::class, 'profissional_id');
+    }
     public function anamnese()
     {
         return $this->hasMany(Anamnese::class, 'profissional_id');
+    }
+    public function procedimento()
+    {
+        return $this->hasMany(Procedimentos::class, 'agenda_id');
     }
 }

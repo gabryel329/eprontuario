@@ -58,4 +58,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Permisoes::class, 'permisao_id');
     }
+
+    public function painel()
+    {
+        return $this->belongsTo(Painel::class, 'user_id');
+    }
 }

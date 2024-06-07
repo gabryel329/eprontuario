@@ -6,19 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Atendimentos extends Model
+class Painel extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table='atendimentos';
+    protected $table='painels';
     protected $fillable = [
-        'queixas',
-        'atestado',
-        'evolucao',
         'paciente_id',
         'agenda_id',
-        'profissional_id',
-        'condicao',
+        'user_id',
+        'sala_id',
     ];
     protected $dates=['deleted_at'];
 
@@ -32,8 +29,8 @@ class Atendimentos extends Model
         return $this->belongsTo(Pacientes::class, 'paciente_id');
     }
     
-    public function profissional()
+    public function user()
     {
-        return $this->belongsTo(Profissional::class, 'profissional_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

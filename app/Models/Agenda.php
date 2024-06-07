@@ -18,7 +18,7 @@ class Agenda extends Model
         'sobrenome',
         'paciente_id',
         'profissional_id',
-        'consulta_id',
+        'procedimento_id',
         'status',
     ];
     protected $dates=['deleted_at'];
@@ -36,5 +36,17 @@ class Agenda extends Model
     public function atendimento()
     {
         return $this->belongsTo(Atendimentos::class, 'agenda_id');
+    }
+    public function remedio()
+    {
+        return $this->belongsTo(Remedio::class, 'agenda_id');
+    }
+    public function procedimento()
+    {
+        return $this->belongsTo(Procedimentos::class, 'procedimento_id');
+    }
+    public function painel()
+    {
+        return $this->belongsTo(Painel::class, 'agenda_id');
     }
 }
