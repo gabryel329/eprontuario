@@ -233,6 +233,8 @@ class AgendaController extends Controller
         $user = Auth::user();
         $userId = $user->id;
         $sala = $user->sala;
+        $permisao_id = $user->permisao_id;
+        
 
         // Criar um novo registro na tabela painels
         $painel = new Painel();
@@ -240,6 +242,7 @@ class AgendaController extends Controller
         $painel->agenda_id = $agendaId;
         $painel->user_id = $userId;
         $painel->sala_id = $sala; // Supondo que o campo na tabela se chame sala_id
+        $painel->permisao_id = $permisao_id;
         $painel->save();
 
         return response()->json(['success' => true, 'message' => 'Dados salvos com sucesso']);

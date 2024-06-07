@@ -24,9 +24,17 @@
     <!-- Sidebar menu-->
     <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
     <aside class="app-sidebar">
+        <div class="app-sidebar__user-name" style="text-align: center; ">
+            <h4 style="color: white">Pacientes</h4>
+        </div>
         <ul class="app-menu" style="text-align: center">
+            <h1></h1>
             @foreach ($painelTudo as $item)
-                <li><a class="app-menu__item"><span class="app-menu__label">{{$item->paciente->name}} {{$item->paciente->sobrenome}}</span></a></li>
+            <li>
+                <a class="app-menu__item">
+                    <span class="app-menu__label">{{$item->paciente->name}} {{$item->paciente->sobrenome}}<br>{{$item->created_at}}</span>
+                </a>    
+            </li>
             @endforeach
         </ul>
     </aside>
@@ -34,44 +42,38 @@
         <div class="row">
             <div class="col-md-12"> <!-- Defina o tamanho do tile-body -->
                 <div class="tile">
-                    <table class="table table-bordered">
-                        <tr>
-                            <td colspan="2">
-                                <img src="logo.png" alt="Logo" style="height: 50px;">
-                                Secretaria de Saúde
-                            </td>
-                            <td colspan="3" style="text-align: center;">SOLICITAÇÃO DE EXAME OU PROCEDIMENTO</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">NOME DO PACIENTE: <input type="text" name="nome_paciente"></td>
-                            <td colspan="3">DOC. IDENTIDADE: <input type="text" name="doc_identidade"></td>
-                        </tr>
-                        <tr>
-                            <td colspan="5">ENDEREÇO: <input type="text" name="endereco"></td>
-                        </tr>
-                        <tr>
-                            <td colspan="5">MOTIVO DA SOLICITAÇÃO: <input type="text" name="motivo_solicitacao"></td>
-                        </tr>
-                        <tr>
-                            <td colspan="3">EXAME OU PROCEDIMENTO SOLICITADO: <input type="text" name="procedimento_solicitado"></td>
-                            <td colspan="2">CÓDIGO: <input type="text" name="codigo"></td>
-                        </tr>
-                        <tr>
-                            <td colspan="3">PROFISSIONAL SOLICITANTE: <input type="text" name="profissional_solicitante"></td>
-                            <td colspan="2">AUTORIZAÇÃO: <input type="text" name="autorizacao"></td>
-                        </tr>
-                        <tr>
-                            <td>DATA: <input type="date" name="data_solicitacao"></td>
-                            <td colspan="2"></td>
-                            <td>PACIENTE: <input type="text" name="paciente"></td>
-                            <td>DATA: <input type="date" name="data_paciente"></td>
-                        </tr>
-                    </table>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card" style="font-size: 2rem; padding: 2rem; border: 2px solid #000;">
+                                <div class="card-body">
+                                    <h5 class="card-title" style="font-size: 3rem;">Nome do Paciente</h5>
+                                    <p class="card-text" style="font-size: 2.5rem;">
+                                        {{ $painelUnico->paciente->name ?? 'N/A' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card" style="font-size: 2rem; padding: 2rem; border: 2px solid #000;">
+                                <div class="card-body">
+                                    <h5 class="card-title" style="font-size: 3rem;">
+                                        @if ($painelUnico->permisao_id == 1)
+                                            Guichê
+                                        @elseif ($painelUnico->permisao_id == 2)
+                                            Consultório
+                                        @endif
+                                    </h5>
+                                    <p class="card-text" style="font-size: 2.5rem;">
+                                        {{ $painelUnico->sala_id ?? 'N/A' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
-    
     <!-- Essential javascripts for application to work-->
     <script src="js/jquery-3.7.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -94,6 +96,14 @@
             ga('create', 'UA-72504830-1', 'auto');
             ga('send', 'pageview');
         }
+    // Função para recarregar a página
+    function recarregarPagina() {
+        location.reload();
+    }
+
+    // Configura a recarga da página a cada 2 segundos (2000 milissegundos)
+    setInterval(recarregarPagina, 2000);
+
     </script>
 </body>
 

@@ -102,20 +102,27 @@ Route::middleware(['check.session.expired'])->group(function () {
     #Atendimentos
 
     Route::get('/atendimento/{agenda_id}/{paciente_id}/medico', [AtendimentosController::class, 'index'])->name('atendimento.index');
-    
     Route::post('/atendimentos/store', [AtendimentosController::class, 'storeAtendimento']);
     Route::get('/atendimentos/{agenda_id}/{paciente_id}', [AtendimentosController::class, 'verificarAtendimento']);
-
     Route::post('/anamneses/store', [AtendimentosController::class, 'storeAnamnese']);
     Route::get('/anamneses/check/{paciente_id}', [AtendimentosController::class, 'verificarAnamnese']);
-
     Route::post('/remedios/store', [AtendimentosController::class, 'storeRemedio']);
     Route::get('/remedios/{agenda_id}/{paciente_id}', [AtendimentosController::class, 'verificarRemedio']);
-
     Route::post('/exames/store', [AtendimentosController::class, 'storeExame'])->name('exames.store');
     Route::get('/exames/{agenda_id}/{paciente_id}', [AtendimentosController::class, 'verificarExame']);
 
-    Route::post('/consultorio/painel', [AgendaController::class, 'storeConsultorioPainel'])->name('consultorioPainel.store');
+    #Consultorio
 
+    Route::post('/consultorio/painel', [AgendaController::class, 'storeConsultorioPainel'])->name('consultorioPainel.store');
     Route::get('/consultorio', [PainelController::class, 'index'])->name('painelConsultorio.index');
+
+
+    #SalaVerificação
+
+    Route::middleware(['auth', 'check.question'])->group(function () {
+        Route::post('/salvar-sala', [UserController::class, 'salvarSala']);
+        Route::get('/home', function () {
+            return view('home');
+        });
+    });
 });

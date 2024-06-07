@@ -100,10 +100,16 @@ class PermisoesController extends Controller
      */
     public function destroy(string $id)
     {
+        // Verifica se o ID é 1 ou 2
+        if (in_array($id, [1, 2])) {
+            return redirect()->route('permisao.index')->with('error', 'Você não pode excluir esta permissão!');
+        }
+    
         $permisao = Permisoes::findOrFail($id);
     
         $permisao->delete();
     
-        return redirect()->route('permisao.index')->with('error', 'Permissão excluída com sucesso!');
-    }    
+        return redirect()->route('permisao.index')->with('success', 'Permissão excluída com sucesso!');
+    }
+      
 }   

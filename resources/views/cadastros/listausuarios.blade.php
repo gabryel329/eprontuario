@@ -74,21 +74,23 @@
                                                             <div class="row">
                                                                 <div class="mb-3 col-md-5">
                                                                     <label class="form-label">Nome</label>
-                                                                    <input class="form-control" name="name" type="text" value="{{ $p->name }}" readonly>
+                                                                    <input class="form-control" name="name" type="text" value="{{ $p->name }}">
                                                                 </div>
                                                                 <div class="mb-3 col-md-4">
                                                                     <label class="form-label">Sobrenome</label>
-                                                                    <input class="form-control" name="sobrenome" type="text" value="{{ $p->sobrenome }}" readonly>
+                                                                    <input class="form-control" name="sobrenome" type="text" value="{{ $p->sobrenome }}">
                                                                 </div>
                                                                 <div class="mb-3 col-md-3">
                                                                     <label class="form-label">Permissão</label>
-                                                                    <select class="form-control" name="permissao_id">
-                                                                        <option disabled selected>{{ $p->permisao->cargo }}</option>
+                                                                    <select class="form-control" name="permisao_id">
                                                                         @foreach ($permissoes as $permissao)
-                                                                            <option value="{{ $permissao->id }}">{{ $permissao->cargo }}</option>
+                                                                            <option value="{{ $permissao->id }}" {{ old('permisao_id', $p->permisao_id) == $permissao->id ? 'selected' : '' }}>
+                                                                                {{ $permissao->cargo }}
+                                                                            </option>
                                                                         @endforeach
                                                                     </select>
-                                                                </div>
+                                                                    
+                                                                </div>                                                                
                                                             </div>
                                                             <div class="row">
                                                                 <div class="mb-3 col-md-4">

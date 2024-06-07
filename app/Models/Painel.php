@@ -16,6 +16,7 @@ class Painel extends Model
         'agenda_id',
         'user_id',
         'sala_id',
+        'permisao_id',
     ];
     protected $dates=['deleted_at'];
 

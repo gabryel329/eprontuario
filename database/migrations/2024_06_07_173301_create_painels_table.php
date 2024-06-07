@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('sala_id')->nullable();
+            $table->string('permisao_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
