@@ -18,8 +18,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('sobrenome');
             $table->string('email')->nullable();
-            $table->softDeletes();
-            $table->timestamps();
             $table->date('nasc')->nullable();
             $table->string('cpf')->nullable();
             $table->string('cep')->nullable();
@@ -43,9 +41,11 @@ return new class extends Migration
             $table->string('matricula')->nullable();
             $table->string('cor')->nullable();
             $table->string('imagem')->nullable();
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
-
+    
     /**
      * Reverse the migrations.
      */

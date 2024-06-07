@@ -19,8 +19,6 @@ return new class extends Migration
             $table->foreign('profissional_id')->references('id')->on('profissionals')->onDelete('cascade');
             $table->string('pa')->nullable();
             $table->string('temp')->nullable();
-            $table->softDeletes();
-            $table->timestamps();
             $table->string('peso')->nullable();
             $table->string('altura')->nullable();
             $table->string('gestante')->nullable();
@@ -37,9 +35,11 @@ return new class extends Migration
             $table->string('alergia2')->nullable();
             $table->string('alergia3')->nullable();
             $table->string('anamnese')->nullable();
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
-
+    
     /**
      * Reverse the migrations.
      */

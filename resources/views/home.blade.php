@@ -23,7 +23,7 @@
             @endif
         }
         .content {
-            position: relative; /* Garante que o conteúdo esteja acima da imagem de fundo */
+            position: relative;
             z-index: 1;
             display: flex;
             justify-content: center;
@@ -34,7 +34,6 @@
 
     <main class="app-content">
         <div class="content">
-            <!-- Conteúdo adicional pode ser adicionado aqui -->
             @if ($empresa)
                 <h1>{{ $empresa->name }}</h1>
             @else
@@ -42,4 +41,30 @@
             @endif
         </div>
     </main>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    function verificarUsuario(user_id, permisao_id) {
+        if (permisao_id === 1 || permisao_id === 2) {
+            var resposta = prompt("Qual o Guinche/Escritório?");
+            if (resposta) {
+                $.ajax({
+                    url: '/salvar-sala',
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        user_id: user_id,
+                        sala: resposta
+                    },
+                });
+            }
+        }
+    }
+
+    $(document).ready(function() {
+        @if (session('question_asked') == false && auth()->check() && (auth()->user()->permisao_id == 1 || auth()->user()->permisao_id == 2))
+            verificarUsuario({{ auth()->user()->id }}, {{ auth()->user()->permisao_id }});
+        @endif
+    });
+    </script>
 @endsection

@@ -203,4 +203,20 @@ class UserController extends Controller
         return redirect()->route('usuario.index')->with('success', 'Usuário excluído com Sucesso!');
     }
 
+
+    public function salvarSala(Request $request)
+    {
+        $user = User::find($request->input('user_id'));
+
+        if ($user) {
+            $user->sala = $request->input('sala');
+            $user->save();
+
+            $request->session()->put('question_asked', true);
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'User not found'], 404);
+    }
 }

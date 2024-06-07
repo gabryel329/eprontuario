@@ -68,6 +68,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         // Outros middlewares
         'check.session.expired' => \App\Http\Middleware\CheckSessionExpired::class,
+        'check.question' => \App\Http\Middleware\CheckIfQuestionAsked::class,
     ];
     
 }

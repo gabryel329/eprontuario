@@ -16,8 +16,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('sobrenome');
             $table->string('email')->nullable();
-            $table->softDeletes();
-            $table->timestamps();
             $table->date('nasc')->nullable();
             $table->string('cpf')->nullable();
             $table->string('cep')->nullable();
@@ -39,6 +37,8 @@ return new class extends Migration
             $table->foreign('permisoes_id')->references('id')->on('permisoes')->onDelete('cascade');
             $table->integer('especialidade_id')->nullable();
             $table->foreign('especialidade_id')->references('id')->on('especialidades')->onDelete('cascade');
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
 
