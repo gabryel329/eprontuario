@@ -8,6 +8,7 @@ use App\Models\Painel;
 use App\Models\Procedimentos;
 use App\Models\Profissional;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -200,12 +201,13 @@ class AgendaController extends Controller
             ]);
         }
 
-        $agendas = collect();
+        $agendasChegou = collect();
 
         // Filter agendas based on logged-in user's linked professional ID
         if ($request->has('data')) {
-            $agendas = Agenda::where('profissional_id', $profissionalId)
+            $agendasChegou = Agenda::where('profissional_id', $profissionalId)
                 ->where('data', $request->data)
+                ->where('status', 'CHEGOU')
                 ->whereNotNull('paciente_id')
                 ->orderBy('hora', 'asc')
                 ->get();
@@ -219,66 +221,109 @@ class AgendaController extends Controller
             session()->forget('data');
         }
 
-        return view('agenda.agendamedica', compact('agendas', 'pacientes'));
+        $agendasMarcado = collect();
+
+        // Filter agendas based on logged-in user's linked professional ID
+        if ($request->has('data')) {
+            $agendasMarcado = Agenda::where('profissional_id', $profissionalId)
+                ->where('data', $request->data)
+                ->where('status', 'MARCADO')
+                ->whereNotNull('paciente_id')
+                ->orderBy('hora', 'asc')
+                ->get();
+
+            // Store form values in the session (optional, adjust based on your needs)
+            session([
+                'data' => $request->data,
+            ]);
+        } else {
+            // Clear session data if no filter is applied (optional)
+            session()->forget('data');
+        }
+
+        $agendasEvadio = collect();
+
+        // Filter agendas based on logged-in user's linked professional ID
+        if ($request->has('data')) {
+            $agendasEvadio = Agenda::where('profissional_id', $profissionalId)
+                ->where('data', $request->data)
+                ->where('status', 'EVADIO')
+                ->whereNotNull('paciente_id')
+                ->orderBy('hora', 'asc')
+                ->get();
+
+            // Store form values in the session (optional, adjust based on your needs)
+            session([
+                'data' => $request->data,
+            ]);
+        } else {
+            // Clear session data if no filter is applied (optional)
+            session()->forget('data');
+        }
+
+        $agendasCancelado = collect();
+
+        // Filter agendas based on logged-in user's linked professional ID
+        if ($request->has('data')) {
+            $agendasCancelado = Agenda::where('profissional_id', $profissionalId)
+                ->where('data', $request->data)
+                ->where('status', 'CANCELADO')
+                ->whereNotNull('paciente_id')
+                ->orderBy('hora', 'asc')
+                ->get();
+
+            // Store form values in the session (optional, adjust based on your needs)
+            session([
+                'data' => $request->data,
+            ]);
+        } else {
+            // Clear session data if no filter is applied (optional)
+            session()->forget('data');
+        }
+
+        return view('agenda.agendamedica', compact('agendasMarcado', 'agendasEvadio', 'agendasCancelado', 'agendasChegou', 'pacientes'));
     }
 
     public function storeConsultorioPainel(Request $request)
     {
-        // Recupere os dados do pedido AJAX
-        $pacienteId = $request->input('paciente_id');
-        $agendaId = $request->input('agenda_id');
-    
-        // Recupere o usuário logado
         $user = Auth::user();
         $userId = $user->id;
         $sala = $user->sala;
         $permisaoId = $user->permisao_id;
-    
-        // Criar um novo registro na tabela painels
-        $painel = new Painel();
-        $painel->paciente_id = $pacienteId;
-        $painel->agenda_id = $agendaId;
-        $painel->user_id = $userId;
-        $painel->sala_id = $sala; // Supondo que o campo na tabela se chame sala_id
-        $painel->permisao_id = $permisaoId;
-        $painel->save();
-    
-        return response()->json(['success' => true, 'message' => 'Dados salvos com sucesso']);
-    }
-    
-
-    public function updateConsultorioPainel(Request $request)
-    {
-        // Recupere os dados do pedido AJAX
-        $pacienteId = $request->input('paciente_id');
         $agendaId = $request->input('agenda_id');
-    
-        // Recupere o usuário logado
-        $user = Auth::user();
-        $userId = $user->id;
-        $sala = $user->sala;
-        $permisao_id = $user->permisao_id;
-    
-        // Verifique se já existe um registro com o paciente_id fornecido
-        $painel = Painel::where('paciente_id', $pacienteId)->first();
-    
+        $pacienteId = $request->input('paciente_id');
+
+        // Verificar se já existe um registro com o mesmo agenda_id
+        $painel = Painel::where('agenda_id', $agendaId)
+                ->where('permisao_id', $permisaoId)
+                ->first();
+
+
         if ($painel) {
-            // Atualize o registro existente, mas mantenha updated_at inalterado
+            // Se o registro já existe, atualize os dados e incremente a coluna sequencia
+            $painel->timestamps = false; // Desativa a manipulação automática dos timestamps
+
+            $painel->update([
+                'user_id' => $userId,
+                'sala_id' => $sala,
+                'permisao_id' => $permisaoId,
+                'sequencia' => $painel->sequencia + 1, // Incrementa a coluna sequencia
+            ]);
+
+            return response()->json(['success' => 'Painel atualizado com sucesso']);
+        } else {
+            // Se não existe, crie um novo registro
+            $painel = new Painel();
+            $painel->paciente_id = $pacienteId;
             $painel->agenda_id = $agendaId;
             $painel->user_id = $userId;
-            $painel->sala_id = $sala; // Supondo que o campo na tabela se chame sala_id
-            $painel->permisao_id = $permisao_id;
-            $painel->timestamps = false; // Desativa a atualização automática dos timestamps
-            $painel->save(['timestamps' => false]); // Salva o modelo sem atualizar updated_at
-            
-            // Atualize o created_at manualmente
-            $painel->created_at = now();
-            $painel->save(['timestamps' => false]);
-    
-            return response()->json(['success' => true, 'message' => 'Dados atualizados com sucesso']);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Paciente não encontrado'], 404);
+            $painel->sala_id = $sala;
+            $painel->permisao_id = $permisaoId;
+            $painel->sequencia = 1; // Inicializa sequencia como 1 para novos registros
+            $painel->save();
+
+            return response()->json(['success' => true, 'message' => 'Dados salvos com sucesso']);
         }
     }
-    
+
 }
