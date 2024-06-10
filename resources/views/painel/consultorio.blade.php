@@ -10,70 +10,83 @@
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/main.css') }}">
     <!-- Font-icon css-->
-    <link rel="stylesheet" type="text/css"
-        href="{{ asset('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css') }}">
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/LOGO_01_VERDE.png') }}">
 </head>
 
-<body class="app sidebar-mini">
-    <!-- Navbar-->
-    <header class="app-header"><a class="app-header__logo">Vali</a>
+<style>
+    .app-content {
+        height: 100vh;
+    }
 
-    </header>
+    .card-body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+</style>
+
+<body class="app sidebar-mini">
     <!-- Sidebar menu-->
-    <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
     <aside class="app-sidebar">
-        <div class="app-sidebar__user-name" style="text-align: center; ">
-            <h4 style="color: white">Pacientes</h4>
+        <div class="app-sidebar__user-name" style="text-align: center;">
+            <h5 style="color: white; text-transform: uppercase; font-weight: bold;">Pacientes Chamados</h5>
         </div>
-        <ul class="app-menu" style="text-align: center">
-            <h1></h1>
-            @foreach ($painelTudo as $item)
-            <li>
-                <a class="app-menu__item">
-                    <span class="app-menu__label">{{$item->paciente->name}} {{$item->paciente->sobrenome}}<br>{{$item->created_at}}</span>
-                </a>    
-            </li>
-            @endforeach
-        </ul>
+    <ul class="app-menu" style="text-align: center; text-transform: uppercase; font-weight: bold;">
+        <h1></h1>
+        @foreach ($painelTudo->sortByDesc('created_at')->take(5) as $item)
+        <li>
+            <a class="app-menu__item">
+                <span class="app-menu__label">
+                    {{ $item->paciente->name ?? 'N/A' }} {{ $item->paciente->sobrenome ?? 'N/A' }}<br>
+                    @if ($item->permisao_id == 1)
+                    Guichê {{ $item->sala_id }}
+                    @elseif ($item->permisao_id == 2)
+                    Consultório {{ $item->sala_id }}
+                    @endif
+                </span>
+            </a>
+        </li>
+        @endforeach
+    </ul>
+
     </aside>
-    <main class="app-content d-flex justify-content-center align-items-center">
-        <div class="row">
-            <div class="col-md-12"> <!-- Defina o tamanho do tile-body -->
-                <div class="tile">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card" style="font-size: 2rem; padding: 2rem; border: 2px solid #000;">
-                                <div class="card-body">
-                                    <h5 class="card-title" style="font-size: 3rem;">Nome do Paciente</h5>
-                                    <p class="card-text" style="font-size: 2.5rem;">
-                                        {{ $painelUnico->paciente->name ?? 'N/A' }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card" style="font-size: 2rem; padding: 2rem; border: 2px solid #000;">
-                                <div class="card-body">
-                                    <h5 class="card-title" style="font-size: 3rem;">
-                                        @if ($painelUnico->permisao_id == 1)
-                                            Guichê
-                                        @elseif ($painelUnico->permisao_id == 2)
-                                            Consultório
-                                        @endif
-                                    </h5>
-                                    <p class="card-text" style="font-size: 2.5rem;">
-                                        {{ $painelUnico->sala_id ?? 'N/A' }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <main class="app-content d-flex justify-content-center align-items-center flex-column">
+        <div class="card text-center mb-4 flex-grow-1 w-100">
+            <div class="card-body">
+                <p class="card-text" style="font-size: 4rem; text-transform: uppercase; font-weight: bold;">
+                    {{ $painelUnico->paciente->name ?? 'Sem Pacientes' }}
+                    {{ $painelUnico->paciente->sobrenome ?? '' }}
+                </p>
+            </div>
+        </div>
+        <div class="card text-center flex-grow-1 w-100">
+            <div class="card-body">
+            @if ($painelUnico)
+                <h5 class="card-title" style="font-size: 3rem; text-transform: uppercase; font-weight: bold;">
+                    @if ($painelUnico->permisao_id == 1)
+                    Guichê
+                    @elseif ($painelUnico->permisao_id == 2)
+                    Consultório
+                    @endif
+                </h5>
+                <p class="card-text" style="font-size: 4rem; font-weight: bold;">
+                    {{ $painelUnico->sala_id ?? 'N/A' }}
+                </p>
+            @else
+                <h5 class="card-title" style="font-size: 3rem; text-transform: uppercase; font-weight: bold;">
+                    Informação não disponível
+                </h5>
+                <p class="card-text" style="font-size: 4rem; font-weight: bold;">
+                </p>
+            @endif
             </div>
         </div>
     </main>
+    <!-- Sound for new patient -->
+    <audio id="newPatientSound" src="{{ asset('sounds/new_patient.mp3') }}" preload="auto"></audio>
     <!-- Essential javascripts for application to work-->
     <script src="js/jquery-3.7.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -96,14 +109,23 @@
             ga('create', 'UA-72504830-1', 'auto');
             ga('send', 'pageview');
         }
-    // Função para recarregar a página
-    function recarregarPagina() {
-        location.reload();
-    }
 
-    // Configura a recarga da página a cada 2 segundos (2000 milissegundos)
-    setInterval(recarregarPagina, 2000);
+        // Função para recarregar a página
+        function recarregarPagina() {
+            location.reload();
+        }
 
+        // Configura a recarga da página a cada 2 segundos (2000 milissegundos)
+        setInterval(recarregarPagina, 2000);
+
+        // Tocar som quando um novo paciente for mostrado
+        let lastPatientCreatedAt = localStorage.getItem('lastPatientCreatedAt');
+        const currentPatientCreatedAt = "{{ $painelUnico->created_at ?? 'N/A' }}";
+
+        if (currentPatientCreatedAt !== 'N/A' && lastPatientCreatedAt !== currentPatientCreatedAt) {
+            document.getElementById('newPatientSound').play();
+            localStorage.setItem('lastPatientCreatedAt', currentPatientCreatedAt);
+        }
     </script>
 </body>
 

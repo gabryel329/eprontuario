@@ -147,7 +147,6 @@ class AgendaController extends Controller
             'paciente_id' => 'required|integer',
             'name' => 'required|string|max:255',
             'sobrenome' => 'required|string|max:255',
-            'procedimento_id' => 'required|integer',
         ]);
 
         // Encontrar a agenda pelo ID
@@ -228,24 +227,58 @@ class AgendaController extends Controller
         // Recupere os dados do pedido AJAX
         $pacienteId = $request->input('paciente_id');
         $agendaId = $request->input('agenda_id');
-
+    
         // Recupere o usuário logado
         $user = Auth::user();
         $userId = $user->id;
         $sala = $user->sala;
-        $permisao_id = $user->permisao_id;
-        
-
+        $permisaoId = $user->permisao_id;
+    
         // Criar um novo registro na tabela painels
         $painel = new Painel();
         $painel->paciente_id = $pacienteId;
         $painel->agenda_id = $agendaId;
         $painel->user_id = $userId;
         $painel->sala_id = $sala; // Supondo que o campo na tabela se chame sala_id
-        $painel->permisao_id = $permisao_id;
+        $painel->permisao_id = $permisaoId;
         $painel->save();
-
+    
         return response()->json(['success' => true, 'message' => 'Dados salvos com sucesso']);
     }
+    
 
+    public function updateConsultorioPainel(Request $request)
+    {
+        // Recupere os dados do pedido AJAX
+        $pacienteId = $request->input('paciente_id');
+        $agendaId = $request->input('agenda_id');
+    
+        // Recupere o usuário logado
+        $user = Auth::user();
+        $userId = $user->id;
+        $sala = $user->sala;
+        $permisao_id = $user->permisao_id;
+    
+        // Verifique se já existe um registro com o paciente_id fornecido
+        $painel = Painel::where('paciente_id', $pacienteId)->first();
+    
+        if ($painel) {
+            // Atualize o registro existente, mas mantenha updated_at inalterado
+            $painel->agenda_id = $agendaId;
+            $painel->user_id = $userId;
+            $painel->sala_id = $sala; // Supondo que o campo na tabela se chame sala_id
+            $painel->permisao_id = $permisao_id;
+            $painel->timestamps = false; // Desativa a atualização automática dos timestamps
+            $painel->save(['timestamps' => false]); // Salva o modelo sem atualizar updated_at
+            
+            // Atualize o created_at manualmente
+            $painel->created_at = now();
+            $painel->save(['timestamps' => false]);
+    
+            return response()->json(['success' => true, 'message' => 'Dados atualizados com sucesso']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Paciente não encontrado'], 404);
+        }
+    }
+    
 }

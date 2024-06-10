@@ -62,44 +62,42 @@
             </div>
         </div>
         <div class="col-md-9">
-            <div class="tile">
-                <table class="table table-striped" style="text-align: center">
-                    <thead>
-                        <tr>
-                            <th>Hora</th>
-                            <th>Nome</th>
-                            <th>Consulta</th>
-                            <th>Status</th>
-                            <th>Chamar</th>
-                            <th>Atender</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($agendas as $item)
-                            <tr>
-                                <td hidden>{{ $item->id }}</td>
-                                <td hidden>{{ $item->paciente_id }}</td>
-                                <td>{{ $item->hora }}</td>
-                                <td>{{ $item->name }} {{ $item->sobrenome }}</td>
-                                <td title="{{ $item->procedimento_id }}">{{ $item->procedimento_id }}</td>
-                                <td>{{ $item->status }}</td>
-                                <td>
-                                    <a type="submit" class="btn btn-warning form-control chamar-btn" data-paciente-id="{{ $item->paciente_id }}" data-agenda-id="{{ $item->id }}" data-paciente-name="{{ $item->name }}">
-                                        <i class="bi bi-volume-up"></i>
-                                    </a>
-                                </td>
-                                <td>
-                                    <a type="button" href="{{ route('atendimento.index', [$item->id, $item->paciente_id]) }}" class="btn btn-info form-control"><i class="bi bi-file-earmark-text"></i></a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="tile">
+    <table class="table table-striped" style="text-align: center">
+            <thead>
+                <tr>
+                    <th>Hora</th>
+                    <th>Nome</th>
+                    <th>Consulta</th>
+                    <th>Status</th>
+                    <th>Chamar</th>
+                    <th>Atender</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($agendas as $item)
+                    <tr>
+                        <td hidden>{{ $item->id }}</td>
+                        <td hidden>{{ $item->paciente_id }}</td>
+                        <td>{{ $item->hora }}</td>
+                        <td>{{ $item->name }} {{ $item->sobrenome }}</td>
+                        <td title="{{ $item->procedimento_id }}">{{ $item->procedimento_id }}</td>
+                        <td>{{ $item->status }}</td>
+                        <td>
+                            <a type="submit" class="btn btn-warning form-control chamar-btn" data-paciente-id="{{ $item->paciente_id }}" data-agenda-id="{{ $item->id }}" data-paciente-name="{{ $item->name }}">
+                                <i class="bi bi-volume-up"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a type="button" href="{{ route('atendimento.index', [$item->id, $item->paciente_id]) }}" class="btn btn-info form-control"><i class="bi bi-file-earmark-text"></i></a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
+</div>
 </main>
-
 <script>
     document.querySelectorAll('.chamar-btn').forEach(button => {
         button.addEventListener('click', function(event) {
@@ -107,10 +105,9 @@
 
             let pacienteId = this.getAttribute('data-paciente-id');
             let agendaId = this.getAttribute('data-agenda-id');
-            let pacienteName = this.getAttribute('data-paciente-name');
 
             // Envia os dados via AJAX para o servidor
-            fetch('{{ route('consultorioPainel.store') }}', {
+            fetch('{{ route('consultorioPainel.update') }}', { // Ajuste a rota para a função update
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -124,14 +121,14 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Dados salvos com sucesso para o paciente: ' + pacienteName);
+                    alert('Paciente chamado!');
                 } else {
-                    alert('Erro ao salvar os dados');
+                    alert('Erro ao atualizar os dados: ' + data.message);
                 }
             })
             .catch(error => {
                 console.error('Erro:', error);
-                alert('Erro ao salvar os dados');
+                alert('Erro ao atualizar os dados');
             });
         });
     });

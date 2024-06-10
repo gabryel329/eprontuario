@@ -10,6 +10,7 @@ use App\Http\Controllers\PainelController;
 use App\Http\Controllers\PermisoesController;
 use App\Http\Controllers\ProfissionalController;
 use App\Http\Controllers\UserController;
+use App\Models\Agenda;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -98,6 +99,7 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::put('/agenda/{id}', [AgendaController::class, 'update'])->name('agenda.update');
     Route::delete('/agenda/{id}', [AgendaController::class, 'destroy'])->name('agenda.destroy');
     Route::post('/agenda/update-status', [AgendaController::class, 'updateStatus'])->name('agenda.updateStatus');
+    Route::post('/consultorioPainel/update', [AgendaController::class, 'updateConsultorioPainel'])->name('consultorioPainel.update');
 
     #Atendimentos
 

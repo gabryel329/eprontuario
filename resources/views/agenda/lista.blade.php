@@ -90,52 +90,57 @@
                         Nenhum filtro aplicado.
                     @endif
                 </span>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Hora</th>
-                            <th>Nome</th>
-                            <th>CPF</th>
-                            <th>Consulta</th>
-                            <th>Status</th>
-                            <th>Excluir</th>
-                            <th>Editar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($agendas as $item)
-                            <tr>
-                                <td>{{ $item->hora }}</td>
-                                <td>{{ $item->name }} {{ $item->sobrenome }}</td>
-                                <td>{{ $item->paciente->cpf }}</td>
-                                <td>{{ $item->procedimento_id }}</td>
-                                <td>
-                                    <select class="form-control status-select" data-id="{{ $item->id }}" data-paciente-id="{{ $item->paciente_id }}">
-                                        <option value="MARCADO" {{ $item->status == 'MARCADO' ? 'selected' : '' }}>MARCADO</option>
-                                        <option value="CHEGOU" {{ $item->status == 'CHEGOU' ? 'selected' : '' }}>CHEGOU</option>
-                                        <option value="CANCELADO" {{ $item->status == 'CANCELADO' ? 'selected' : '' }}>CANCELADO</option>
-                                        <option value="EVADIO" {{ $item->status == 'EVADIO' ? 'selected' : '' }}>EVADIO</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <form action="{{ route('agenda.destroy', $item->id) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger"><i class="bi bi-x-circle"></i></button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-info" onclick="openEditModal('{{ $item->id }}')"><i class="bi bi-pencil-square"></i></button>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Hora</th>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Consulta</th>
+            <th>Status</th>
+            <th>Chamar</th>
+            <th>Excluir</th>
+            <th>Editar</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($agendas as $item)
+            <tr>
+                <td>{{ $item->hora }}</td>
+                <td>{{ $item->paciente->nome }} {{ $item->paciente->sobrenome }}</td>
+                <td>{{ optional($item->paciente)->cpf }}</td>
+                <td>{{ $item->procedimento_id }}</td>
+                <td>
+                    <select class="form-control status-select" data-id="{{ $item->id }}" data-paciente-id="{{ $item->paciente_id }}">
+                        <option value="MARCADO" {{ $item->status == 'MARCADO' ? 'selected' : '' }}>MARCADO</option>
+                        <option value="CHEGOU" {{ $item->status == 'CHEGOU' ? 'selected' : '' }}>CHEGOU</option>
+                        <option value="CANCELADO" {{ $item->status == 'CANCELADO' ? 'selected' : '' }}>CANCELADO</option>
+                        <option value="EVADIO" {{ $item->status == 'EVADIO' ? 'selected' : '' }}>EVADIO</option>
+                    </select>
+                </td>
+                <td>
+                    <a type="submit" class="btn btn-warning form-control chamar-btn" data-paciente-id="{{ $item->paciente_id }}" data-agenda-id="{{ $item->id }}" data-paciente-nome="{{ $item->paciente->nome }}" data-paciente-sobrenome="{{ $item->paciente->sobrenome }}">
+                        <i class="bi bi-volume-up"></i>
+                    </a>
+                </td>
+                <td>
+                    <form action="{{ route('agenda.destroy', $item->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger"><i class="bi bi-x-circle"></i></button>
+                    </form>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-info" onclick="openEditModal('{{ $item->id }}')"><i class="bi bi-pencil-square"></i></button>
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+</div>
+</div>
+</div>
 </main>
-
 <!-- Modals -->
 @foreach ($agendas as $item)
     <!-- Modal for Editing -->
@@ -324,6 +329,44 @@
             } else {
                 $(this).hide();
             }
+        });
+    });
+
+    document.querySelectorAll('.chamar-btn').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault(); // Impede o comportamento padrão do botão
+
+            let pacienteId = this.getAttribute('data-paciente-id');
+            let agendaId = this.getAttribute('data-agenda-id');
+            let pacienteNome = this.getAttribute('data-paciente-nome');
+            let pacienteSobrenome = this.getAttribute('data-paciente-sobrenome');
+
+            // Envia os dados via AJAX para o servidor
+            fetch('{{ route('consultorioPainel.store') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    paciente_id: pacienteId,
+                    agenda_id: agendaId,
+                    nome: pacienteNome,
+                    sobrenome: pacienteSobrenome
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Paciente chamado!');
+                } else {
+                    alert('Erro ao salvar os dados');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao salvar os dados');
+            });
         });
     });
 </script>
