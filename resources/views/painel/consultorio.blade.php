@@ -42,9 +42,9 @@
                     <span class="app-menu__label">
                         {{ $item->paciente->name ?? 'N/A' }} {{ $item->paciente->sobrenome ?? 'N/A' }}<br>
                         @if ($item->permisao_id == 1)
-                        Guichê {{ $item->sala_id }}
-                        @elseif ($item->permisao_id == 2)
                         Consultório {{ $item->sala_id }}
+                        @elseif ($item->permisao_id == 2)
+                        Guichê {{ $item->sala_id }}
                         @endif
                     </span>
                 </a>
