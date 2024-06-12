@@ -45,21 +45,37 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
     function verificarUsuario(user_id, permisao_id) {
-        if (permisao_id === 1 || permisao_id === 2) {
-            var resposta = prompt("Qual o Guinche/Escritório?");
-            if (resposta) {
-                $.ajax({
-                    url: '/salvar-sala',
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        user_id: user_id,
-                        sala: resposta
-                    },
-                });
-            }
+    var pergunta;
+    if (permisao_id === 1) {
+        pergunta = "Qual o consultório?";
+    } else if (permisao_id === 2) {
+        pergunta = "Qual o guichê?";
+    }
+
+    if (pergunta) {
+        var resposta = prompt(pergunta);
+        if (resposta) {
+            $.ajax({
+                url: '/salvar-sala',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    user_id: user_id,
+                    sala: resposta
+                },
+                success: function(response) {
+                    // Aqui você pode adicionar qualquer ação adicional que você queira realizar após a resposta bem-sucedida
+                    alert('Resposta salva com sucesso!');
+                },
+                error: function(xhr, status, error) {
+                    // Aqui você pode adicionar ações adicionais para lidar com erros
+                    alert('Ocorreu um erro ao salvar a resposta.');
+                }
+            });
         }
     }
+}
+
 
     $(document).ready(function() {
         @if (session('question_asked') == false && auth()->check() && (auth()->user()->permisao_id == 1 || auth()->user()->permisao_id == 2))

@@ -17,7 +17,7 @@
   </div>
   <ul class="app-menu">
     <li><a class="app-menu__item active" href="/home"><i class="app-menu__icon bi bi-speedometer"></i><span class="app-menu__label">Página Inicial</span></a></li>
-    @if(Auth::user()->permisao_id == 1 || Auth::user()->permisao_id == 3)
+    @if(Auth::user()->permisao_id == 2 || Auth::user()->permisao_id == 3)
       <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi-person-workspace"></i><span class="app-menu__label">Recepção</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
         <ul class="treeview-menu">
           <li><a class="treeview-item" href="{{route('agenda.index')}}"><i class="icon bi bi-calendar-plus"></i> Criar Agenda</a></li>
@@ -35,7 +35,7 @@
       </li>
     @endif
 
-    @if(Auth::user()->permisao_id == 2 || Auth::user()->permisao_id == 3)
+    @if(Auth::user()->permisao_id == 1 || Auth::user()->permisao_id == 3)
       <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi-heart-pulse"></i><span class="app-menu__label">Atendimento</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
         <ul class="treeview-menu">
           <li><a class="treeview-item" href="#"><i class="icon bi bi-pencil-square"></i> Prontuarios</a></li>

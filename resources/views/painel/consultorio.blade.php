@@ -130,7 +130,7 @@
             let roomNumber = document.getElementById('room-number').innerText;
 
             // Construct the full text
-            let fullText = `${patientName}, ${locationType}, Sala ${roomNumber}`;
+            let fullText = `${patientName}, ${locationType}, ${roomNumber}`;
 
             // Speak the text if updated_at has changed
             let lastPatientUpdatedAt = localStorage.getItem('lastPatientUpdatedAt');

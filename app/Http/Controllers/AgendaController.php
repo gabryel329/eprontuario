@@ -199,7 +199,7 @@ class AgendaController extends Controller
         } else {
             // Handle the case where user doesn't have a linked professional ID
             // (consider returning an appropriate error message or view)
-            return view('agenda.error', [ // Replace 'error' with appropriate view name
+            return view('home', [ // Replace 'error' with appropriate view name
                 'message' => 'Usuário não possui vínculo com um profissional'
             ]);
         }

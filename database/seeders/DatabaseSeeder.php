@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         DB::table('permisoes')->insert([
-            ['cargo' => 'Recepção'],
             ['cargo' => 'Medico'],
+            ['cargo' => 'Recepção'],
             ['cargo' => 'Admin'],
         ]);
 
@@ -31,8 +31,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('profissionals')->insert([
-            ['name' => 'Admin', 'sobrenome' => 'Souza', 'email' => 'admin@anb.com'],
-            ['name' => 'Matheus', 'sobrenome' => 'Silva', 'email' => 'cando@gmail.com'],
+            ['name' => 'Medico', 'sobrenome' => 'Souza', 'email' => 'admin@anb.com'],
+            ['name' => 'Recepcao', 'sobrenome' => 'Silva', 'email' => 'cando@gmail.com'],
         ]);
 
         DB::table('users')->insert([
