@@ -31,8 +31,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('profissionals')->insert([
-            ['name' => 'Medico', 'sobrenome' => 'Souza', 'email' => 'admin@anb.com'],
-            ['name' => 'Recepcao', 'sobrenome' => 'Silva', 'email' => 'cando@gmail.com'],
+            ['name' => 'Medico', 'sobrenome' => 'Souza', 'email' => 'admin@anb.com', 'crm' => 123456],
+            ['name' => 'Recepcao', 'sobrenome' => 'Silva', 'email' => 'cando@gmail.com', 'crm' => null],
         ]);
 
         DB::table('users')->insert([
