@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         DB::table('permisoes')->insert([
             ['cargo' => 'Recepção'],
             ['cargo' => 'Medico'],
+            ['cargo' => 'Admin'],
         ]);
 
         DB::table('especialidades')->insert([
@@ -30,16 +31,32 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('profissionals')->insert([
-            ['name' => 'Admin2', 'sobrenome' => 'Souza', 'email' => 'admin@anb.com'],
-            ['name' => 'Matheus', 'sobrenome' => 'Silva', 'email' => 'cando@gmail.com']
+            ['name' => 'Admin', 'sobrenome' => 'Souza', 'email' => 'admin@anb.com'],
+            ['name' => 'Matheus', 'sobrenome' => 'Silva', 'email' => 'cando@gmail.com'],
         ]);
 
         DB::table('users')->insert([
             [
                 'name' => 'Admin',
                 'email' => 'admin@anb.com',
+                'permisao_id' => 3,
+                'profissional_id' => null,
+                'password' => bcrypt('12345678'),
+                'imagem' => 'favicon.png'
+            ],
+            [
+                'name' => 'Admin1',
+                'email' => 'admin1@anb.com',
                 'permisao_id' => 1,
                 'profissional_id' => 1,
+                'password' => bcrypt('12345678'),
+                'imagem' => 'favicon.png'
+            ],
+            [
+                'name' => 'Admin2',
+                'email' => 'admin2@anb.com',
+                'permisao_id' => 2,
+                'profissional_id' => 2,
                 'password' => bcrypt('12345678'),
                 'imagem' => 'favicon.png'
             ],
