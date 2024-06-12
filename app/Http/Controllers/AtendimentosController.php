@@ -24,18 +24,95 @@ class AtendimentosController extends Controller
         $agenda = Agenda::findOrFail($agenda_id);
         $medicamento = Medicamento::all();
         $procedimento = Procedimentos::all();
-        // Obtenha a data atual
-        $dataAtual = now()->format('Y-m-d');
-
-        // Busque a anamnese com base na data atual e no paciente_id
-        $anamnese = Anamnese::where('created_at', $dataAtual)
-            ->where('paciente_id', $paciente_id)
-            ->first();
 
         $paciente = Pacientes::findOrFail($paciente_id);
 
-        return view('atendimentos.atendimentomedico', compact('agenda', 'paciente', 'anamnese', 'medicamento', 'procedimento'));
+        // Consulta para obter o histórico de atendimento do paciente
+        $historico = DB::table('agendas as ag')
+            ->join('pacientes as pa', 'ag.paciente_id', '=', 'pa.id')
+            ->leftJoin('anamneses as an', function ($join) {
+                $join->on('an.paciente_id', '=', 'pa.id')
+                    ->on(DB::raw('DATE(an.created_at)'), '=', 'ag.data');
+            })
+            ->leftJoin('atendimentos as at', function ($join) {
+                $join->on('at.paciente_id', '=', 'pa.id')
+                    ->on(DB::raw('DATE(at.created_at)'), '=', 'ag.data');
+            })
+            ->leftJoin('exames as ex', function ($join) {
+                $join->on('ex.paciente_id', '=', 'pa.id')
+                    ->on(DB::raw('DATE(ex.created_at)'), '=', 'ag.data');
+            })
+            ->leftJoin('remedios as re', function ($join) {
+                $join->on('re.paciente_id', '=', 'pa.id')
+                    ->on(DB::raw('DATE(re.created_at)'), '=', 'ag.data');
+            })
+            ->select(
+                'ag.data',
+                'pa.id as paciente_id',
+                DB::raw('STRING_AGG(DISTINCT an.id::text, \',\') as anamneses_ids'),
+                DB::raw('STRING_AGG(DISTINCT at.id::text, \',\') as atendimentos_ids'),
+                DB::raw('STRING_AGG(DISTINCT ex.id::text, \',\') as exames_ids'),
+                DB::raw('STRING_AGG(DISTINCT re.id::text, \',\') as remedios_ids'),
+                'an.profissional_id as an_profissional_id',
+                'an.pa as an_pa',
+                'an.temp as an_temp',
+                'an.peso as an_peso',
+                'an.altura as an_altura',
+                'an.gestante as an_gestante',
+                'an.dextro as an_dextro',
+                'an.spo2 as an_spo2',
+                'an.fc as an_fc',
+                'an.fr as an_fr',
+                'an.acolhimento as an_acolhimento',
+                'an.acolhimento1 as an_acolhimento1',
+                'an.acolhimento2 as an_acolhimento2',
+                'an.acolhimento3 as an_acolhimento3',
+                'an.acolhimento4 as an_acolhimento4',
+                'an.alergia1 as an_alergia1',
+                'an.alergia2 as an_alergia2',
+                'an.alergia3 as an_alergia3',
+                'an.anamnese as an_anamnese',
+                'at.queixas as at_queixas',
+                'at.atestado as at_atestado',
+                'at.evolucao as at_evolucao',
+                'at.condicao as at_condicao'
+            )
+            ->where('pa.id', $paciente_id)
+            ->groupBy(
+                'ag.data',
+                'pa.id',
+                'an.profissional_id',
+                'an.pa',
+                'an.temp',
+                'an.peso',
+                'an.altura',
+                'at.condicao',
+                'at.evolucao',
+                'at.atestado',
+                'an.spo2',
+                'an.dextro',
+                'an.gestante',
+                'at.queixas',
+                'an.anamnese',
+                'an.alergia3',
+                'an.alergia2',
+                'an.alergia1',
+                'an.acolhimento4',
+                'an.acolhimento3',
+                'an.acolhimento2',
+                'an.acolhimento1',
+                'an.acolhimento',
+                'an.fr',
+                'an.fc'
+            )
+            ->orderBy('ag.data', 'asc')
+            ->get();
+
+        return view('atendimentos.atendimentomedico', compact('agenda', 'paciente', 'medicamento', 'procedimento', 'historico'));
     }
+
+
+
 
     public function storeAtendimento(Request $request)
     {
