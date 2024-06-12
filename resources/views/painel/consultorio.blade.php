@@ -66,9 +66,9 @@
             @if ($painelUnico)
                 <h5 id="location-type" class="card-title" style="font-size: 3rem; text-transform: uppercase; font-weight: bold;">
                     @if ($painelUnico->permisao_id == 1)
-                    Guichê
-                    @elseif ($painelUnico->permisao_id == 2)
                     Consultório
+                    @elseif ($painelUnico->permisao_id == 2)
+                    Guichê
                     @endif
                 </h5>
                 <p id="room-number" class="card-text" style="font-size: 4rem; font-weight: bold;">
