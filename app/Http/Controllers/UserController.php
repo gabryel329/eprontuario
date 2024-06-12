@@ -45,13 +45,19 @@ class UserController extends Controller
 
      public function store(Request $request)
      {
+         // Validação personalizada
+         $messages = [
+             'password.min' => 'A senha deve ter pelo menos 8 caracteres.',
+             // Adicione outras mensagens personalizadas conforme necessário
+         ];
+     
          // Validate the request inputs, including the image size
          $request->validate([
              'name' => 'required|string|max:255',
              'sobrenome' => 'required|string|max:255',
              'email' => 'required|email|unique:users,email',
              'password' => 'required|string|min:8',
-         ]);
+         ], $messages);
      
          // Capitalize the input
          $nome = ucfirst($request->input('name'));
@@ -65,16 +71,16 @@ class UserController extends Controller
          $imagem = $request->file('imagem');
      
          if ($imagem && $imagem->isValid()) {
-            $filenameWithExt = $imagem->getClientOriginalName();
-            // Get just filename
-            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            // Get just ext
-            $extension = $imagem->getClientOriginalExtension();
-            // Filename to store
-            $imageName = $filename . '.' . $extension;
-
-            // Upload Image to the 'public/images/' directory
-            $imagem->move(public_path('images/'), $imageName);
+             $filenameWithExt = $imagem->getClientOriginalName();
+             // Get just filename
+             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+             // Get just ext
+             $extension = $imagem->getClientOriginalExtension();
+             // Filename to store
+             $imageName = $filename . '.' . $extension;
+     
+             // Upload Image to the 'public/images/' directory
+             $imagem->move(public_path('images/'), $imageName);
      
              // Create a new user
              $user = User::create([
@@ -99,7 +105,7 @@ class UserController extends Controller
      
          return redirect()->route('usuario.index')->with('success', 'Usuário criado com sucesso')->with('user', $user);
      }
-
+     
 
     /**
      * Display the specified resource.

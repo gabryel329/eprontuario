@@ -38,7 +38,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Médico</label>
-                                <select class="form-control" id="profissional_id" name="profissional_id">
+                                <select class="form-control" id="profissional_id" name="profissional_id" required>
                                     <option disabled selected style="font-size:18px;color: black;">Escolha</option>
                                     @foreach ($profissional as $item)
                                         <option value="{{ $item->id }}">{{ $item->name }} {{ $item->sobrenome }}
@@ -58,8 +58,7 @@
                                 <div class="row">
                                     <div class="mb-3 col-md-6">
                                         <label class="form-label">Hora</label>
-                                        <input class="form-control" id="hora" name="hora" type="time"
-                                            list="time-options">
+                                        <input class="form-control" id="hora" name="hora" type="time" list="time-options" required>
                                         <datalist id="time-options"></datalist>
                                     </div>
                                     <div class="mb-3 col-md-6">
@@ -83,9 +82,15 @@
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="mb-2 col-md-12">
+                                        <label class="form-label"><strong>Contato :</strong></label>
+                                        <input class="form-control" id="celular" name="celular" type="text">
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="mb-3 col-md-12">
-                                        <label class="form-label">Procedimento</label>
-                                        <select class="form-control" id="procedimento_id" name="procedimento_id">
+                                        <label class="form-label">Consulta</label>
+                                        <select class="form-control" id="procedimento_id" name="procedimento_id" required>
                                             <option value="">Selecione o Procedimento
                                             </option>
                                             @foreach ($procedimentos as $item)
@@ -184,24 +189,29 @@
         function showAdditionalFields() {
             var data = document.getElementById('data').value;
             var profissionalId = document.getElementById('profissional_id').value;
-            var profissionalName = document.getElementById('profissional_id').options[document.getElementById(
-                'profissional_id').selectedIndex].text;
+            var profissionalName = document.getElementById('profissional_id').options[document.getElementById('profissional_id').selectedIndex].text;
 
-            if (data && profissionalId) {
-                document.getElementById('selectedData').value = data;
-                document.getElementById('selectedProfissionalId').value = profissionalId;
-
-                document.getElementById('displaySelectedData').innerText = data;
-                document.getElementById('displaySelectedProfissional').innerText = profissionalName;
-
-                document.getElementById('initial-form').style.display = 'none';
-                document.getElementById('additional-fields').style.display = 'block';
-                document.getElementById('agenda-table').style.display = 'block';
-
-                fetchAgenda(data, profissionalId);
-            } else {
-                alert('Por favor, selecione uma data e um médico.');
+            if (!data) {
+                alert('Por favor, selecione uma data.');
+                return;
             }
+
+            if (!profissionalId || profissionalId === "Escolha") {
+                alert('Por favor, selecione um médico.');
+                return;
+            }
+
+            document.getElementById('selectedData').value = data;
+            document.getElementById('selectedProfissionalId').value = profissionalId;
+
+            document.getElementById('displaySelectedData').innerText = data;
+            document.getElementById('displaySelectedProfissional').innerText = profissionalName;
+
+            document.getElementById('initial-form').style.display = 'none';
+            document.getElementById('additional-fields').style.display = 'block';
+            document.getElementById('agenda-table').style.display = 'block';
+
+            fetchAgenda(data, profissionalId);
         }
 
         function fetchAgenda(data, profissionalId) {
@@ -266,6 +276,13 @@
                 data = data.filter(function(item) {
                     return item.name !== 'paciente_id';
                 });
+            var hora = document.getElementById('hora').value;
+            var procedimento = document.getElementById('procedimento_id').value;
+
+            if (!hora || !procedimento) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return false;
+            }
             }
 
             $.ajax({

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Painel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class PainelController extends Controller
 {
@@ -13,7 +14,8 @@ class PainelController extends Controller
     public function index()
     {
         $painelTudo = Painel::all();
-        $painelUnico = Painel::latest()->first(); // Ou você pode usar Painel::orderBy('id', 'desc')->first();
+        $painelUnico = Painel::orderBy('updated_at', 'desc')->first(); // Pega o último registro atualizado baseado na coluna updated_at
+
         return view('painel.consultorio', compact('painelTudo', 'painelUnico'));
     }
 

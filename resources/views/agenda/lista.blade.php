@@ -48,7 +48,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <label class="form-label">Data</label>
-                                <input name="data" id="data" class="form-control" type="date" value="{{ session('data', \Carbon\Carbon::now()->format('Y-m-d')) }}">
+                                <input name="data" id="data" class="form-control" type="date" value="{{ session('data', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Médico</label>
@@ -63,7 +63,8 @@
                         <div class="tile-footer">
                             <div class="row">
                                 <div class="col-md-8 col-md-offset-3">
-                                    <button class="btn btn-primary" type="submit"><i class="bi bi-check-circle-fill me-2"></i>Buscar</button>
+                                    <button class="btn btn-primary" type="submit"><i class="bi bi-check-circle-fill me-2"
+                                        onclick="showAdditionalFields()"></i>Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -96,6 +97,7 @@
             <th>Hora</th>
             <th>Nome</th>
             <th>CPF</th>
+            <th>Contato</th>
             <th>Consulta</th>
             <th>Status</th>
             <th>Chamar</th>
@@ -107,8 +109,9 @@
         @foreach ($agendas as $item)
             <tr>
                 <td>{{ $item->hora }}</td>
-                <td>{{ $item->paciente->nome }} {{ $item->paciente->sobrenome }}</td>
-                <td>{{ optional($item->paciente)->cpf }}</td>
+                <td>{{ $item->paciente->name ?? $item->name }} {{ $item->paciente->sobrenome ?? $item->sobrenome }}</td>
+                <td>{{ optional($item->paciente)->cpf ?? 'PACIENTE SEM CPF' }}</td>
+                <td>{{ $item->celular }}</td>
                 <td>{{ $item->procedimento_id }}</td>
                 <td>
                     <select class="form-control status-select" data-id="{{ $item->id }}" data-paciente-id="{{ $item->paciente_id }}">
@@ -119,7 +122,7 @@
                     </select>
                 </td>
                 <td>
-                    <a type="submit" class="btn btn-warning form-control chamar-btn" data-paciente-id="{{ $item->paciente_id }}" data-agenda-id="{{ $item->id }}" data-paciente-nome="{{ $item->paciente->nome }}" data-paciente-sobrenome="{{ $item->paciente->sobrenome }}">
+                    <a type="submit" class="btn btn-warning form-control chamar-btn {{ $item->paciente_id ? '' : 'disabled' }}" data-paciente-id="{{ $item->paciente_id ?? null }}" data-agenda-id="{{ $item->id ?? null }}" data-paciente-nome="{{ $item->paciente->nome ?? null }}" data-paciente-sobrenome="{{ $item->paciente->sobrenome ?? null }}">
                         <i class="bi bi-volume-up"></i>
                     </a>
                 </td>
@@ -369,5 +372,33 @@
             });
         });
     });
+
+    function showAdditionalFields() {
+        var data = document.getElementById('data').value;
+        var profissionalId = document.getElementById('profissional_id').value;
+        var profissionalName = document.getElementById('profissional_id').options[document.getElementById('profissional_id').selectedIndex].text;
+
+        if (!data) {
+            alert('Por favor, selecione uma data.');
+            return;
+        }
+
+        if (!profissionalId || profissionalId === "Escolha") {
+            alert('Por favor, selecione um médico.');
+            return;
+        }
+
+        document.getElementById('selectedData').value = data;
+        document.getElementById('selectedProfissionalId').value = profissionalId;
+
+        document.getElementById('displaySelectedData').innerText = data;
+        document.getElementById('displaySelectedProfissional').innerText = profissionalName;
+
+        document.getElementById('initial-form').style.display = 'none';
+        document.getElementById('additional-fields').style.display = 'block';
+        document.getElementById('agenda-table').style.display = 'block';
+
+        fetchAgenda(data, profissionalId);
+    }
 </script>
 @endsection

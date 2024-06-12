@@ -44,7 +44,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label>CNPJ</label>
-                                        <input class="form-control" type="text" id="cnpj" name="cnpj" value="{{ $empresa->cnpj }}">
+                                        <input class="form-control" type="text" id="cnpj" name="cnpj" value="{{ $empresa->cnpj }}" required>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -125,4 +125,15 @@
         </div>
     </div>
 </main>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('#cnpj').mask('00.000.000/0000-00');
+    $('#telefone').mask('(00) 0000-0000');
+    $('#celular').mask('(00) 00000-0000');
+});
+</script>
 @endsection

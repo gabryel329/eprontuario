@@ -14106,7 +14106,7 @@ textarea.form-control-lg {
 
 .material-half-bg {
   height: 100vh;
-  background-color: #e7e7e7;
+  background-color: #00695C;
   position: fixed;
   top: 0;
   left: 0;
@@ -14115,7 +14115,7 @@ textarea.form-control-lg {
   z-index: -1;
 }
 .material-half-bg .cover {
-  background-color: #00695C;
+  background-color: #FFF;
   height: 50vh;
 }
 

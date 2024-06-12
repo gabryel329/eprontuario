@@ -15,6 +15,7 @@ class Agenda extends Model
         'hora',
         'data',
         'name',
+        'celular',
         'sobrenome',
         'paciente_id',
         'profissional_id',

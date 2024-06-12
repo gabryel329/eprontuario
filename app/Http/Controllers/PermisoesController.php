@@ -88,6 +88,11 @@ class PermisoesController extends Controller
             return redirect()->back()->with('error', 'Permissão não encontrada!');
         }
 
+        // Verifica se o ID é 1 ou 2
+        if (in_array($id, [1, 2])) {
+            return redirect()->route('permisao.index')->with('error', 'Você não pode editar esta permissão!');
+        }
+
         $permisao->cargo = ucfirst(trim($request->input('cargo')));
 
         $permisao->save();

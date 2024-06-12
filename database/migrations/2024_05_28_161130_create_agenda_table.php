@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('status')->nullable();
             $table->string('name')->nullable();
             $table->string('sobrenome')->nullable();
+            $table->string('celular')->nullable();
             $table->integer('profissional_id')->nullable();
             $table->foreign('profissional_id')->references('id')->on('profissionals')->onDelete('cascade');
             $table->integer('paciente_id')->nullable();

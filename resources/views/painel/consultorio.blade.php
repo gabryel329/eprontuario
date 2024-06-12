@@ -34,29 +34,28 @@
         <div class="app-sidebar__user-name" style="text-align: center;">
             <h5 style="color: white; text-transform: uppercase; font-weight: bold;">Pacientes Chamados</h5>
         </div>
-    <ul class="app-menu" style="text-align: center; text-transform: uppercase; font-weight: bold;">
-        <h1></h1>
-        @foreach ($painelTudo->sortByDesc('created_at')->take(5) as $item)
-        <li>
-            <a class="app-menu__item">
-                <span class="app-menu__label">
-                    {{ $item->paciente->name ?? 'N/A' }} {{ $item->paciente->sobrenome ?? 'N/A' }}<br>
-                    @if ($item->permisao_id == 1)
-                    Guichê {{ $item->sala_id }}
-                    @elseif ($item->permisao_id == 2)
-                    Consultório {{ $item->sala_id }}
-                    @endif
-                </span>
-            </a>
-        </li>
-        @endforeach
-    </ul>
-
+        <ul class="app-menu" style="text-align: center; text-transform: uppercase; font-weight: bold;">
+            <h1></h1>
+            @foreach ($painelTudo->sortByDesc('created_at')->take(5) as $item)
+            <li>
+                <a class="app-menu__item">
+                    <span class="app-menu__label">
+                        {{ $item->paciente->name ?? 'N/A' }} {{ $item->paciente->sobrenome ?? 'N/A' }}<br>
+                        @if ($item->permisao_id == 1)
+                        Guichê {{ $item->sala_id }}
+                        @elseif ($item->permisao_id == 2)
+                        Consultório {{ $item->sala_id }}
+                        @endif
+                    </span>
+                </a>
+            </li>
+            @endforeach
+        </ul>
     </aside>
     <main class="app-content d-flex justify-content-center align-items-center flex-column">
         <div class="card text-center mb-4 flex-grow-1 w-100">
             <div class="card-body">
-                <p class="card-text" style="font-size: 4rem; text-transform: uppercase; font-weight: bold;">
+                <p id="patient-name" class="card-text" style="font-size: 4rem; text-transform: uppercase; font-weight: bold;">
                     {{ $painelUnico->paciente->name ?? 'Sem Pacientes' }}
                     {{ $painelUnico->paciente->sobrenome ?? '' }}
                 </p>
@@ -65,14 +64,14 @@
         <div class="card text-center flex-grow-1 w-100">
             <div class="card-body">
             @if ($painelUnico)
-                <h5 class="card-title" style="font-size: 3rem; text-transform: uppercase; font-weight: bold;">
+                <h5 id="location-type" class="card-title" style="font-size: 3rem; text-transform: uppercase; font-weight: bold;">
                     @if ($painelUnico->permisao_id == 1)
                     Guichê
                     @elseif ($painelUnico->permisao_id == 2)
                     Consultório
                     @endif
                 </h5>
-                <p class="card-text" style="font-size: 4rem; font-weight: bold;">
+                <p id="room-number" class="card-text" style="font-size: 4rem; font-weight: bold;">
                     {{ $painelUnico->sala_id ?? 'N/A' }}
                 </p>
             @else
@@ -85,6 +84,7 @@
             </div>
         </div>
     </main>
+
     <!-- Sound for new patient -->
     <audio id="newPatientSound" src="{{ asset('sounds/new_patient.mp3') }}" preload="auto"></audio>
     <!-- Essential javascripts for application to work-->
@@ -106,11 +106,39 @@
         // Tocar som quando um novo paciente for mostrado
         let lastPatientCreatedAt = localStorage.getItem('lastPatientCreatedAt');
         const currentPatientCreatedAt = "{{ $painelUnico->created_at ?? 'N/A' }}";
+        const currentPatientUpdatedAt = "{{ $painelUnico->updated_at ?? 'N/A' }}";
 
         if (currentPatientCreatedAt !== 'N/A' && lastPatientCreatedAt !== currentPatientCreatedAt) {
             document.getElementById('newPatientSound').play();
             localStorage.setItem('lastPatientCreatedAt', currentPatientCreatedAt);
         }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            function speak(text) {
+                if ('speechSynthesis' in window) {
+                    let speech = new SpeechSynthesisUtterance(text);
+                    speech.lang = 'pt-BR'; // Define a língua para português do Brasil
+                    window.speechSynthesis.speak(speech);
+                } else {
+                    console.log('Speech Synthesis not supported');
+                }
+            }
+
+            // Capture the text to be read
+            let patientName = document.getElementById('patient-name').innerText;
+            let locationType = document.getElementById('location-type').innerText;
+            let roomNumber = document.getElementById('room-number').innerText;
+
+            // Construct the full text
+            let fullText = `${patientName}, ${locationType}, Sala ${roomNumber}`;
+
+            // Speak the text if updated_at has changed
+            let lastPatientUpdatedAt = localStorage.getItem('lastPatientUpdatedAt');
+            if (currentPatientUpdatedAt !== 'N/A' && lastPatientUpdatedAt !== currentPatientUpdatedAt) {
+                speak(fullText);
+                localStorage.setItem('lastPatientUpdatedAt', currentPatientUpdatedAt);
+            }
+        });
     </script>
 </body>
 

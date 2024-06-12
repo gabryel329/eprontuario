@@ -43,7 +43,7 @@
                         </div>
                         <div class="mb-3 col-md-3">
                             <label class="form-label">CPF </label>
-                            <input class="form-control" id="cpf" name="cpf" type="text">
+                            <input class="form-control" id="cpf" name="cpf" type="text" required>
                         </div>
                         <div class="mb-3 col-md-3">
                             <label class="form-label">Gênero</label>
@@ -66,7 +66,7 @@
                     <div class="row">
                         <div class="mb-3 col-md-4">
                             <label class="form-label">RG</label>
-                            <input class="form-control" id="rg" name="rg" type="text">
+                            <input class="form-control" id="rg" name="rg" type="text" required>
                         </div>
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Certidão de Nascimento</label>
@@ -96,7 +96,7 @@
                             <input class="form-control" id="matricula" name="matricula" type="text">
                         </div>
                         <div class="mb-3 col-md-4">
-                            <label class="form-label">Cor</label>
+                            <label class="form-label">Étnia</label>
                             <select class="form-control" id="cor" name="cor">
                                 <option disabled selected style="font-size:18px;color: black;">Escolha</option>       
                                     <option value="Branco">Branco</option>
@@ -127,14 +127,14 @@
                         </div>
                         <div class="mb-3 col-md-6">
                             <label class="form-label">Celular</label>
-                            <input class="form-control" id="celular" name="celular" type="text">
+                            <input class="form-control" id="celular" name="celular" type="text" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="mb-3 col-md-3">
                             <label class="form-label">CEP </label>
                             <input class="form-control" name="cep" type="text" id="cep" value="" size="10" maxlength="9"
-                            onblur="pesquisacep(this.value);">
+                            onblur="pesquisacep(this.value);" required>
                         </div>
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Rua </label>
@@ -174,106 +174,115 @@
         </div>
       </div>
     </main>
-    <script>
-        function showPassword() {
-            var passwordField = document.getElementById('password');
-            passwordField.type = 'text';
-        }
-    
-        function hidePassword() {
-            var passwordField = document.getElementById('password');
-            passwordField.type = 'password';
-        }
-    
-        document.addEventListener('DOMContentLoaded', function() {
-            var permissoesSelect = document.getElementById('permisoes_id');
-            var especialidadeDiv = document.getElementById('especialidade-div');
-            var crmDiv = document.getElementById('crm-div');
-            var coremDiv = document.getElementById('corem-div');
-    
-            permissoesSelect.addEventListener('change', function() {
-                var selectedValue = permissoesSelect.value;
-    
-                if (selectedValue == '2') { // Certifique-se de que '2' é o ID correspondente a 'médico'
-                    especialidadeDiv.classList.remove('hidden');
-                    crmDiv.classList.remove('hidden');
-                    coremDiv.classList.add('hidden');
-                } else if (selectedValue == '3') { // Certifique-se de que '3' é o ID correspondente a 'enfermeiro'
-                    especialidadeDiv.classList.remove('hidden');
-                    crmDiv.classList.add('hidden');
-                    coremDiv.classList.remove('hidden');
-                } else {
-                    especialidadeDiv.classList.add('hidden');
-                    crmDiv.classList.add('hidden');
-                    coremDiv.classList.add('hidden');
-                }
-            });
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+    $('#cpf').mask('000.000.000-00');
+    $('#telefone').mask('(00) 0000-0000');
+    $('#celular').mask('(00) 00000-0000');
+});
+
+    function showPassword() {
+        var passwordField = document.getElementById('password');
+        passwordField.type = 'text';
+    }
+
+    function hidePassword() {
+        var passwordField = document.getElementById('password');
+        passwordField.type = 'password';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var permissoesSelect = document.getElementById('permisoes_id');
+        var especialidadeDiv = document.getElementById('especialidade-div');
+        var crmDiv = document.getElementById('crm-div');
+        var coremDiv = document.getElementById('corem-div');
+
+        permissoesSelect.addEventListener('change', function() {
+            var selectedValue = permissoesSelect.value;
+
+            if (selectedValue == '2') { // Certifique-se de que '2' é o ID correspondente a 'médico'
+                especialidadeDiv.classList.remove('hidden');
+                crmDiv.classList.remove('hidden');
+                coremDiv.classList.add('hidden');
+            } else if (selectedValue == '3') { // Certifique-se de que '3' é o ID correspondente a 'enfermeiro'
+                especialidadeDiv.classList.remove('hidden');
+                crmDiv.classList.add('hidden');
+                coremDiv.classList.remove('hidden');
+            } else {
+                especialidadeDiv.classList.add('hidden');
+                crmDiv.classList.add('hidden');
+                coremDiv.classList.add('hidden');
+            }
         });
+    });
+    
+    function limpa_formulário_cep() {
+            //Limpa valores do formulário de cep.
+            document.getElementById('rua').value=("");
+            document.getElementById('bairro').value=("");
+            document.getElementById('cidade').value=("");
+            document.getElementById('uf').value=("");
+    }
+
+    function meu_callback(conteudo) {
+        if (!("erro" in conteudo)) {
+            //Atualiza os campos com os valores.
+            document.getElementById('rua').value=(conteudo.logradouro);
+            document.getElementById('bairro').value=(conteudo.bairro);
+            document.getElementById('cidade').value=(conteudo.localidade);
+            document.getElementById('uf').value=(conteudo.uf);
+        } //end if.
+        else {
+            //CEP não Encontrado.
+            limpa_formulário_cep();
+            alert("CEP não encontrado.");
+        }
+    }
         
-        function limpa_formulário_cep() {
-                //Limpa valores do formulário de cep.
-                document.getElementById('rua').value=("");
-                document.getElementById('bairro').value=("");
-                document.getElementById('cidade').value=("");
-                document.getElementById('uf').value=("");
-        }
-    
-        function meu_callback(conteudo) {
-            if (!("erro" in conteudo)) {
-                //Atualiza os campos com os valores.
-                document.getElementById('rua').value=(conteudo.logradouro);
-                document.getElementById('bairro').value=(conteudo.bairro);
-                document.getElementById('cidade').value=(conteudo.localidade);
-                document.getElementById('uf').value=(conteudo.uf);
+    function pesquisacep(valor) {
+
+        //Nova variável "cep" somente com dígitos.
+        var cep = valor.replace(/\D/g, '');
+
+        //Verifica se campo cep possui valor informado.
+        if (cep != "") {
+
+            //Expressão regular para validar o CEP.
+            var validacep = /^[0-9]{8}$/;
+
+            //Valida o formato do CEP.
+            if(validacep.test(cep)) {
+
+                //Preenche os campos com "..." enquanto consulta webservice.
+                document.getElementById('rua').value="...";
+                document.getElementById('bairro').value="...";
+                document.getElementById('cidade').value="...";
+                document.getElementById('uf').value="...";
+
+                //Cria um elemento javascript.
+                var script = document.createElement('script');
+
+                //Sincroniza com o callback.
+                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+
+                //Insere script no documento e carrega o conteúdo.
+                document.body.appendChild(script);
+
             } //end if.
             else {
-                //CEP não Encontrado.
+                //cep é inválido.
                 limpa_formulário_cep();
-                alert("CEP não encontrado.");
+                alert("Formato de CEP inválido.");
             }
+        } //end if.
+        else {
+            //cep sem valor, limpa formulário.
+            limpa_formulário_cep();
         }
-            
-        function pesquisacep(valor) {
-    
-            //Nova variável "cep" somente com dígitos.
-            var cep = valor.replace(/\D/g, '');
-    
-            //Verifica se campo cep possui valor informado.
-            if (cep != "") {
-    
-                //Expressão regular para validar o CEP.
-                var validacep = /^[0-9]{8}$/;
-    
-                //Valida o formato do CEP.
-                if(validacep.test(cep)) {
-    
-                    //Preenche os campos com "..." enquanto consulta webservice.
-                    document.getElementById('rua').value="...";
-                    document.getElementById('bairro').value="...";
-                    document.getElementById('cidade').value="...";
-                    document.getElementById('uf').value="...";
-    
-                    //Cria um elemento javascript.
-                    var script = document.createElement('script');
-    
-                    //Sincroniza com o callback.
-                    script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
-    
-                    //Insere script no documento e carrega o conteúdo.
-                    document.body.appendChild(script);
-    
-                } //end if.
-                else {
-                    //cep é inválido.
-                    limpa_formulário_cep();
-                    alert("Formato de CEP inválido.");
-                }
-            } //end if.
-            else {
-                //cep sem valor, limpa formulário.
-                limpa_formulário_cep();
-            }
-        };
-    
-    </script>
+    };
+</script>
 @endsection

@@ -39,12 +39,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($anamnese as $item)
+                                    @foreach ($pacientes as $item)
                                         <tr>
                                             <td>{{ $item->id }}</td>
-                                            <td>{{ $item->paciente->name }} {{ $item->paciente->sobrenome }}</td>
-                                            <td>{{ $item->paciente->cpf }}</td>
-                                            <td>{{ $item->paciente->sus }}</td>
+                                            <td>{{ $item->name }} {{ $item->sobrenome }}</td>
+                                            <td>{{ $item->cpf }}</td>
+                                            <td>{{ $item->sus ?? 'NÃO TEM'}}</td>
                                             <td>
                                                 <div>
                                                     <button type="button" class="btn btn-info" data-bs-toggle="modal"
@@ -83,14 +83,14 @@
                                                                     <label class="form-label"><strong>Nome:</strong></label>
                                                                     <input class="form-control" id="name"
                                                                         name="name" type="text"
-                                                                        value="{{ $item->paciente->name }}" disabled>
+                                                                        value="{{ $item->name }}" disabled>
                                                                 </div>
                                                                 <div class="mb-3 col-md-6">
                                                                     <label
                                                                         class="form-label"><strong>Sobrenome:</strong></label>
                                                                     <input class="form-control" id="sobrenome"
                                                                         name="sobrenome" type="text"
-                                                                        value="{{ $item->paciente->sobrenome }}" disabled>
+                                                                        value="{{ $item->sobrenome }}" disabled>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -100,7 +100,7 @@
                                                                     <input class="form-control" id="nasc"
                                                                         name="nasc" type="date"
                                                                         onchange="calculateAge()"
-                                                                        value="{{ $item->paciente->nasc }}" disabled>
+                                                                        value="{{ $item->nasc }}" disabled>
                                                                 </div>
                                                                 <div class="mb-3 col-md-3">
                                                                     <label
@@ -112,7 +112,7 @@
                                                                     <label class="form-label"><strong>Sexo:</strong></label>
                                                                     <input class="form-control" id="genero"
                                                                         name="genero" type="text"
-                                                                        value="{{ $item->paciente->genero == 'M' ? 'Masculino' : 'Feminino' }}"
+                                                                        value="{{ $item->genero == 'M' ? 'Masculino' : 'Feminino' }}"
                                                                         disabled>
                                                                 </div>
 
@@ -120,7 +120,7 @@
                                                                     <label class="form-label"><strong>CNS:</strong></label>
                                                                     <input class="form-control" id="sus"
                                                                         name="sus" type="text"
-                                                                        value="{{ $item->paciente->sus }}" disabled>
+                                                                        value="{{ $item->sus }}" disabled>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -129,27 +129,27 @@
                                                                         class="form-label"><strong>Etnia:</strong></label>
                                                                     <input class="form-control" id="cor"
                                                                         name="cor" type="text"
-                                                                        value="{{ $item->paciente->cor }}" disabled>
+                                                                        value="{{ $item->cor }}" disabled>
                                                                 </div>
                                                                 <div class="mb-3 col-md-3">
                                                                     <label class="form-label"><strong>CPF:</strong></label>
                                                                     <input class="form-control" id="cpf"
                                                                         name="cpf" type="text"
-                                                                        value="{{ $item->paciente->cpf }}" disabled>
+                                                                        value="{{ $item->cpf }}" disabled>
                                                                 </div>
                                                                 <div class="mb-3 col-md-3">
                                                                     <label
                                                                         class="form-label"><strong>Telefone:</strong></label>
                                                                     <input class="form-control" id="telefone"
                                                                         name="telefone" type="text"
-                                                                        value="{{ $item->paciente->telefone }}" disabled>
+                                                                        value="{{ $item->telefone }}" disabled>
                                                                 </div>
                                                                 <div class="mb-3 col-md-3">
                                                                     <label
                                                                         class="form-label"><strong>Celular:</strong></label>
                                                                     <input class="form-control" id="celular"
                                                                         name="celular" type="text"
-                                                                        value="{{ $item->paciente->celular }}" disabled>
+                                                                        value="{{ $item->celular }}" disabled>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -157,7 +157,7 @@
                                                                     <label class="form-label"><strong>Mãe:</strong></label>
                                                                     <input class="form-control" id="nome_mae"
                                                                         name="nome_mae" type="text"
-                                                                        value="{{ $item->paciente->nome_mae }}" disabled>
+                                                                        value="{{ $item->nome_mae }}" disabled>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -166,27 +166,27 @@
                                                                         class="form-label"><strong>Endereço:</strong></label>
                                                                     <input class="form-control" id="rua"
                                                                         name="rua" type="text"
-                                                                        value="{{ $item->paciente->rua }}" disabled>
+                                                                        value="{{ $item->rua }}" disabled>
                                                                 </div>
                                                                 <div class="mb-3 col-md-3">
                                                                     <label
                                                                         class="form-label"><strong>Bairro:</strong></label>
                                                                     <input class="form-control" id="bairro"
                                                                         name="bairro" type="text"
-                                                                        value="{{ $item->paciente->bairro }}" disabled>
+                                                                        value="{{ $item->bairro }}" disabled>
                                                                 </div>
                                                                 <div class="mb-3 col-md-3">
                                                                     <label
                                                                         class="form-label"><strong>Município:</strong></label>
                                                                     <input class="form-control" id="cidade"
                                                                         name="cidade" type="text"
-                                                                        value="{{ $item->paciente->cidade }}" disabled>
+                                                                        value="{{ $item->cidade }}" disabled>
                                                                 </div>
                                                                 <div class="mb-3 col-md-3">
                                                                     <label class="form-label"><strong>CEP:</strong></label>
                                                                     <input class="form-control" id="cep"
                                                                         name="cep" type="text"
-                                                                        value="{{ $item->paciente->cep }}" disabled>
+                                                                        value="{{ $item->cep }}" disabled>
                                                                 </div>
                                                             </div>
                                                             <hr>

@@ -117,7 +117,8 @@ Route::middleware(['check.session.expired'])->group(function () {
 
     Route::post('/consultorio/painel', [AgendaController::class, 'storeConsultorioPainel'])->name('consultorioPainel.store');
     Route::get('/consultorio', [PainelController::class, 'index'])->name('painelConsultorio.index');
-
+    Route::get('/painel/ultimo-registro-atualizado', [PainelController::class, 'getUltimoRegistroAtualizado']);
+    Route::get('/main', [PainelController::class, 'showMain']);
 
     #SalaVerificação
 

@@ -71,6 +71,7 @@ class AgendaController extends Controller
         $hora = $request->input('hora');
         $name = ucfirst($request->input('name'));
         $sobrenome = ucfirst($request->input('sobrenome'));
+        $celular = $request->input('celular');
         $procedimento_id = $request->input('procedimento_id');
         $profissional_id = $request->input('profissional_id');
         $paciente_id = $request->input('paciente_id');
@@ -94,6 +95,7 @@ class AgendaController extends Controller
             'hora' => $hora,
             'name' => $name,
             'sobrenome' => $sobrenome,
+            'celular' => $celular,
             'procedimento_id' => $procedimento_id,
             'profissional_id' => $profissional_id,
             'status' => "MARCADO",
@@ -160,6 +162,7 @@ class AgendaController extends Controller
         $agenda->paciente_id = $request->paciente_id;
         $agenda->name = $request->name;
         $agenda->sobrenome = $request->sobrenome;
+        $agenda->celular = $request->celular;
         $agenda->procedimento_id = $request->procedimento_id;
 
         // Salvar as mudanças
@@ -300,8 +303,6 @@ class AgendaController extends Controller
 
 
         if ($painel) {
-            // Se o registro já existe, atualize os dados e incremente a coluna sequencia
-            $painel->timestamps = false; // Desativa a manipulação automática dos timestamps
 
             $painel->update([
                 'user_id' => $userId,

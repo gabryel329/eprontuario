@@ -39,11 +39,11 @@
                             <div class="mb-3 col-md-4">
                                 <label class="form-label"><strong>Nome:</strong></label>
                                 <input class="form-control" id="id" name="id" type="text" hidden>
-                                <input class="form-control" id="name" name="name" type="text" readonly>
+                                <input class="form-control" id="name" name="name" type="text" required>
                             </div>
                             <div class="mb-3 col-md-4">
                                 <label class="form-label"><strong>Sobrenome:</strong></label>
-                                <input class="form-control" id="sobrenome" name="sobrenome" type="text" readonly>
+                                <input class="form-control" id="sobrenome" name="sobrenome" type="text">
                             </div>
                             <div class="mb-3 col-md-4">
                                 <label class="form-label">Permissão:</label>
@@ -58,7 +58,7 @@
                         <div class="row">
                             <div class="mb-3 col-md-4">
                                 <label class="form-label"><strong>Email:</strong></label>
-                                <input class="form-control" id="email" name="email" type="email" readonly>
+                                <input class="form-control" id="email" name="email" type="email" required>
                             </div>
                             <div class="mb-3 col-md-4">
                                 <label class="form-label"><strong>Senha:</strong></label>

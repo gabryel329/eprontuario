@@ -37,7 +37,7 @@ class AnamneseController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request, Anamnese $anamnese)
-{
+    {
     // Validação dos dados do formulário
     $validatedData = $request->validate([
         'paciente_id' => 'nullable|integer|exists:pacientes,id',
@@ -61,6 +61,11 @@ class AnamneseController extends Controller
         'anamnese' => 'nullable|string',
     ]);
 
+    // Verificar se o paciente_id está presente
+    if (is_null($validatedData['paciente_id'])) {
+        return redirect()->route('anamnese.index')->with('error', 'Escolha o paciente.');
+    }
+
     // Obter o ID do profissional atualmente autenticado
     $profissionalId = Auth::user()->profissional_id;
 
@@ -73,6 +78,7 @@ class AnamneseController extends Controller
     // Redireciona com uma mensagem de sucesso
     return redirect()->route('anamnese.index')->with('success', 'Anamnese criada com sucesso.');
 }
+    
 
 
     public function update(Request $request, $id)

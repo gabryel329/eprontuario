@@ -39,12 +39,6 @@
             <li><a class="treeview-item" href="{{route('agenda.agendaMedica')}}"><i class="icon bi bi-calendar2-check"></i> Agenda Medica</a></li>
           </ul>
         </li>
-        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi-calendar-date"></i><span class="app-menu__label">Agenda</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
-          <ul class="treeview-menu">
-            <li><a class="treeview-item" href="{{route('agenda.index')}}"><i class="icon bi bi-calendar-plus"></i> Criar Agenda</a></li>
-            <li><a class="treeview-item" href="{{route('agenda.index1')}}"><i class="icon bi bi-search"></i> Consultar Agenda</a></li>
-          </ul>
-        </li>
         <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi bi-gear"></i><span class="app-menu__label">Administração</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
           <ul class="treeview-menu">
                 <li><a class="treeview-item" href="{{route('permisao.index')}}"><i class="icon bi bi-arrow-bar-right"></i> Permissões</a></li>
