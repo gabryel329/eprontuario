@@ -29,7 +29,7 @@ class AgendaController extends Controller
 
         $agendas = Agenda::all();
         $pacientes = Pacientes::all();
-        $profissional = Profissional::all();
+        $profissional = Profissional::whereNotNull('crm')->get();
         $procedimentos = Procedimentos::all();
 
         return view('agenda.criar', compact(['agendas', 'pacientes', 'profissional', 'procedimentos']));
