@@ -9,6 +9,7 @@ use App\Models\Exames;
 use App\Models\Medicamento;
 use App\Models\Pacientes;
 use App\Models\Procedimentos;
+use App\Models\Profissional;
 use App\Models\Remedio;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -363,51 +364,84 @@ class AtendimentosController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function index1(Request $request)
     {
-        //
+        // Recupera todos os profissionais e pacientes para o dropdown
+        $profissional = Profissional::all();
+        $paciente = Pacientes::all();
+
+        // Filtra os parâmetros de busca da requisição
+        $data = $request->input('data', date('Y-m-d'));
+        $profissional_id = $request->input('profissional_id');
+        $paciente_id = $request->input('paciente_id');
+
+        // Monta a consulta com joins e leftJoins
+        $historico = DB::table('agendas as ag')
+            ->select(
+                'ag.data',
+                'ag.id as consulta',
+                'pa.id as paciente_id',
+                'pa.name as paciente',
+                'pr.name as profissional',
+                'prc.procedimento as procedimento',
+                DB::raw('STRING_AGG(DISTINCT an.id::text, \',\') as anamneses_ids'),
+                DB::raw('STRING_AGG(DISTINCT at.id::text, \',\') as atendimentos_ids'),
+                DB::raw('STRING_AGG(DISTINCT ex.id::text, \',\') as exames_ids'),
+                DB::raw('STRING_AGG(DISTINCT re.id::text, \',\') as remedios_ids'),
+                'an.profissional_id as an_profissional_id',
+                'an.pa as an_pa',
+                'an.temp as an_temp',
+                'an.peso as an_peso',
+                'an.altura as an_altura',
+                'an.gestante as an_gestante',
+                'an.dextro as an_dextro',
+                'an.spo2 as an_spo2',
+                'an.fc as an_fc',
+                'an.fr as an_fr',
+                'an.acolhimento as an_acolhimento',
+                'an.acolhimento1 as an_acolhimento1',
+                'an.acolhimento2 as an_acolhimento2',
+                'an.acolhimento3 as an_acolhimento3',
+                'an.acolhimento4 as an_acolhimento4',
+                'an.alergia1 as an_alergia1',
+                'an.alergia2 as an_alergia2',
+                'an.alergia3 as an_alergia3',
+                'an.anamnese as an_anamnese',
+                'at.queixas as at_queixas',
+                'at.atestado as at_atestado',
+                'at.evolucao as at_evolucao',
+                'at.condicao as at_condicao'
+            )
+            ->join('profissionals as pr', 'ag.profissional_id', '=', 'pr.id')
+            ->join('pacientes as pa', 'ag.paciente_id', '=', 'pa.id')
+            ->join('procedimentos as prc', 'ag.procedimento_id', '=', 'prc.procedimento')
+            ->leftJoin('anamneses as an', function ($join) use ($data) {
+                $join->on('an.paciente_id', '=', 'pa.id')
+                    ->where(DB::raw('DATE(an.created_at)'), '=', $data);
+            })
+            ->leftJoin('atendimentos as at', function ($join) use ($data) {
+                $join->on('at.paciente_id', '=', 'pa.id')
+                    ->where(DB::raw('DATE(at.created_at)'), '=', $data);
+            })
+            ->leftJoin('exames as ex', function ($join) use ($data) {
+                $join->on('ex.paciente_id', '=', 'pa.id')
+                    ->where(DB::raw('DATE(ex.created_at)'), '=', $data);
+            })
+            ->leftJoin('remedios as re', function ($join) use ($data) {
+                $join->on('re.paciente_id', '=', 'pa.id')
+                    ->where(DB::raw('DATE(re.created_at)'), '=', $data);
+            })
+            ->where('ag.data', $data)
+            ->where('pa.id', $paciente_id)
+            ->where('an.profissional_id', $profissional_id)
+            ->groupBy('prc.procedimento', 'ag.data', 'ag.id','pa.name', 'pr.name', 'pa.id', 'an.profissional_id', 'an.pa', 'an.temp', 'an.peso', 'an.altura', 
+            'at.condicao', 'at.evolucao', 'at.atestado', 'an.spo2', 'an.dextro', 'an.gestante', 'at.queixas', 
+            'an.anamnese', 'an.alergia3', 'an.alergia2', 'an.alergia1', 'an.acolhimento4', 'an.acolhimento3',
+             'an.acolhimento2', 'an.acolhimento1', 'an.acolhimento', 'an.fr', 'an.fc')
+            ->orderBy('ag.data', 'asc')
+            ->get();
+
+        return view('atendimentos.prontuarios', compact('profissional', 'paciente', 'historico'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Atendimentos $atendimentos)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Atendimentos $atendimentos)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Atendimentos $atendimentos)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Atendimentos $atendimentos)
-    {
-        //
-    }
 }

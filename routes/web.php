@@ -104,6 +104,7 @@ Route::middleware(['check.session.expired'])->group(function () {
     #Atendimentos
 
     Route::get('/atendimento/{agenda_id}/{paciente_id}/medico', [AtendimentosController::class, 'index'])->name('atendimento.index');
+    Route::get('/atendimento/lista', [AtendimentosController::class, 'index1'])->name('atendimento.lista');
     Route::post('/atendimentos/store', [AtendimentosController::class, 'storeAtendimento']);
     Route::get('/atendimentos/{agenda_id}/{paciente_id}', [AtendimentosController::class, 'verificarAtendimento']);
     Route::post('/anamneses/store', [AtendimentosController::class, 'storeAnamnese']);

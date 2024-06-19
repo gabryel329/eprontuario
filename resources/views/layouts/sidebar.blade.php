@@ -38,7 +38,7 @@
     @if(Auth::user()->permisao_id == 1 || Auth::user()->permisao_id == 3)
       <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon bi bi-heart-pulse"></i><span class="app-menu__label">Atendimento</span><i class="treeview-indicator bi bi-chevron-right"></i></a>
         <ul class="treeview-menu">
-          <li><a class="treeview-item" href="#"><i class="icon bi bi-pencil-square"></i> Prontuarios</a></li>
+          <li><a class="treeview-item" href="{{route('atendimento.lista')}}"><i class="icon bi bi-pencil-square"></i> Prontuarios</a></li>
           <li><a class="treeview-item" href="{{route('agenda.agendaMedica')}}"><i class="icon bi bi-calendar2-check"></i> Agenda Medica</a></li>
         </ul>
       </li>
