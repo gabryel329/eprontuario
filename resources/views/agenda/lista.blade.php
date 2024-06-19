@@ -83,7 +83,7 @@
                             @php
                                 $profissional = $profissionals->firstWhere('id', session('profissional_id'));
                             @endphp
-                            {{ $profissional ? $profissional->name : 'N/A' }} {{ $profissional ? $profissional->sobrenome : 'N/A' }}
+                            {{ $profissional ? $profissional->name : 'N/A' }}
                         @else
                             N/A
                         @endif
@@ -109,7 +109,7 @@
         @foreach ($agendas as $item)
             <tr>
                 <td>{{ $item->hora }}</td>
-                <td>{{ $item->paciente->name ?? $item->name }} {{ $item->paciente->sobrenome ?? $item->sobrenome }}</td>
+                <td>{{ $item->paciente->name ?? $item->name }}</td>
                 <td>{{ optional($item->paciente)->cpf ?? 'PACIENTE SEM CPF' }}</td>
                 <td>{{ $item->celular }}</td>
                 <td>{{ $item->procedimento_id }}</td>
@@ -122,7 +122,7 @@
                     </select>
                 </td>
                 <td>
-                    <a type="submit" class="btn btn-warning form-control chamar-btn {{ $item->paciente_id ? '' : 'disabled' }}" data-paciente-id="{{ $item->paciente_id ?? null }}" data-agenda-id="{{ $item->id ?? null }}" data-paciente-nome="{{ $item->paciente->nome ?? null }}" data-paciente-sobrenome="{{ $item->paciente->sobrenome ?? null }}">
+                    <a type="submit" class="btn btn-warning form-control chamar-btn {{ $item->paciente_id ? '' : 'disabled' }}" data-paciente-id="{{ $item->paciente_id ?? null }}" data-agenda-id="{{ $item->id ?? null }}" data-paciente-nome="{{ $item->paciente->nome ?? null }}" >
                         <i class="bi bi-volume-up"></i>
                     </a>
                 </td>
@@ -167,14 +167,10 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="mb-3 col-md-6">
-                                <label class="form-label"><strong>Nome:</strong></label>
+                            <div class="mb-3 col-md-12">
+                                <label class="form-label"><strong>Nome Completo:</strong></label>
                                 <input type="hidden" id="paciente_id{{ $item->id }}" name="paciente_id" value="{{ $item->paciente_id }}">
                                 <input class="form-control" id="edit-name-{{ $item->id }}" name="name" type="text" value="{{ $item->name }}">
-                            </div>
-                            <div class="mb-3 col-md-6">
-                                <label class="form-label"><strong>Sobrenome:</strong></label>
-                                <input class="form-control" id="edit-sobrenome-{{ $item->id }}" name="sobrenome" type="text" value="{{ $item->sobrenome }}">
                             </div>
                         </div>
                         <div class="row">
@@ -183,7 +179,7 @@
                                 <select class="form-control" id="edit-profissional-id-{{ $item->id }}" name="profissional_id">
                                     @foreach ($profissionals as $profissional)
                                         <option value="{{ $profissional->id }}" {{ $item->profissional_id == $profissional->id ? 'selected' : '' }}>
-                                            {{ $profissional->name }} {{ $profissional->sobrenome }}
+                                            {{ $profissional->name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -234,7 +230,6 @@
                         <thead>
                             <tr>
                                 <th>Nome</th>
-                                <th>Sobrenome</th>
                                 <th>CPF</th>
                                 <th>Nome Social</th>
                                 <th>Ação</th>
@@ -244,11 +239,10 @@
                             @foreach ($pacientes as $p)
                                 <tr>
                                     <td>{{ $p->name }}</td>
-                                    <td>{{ $p->sobrenome }}</td>
                                     <td>{{ $p->cpf }}</td>
                                     <td>{{ $p->nome_social }}</td>
                                     <td>
-                                        <button class="btn btn-primary" type="button" onclick="selectPaciente('{{ $item->id }}', '{{ $p->id }}', '{{ $p->name }}', '{{ $p->sobrenome }}')">Selecionar</button>
+                                        <button class="btn btn-primary" type="button" onclick="selectPaciente('{{ $item->id }}', '{{ $p->id }}', '{{ $p->name }}')">Selecionar</button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -303,10 +297,9 @@
         $('#editModal' + id).modal('show');
     }
 
-    function selectPaciente(itemId, id, name, sobrenome) {
+    function selectPaciente(itemId, id, name) {
         $('#paciente_id' + itemId).val(id);
         $('#edit-name-' + itemId).val(name);
-        $('#edit-sobrenome-' + itemId).val(sobrenome);
         var pacienteModal = bootstrap.Modal.getInstance(document.getElementById('pacienteModal-' + itemId));
         pacienteModal.hide();
     }
@@ -342,7 +335,6 @@
             let pacienteId = this.getAttribute('data-paciente-id');
             let agendaId = this.getAttribute('data-agenda-id');
             let pacienteNome = this.getAttribute('data-paciente-nome');
-            let pacienteSobrenome = this.getAttribute('data-paciente-sobrenome');
 
             // Envia os dados via AJAX para o servidor
             fetch('{{ route('consultorioPainel.store') }}', {
@@ -354,8 +346,7 @@
                 body: JSON.stringify({
                     paciente_id: pacienteId,
                     agenda_id: agendaId,
-                    nome: pacienteNome,
-                    sobrenome: pacienteSobrenome
+                    nome: pacienteNome
                 })
             })
             .then(response => response.json())

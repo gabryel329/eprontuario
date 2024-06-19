@@ -36,14 +36,10 @@
                                     Selecionar Paciente
                                 </button>
                             </div>
-                            <div class="mb-3 col-md-4">
-                                <label class="form-label"><strong>Nome:</strong></label>
+                            <div class="mb-3 col-md-9">
+                                <label class="form-label"><strong>Nome Completo:</strong></label>
                                 <input class="form-control" id="paciente_id" name="paciente_id" type="text" hidden>
                                 <input class="form-control" id="name" name="name" type="text" disabled>
-                            </div>
-                            <div class="mb-3 col-md-5">
-                                <label class="form-label"><strong>Sobrenome:</strong></label>
-                                <input class="form-control" id="sobrenome" name="sobrenome" type="text" disabled>
                             </div>
                         </div>
                         <div class="row">
@@ -229,7 +225,6 @@
                     <thead>
                         <tr>
                             <th>Nome</th>
-                            <th>Sobrenome</th>
                             <th>CPF</th>
                             <th>Nome Social</th>
                             <th>Ação</th>
@@ -239,11 +234,10 @@
                         @foreach ($pacientes as $p)
                             <tr>
                                 <td>{{ $p->name }}</td>
-                                <td>{{ $p->sobrenome }}</td>
                                 <td>{{ $p->cpf }}</td>
                                 <td>{{ $p->nome_social }}</td>
                                 <td>
-                                    <button class="btn btn-primary" type="button" onclick="selectPaciente('{{ $p->id }}', '{{ $p->name }}', '{{ $p->sobrenome }}', '{{ $p->nasc }}', '{{ $p->genero }}', '{{ $p->sus }}', '{{ $p->cor }}', '{{ $p->cpf }}', '{{ $p->telefone }}', '{{ $p->celular }}', '{{ $p->nome_mae }}', '{{ $p->rua }}', '{{ $p->bairro }}', '{{ $p->cidade }}', '{{ $p->cep }}')">Selecionar</button>
+                                    <button class="btn btn-primary" type="button" onclick="selectPaciente('{{ $p->id }}', '{{ $p->name }}', '{{ $p->nasc }}', '{{ $p->genero }}', '{{ $p->sus }}', '{{ $p->cor }}', '{{ $p->cpf }}', '{{ $p->telefone }}', '{{ $p->celular }}', '{{ $p->nome_mae }}', '{{ $p->rua }}', '{{ $p->bairro }}', '{{ $p->cidade }}', '{{ $p->cep }}')">Selecionar</button>
                                 </td>
                             </tr>
                         @endforeach
@@ -286,10 +280,9 @@
         }
     }
 
-    function selectPaciente(id, name, sobrenome, nasc, genero, sus, cor, cpf, telefone, celular, nome_mae, rua, bairro, cidade, cep) {
+    function selectPaciente(id, name, , nasc, genero, sus, cor, cpf, telefone, celular, nome_mae, rua, bairro, cidade, cep) {
         document.getElementById('name').value = name;
         document.getElementById('paciente_id').value = id;
-        document.getElementById('sobrenome').value = sobrenome;
         document.getElementById('nasc').value = nasc;
         document.getElementById('genero').value = genero;
         document.getElementById('sus').value = sus;

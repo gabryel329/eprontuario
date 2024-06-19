@@ -19,42 +19,38 @@
                 <form action="{{route('paciente.store')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
-                        <div class="mb-3 col-md-3">
-                            <label class="form-label">Nome </label>
-                            <input class="form-control" id="name" name="name" type="text">
-                        </div>
-                        <div class="mb-3 col-md-3">
-                            <label class="form-label">Sobrenome </label>
-                            <input class="form-control" id="sobrenome" name="sobrenome" type="text">
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label">Nome Completo</label>
+                            <input class="form-control" id="name" name="name" type="text" value="{{ old('name') }}">
                         </div>
                         <div class="mb-3 col-md-3">
                             <label class="form-label">E-mail</label>
-                            <input class="form-control" id="email" name="email" type="email">
+                            <input class="form-control" id="email" name="email" type="email" value="{{ old('email') }}">
                         </div>
                         <div class="mb-3 col-md-3">
                             <label class="form-label">Nome Social</label>
-                            <input class="form-control" id="nome_social" name="nome_social" type="text">
+                            <input class="form-control" id="nome_social" name="nome_social" type="text" value="{{ old('nome_social') }}">
                         </div>
                     </div>
                     <div class="row">
                         <div class="mb-3 col-md-3">
                             <label class="form-label">Nascimento </label>
-                            <input class="form-control" id="nasc" name="nasc" type="date">
+                            <input class="form-control" id="nasc" name="nasc" type="date" value="{{ old('nasc') }}">
                         </div>
                         <div class="mb-3 col-md-3">
                             <label class="form-label">CPF </label>
-                            <input class="form-control" id="cpf" name="cpf" type="text" required>
+                            <input class="form-control" id="cpf" name="cpf" type="text" value="{{ old('cpf') }}" required>
                         </div>
                         <div class="mb-3 col-md-3">
                             <label class="form-label">Gênero</label>
                             <div class="form-check">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="radio" id="genero" name="genero" value="M">Masculino
+                                <input class="form-check-input" type="radio" id="genero" name="genero" value="M" {{ old('genero') == 'M' ? 'checked' : '' }}>Masculino
                               </label>
                             </div>
                             <div class="form-check">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="radio" id="genero" name="genero" value="F">Feminino
+                                <input class="form-check-input" type="radio" id="genero" name="genero" value="F" {{ old('genero') == 'F' ? 'checked' : '' }}>Feminino
                               </label>
                             </div>
                           </div>
@@ -66,15 +62,15 @@
                     <div class="row">
                         <div class="mb-3 col-md-4">
                             <label class="form-label">RG</label>
-                            <input class="form-control" id="rg" name="rg" type="text" required>
+                            <input class="form-control" id="rg" name="rg" type="text" value="{{ old('rg') }}" required>
                         </div>
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Certidão de Nascimento</label>
-                            <input class="form-control" id="certidao" name="certidao" type="text">
+                            <input class="form-control" id="certidao" name="certidao" type="text" value="{{ old('certidao') }}">
                         </div>
                         <div class="mb-3 col-md-4">
-                            <label class="form-label">SUS</label>
-                            <input class="form-control" id="sus" name="sus" type="text">
+                            <label class="form-label">CNS</label>
+                            <input class="form-control" id="sus" name="sus" type="text" value="{{ old('sus') }}">
                         </div>
                     </div>
                     <div class="row">
@@ -82,22 +78,22 @@
                             <label class="form-label">Convênio</label>
                             <div class="form-check">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="radio" id="convenio" name="convenio" value="S">SIM
+                                <input class="form-check-input" type="radio" id="convenio" name="convenio" value="S" {{ old('convenio') == 'S' ? 'checked' : '' }}>SIM
                               </label>
                             </div>
                             <div class="form-check">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="radio" id="convenio" name="convenio" value="N">NÃO
+                                <input class="form-check-input" type="radio" id="convenio" name="convenio" value="N" {{ old('convenio') == 'N' ? 'checked' : '' }}>NÃO
                               </label>
                             </div>
                         </div>
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Matricula</label>
-                            <input class="form-control" id="matricula" name="matricula" type="text">
+                            <input class="form-control" id="matricula" name="matricula" type="text" value="{{ old('matricula') }}">
                         </div>
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Étnia</label>
-                            <select class="form-control" id="cor" name="cor">
+                            <select class="form-control" id="cor" name="cor" required>
                                 <option disabled selected style="font-size:18px;color: black;">Escolha</option>       
                                     <option value="Branco">Branco</option>
                                     <option value="Preto">Preto</option>
@@ -109,58 +105,58 @@
                     <div class="row">
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Nome do Pai</label>
-                            <input class="form-control" id="nome_pai" name="nome_pai" type="text">
+                            <input class="form-control" id="nome_pai" name="nome_pai" type="text" value="{{ old('nome_pai') }}">
                         </div>
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Nome da Mãe</label>
-                            <input class="form-control" id="nome_mãe" name="nome_mãe" type="text">
+                            <input class="form-control" id="nome_mãe" name="nome_mãe" type="text" value="{{ old('nome_mãe') }}">
                         </div>
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Acompanhante</label>
-                            <input class="form-control" id="acompanhante" name="acompanhante" type="text">
+                            <input class="form-control" id="acompanhante" name="acompanhante" type="text" value="{{ old('acompanhante') }}">
                         </div>
                     </div>
                     <div class="row">
                         <div class="mb-3 col-md-6">
                             <label class="form-label">Telefone</label>
-                            <input class="form-control" id="telefone" name="telefone" type="text">
+                            <input class="form-control" id="telefone" name="telefone" type="text" value="{{ old('telefone') }}">
                         </div>
                         <div class="mb-3 col-md-6">
                             <label class="form-label">Celular</label>
-                            <input class="form-control" id="celular" name="celular" type="text" required>
+                            <input class="form-control" id="celular" name="celular" type="text" value="{{ old('celular') }}" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="mb-3 col-md-3">
                             <label class="form-label">CEP </label>
-                            <input class="form-control" name="cep" type="text" id="cep" value="" size="10" maxlength="9"
+                            <input class="form-control" name="cep" type="text" id="cep" value="{{ old('cep') }}" size="10" maxlength="9"
                             onblur="pesquisacep(this.value);" required>
                         </div>
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Rua </label>
-                            <input class="form-control" name="rua" type="text" id="rua" size="60">
+                            <input class="form-control" name="rua" type="text" id="rua" size="60" value="{{ old('rua') }}">
                         </div>
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Bairro</label>
-                            <input class="form-control" name="bairro" type="text" id="bairro" size="40">
+                            <input class="form-control" name="bairro" type="text" id="bairro" size="40" value="{{ old('bairro') }}">
                         </div>
                         <div class="mb-3 col-md-1">
                             <label class="form-label">Estado</label>
-                            <input class="form-control"  name="uf" type="text" id="uf" size="2">
+                            <input class="form-control"  name="uf" type="text" id="uf" size="2" value="{{ old('uf') }}">
                         </div>
                     </div>
                     <div class="row">
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Cidade</label>
-                            <input class="form-control" name="cidade" type="text" id="cidade" size="40">
+                            <input class="form-control" name="cidade" type="text" id="cidade" size="40" value="{{ old('cidade') }}">
                         </div>
                         <div class="mb-3 col-md-2">
                             <label class="form-label">Numero</label>
-                            <input class="form-control" name="numero" type="text" id="numero" size="40">
+                            <input class="form-control" name="numero" type="text" id="numero" size="40" value="{{ old('numero') }}">
                         </div>
                         <div class="mb-3 col-md-6">
                             <label class="form-label">Complemento</label>
-                            <input class="form-control" name="complemento" type="text" id="complemento" size="40">
+                            <input class="form-control" name="complemento" type="text" id="complemento" size="40" value="{{ old('complemento') }}">
                         </div>
                     </div>
                     <div class="row">
@@ -180,109 +176,55 @@
 
 <script>
     $(document).ready(function(){
-    $('#cpf').mask('000.000.000-00');
-    $('#telefone').mask('(00) 0000-0000');
-    $('#celular').mask('(00) 00000-0000');
-});
-
-    function showPassword() {
-        var passwordField = document.getElementById('password');
-        passwordField.type = 'text';
-    }
-
-    function hidePassword() {
-        var passwordField = document.getElementById('password');
-        passwordField.type = 'password';
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        var permissoesSelect = document.getElementById('permisoes_id');
-        var especialidadeDiv = document.getElementById('especialidade-div');
-        var crmDiv = document.getElementById('crm-div');
-        var coremDiv = document.getElementById('corem-div');
-
-        permissoesSelect.addEventListener('change', function() {
-            var selectedValue = permissoesSelect.value;
-
-            if (selectedValue == '2') { // Certifique-se de que '2' é o ID correspondente a 'médico'
-                especialidadeDiv.classList.remove('hidden');
-                crmDiv.classList.remove('hidden');
-                coremDiv.classList.add('hidden');
-            } else if (selectedValue == '3') { // Certifique-se de que '3' é o ID correspondente a 'enfermeiro'
-                especialidadeDiv.classList.remove('hidden');
-                crmDiv.classList.add('hidden');
-                coremDiv.classList.remove('hidden');
-            } else {
-                especialidadeDiv.classList.add('hidden');
-                crmDiv.classList.add('hidden');
-                coremDiv.classList.add('hidden');
-            }
-        });
+        $('#cpf').mask('000.000.000-00');
+        $('#telefone').mask('(00) 0000-0000');
+        $('#celular').mask('(00) 00000-0000');
     });
-    
+
     function limpa_formulário_cep() {
-            //Limpa valores do formulário de cep.
-            document.getElementById('rua').value=("");
-            document.getElementById('bairro').value=("");
-            document.getElementById('cidade').value=("");
-            document.getElementById('uf').value=("");
+        document.getElementById('rua').value=("");
+        document.getElementById('bairro').value=("");
+        document.getElementById('cidade').value=("");
+        document.getElementById('uf').value=("");
     }
 
     function meu_callback(conteudo) {
         if (!("erro" in conteudo)) {
-            //Atualiza os campos com os valores.
             document.getElementById('rua').value=(conteudo.logradouro);
             document.getElementById('bairro').value=(conteudo.bairro);
             document.getElementById('cidade').value=(conteudo.localidade);
             document.getElementById('uf').value=(conteudo.uf);
-        } //end if.
-        else {
-            //CEP não Encontrado.
+        } else {
             limpa_formulário_cep();
             alert("CEP não encontrado.");
         }
     }
-        
-    function pesquisacep(valor) {
 
-        //Nova variável "cep" somente com dígitos.
+    function pesquisacep(valor) {
         var cep = valor.replace(/\D/g, '');
 
-        //Verifica se campo cep possui valor informado.
         if (cep != "") {
-
-            //Expressão regular para validar o CEP.
             var validacep = /^[0-9]{8}$/;
 
-            //Valida o formato do CEP.
             if(validacep.test(cep)) {
-
-                //Preenche os campos com "..." enquanto consulta webservice.
                 document.getElementById('rua').value="...";
                 document.getElementById('bairro').value="...";
                 document.getElementById('cidade').value="...";
                 document.getElementById('uf').value="...";
 
-                //Cria um elemento javascript.
                 var script = document.createElement('script');
 
-                //Sincroniza com o callback.
                 script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
 
-                //Insere script no documento e carrega o conteúdo.
                 document.body.appendChild(script);
 
-            } //end if.
-            else {
-                //cep é inválido.
+            } else {
                 limpa_formulário_cep();
                 alert("Formato de CEP inválido.");
             }
-        } //end if.
-        else {
-            //cep sem valor, limpa formulário.
+        } else {
             limpa_formulário_cep();
         }
-    };
+    }
 </script>
 @endsection

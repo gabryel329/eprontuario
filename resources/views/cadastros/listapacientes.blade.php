@@ -32,13 +32,9 @@
                         <form action="{{route('paciente.store')}}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="row">
-                                <div class="mb-3 col-md-3">
+                                <div class="mb-3 col-md-6">
                                     <label class="form-label">Nome </label>
                                     <input class="form-control" id="name" name="name" type="text">
-                                </div>
-                                <div class="mb-3 col-md-3">
-                                    <label class="form-label">Sobrenome </label>
-                                    <input class="form-control" id="sobrenome" name="sobrenome" type="text">
                                 </div>
                                 <div class="mb-3 col-md-3">
                                     <label class="form-label">E-mail</label>
@@ -205,7 +201,7 @@
                                 <tbody>
                                     @foreach ($paciente as $item)
                                         <tr>
-                                            <td>{{ $item->name }} {{ $item->sobrenome }}</td>
+                                            <td>{{ $item->name }}</td>
                                             <td>{{ $item->email }}</td>
                                             <td>{{ $item->cpf }}</td>
                                             <td>{{ $item->celular }}</td>
@@ -243,15 +239,10 @@
                                                             @method('PUT')
                                                             <div class="row">
                                                                 <div class="row">
-                                                                    <div class="mb-3 col-md-3">
-                                                                        <label class="form-label">Nome </label>
+                                                                    <div class="mb-3 col-md-6">
+                                                                        <label class="form-label">Nome Completo</label>
                                                                         <input class="form-control" id="name{{ $item->id }}" name="name" type="text" value="{{ $item->name }}">
                                                                     </div>
-                                                                    <div class="mb-3 col-md-3">
-                                                                        <label class="form-label">Sobrenome </label>
-                                                                        <input class="form-control" id="sobrenome{{ $item->id }}" name="sobrenome" type="text" value="{{ $item->sobrenome }}">
-                                                                    </div>
-                                                                    
                                                                     <div class="mb-3 col-md-3">
                                                                         <label class="form-label">E-mail</label>
                                                                         <input class="form-control" id="email{{ $item->id }}" name="email" type="text" value="{{ $item->email }}">

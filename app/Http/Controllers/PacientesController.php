@@ -35,15 +35,36 @@ class PacientesController extends Controller
      */
     public function store(Request $request)
     {
-
+        // Verifica se já existe um paciente com o mesmo CPF
+        $cpf = $request->input('cpf');
+        $existeCpf = Pacientes::where('cpf', $cpf)->first();
+        if ($existeCpf) {
+            return redirect()->back()->withInput()->with('error', 'CPF já cadastrado, tente novamente');
+        }
+    
+        // Verifica se já existe um paciente com o mesmo RG
+        $rg = $request->input('rg');
+        $existeRG = Pacientes::where('rg', $rg)->first();
+        if ($existeRG) {
+            return redirect()->back()->withInput()->with('error', 'RG já cadastrado, tente novamente');
+        }
+    
+        // Verifica se já existe um paciente com o mesmo SUS, se o campo foi preenchido
+        $sus = $request->input('sus');
+        if (!empty($sus)) {
+            $existeSUS = Pacientes::where('sus', $sus)->first();
+            if ($existeSUS) {
+                return redirect()->back()->withInput()->with('error', 'SUS já cadastrado, tente novamente');
+            }
+        }
+    
         // Capitalize the input where appropriate
         $name = ucfirst($request->input('name'));
         $sobrenome = ucfirst($request->input('sobrenome'));
-
+    
         // Get the other inputs
         $email = $request->input('email');
         $nasc = $request->input('nasc');
-        $cpf = $request->input('cpf');
         $cep = $request->input('cep');
         $rua = $request->input('rua');
         $bairro = $request->input('bairro');
@@ -58,113 +79,53 @@ class PacientesController extends Controller
         $nome_mae = $request->input('nome_mae');
         $acompanhante = $request->input('acompanhante');
         $genero = $request->input('genero');
-        $rg = $request->input('rg');
         $certidao = $request->input('certidao');
-        $sus = $request->input('sus');
         $convenio = $request->input('convenio');
         $matricula = $request->input('matricula');
         $cor = $request->input('cor');
         $imagem = $request->file('imagem');
-
-        // Check if the user already exists
-        $existePaciente = Pacientes::where('cpf', $cpf)->first();
-
-        if ($existePaciente) {
-            return redirect()->route('paciente.index')->with('error', 'Paciente já existe!');
-        }
-
+    
         if ($imagem && $imagem->isValid()) {
             $filenameWithExt = $imagem->getClientOriginalName();
-            // Get just filename
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            // Get just ext
             $extension = $imagem->getClientOriginalExtension();
-            // Filename to store
             $imageName = $filename . '.' . $extension;
-
-            // Upload Image to the 'public/images/' directory
             $imagem->move(public_path('images/'), $imageName);
-
-            // Create the Paciente
-            $paciente = Pacientes::create([
-                'name' => $name,
-                'sobrenome' => $sobrenome,
-                'email' => $email,
-                'nasc' => $nasc,
-                'cpf' => $cpf,
-                'cep' => $cep,
-                'rua' => $rua,
-                'bairro' => $bairro,
-                'cidade' => $cidade,
-                'uf' => $uf,
-                'numero' => $numero,
-                'complemento' => $complemento,
-                'telefone' => $telefone,
-                'celular' => $celular,
-                'nome_social' => $nome_social,
-                'nome_pai' => $nome_pai,
-                'nome_mae' => $nome_mae,
-                'acompanhante' => $acompanhante,
-                'genero' => $genero,
-                'rg' => $rg,
-                'certidao' => $certidao,
-                'sus' => $sus,
-                'convenio' => $convenio,
-                'matricula' => $matricula,
-                'cor' => $cor,
-                'imagem' => $imageName, // Store the image name
-                // Add other fields...
-            ]);
         } else {
-            $paciente = Pacientes::create([
-                'name' => $name,
-                'sobrenome' => $sobrenome,
-                'email' => $email,
-                'nasc' => $nasc,
-                'cpf' => $cpf,
-                'cep' => $cep,
-                'rua' => $rua,
-                'bairro' => $bairro,
-                'cidade' => $cidade,
-                'uf' => $uf,
-                'numero' => $numero,
-                'complemento' => $complemento,
-                'telefone' => $telefone,
-                'celular' => $celular,
-                'nome_social' => $nome_social,
-                'nome_pai' => $nome_pai,
-                'nome_mae' => $nome_mae,
-                'acompanhante' => $acompanhante,
-                'genero' => $genero,
-                'rg' => $rg,
-                'certidao' => $certidao,
-                'sus' => $sus,
-                'convenio' => $convenio,
-                'matricula' => $matricula,
-                'cor' => $cor,
-            ]);
+            $imageName = null;
         }
-
-        $paciente->save();
-
+    
+        $paciente = Pacientes::create([
+            'name' => $name,
+            'sobrenome' => $sobrenome,
+            'email' => $email,
+            'nasc' => $nasc,
+            'cpf' => $cpf,
+            'cep' => $cep,
+            'rua' => $rua,
+            'bairro' => $bairro,
+            'cidade' => $cidade,
+            'uf' => $uf,
+            'numero' => $numero,
+            'complemento' => $complemento,
+            'telefone' => $telefone,
+            'celular' => $celular,
+            'nome_social' => $nome_social,
+            'nome_pai' => $nome_pai,
+            'nome_mae' => $nome_mae,
+            'acompanhante' => $acompanhante,
+            'genero' => $genero,
+            'rg' => $rg,
+            'certidao' => $certidao,
+            'sus' => $sus,
+            'convenio' => $convenio,
+            'matricula' => $matricula,
+            'cor' => $cor,
+            'imagem' => $imageName,
+        ]);
+    
         return redirect()->route('agenda.index1')->with('success', 'Paciente criado com sucesso')->with('paciente', $paciente);
     }
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        // Find the user by ID
-        $paciente = Pacientes::find($id);
-
-        if (!$paciente) {
-            return redirect()->route('paciente.index')->with('error', 'Paciente não encontrado!');
-        }
-
-        // Return the view with the user data
-        return view('paciente.show', compact('paciente'));
-    }
-
     /**
      * Show the form for editing the specified resource.
      */

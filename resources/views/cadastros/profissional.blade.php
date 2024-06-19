@@ -46,13 +46,9 @@
             <form action="{{route('profissional.store')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
-                    <div class="mb-3 col-md-4">
+                    <div class="mb-3 col-md-8">
                         <label class="form-label">Nome </label>
                         <input class="form-control" id="name" name="name" type="text" require>
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">Sobrenome </label>
-                        <input class="form-control" id="sobrenome" name="sobrenome" type="text">
                     </div>
                     <div class="mb-3 col-md-4">
                         <label class="form-label">E-mail</label>

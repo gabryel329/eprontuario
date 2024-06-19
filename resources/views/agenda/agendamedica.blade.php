@@ -95,7 +95,7 @@
                                             <td hidden>{{ $item->id }}</td>
                                             <td hidden>{{ $item->paciente_id }}</td>
                                             <td>{{ $item->hora }}</td>
-                                            <td>{{ $item->name }} {{ $item->sobrenome }}</td>
+                                            <td>{{ $item->name }}</td>
                                             <td title="{{ $item->procedimento_id }}">{{ $item->procedimento_id }}</td>
                                             <td>
                                                 <a type="submit" class="btn btn-warning form-control chamar-btn"
@@ -131,7 +131,7 @@
                                             <td hidden>{{ $item->id }}</td>
                                             <td hidden>{{ $item->paciente_id }}</td>
                                             <td>{{ $item->hora }}</td>
-                                            <td>{{ $item->name }} {{ $item->sobrenome }}</td>
+                                            <td>{{ $item->name }}</td>
                                             <td title="{{ $item->procedimento_id }}">{{ $item->procedimento_id }}</td>
                                         </tr>
                                     @endforeach
@@ -153,7 +153,7 @@
                                             <td hidden>{{ $item->id }}</td>
                                             <td hidden>{{ $item->paciente_id }}</td>
                                             <td>{{ $item->hora }}</td>
-                                            <td>{{ $item->name }} {{ $item->sobrenome }}</td>
+                                            <td>{{ $item->name }}</td>
                                             <td title="{{ $item->procedimento_id }}">{{ $item->procedimento_id }}</td>
                                         </tr>
                                     @endforeach
@@ -175,7 +175,7 @@
                                             <td hidden>{{ $item->id }}</td>
                                             <td hidden>{{ $item->paciente_id }}</td>
                                             <td>{{ $item->hora }}</td>
-                                            <td>{{ $item->name }} {{ $item->sobrenome }}</td>
+                                            <td>{{ $item->name }}</td>
                                             <td title="{{ $item->procedimento_id }}">{{ $item->procedimento_id }}</td>
                                         </tr>
                                     @endforeach
@@ -195,7 +195,6 @@
                 let pacienteId = this.getAttribute('data-paciente-id');
                 let agendaId = this.getAttribute('data-agenda-id');
                 let pacienteNome = this.getAttribute('data-paciente-name');
-                let pacienteSobrenome = this.getAttribute('data-paciente-sobrenome');
 
                 // Envia os dados via AJAX para o servidor
                 fetch('{{ route('consultorioPainel.store') }}', {
@@ -208,7 +207,6 @@
                             paciente_id: pacienteId,
                             agenda_id: agendaId,
                             nome: pacienteNome,
-                            sobrenome: pacienteSobrenome
                         })
                     })
                     .then(response => response.json())

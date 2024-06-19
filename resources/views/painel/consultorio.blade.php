@@ -40,7 +40,7 @@
             <li>
                 <a class="app-menu__item">
                     <span class="app-menu__label">
-                        {{ $item->paciente->name ?? 'N/A' }} {{ $item->paciente->sobrenome ?? 'N/A' }}<br>
+                        {{ $item->paciente->name ?? 'N/A' }}<br>
                         @if ($item->permisao_id == 1)
                         Consultório {{ $item->sala_id }}
                         @elseif ($item->permisao_id == 2)
@@ -57,7 +57,6 @@
             <div class="card-body">
                 <p id="patient-name" class="card-text" style="font-size: 4rem; text-transform: uppercase; font-weight: bold;">
                     {{ $painelUnico->paciente->name ?? 'Sem Pacientes' }}
-                    {{ $painelUnico->paciente->sobrenome ?? '' }}
                 </p>
             </div>
         </div>

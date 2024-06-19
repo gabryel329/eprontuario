@@ -40,7 +40,7 @@
                             <tbody>
                                 @foreach ($profissioanls as $item)
                                     <tr>
-                                        <td>{{ $item->name }} {{ $item->sobrenome }}</td>
+                                        <td>{{ $item->name }}</td>
                                         <td>{{ optional($item->especialidade)->especialidade }}</td>
                                         <td>{{ $item->email }}</td>
                                         <td>
@@ -73,13 +73,9 @@
                                                     @csrf
                                                     @method('PUT')
                                                     <div class="row">
-                                                        <div class="mb-3 col-md-4">
-                                                            <label class="form-label">Nome</label>
+                                                        <div class="mb-3 col-md-8">
+                                                            <label class="form-label">Nome Completo</label>
                                                             <input class="form-control" id="name" name="name" type="text" value="{{ $item->name }}">
-                                                        </div>
-                                                        <div class="mb-3 col-md-4">
-                                                            <label class="form-label">Sobrenome</label>
-                                                            <input class="form-control" id="sobrenome" name="sobrenome" type="text" value="{{ $item->sobrenome }}">
                                                         </div>
                                                         <div class="mb-3 col-md-4">
                                                             <label class="form-label">E-mail</label>
