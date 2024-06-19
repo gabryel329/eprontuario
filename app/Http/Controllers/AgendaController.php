@@ -200,7 +200,7 @@ class AgendaController extends Controller
             // Handle the case where user doesn't have a linked professional ID
             // (consider returning an appropriate error message or view)
             return view('home', [ // Replace 'error' with appropriate view name
-                'message' => 'Usuário não possui vínculo com um profissional'
+                'message' => 'Permissão Negada'
             ]);
         }
 

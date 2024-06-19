@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
                 'permisao_id' => 3,
                 'profissional_id' => null,
                 'password' => bcrypt('12345678'),
-                'imagem' => 'favicon.png'
+                'imagem' => 'LOGO_01_VERDE.png'
             ],
             [
                 'name' => 'Admin1',
@@ -50,7 +50,7 @@ class DatabaseSeeder extends Seeder
                 'permisao_id' => 1,
                 'profissional_id' => 1,
                 'password' => bcrypt('12345678'),
-                'imagem' => 'favicon.png'
+                'imagem' => 'LOGO_01_VERDE.png'
             ],
             [
                 'name' => 'Admin2',
@@ -58,7 +58,7 @@ class DatabaseSeeder extends Seeder
                 'permisao_id' => 2,
                 'profissional_id' => 2,
                 'password' => bcrypt('12345678'),
-                'imagem' => 'favicon.png'
+                'imagem' => 'LOGO_01_VERDE.png'
             ],
         ]);
 
