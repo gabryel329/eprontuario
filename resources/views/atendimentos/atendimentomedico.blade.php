@@ -12,7 +12,7 @@
                 <h1><i class="bi bi-receipt"></i> Atendimento</h1>
                 <div class="actions">
                     <label class="form-label"><strong>Paciente:</strong></label>
-                    <p>{{ $paciente->name }} {{ $paciente->sobrenome }}</p>
+                    <p>{{ $paciente->name }}</p>
                 </div>
             </div>
             <ul class="app-breadcrumb breadcrumb">

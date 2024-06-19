@@ -41,8 +41,7 @@
                                 <select class="form-control" id="profissional_id" name="profissional_id" required>
                                     <option disabled selected style="font-size:18px;color: black;">Escolha</option>
                                     @foreach ($profissional as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }} {{ $item->sobrenome }}
-                                        </option>
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -70,15 +69,11 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="mb-3 col-md-6">
+                                    <div class="mb-3 col-md-12">
                                         <label class="form-label"><strong>Nome:</strong></label>
                                         <input class="form-control" id="paciente_id" name="paciente_id" type="text"
                                             hidden>
                                         <input class="form-control" id="name" name="name" type="text">
-                                    </div>
-                                    <div class="mb-3 col-md-6">
-                                        <label class="form-label"><strong>Sobrenome:</strong></label>
-                                        <input class="form-control" id="sobrenome" name="sobrenome" type="text">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -153,7 +148,6 @@
                         <thead>
                             <tr>
                                 <th>Nome</th>
-                                <th>Sobrenome</th>
                                 <th>CPF</th>
                                 <th>Nome Social</th>
                                 <th>Ação</th>
@@ -163,12 +157,11 @@
                             @foreach ($pacientes as $p)
                                 <tr>
                                     <td>{{ $p->name }}</td>
-                                    <td>{{ $p->sobrenome }}</td>
                                     <td>{{ $p->cpf }}</td>
                                     <td>{{ $p->nome_social }}</td>
                                     <td>
                                         <button class="btn btn-primary" type="button"
-                                            onclick="selectPaciente('{{ $p->id }}', '{{ $p->name }}', '{{ $p->sobrenome }}')">Selecionar</button>
+                                            onclick="selectPaciente('{{ $p->id }}', '{{ $p->name }}')">Selecionar</button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -261,10 +254,9 @@
             }
         });
 
-        function selectPaciente(id, name, sobrenome) {
+        function selectPaciente(id, name) {
             document.getElementById('name').value = name;
             document.getElementById('paciente_id').value = id;
-            document.getElementById('sobrenome').value = sobrenome;
             var modal = bootstrap.Modal.getInstance(document.getElementById('pacienteModal'));
             modal.hide();
         }

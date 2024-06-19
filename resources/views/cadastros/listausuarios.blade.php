@@ -39,7 +39,7 @@
                                 <tbody>
                                     @foreach ($users as $p)
                                         <tr>
-                                            <td>{{ $p->name }} {{ $p->sobrenome }}</td>
+                                            <td>{{ $p->name }}</td>
                                             <td>{{ $p->email }}</td>
                                             <td>
                                                 <div class="d-flex">
@@ -72,13 +72,9 @@
                                                             @csrf
                                                             @method('PUT')
                                                             <div class="row">
-                                                                <div class="mb-3 col-md-5">
+                                                                <div class="mb-3 col-md-9">
                                                                     <label class="form-label">Nome</label>
                                                                     <input class="form-control" name="name" type="text" value="{{ $p->name }}">
-                                                                </div>
-                                                                <div class="mb-3 col-md-4">
-                                                                    <label class="form-label">Sobrenome</label>
-                                                                    <input class="form-control" name="sobrenome" type="text" value="{{ $p->sobrenome }}">
                                                                 </div>
                                                                 <div class="mb-3 col-md-3">
                                                                     <label class="form-label">Permissão</label>

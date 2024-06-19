@@ -42,7 +42,7 @@
                                     @foreach ($pacientes as $item)
                                         <tr>
                                             <td>{{ $item->id }}</td>
-                                            <td>{{ $item->name }} {{ $item->sobrenome }}</td>
+                                            <td>{{ $item->name }}</td>
                                             <td>{{ $item->cpf }}</td>
                                             <td>{{ $item->sus ?? 'NÃO TEM'}}</td>
                                             <td>
@@ -79,18 +79,11 @@
                                                             @csrf
                                                             @method('PUT')
                                                             <div class="row">
-                                                                <div class="mb-3 col-md-6">
-                                                                    <label class="form-label"><strong>Nome:</strong></label>
+                                                                <div class="mb-3 col-md-12">
+                                                                    <label class="form-label"><strong>Nome Completo:</strong></label>
                                                                     <input class="form-control" id="name"
                                                                         name="name" type="text"
                                                                         value="{{ $item->name }}" disabled>
-                                                                </div>
-                                                                <div class="mb-3 col-md-6">
-                                                                    <label
-                                                                        class="form-label"><strong>Sobrenome:</strong></label>
-                                                                    <input class="form-control" id="sobrenome"
-                                                                        name="sobrenome" type="text"
-                                                                        value="{{ $item->sobrenome }}" disabled>
                                                                 </div>
                                                             </div>
                                                             <div class="row">

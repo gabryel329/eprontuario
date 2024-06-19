@@ -36,14 +36,10 @@
                     <form method="POST" action="{{ route('usuario.store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
-                            <div class="mb-3 col-md-4">
-                                <label class="form-label"><strong>Nome:</strong></label>
+                            <div class="mb-3 col-md-8">
+                                <label class="form-label"><strong>Nome Completo:</strong></label>
                                 <input class="form-control" id="id" name="id" type="text" hidden>
                                 <input class="form-control" id="name" name="name" type="text" required>
-                            </div>
-                            <div class="mb-3 col-md-4">
-                                <label class="form-label"><strong>Sobrenome:</strong></label>
-                                <input class="form-control" id="sobrenome" name="sobrenome" type="text">
                             </div>
                             <div class="mb-3 col-md-4">
                                 <label class="form-label">Permissão:</label>
@@ -94,7 +90,6 @@
                     <thead>
                         <tr>
                             <th>Nome</th>
-                            <th>Sobrenome</th>
                             <th>CPF</th>
                             <th>Nome Social</th>
                             <th>Ação</th>
@@ -104,11 +99,10 @@
                         @foreach ($profissioanls as $p)
                             <tr>
                                 <td>{{ $p->name }}</td>
-                                <td>{{ $p->sobrenome }}</td>
                                 <td>{{ $p->cpf }}</td>
                                 <td>{{ $p->nome_social }}</td>
                                 <td>
-                                    <button class="btn btn-primary" type="button" onclick="selectProfissional('{{ $p->id }}', '{{ $p->name }}', '{{ $p->sobrenome }}', '{{ $p->email }}')">Selecionar</button>
+                                    <button class="btn btn-primary" type="button" onclick="selectProfissional('{{ $p->id }}', '{{ $p->name }}', '{{ $p->email }}')">Selecionar</button>
                                 </td>
                             </tr>
                         @endforeach
@@ -144,10 +138,9 @@
         }
     });
 
-    function selectProfissional(id, name, sobrenome, email) {
+    function selectProfissional(id, name, email) {
         document.getElementById('name').value = name;
         document.getElementById('id').value = id;
-        document.getElementById('sobrenome').value = sobrenome;
         document.getElementById('email').value = email;
 
         // Fecha o modal
