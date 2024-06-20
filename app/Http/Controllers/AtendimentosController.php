@@ -367,16 +367,19 @@ class AtendimentosController extends Controller
     public function index1(Request $request)
     {
         // Recupera todos os profissionais e pacientes para o dropdown
-        $profissional = Profissional::all();
+        $profissional = Profissional::join('users', 'profissionals.id', '=', 'users.profissional_id')
+        ->where('users.permisao_id', 1)
+        ->distinct()
+        ->get(['profissionals.id', 'profissionals.name']);
         $paciente = Pacientes::all();
-
+    
         // Filtra os parâmetros de busca da requisição
-        $data = $request->input('data', date('Y-m-d'));
-        $profissional_id = $request->input('profissional_id');
-        $paciente_id = $request->input('paciente_id');
-
+        $data = $request->input('data', null);  // Alterado para permitir data vazia
+        $profissional_id = $request->input('profissional_id', null);  // Alterado para permitir profissional_id vazio
+        $paciente_id = $request->input('paciente_id', null);  // Alterado para permitir paciente_id vazio
+    
         // Monta a consulta com joins e leftJoins
-        $historico = DB::table('agendas as ag')
+        $query = DB::table('agendas as ag')
             ->select(
                 'ag.data',
                 'ag.id as consulta',
@@ -410,38 +413,73 @@ class AtendimentosController extends Controller
                 'at.queixas as at_queixas',
                 'at.atestado as at_atestado',
                 'at.evolucao as at_evolucao',
-                'at.condicao as at_condicao'
+                'at.condicao as at_condicao',
+                DB::raw('STRING_AGG(DISTINCT proc2.procedimento::text, \',\') as exames'),
+                DB::raw('STRING_AGG(DISTINCT med.nome::text, \',\') as remedios'),
+                DB::raw('STRING_AGG(DISTINCT re.dose::text, \',\') as doses'),
+                DB::raw('STRING_AGG(DISTINCT re.horas::text, \',\') as horas')
             )
             ->join('profissionals as pr', 'ag.profissional_id', '=', 'pr.id')
             ->join('pacientes as pa', 'ag.paciente_id', '=', 'pa.id')
             ->join('procedimentos as prc', 'ag.procedimento_id', '=', 'prc.procedimento')
             ->leftJoin('anamneses as an', function ($join) use ($data) {
-                $join->on('an.paciente_id', '=', 'pa.id')
-                    ->where(DB::raw('DATE(an.created_at)'), '=', $data);
+                $join->on('an.paciente_id', '=', 'pa.id');
+                if (!empty($data)) {
+                    $join->where(DB::raw('DATE(an.created_at)'), '=', $data);
+                }
             })
             ->leftJoin('atendimentos as at', function ($join) use ($data) {
-                $join->on('at.paciente_id', '=', 'pa.id')
-                    ->where(DB::raw('DATE(at.created_at)'), '=', $data);
+                $join->on('at.paciente_id', '=', 'pa.id');
+                if (!empty($data)) {
+                    $join->where(DB::raw('DATE(at.created_at)'), '=', $data);
+                }
             })
             ->leftJoin('exames as ex', function ($join) use ($data) {
-                $join->on('ex.paciente_id', '=', 'pa.id')
-                    ->where(DB::raw('DATE(ex.created_at)'), '=', $data);
+                $join->on('ex.paciente_id', '=', 'pa.id');
+                if (!empty($data)) {
+                    $join->where(DB::raw('DATE(ex.created_at)'), '=', $data);
+                }
             })
             ->leftJoin('remedios as re', function ($join) use ($data) {
-                $join->on('re.paciente_id', '=', 'pa.id')
-                    ->where(DB::raw('DATE(re.created_at)'), '=', $data);
+                $join->on('re.paciente_id', '=', 'pa.id');
+                if (!empty($data)) {
+                    $join->where(DB::raw('DATE(re.created_at)'), '=', $data);
+                }
             })
-            ->where('ag.data', $data)
-            ->where('pa.id', $paciente_id)
-            ->where('an.profissional_id', $profissional_id)
-            ->groupBy('prc.procedimento', 'ag.data', 'ag.id','pa.name', 'pr.name', 'pa.id', 'an.profissional_id', 'an.pa', 'an.temp', 'an.peso', 'an.altura', 
-            'at.condicao', 'at.evolucao', 'at.atestado', 'an.spo2', 'an.dextro', 'an.gestante', 'at.queixas', 
-            'an.anamnese', 'an.alergia3', 'an.alergia2', 'an.alergia1', 'an.acolhimento4', 'an.acolhimento3',
-             'an.acolhimento2', 'an.acolhimento1', 'an.acolhimento', 'an.fr', 'an.fc')
+            ->leftJoin('procedimentos as proc2', 'ex.procedimento_id', '=', 'proc2.id')
+            ->leftJoin('medicamentos as med', 're.medicamento_id', '=', 'med.id');
+    
+        // Aplica os filtros apenas se os parâmetros não estiverem vazios
+        if (!empty($data)) {
+            $query->where('ag.data', $data);
+        }
+        if (!empty($paciente_id)) {
+            $query->where('pa.id', $paciente_id);
+        }
+        if (!empty($profissional_id)) {
+            $query->where('an.profissional_id', $profissional_id);
+        }
+    
+        // Finaliza a montagem da consulta
+        $historico = $query->groupBy(
+                'prc.procedimento', 'ag.data', 'ag.id', 'pa.name', 'pr.name', 'pa.id', 'an.profissional_id',
+                'an.pa', 'an.temp', 'an.peso', 'an.altura', 'at.condicao', 'at.evolucao', 'at.atestado', 'an.spo2',
+                'an.dextro', 'an.gestante', 'at.queixas', 'an.anamnese', 'an.alergia3', 'an.alergia2', 'an.alergia1',
+                'an.acolhimento4', 'an.acolhimento3', 'an.acolhimento2', 'an.acolhimento1', 'an.acolhimento', 'an.fr', 'an.fc'
+            )
             ->orderBy('ag.data', 'asc')
             ->get();
-
+    
+        // Convert the grouped strings back to arrays
+        foreach ($historico as $h) {
+            $h->exames = !empty($h->exames) ? explode(',', $h->exames) : [];
+            $h->remedios = !empty($h->remedios) ? explode(',', $h->remedios) : [];
+            $h->doses = !empty($h->doses) ? explode(',', $h->doses) : [];
+            $h->horas = !empty($h->horas) ? explode(',', $h->horas) : [];
+        }
+    
         return view('atendimentos.prontuarios', compact('profissional', 'paciente', 'historico'));
     }
+    
 
 }
