@@ -212,25 +212,28 @@
             fetchAgenda(data, profissionalId);
         }
 
+
+        const currentYear = new Date().getFullYear();
+        const feriados = [
+            `${currentYear}-01-01`, // Ano Novo
+            `${currentYear}-02-12`, // Carnaval (segunda-feira)
+            `${currentYear}-02-13`, // Carnaval (terça-feira)
+            `${currentYear}-02-14`, // Quarta-feira de Cinzas (ponto facultativo até às 14h)
+            `${currentYear}-03-29`, // Paixão de Cristo
+            `${currentYear}-04-21`, // Tiradentes
+            `${currentYear}-05-01`, // Dia do Trabalho
+            `${currentYear}-05-30`, // Corpus Christi
+            `${currentYear}-06-24`, // São João
+            `${currentYear}-07-02`, // Independência da Bahia
+            `${currentYear}-09-07`, // Independência do Brasil
+            `${currentYear}-10-12`, // Nossa Senhora Aparecida
+            `${currentYear}-11-02`, // Finados
+            `${currentYear}-11-15`, // Proclamação da República
+            `${currentYear}-12-08`, // Nossa Senhora da Conceição da Praia
+            `${currentYear}-12-25`  // Natal
+        ];
+
         function isHoliday(data) {
-            var feriados = [
-                '2024-01-01', // Ano Novo
-                '2024-02-12', // Carnaval (segunda-feira)
-                '2024-02-13', // Carnaval (terça-feira)
-                '2024-02-14', // Quarta-feira de Cinzas (ponto facultativo até às 14h)
-                '2024-03-29', // Paixão de Cristo
-                '2024-04-21', // Tiradentes
-                '2024-05-01', // Dia do Trabalho
-                '2024-05-30', // Corpus Christi
-                '2024-06-24', // São João
-                '2024-07-02', // Independência da Bahia
-                '2024-09-07', // Independência do Brasil
-                '2024-10-12', // Nossa Senhora Aparecida
-                '2024-11-02', // Finados
-                '2024-11-15', // Proclamação da República
-                '2024-12-08', // Nossa Senhora da Conceição da Praia
-                '2024-12-25'  // Natal
-            ];
             return feriados.includes(data);
         }
 
