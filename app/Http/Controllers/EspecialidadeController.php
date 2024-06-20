@@ -45,7 +45,7 @@ class EspecialidadeController extends Controller
         $especialidade = ucfirst(trim($request->input('especialidade')));
     
         // Check if the permission already exists
-        $existeEspecialidade = Permisoes::where('especialidade', $especialidade)->first();
+        $existeEspecialidade = Especialidade::where('especialidade', $especialidade)->first();
     
         if ($existeEspecialidade) {
             return redirect()->route('especialidade.index')->with('error', 'Especialidade já existe!');
