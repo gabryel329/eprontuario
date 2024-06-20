@@ -194,6 +194,11 @@
                 return;
             }
 
+            if (isHoliday(data)) {
+                alert('A data selecionada é um feriado. Por favor, escolha outra data.');
+                return;
+            }
+
             document.getElementById('selectedData').value = data;
             document.getElementById('selectedProfissionalId').value = profissionalId;
 
@@ -205,6 +210,28 @@
             document.getElementById('agenda-table').style.display = 'block';
 
             fetchAgenda(data, profissionalId);
+        }
+
+        function isHoliday(data) {
+            var feriados = [
+                '2024-01-01', // Ano Novo
+                '2024-02-12', // Carnaval (segunda-feira)
+                '2024-02-13', // Carnaval (terça-feira)
+                '2024-02-14', // Quarta-feira de Cinzas (ponto facultativo até às 14h)
+                '2024-03-29', // Paixão de Cristo
+                '2024-04-21', // Tiradentes
+                '2024-05-01', // Dia do Trabalho
+                '2024-05-30', // Corpus Christi
+                '2024-06-24', // São João
+                '2024-07-02', // Independência da Bahia
+                '2024-09-07', // Independência do Brasil
+                '2024-10-12', // Nossa Senhora Aparecida
+                '2024-11-02', // Finados
+                '2024-11-15', // Proclamação da República
+                '2024-12-08', // Nossa Senhora da Conceição da Praia
+                '2024-12-25'  // Natal
+            ];
+            return feriados.includes(data);
         }
 
         function fetchAgenda(data, profissionalId) {
@@ -245,7 +272,7 @@
 
             for (var i = 0; i < rows.length; i++) {
                 var name = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
-                var cpf = rows[i].getElementsByTagName('td')[2].textContent.toLowerCase();
+                var cpf = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
                 if (name.indexOf(input) > -1 || cpf.indexOf(input) > -1) {
                     rows[i].style.display = "";
                 } else {
@@ -268,13 +295,13 @@
                 data = data.filter(function(item) {
                     return item.name !== 'paciente_id';
                 });
+            }
             var hora = document.getElementById('hora').value;
             var procedimento = document.getElementById('procedimento_id').value;
 
             if (!hora || !procedimento) {
                 alert('Por favor, preencha todos os campos obrigatórios.');
                 return false;
-            }
             }
 
             $.ajax({
