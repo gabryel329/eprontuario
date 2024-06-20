@@ -48,11 +48,11 @@
                 <div class="row">
                     <div class="mb-3 col-md-8">
                         <label class="form-label">Nome </label>
-                        <input class="form-control" id="name" name="name" type="text" require>
+                        <input class="form-control" id="name" name="name" type="text" required>
                     </div>
                     <div class="mb-3 col-md-4">
                         <label class="form-label">E-mail</label>
-                        <input class="form-control" id="email" name="email" type="email" require>
+                        <input class="form-control" id="email" name="email" type="email" required>
                     </div>
                 </div>
                 <div class="row">
@@ -83,6 +83,25 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label">Tipo de Profissional</label>
+                        <select class="form-control" id="tipo_profissional" name="tipo_profissional" onchange="mostrarCamposEspecificos()">
+                            <option disabled selected style="font-size:18px;color: black;">Escolha</option>
+                            <option value="medico">Médico</option>
+                            <option value="enfermeiro">Enfermeiro</option>
+                            <option value="atendente">Atendente</option>
+                        </select>
+                    </div>
+                    <div class="mb-3 col-md-4 hidden" id="campo_crm">
+                        <label class="form-label">CRM</label>
+                        <input class="form-control" id="crm" name="crm" type="text">
+                    </div>
+                    <div class="mb-3 col-md-4 hidden" id="campo_corem">
+                        <label class="form-label">COREM</label>
+                        <input class="form-control" id="corem" name="corem" type="text">
+                    </div>
+                </div>
+                <div class="row hidden" id="campos_comuns">
                     <div class="mb-3 col-md-6">
                         <label class="form-label">Telefone </label>
                         <input class="form-control" id="telefone" name="telefone" type="text">
@@ -102,20 +121,11 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">CRM</label>
-                        <input class="form-control" id="crm" name="crm" type="text">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">COREM</label>
-                        <input class="form-control" id="corem" name="corem" type="text">
-                    </div>
                 </div>
                 <div class="row">
                     <div class="mb-3 col-md-3">
                         <label class="form-label">CEP </label>
-                        <input class="form-control" name="cep" type="text" id="cep" value="" size="10" maxlength="9"
-                        onblur="pesquisacep(this.value);">
+                        <input class="form-control" name="cep" type="text" id="cep" value="" size="10" maxlength="9" onblur="pesquisacep(this.value);">
                     </div>
                     <div class="mb-3 col-md-3">
                         <label class="form-label">Rua </label>
@@ -131,7 +141,7 @@
                     </div>
                     <div class="mb-3 col-md-1">
                         <label class="form-label">Estado</label>
-                        <input class="form-control"  name="uf" type="text" id="uf" size="2">
+                        <input class="form-control" name="uf" type="text" id="uf" size="2">
                     </div>
                 </div>
                 <div class="row">
@@ -170,66 +180,79 @@ $(document).ready(function(){
             'A': { pattern: /[A-Za-z]/ }
         }
     });
-    
 });
 
+function limpa_formulário_cep() {
+    //Limpa valores do formulário de cep.
+    document.getElementById('rua').value=("");
+    document.getElementById('bairro').value=("");
+    document.getElementById('cidade').value=("");
+    document.getElementById('uf').value=("");
+}
 
-    function limpa_formulário_cep() {
-        //Limpa valores do formulário de cep.
-        document.getElementById('rua').value=("");
-        document.getElementById('bairro').value=("");
-        document.getElementById('cidade').value=("");
-        document.getElementById('uf').value=("");
+function meu_callback(conteudo) {
+    if (!("erro" in conteudo)) {
+        //Atualiza os campos com os valores.
+        document.getElementById('rua').value=(conteudo.logradouro);
+        document.getElementById('bairro').value=(conteudo.bairro);
+        document.getElementById('cidade').value=(conteudo.localidade);
+        document.getElementById('uf').value=(conteudo.uf);
+    } else {
+        //CEP não Encontrado.
+        limpa_formulário_cep();
+        alert("CEP não encontrado.");
     }
+}
 
-    function meu_callback(conteudo) {
-        if (!("erro" in conteudo)) {
-            //Atualiza os campos com os valores.
-            document.getElementById('rua').value=(conteudo.logradouro);
-            document.getElementById('bairro').value=(conteudo.bairro);
-            document.getElementById('cidade').value=(conteudo.localidade);
-            document.getElementById('uf').value=(conteudo.uf);
+function pesquisacep(valor) {
+    //Nova variável "cep" somente com dígitos.
+    var cep = valor.replace(/\D/g, '');
+
+    //Verifica se campo cep possui valor informado.
+    if (cep != "") {
+        //Expressão regular para validar o CEP.
+        var validacep = /^[0-9]{8}$/;
+
+        //Valida o formato do CEP.
+        if(validacep.test(cep)) {
+            //Preenche os campos com "..." enquanto consulta webservice.
+            document.getElementById('rua').value="...";
+            document.getElementById('bairro').value="...";
+            document.getElementById('cidade').value="...";
+            document.getElementById('uf').value="...";
+
+            //Cria um elemento javascript.
+            var script = document.createElement('script');
+
+            //Sincroniza com o callback.
+            script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+
+            //Insere script no documento e carrega o conteúdo.
+            document.body.appendChild(script);
         } else {
-            //CEP não Encontrado.
+            //cep é inválido.
             limpa_formulário_cep();
-            alert("CEP não encontrado.");
+            alert("Formato de CEP inválido.");
         }
+    } else {
+        //cep sem valor, limpa formulário.
+        limpa_formulário_cep();
     }
+}
 
-    function pesquisacep(valor) {
-        //Nova variável "cep" somente com dígitos.
-        var cep = valor.replace(/\D/g, '');
-
-        //Verifica se campo cep possui valor informado.
-        if (cep != "") {
-            //Expressão regular para validar o CEP.
-            var validacep = /^[0-9]{8}$/;
-
-            //Valida o formato do CEP.
-            if(validacep.test(cep)) {
-                //Preenche os campos com "..." enquanto consulta webservice.
-                document.getElementById('rua').value="...";
-                document.getElementById('bairro').value="...";
-                document.getElementById('cidade').value="...";
-                document.getElementById('uf').value="...";
-
-                //Cria um elemento javascript.
-                var script = document.createElement('script');
-
-                //Sincroniza com o callback.
-                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
-
-                //Insere script no documento e carrega o conteúdo.
-                document.body.appendChild(script);
-            } else {
-                //cep é inválido.
-                limpa_formulário_cep();
-                alert("Formato de CEP inválido.");
-            }
-        } else {
-            //cep sem valor, limpa formulário.
-            limpa_formulário_cep();
-        }
+function mostrarCamposEspecificos() {
+    var tipo = document.getElementById('tipo_profissional').value;
+    document.getElementById('campo_crm').classList.add('hidden');
+    document.getElementById('campo_corem').classList.add('hidden');
+    document.getElementById('campos_comuns').classList.add('hidden');
+    
+    if (tipo === 'medico') {
+        document.getElementById('campo_crm').classList.remove('hidden');
+    } else if (tipo === 'enfermeiro') {
+        document.getElementById('campo_corem').classList.remove('hidden');
+    } else if (tipo === 'atendente') {
+        document.getElementById('campos_comuns').classList.remove('hidden');
     }
+}
 </script>
 @endsection
