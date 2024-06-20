@@ -280,7 +280,7 @@
         }
     }
 
-    function selectPaciente(id, name, , nasc, genero, sus, cor, cpf, telefone, celular, nome_mae, rua, bairro, cidade, cep) {
+    function selectPaciente(id, name, nasc, genero, sus, cor, cpf, telefone, celular, nome_mae, rua, bairro, cidade, cep) {
         document.getElementById('name').value = name;
         document.getElementById('paciente_id').value = id;
         document.getElementById('nasc').value = nasc;
