@@ -89,7 +89,7 @@
                             <option disabled selected style="font-size:18px;color: black;">Escolha</option>
                             <option value="medico">Médico</option>
                             <option value="enfermeiro">Enfermeiro</option>
-                            <option value="atendente">Atendente</option>
+                            <option value="administrativo">Administrativo</option>
                         </select>
                     </div>
                     <div class="mb-3 col-md-4 hidden" id="campo_crm">
@@ -250,7 +250,7 @@ function mostrarCamposEspecificos() {
         document.getElementById('campo_crm').classList.remove('hidden');
     } else if (tipo === 'enfermeiro') {
         document.getElementById('campo_corem').classList.remove('hidden');
-    } else if (tipo === 'atendente') {
+    } else if (tipo === 'administrativo') {
         document.getElementById('campos_comuns').classList.remove('hidden');
     }
 }

@@ -115,6 +115,14 @@ $currentDate = date('Y-m-d');
         const supportChart = echarts.init(supportChartElement, null, { renderer: 'svg' });
         supportChart.setOption(supportRequests);
         new ResizeObserver(() => supportChart.resize()).observe(supportChartElement);
+
+        function confirmDeletion(event) {
+        if (!confirm('Tem certeza que deseja excluir este item?')) {
+            event.preventDefault();
+            return false;
+        }
+        return true;
+    }
       </script>
       <!-- Google analytics script-->
       <script type="text/javascript">
@@ -135,7 +143,8 @@ $currentDate = date('Y-m-d');
     <script type="text/javascript">
         $('#sampleTable').DataTable();
     </script>
-    
+    <!-- Jquery Others Plugins -->
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.3/localization/messages_pt_BR.js"></script>    
 </body>
 
 </html>

@@ -177,6 +177,16 @@
             var dateInput = document.getElementById('data');
             var today = new Date().toISOString().split('T')[0];
             dateInput.setAttribute('min', today);
+
+            dateInput.addEventListener('input', function() {
+                var selectedDate = new Date(this.value);
+                var dayOfWeek = selectedDate.getUTCDay(); // Domingo = 0, Segunda = 1, etc.
+
+                if (dayOfWeek === 0) {
+                    alert('Domingos não são permitidos. Por favor, escolha outro dia.');
+                    this.value = '';
+                }
+            });
         });
 
         function showAdditionalFields() {
@@ -211,7 +221,6 @@
 
             fetchAgenda(data, profissionalId);
         }
-
 
         const currentYear = new Date().getFullYear();
         const feriados = [

@@ -35,7 +35,7 @@
                     <div class="row">
                         <div class="mb-3 col-md-3">
                             <label class="form-label">Nascimento </label>
-                            <input class="form-control" id="nasc" name="nasc" type="date" value="{{ old('nasc') }}">
+                            <input class="form-control" id="nasc" name="nasc" type="date" value="{{ old('nasc') }}" min="{{ date('Y-m-d') }}">
                         </div>
                         <div class="mb-3 col-md-3">
                             <label class="form-label">CPF </label>

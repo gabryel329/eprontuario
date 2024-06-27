@@ -214,7 +214,7 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <form action="{{ route('paciente.destroy', $item->id) }}" method="POST">
+                                                <form action="{{ route('paciente.destroy', $item->id) }}" method="POST" onsubmit="return confirmDeletion(event)">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Excluir</button>

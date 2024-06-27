@@ -100,6 +100,7 @@
                                 <table class="table table-bordered table-striped" style="text-align: center">
                                     <thead>
                                         <tr>
+                                            <th>ID</th>
                                             <th>Data</th>
                                             <th>Paciente</th>
                                             <th>Profissional</th>
@@ -111,6 +112,7 @@
                                     <tbody>
                                         @foreach ($historico as $historico)
                                             <tr>
+                                                <td>{{ $historico->consulta }}</td>
                                                 <td>{{ $historico->data }}</td>
                                                 <td>{{ $historico->paciente }}</td>
                                                 <td>{{ $historico->profissional }}</td>
@@ -356,6 +358,7 @@
                         <table class="table table-hover" id="pacienteTable">
                             <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Nome</th>
                                     <th>CPF</th>
                                     <th>CNS</th>
@@ -365,6 +368,7 @@
                             <tbody>
                                 @foreach ($paciente as $paciente)
                                     <tr>
+                                        <td>{{ $paciente->id }}</td>
                                         <td>{{ $paciente->name }}</td>
                                         <td>{{ $paciente->cpf }}</td>
                                         <td>{{ $paciente->sus }}</td>

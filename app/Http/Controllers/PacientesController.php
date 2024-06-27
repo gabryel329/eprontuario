@@ -124,7 +124,7 @@ class PacientesController extends Controller
             'imagem' => $imageName,
         ]);
     
-        return redirect()->route('agenda.index1')->with('success', 'Paciente criado com sucesso')->with('paciente', $paciente);
+        return redirect()->back()->with('success', 'Paciente criado com sucesso')->with('paciente', $paciente);
     }
     /**
      * Show the form for editing the specified resource.
@@ -235,12 +235,12 @@ class PacientesController extends Controller
         $paciente = Pacientes::find($id);
 
         if (!$paciente) {
-            return redirect()->route('paciente.index')->with('error', 'Paciente não encontrado!');
+            return redirect()->back()->with('error', 'Paciente não encontrado!');
         }
 
         // Delete the user
         $paciente->delete();
 
-        return redirect()->route('paciente.index')->with('success', 'Paciente excluído com Sucesso!');
+        return redirect()->back()->with('success', 'Paciente excluído com Sucesso!');
     }
 }

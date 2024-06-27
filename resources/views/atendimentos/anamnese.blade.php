@@ -255,7 +255,7 @@
 
         for (var i = 0; i < rows.length; i++) {
             var name = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
-            var cpf = rows[i].getElementsByTagName('td')[2].textContent.toLowerCase();
+            var cpf = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
             if (name.indexOf(input) > -1 || cpf.indexOf(input) > -1) {
                 rows[i].style.display = "";
             } else {
@@ -264,7 +264,7 @@
         }
     });
     
-        function calculateAge() {
+    function calculateAge() {
         var birthDate = document.getElementById('nasc').value;
         if (birthDate) {
             var today = new Date();

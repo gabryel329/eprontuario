@@ -187,105 +187,58 @@ class AgendaController extends Controller
     }
 
     public function agendaMedica(Request $request)
-    {
-        $pacientes = Pacientes::all();
+{
+    $pacientes = Pacientes::all();
 
-        // Get the currently logged-in user
-        $user = auth()->user();
+    // Get the currently logged-in user
+    $user = auth()->user();
+    $profissionalId = $user->profissional_id;
 
-        // Check if user has a linked professional ID
-        if ($user && $user->profissional_id) {
-            $profissionalId = $user->profissional_id;
-        } else {
-            // Handle the case where user doesn't have a linked professional ID
-            // (consider returning an appropriate error message or view)
-            return view('home', [ // Replace 'error' with appropriate view name
-                'message' => 'Permissão Negada'
-            ]);
-        }
+    $agendasChegou = collect();
+    $agendasMarcado = collect();
+    $agendasEvadio = collect();
+    $agendasCancelado = collect();
 
-        $agendasChegou = collect();
+    // Filter agendas based on logged-in user's linked professional ID
+    if ($request->has('data')) {
+        $data = $request->data;
+        $agendasChegou = Agenda::where('profissional_id', $profissionalId)
+            ->where('data', $data)
+            ->where('status', 'CHEGOU')
+            ->whereNotNull('paciente_id')
+            ->orderBy('hora', 'asc')
+            ->get();
 
-        // Filter agendas based on logged-in user's linked professional ID
-        if ($request->has('data')) {
-            $agendasChegou = Agenda::where('profissional_id', $profissionalId)
-                ->where('data', $request->data)
-                ->where('status', 'CHEGOU')
-                ->whereNotNull('paciente_id')
-                ->orderBy('hora', 'asc')
-                ->get();
+        $agendasMarcado = Agenda::where('profissional_id', $profissionalId)
+            ->where('data', $data)
+            ->where('status', 'MARCADO')
+            ->whereNotNull('paciente_id')
+            ->orderBy('hora', 'asc')
+            ->get();
 
-            // Store form values in the session (optional, adjust based on your needs)
-            session([
-                'data' => $request->data,
-            ]);
-        } else {
-            // Clear session data if no filter is applied (optional)
-            session()->forget('data');
-        }
+        $agendasEvadio = Agenda::where('profissional_id', $profissionalId)
+            ->where('data', $data)
+            ->where('status', 'EVADIO')
+            ->whereNotNull('paciente_id')
+            ->orderBy('hora', 'asc')
+            ->get();
 
-        $agendasMarcado = collect();
+        $agendasCancelado = Agenda::where('profissional_id', $profissionalId)
+            ->where('data', $data)
+            ->where('status', 'CANCELADO')
+            ->whereNotNull('paciente_id')
+            ->orderBy('hora', 'asc')
+            ->get();
 
-        // Filter agendas based on logged-in user's linked professional ID
-        if ($request->has('data')) {
-            $agendasMarcado = Agenda::where('profissional_id', $profissionalId)
-                ->where('data', $request->data)
-                ->where('status', 'MARCADO')
-                ->whereNotNull('paciente_id')
-                ->orderBy('hora', 'asc')
-                ->get();
-
-            // Store form values in the session (optional, adjust based on your needs)
-            session([
-                'data' => $request->data,
-            ]);
-        } else {
-            // Clear session data if no filter is applied (optional)
-            session()->forget('data');
-        }
-
-        $agendasEvadio = collect();
-
-        // Filter agendas based on logged-in user's linked professional ID
-        if ($request->has('data')) {
-            $agendasEvadio = Agenda::where('profissional_id', $profissionalId)
-                ->where('data', $request->data)
-                ->where('status', 'EVADIO')
-                ->whereNotNull('paciente_id')
-                ->orderBy('hora', 'asc')
-                ->get();
-
-            // Store form values in the session (optional, adjust based on your needs)
-            session([
-                'data' => $request->data,
-            ]);
-        } else {
-            // Clear session data if no filter is applied (optional)
-            session()->forget('data');
-        }
-
-        $agendasCancelado = collect();
-
-        // Filter agendas based on logged-in user's linked professional ID
-        if ($request->has('data')) {
-            $agendasCancelado = Agenda::where('profissional_id', $profissionalId)
-                ->where('data', $request->data)
-                ->where('status', 'CANCELADO')
-                ->whereNotNull('paciente_id')
-                ->orderBy('hora', 'asc')
-                ->get();
-
-            // Store form values in the session (optional, adjust based on your needs)
-            session([
-                'data' => $request->data,
-            ]);
-        } else {
-            // Clear session data if no filter is applied (optional)
-            session()->forget('data');
-        }
-
-        return view('agenda.agendamedica', compact('agendasMarcado', 'agendasEvadio', 'agendasCancelado', 'agendasChegou', 'pacientes'));
+        // Store form values in the session (optional, adjust based on your needs)
+        session(['data' => $data]);
+    } else {
+        // Clear session data if no filter is applied (optional)
+        session()->forget('data');
     }
+
+    return view('agenda.agendamedica', compact('agendasMarcado', 'agendasEvadio', 'agendasCancelado', 'agendasChegou', 'pacientes'));
+}
 
     public function storeConsultorioPainel(Request $request)
     {

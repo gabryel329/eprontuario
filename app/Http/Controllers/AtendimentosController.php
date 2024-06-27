@@ -368,9 +368,9 @@ class AtendimentosController extends Controller
     {
         // Recupera todos os profissionais e pacientes para o dropdown
         $profissional = Profissional::join('users', 'profissionals.id', '=', 'users.profissional_id')
-        ->where('users.permisao_id', 1)
-        ->distinct()
-        ->get(['profissionals.id', 'profissionals.name']);
+            ->where('users.permisao_id', 1)
+            ->distinct()
+            ->get(['profissionals.id', 'profissionals.name']);
         $paciente = Pacientes::all();
     
         // Filtra os parâmetros de busca da requisição
@@ -381,6 +381,7 @@ class AtendimentosController extends Controller
         // Monta a consulta com joins e leftJoins
         $query = DB::table('agendas as ag')
             ->select(
+                'ag.id', // Inclui o ID da agenda como o ID do histórico
                 'ag.data',
                 'ag.id as consulta',
                 'pa.id as paciente_id',
@@ -462,6 +463,7 @@ class AtendimentosController extends Controller
     
         // Finaliza a montagem da consulta
         $historico = $query->groupBy(
+                'ag.id', // Adiciona ag.id ao groupBy
                 'prc.procedimento', 'ag.data', 'ag.id', 'pa.name', 'pr.name', 'pa.id', 'an.profissional_id',
                 'an.pa', 'an.temp', 'an.peso', 'an.altura', 'at.condicao', 'at.evolucao', 'at.atestado', 'an.spo2',
                 'an.dextro', 'an.gestante', 'at.queixas', 'an.anamnese', 'an.alergia3', 'an.alergia2', 'an.alergia1',
@@ -480,6 +482,6 @@ class AtendimentosController extends Controller
     
         return view('atendimentos.prontuarios', compact('profissional', 'paciente', 'historico'));
     }
-    
+      
 
 }
