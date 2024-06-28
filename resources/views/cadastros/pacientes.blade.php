@@ -75,17 +75,13 @@
                     </div>
                     <div class="row">
                         <div class="mb-3 col-md-4">
-                            <label class="form-label">Convênio</label>
-                            <div class="form-check">
-                              <label class="form-check-label">
-                                <input class="form-check-input" type="radio" id="convenio" name="convenio" value="S" {{ old('convenio') == 'S' ? 'checked' : '' }}>SIM
-                              </label>
-                            </div>
-                            <div class="form-check">
-                              <label class="form-check-label">
-                                <input class="form-check-input" type="radio" id="convenio" name="convenio" value="N" {{ old('convenio') == 'N' ? 'checked' : '' }}>NÃO
-                              </label>
-                            </div>
+                            <label class="form-label">Convênio:</label>
+                            <select class="form-control" id="convenio" name="convenio">
+                                <option disabled selected style="font-size:18px;color: black;">Escolha</option>
+                                @foreach ($paciente as $item)
+                                    <option value="{{ $item->id }}">{{ $item->convenio }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Matricula</label>
