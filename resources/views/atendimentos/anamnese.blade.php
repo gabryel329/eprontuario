@@ -224,6 +224,7 @@
                 <table class="table table-hover" id="pacienteTable">
                     <thead>
                         <tr>
+                            <th>#</th>
                             <th>Nome</th>
                             <th>CPF</th>
                             <th>Nome Social</th>
@@ -233,6 +234,7 @@
                     <tbody>
                         @foreach ($pacientes as $p)
                             <tr>
+                                <td>{{ $p->id }}</td>
                                 <td>{{ $p->name }}</td>
                                 <td>{{ $p->cpf }}</td>
                                 <td>{{ $p->nome_social }}</td>

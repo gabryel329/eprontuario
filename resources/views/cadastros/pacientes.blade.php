@@ -74,8 +74,21 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="mb-3 col-md-4">
+                        <div class="mb-3 col-md-6" id="convenio-container">
                             <label class="form-label">Convênio:</label>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" id="sim" name="convenio_option" value="sim" onchange="toggleConvenio()">Sim
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" id="nao" name="convenio_option" value="nao" onchange="toggleConvenio()">Não
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3 col-md-3" id="convenio-select-container">
+                            <label class="form-label">Selecione:</label>
                             <select class="form-control" id="convenio" name="convenio">
                                 <option disabled selected style="font-size:18px;color: black;">Escolha</option>
                                 @foreach ($paciente as $item)
@@ -83,18 +96,18 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="mb-3 col-md-4">
+                        <div class="mb-3 col-md-4" id="convenio-container2">
                             <label class="form-label">Matricula</label>
                             <input class="form-control" id="matricula" name="matricula" type="text" value="{{ old('matricula') }}">
                         </div>
-                        <div class="mb-3 col-md-4">
+                        <div class="mb-3 col-md-6" id="convenio-container3">
                             <label class="form-label">Étnia</label>
                             <select class="form-control" id="cor" name="cor" required>
                                 <option disabled selected style="font-size:18px;color: black;">Escolha</option>       
-                                    <option value="Branco">Branco</option>
-                                    <option value="Preto">Preto</option>
-                                    <option value="Amarelo">Amarelo</option>
-                                    <option value="Pardo">Pardo</option>
+                                <option value="Branco">Branco</option>
+                                <option value="Preto">Preto</option>
+                                <option value="Amarelo">Amarelo</option>
+                                <option value="Pardo">Pardo</option>
                             </select>
                         </div>
                     </div>
@@ -171,6 +184,29 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
 <script>
+     function toggleConvenio() {
+    if ($('#sim').is(':checked')) {
+        $('#convenio-select-container').show();
+        $('#convenio-container2').show();
+        $('#convenio-container').removeClass('col-md-6').addClass('col-md-3')
+        $('#convenio-container2').removeClass('col-md-4').addClass('col-md-3');
+        $('#convenio-container3').removeClass('col-md-6').addClass('col-md-3');
+    } else {
+        $('#convenio-select-container').hide();
+        $('#convenio-container2').hide();
+        $('#convenio-container').removeClass('col-md-3').addClass('col-md-6');
+        $('#convenio-container2').removeClass('col-md-3').addClass('col-md-4');
+        $('#convenio-container3').removeClass('col-md-3').addClass('col-md-6');
+    }
+}
+
+$(document).ready(function() {
+    // Hide the convenio select container by default
+    $('#convenio-select-container').hide();
+    $('#convenio-container2').hide();
+});
+
+
     $(document).ready(function(){
         $('#cpf').mask('000.000.000-00');
         $('#telefone').mask('(00) 0000-0000');

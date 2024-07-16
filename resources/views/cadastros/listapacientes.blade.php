@@ -10,16 +10,16 @@
             <li class="breadcrumb-item active"><a href="#">Pacientes</a></li>
         </ul>
     </div>
-@if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
-@if(session('error'))
-    <div class="alert alert-warning">
-        {{ session('error') }}
-    </div>
-@endif
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="alert alert-warning">
+            {{ session('error') }}
+        </div>
+    @endif
     <div class="col-md-12">
         <div class="tile">
             <div class="tile-body">
@@ -43,30 +43,24 @@
                                     <td>{{ $item->cpf }}</td>
                                     <td>{{ $item->celular }}</td>
                                     <td>
-                                        <div>
-                                            <button type="button" class="btn btn-info" data-bs-toggle="modal"
-                                                data-bs-target="#editModal{{ $item->id }}">
-                                                Editar
-                                            </button>
-                                        </div>
+                                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}">
+                                            Editar
+                                        </button>
                                     </td>
                                     <td>
-                                        <form action="{{ route('paciente.destroy', $item->id) }}" method="POST" onsubmit="return confirmDeletion(event)">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Excluir</button>
-                                        </form>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}">
+                                            Excluir
+                                        </button>
                                     </td>
                                 </tr>
-                                <div class="modal fade" id="editModal{{ $item->id }}" tabindex="-1"
-                                    aria-labelledby="editModalLabel{{ $item->id }}" aria-hidden="true">
+                                
+                                <!-- Edit Modal -->
+                                <div class="modal fade" id="editModal{{ $item->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $item->id }}" aria-hidden="true">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="editModalLabel{{ $item->id }}">
-                                                    Editar Paciente</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
+                                                <h5 class="modal-title" id="editModalLabel{{ $item->id }}">Editar Paciente</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <form method="POST"
@@ -102,12 +96,12 @@
                                                                 <label class="form-label">Gênero</label>
                                                                 <div class="form-check">
                                                                     <label class="form-check-label">
-                                                                        <input class="form-check-input" type="radio" id="genero" name="genero" value="M" {{ $item->genero == 'M' ? 'checked' : '' }}>Masculino
+                                                                        <input class="form-check-input" type="radio" id="generoM{{ $item->id }}" name="genero" value="M" {{ $item->genero == 'M' ? 'checked' : '' }}>Masculino
                                                                     </label>
                                                                 </div>
                                                                 <div class="form-check">
                                                                     <label class="form-check-label">
-                                                                        <input class="form-check-input" type="radio" id="genero" name="genero" value="F" {{ $item->genero == 'F' ? 'checked' : '' }}>Feminino
+                                                                        <input class="form-check-input" type="radio" id="generoF{{ $item->id }}" name="genero" value="F" {{ $item->genero == 'F' ? 'checked' : '' }}>Feminino
                                                                     </label>
                                                                 </div>
                                                             </div>
@@ -133,15 +127,11 @@
                                                         <div class="row">
                                                             <div class="mb-3 col-md-4">
                                                                 <label class="form-label">Convênio:</label>
-                                                                <select class="form-control" id="convenio" name="convenio">
+                                                                <select class="form-control" id="convenio{{ $item->id }}" name="convenio">
                                                                     <option disabled selected style="font-size:18px;color: black;">Escolha</option>
-                                                                    @if ($paciente->isEmpty())
-                                                                        <option value="0">Convênio não cadastrado</option>
-                                                                    @else
-                                                                        @foreach ($paciente as $item)
-                                                                            <option value="{{ $item->id }}">{{ $item->convenio ?? 'Convênio não cadastrado'}}</option>
-                                                                        @endforeach
-                                                                    @endif
+                                                                    {{-- @foreach ($convenios as $convenio)
+                                                                        <option value="{{ $convenio->id }}" {{ $convenio->id == $item->convenio_id ? 'selected' : '' }}>{{ $convenio->nome }}</option>
+                                                                    @endforeach --}}
                                                                 </select>
                                                             </div>                                                            
                                                             <div class="mb-3 col-md-4">
@@ -150,12 +140,12 @@
                                                             </div>
                                                             <div class="mb-3 col-md-4">
                                                                 <label class="form-label">Cor</label>
-                                                                <select class="form-control" id="cor" name="cor">
+                                                                <select class="form-control" id="cor{{ $item->id }}" name="cor">
                                                                     <option disabled selected style="font-size:18px;color: black;">{{ $item->cor }}</option>       
-                                                                        <option value="Branco">Branco</option>
-                                                                        <option value="Preto">Preto</option>
-                                                                        <option value="Amarelo">Amarelo</option>
-                                                                        <option value="Pardo">Pardo</option>
+                                                                    <option value="Branco" {{ $item->cor == 'Branco' ? 'selected' : '' }}>Branco</option>
+                                                                    <option value="Preto" {{ $item->cor == 'Preto' ? 'selected' : '' }}>Preto</option>
+                                                                    <option value="Amarelo" {{ $item->cor == 'Amarelo' ? 'selected' : '' }}>Amarelo</option>
+                                                                    <option value="Pardo" {{ $item->cor == 'Pardo' ? 'selected' : '' }}>Pardo</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -174,58 +164,100 @@
                                                             </div>
                                                         </div>
                                                         <div class="row">
-                                                            <div class="mb-3 col-md-6">
-                                                                <label class="form-label">Telefone</label>
-                                                                <input class="form-control" id="telefone{{ $item->id }}" name="telefone" type="text" value="{{ $item->telefone }}">
+                                                            <div class="mb-3 col-md-4">
+                                                                <label class="form-label">Estado Civil</label>
+                                                                <select class="form-control" id="estado_civil{{ $item->id }}" name="estado_civil">
+                                                                    <option disabled selected style="font-size:18px;color: black;">{{ $item->estado_civil }}</option>
+                                                                    <option value="Solteiro(a)" {{ $item->estado_civil == 'Solteiro(a)' ? 'selected' : '' }}>Solteiro(a)</option>
+                                                                    <option value="Casado(a)" {{ $item->estado_civil == 'Casado(a)' ? 'selected' : '' }}>Casado(a)</option>
+                                                                    <option value="Divorciado(a)" {{ $item->estado_civil == 'Divorciado(a)' ? 'selected' : '' }}>Divorciado(a)</option>
+                                                                    <option value="Viuvo(a)" {{ $item->estado_civil == 'Viuvo(a)' ? 'selected' : '' }}>Viuvo(a)</option>
+                                                                    <option value="Separado(a)" {{ $item->estado_civil == 'Separado(a)' ? 'selected' : '' }}>Separado(a)</option>
+                                                                </select>
                                                             </div>
-                                                            <div class="mb-3 col-md-6">
+                                                            <div class="mb-3 col-md-4">
+                                                                <label class="form-label">Telefone Fixo</label>
+                                                                <input class="form-control" id="telefone_fixo{{ $item->id }}" name="telefone_fixo" type="text" value="{{ $item->telefone_fixo }}">
+                                                            </div>
+                                                            <div class="mb-3 col-md-4">
                                                                 <label class="form-label">Celular</label>
                                                                 <input class="form-control" id="celular{{ $item->id }}" name="celular" type="text" value="{{ $item->celular }}">
                                                             </div>
                                                         </div>
                                                         <div class="row">
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">CEP </label>
-                                                                <input class="form-control" name="cep" type="text" id="cep" value="{{ $item->cep }}" size="10" maxlength="9"
-                                                                onblur="pesquisacep(this.value);">
+                                                            <div class="mb-3 col-md-4">
+                                                                <label class="form-label">Deficiente?</label>
+                                                                <select class="form-control" id="deficiente{{ $item->id }}" name="deficiente">
+                                                                    <option disabled selected style="font-size:18px;color: black;">{{ $item->deficiente }}</option>
+                                                                    <option value="Nao" {{ $item->deficiente == 'Nao' ? 'selected' : '' }}>Nao</option>
+                                                                    <option value="Sim" {{ $item->deficiente == 'Sim' ? 'selected' : '' }}>Sim</option>
+                                                                </select>
                                                             </div>
                                                             <div class="mb-3 col-md-4">
-                                                                <label class="form-label">Rua </label>
-                                                                <input class="form-control" name="rua" type="text" id="rua" value="{{ $item->rua }}" size="60">
+                                                                <label class="form-label">Rua</label>
+                                                                <input class="form-control" id="rua{{ $item->id }}" name="rua" type="text" value="{{ $item->rua }}">
                                                             </div>
-                                                            <div class="mb-3 col-md-4">
-                                                                <label class="form-label">Bairro</label>
-                                                                <input class="form-control" name="bairro" type="text" id="bairro" value="{{ $item->bairro }}" size="40">
+                                                            <div class="mb-3 col-md-2">
+                                                                <label class="form-label">Número</label>
+                                                                <input class="form-control" id="numero{{ $item->id }}" name="numero" type="text" value="{{ $item->numero }}">
                                                             </div>
-                                                            <div class="mb-3 col-md-1">
-                                                                <label class="form-label">Estado</label>
-                                                                <input class="form-control"  name="uf" type="text" id="uf" value="{{ $item->uf }}" size="2">
+                                                            <div class="mb-3 col-md-2">
+                                                                <label class="form-label">Complemento</label>
+                                                                <input class="form-control" id="complemento{{ $item->id }}" name="complemento" type="text" value="{{ $item->complemento }}">
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="mb-3 col-md-4">
+                                                                <label class="form-label">Bairro</label>
+                                                                <input class="form-control" id="bairro{{ $item->id }}" name="bairro" type="text" value="{{ $item->bairro }}">
+                                                            </div>
+                                                            <div class="mb-3 col-md-3">
+                                                                <label class="form-label">CEP</label>
+                                                                <input class="form-control" id="cep{{ $item->id }}" name="cep" type="text" value="{{ $item->cep }}" onblur="pesquisacep(this.value);">
+                                                            </div>
+                                                            <div class="mb-3 col-md-3">
                                                                 <label class="form-label">Cidade</label>
-                                                                <input class="form-control" name="cidade" type="text" id="cidade" value="{{ $item->cidade }}" size="40">
+                                                                <input class="form-control" id="cidade{{ $item->id }}" name="cidade" type="text" value="{{ $item->cidade }}">
                                                             </div>
                                                             <div class="mb-3 col-md-2">
-                                                                <label class="form-label">Numero</label>
-                                                                <input class="form-control" name="numero" type="text" id="numero" value="{{ $item->numero }}" size="40">
+                                                                <label class="form-label">Estado</label>
+                                                                <input class="form-control" id="uf{{ $item->id }}" name="uf" type="text" value="{{ $item->uf }}">
                                                             </div>
-                                                            <div class="mb-3 col-md-6">
-                                                                <label class="form-label">Complemento</label>
-                                                                <input class="form-control" name="complemento" type="text" id="complemento" value="{{ $item->complemento }}" size="40">
-                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Cancelar</button>
-                                                        <button type="submit"
-                                                            class="btn btn-primary">Salvar</button>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                        <button type="submit" class="btn btn-primary">Salvar</button>
                                                     </div>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Delete Confirmation Modal -->
+                                <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ $item->id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteModalLabel{{ $item->id }}">Confirmar Exclusão</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Tem certeza de que deseja excluir o paciente <strong>{{ $item->name }}</strong>?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                <form action="{{ route('paciente.destroy', $item->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger">Excluir</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
                             @endforeach
                         </tbody>
                     </table>
@@ -233,75 +265,48 @@
             </div>
         </div>
     </div>
-</div>
-    </main>
-    <script> 
-        function limpa_formulário_cep() {
-                //Limpa valores do formulário de cep.
-                document.getElementById('rua').value=("");
-                document.getElementById('bairro').value=("");
-                document.getElementById('cidade').value=("");
-                document.getElementById('uf').value=("");
-        }
-    
-        function meu_callback(conteudo) {
-            if (!("erro" in conteudo)) {
-                //Atualiza os campos com os valores.
-                document.getElementById('rua').value=(conteudo.logradouro);
-                document.getElementById('bairro').value=(conteudo.bairro);
-                document.getElementById('cidade').value=(conteudo.localidade);
-                document.getElementById('uf').value=(conteudo.uf);
-            } //end if.
-            else {
-                //CEP não Encontrado.
+</main>
+
+<script>
+    function pesquisacep(valor) {
+        var cep = valor.replace(/\D/g, '');
+        if (cep != "") {
+            var validacep = /^[0-9]{8}$/;
+            if (validacep.test(cep)) {
+                document.getElementById('rua').value = "...";
+                document.getElementById('bairro').value = "...";
+                document.getElementById('cidade').value = "...";
+                document.getElementById('uf').value = "...";
+
+                var script = document.createElement('script');
+                script.src = 'https://viacep.com.br/ws/' + cep + '/json/?callback=meu_callback';
+                document.body.appendChild(script);
+            } else {
                 limpa_formulário_cep();
-                alert("CEP não encontrado.");
+                alert("Formato de CEP inválido.");
             }
+        } else {
+            limpa_formulário_cep();
         }
-            
-        function pesquisacep(valor) {
-    
-            //Nova variável "cep" somente com dígitos.
-            var cep = valor.replace(/\D/g, '');
-    
-            //Verifica se campo cep possui valor informado.
-            if (cep != "") {
-    
-                //Expressão regular para validar o CEP.
-                var validacep = /^[0-9]{8}$/;
-    
-                //Valida o formato do CEP.
-                if(validacep.test(cep)) {
-    
-                    //Preenche os campos com "..." enquanto consulta webservice.
-                    document.getElementById('rua').value="...";
-                    document.getElementById('bairro').value="...";
-                    document.getElementById('cidade').value="...";
-                    document.getElementById('uf').value="...";
-    
-                    //Cria um elemento javascript.
-                    var script = document.createElement('script');
-    
-                    //Sincroniza com o callback.
-                    script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
-    
-                    //Insere script no documento e carrega o conteúdo.
-                    document.body.appendChild(script);
-    
-                } //end if.
-                else {
-                    //cep é inválido.
-                    limpa_formulário_cep();
-                    alert("Formato de CEP inválido.");
-                }
-            } //end if.
-            else {
-                //cep sem valor, limpa formulário.
-                limpa_formulário_cep();
-            }
-        };
-    
-    </script>
+    }
+
+    function limpa_formulário_cep() {
+        document.getElementById('rua').value = "";
+        document.getElementById('bairro').value = "";
+        document.getElementById('cidade').value = "";
+        document.getElementById('uf').value = "";
+    }
+
+    function meu_callback(conteudo) {
+        if (!("erro" in conteudo)) {
+            document.getElementById('rua').value = conteudo.logradouro;
+            document.getElementById('bairro').value = conteudo.bairro;
+            document.getElementById('cidade').value = conteudo.localidade;
+            document.getElementById('uf').value = conteudo.uf;
+        } else {
+            limpa_formulário_cep();
+            alert("CEP não encontrado.");
+        }
+    }
+</script>
 @endsection
-
-
