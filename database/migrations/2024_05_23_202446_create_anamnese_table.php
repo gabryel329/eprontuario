@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('temp')->nullable();
             $table->string('peso')->nullable();
             $table->string('altura')->nullable();
+            $table->string('imc')->nullable();
+            $table->string('classificacao')->nullable();
             $table->string('gestante')->nullable();
             $table->string('dextro')->nullable();
             $table->string('spo2')->nullable();
