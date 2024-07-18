@@ -489,6 +489,12 @@ class AtendimentosController extends Controller
     return view('atendimentos.prontuarios', compact('profissional', 'paciente', 'historico'));
 }
 
-      
+    public function ficha_atendimento(Request $request){
 
+        // Obtenha todos os dados do formulário
+        $dadosFormulario = $request->all();
+        
+        // Retorne a view 'ficha' passando os dados
+        return view('atendimentos.ficha')->with('dadosFormulario', $dadosFormulario);
+    }
 }
