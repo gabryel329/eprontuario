@@ -105,24 +105,32 @@
                         <hr>
                         <div class="row">
                             <div class="mb-3 col-md-3">
-                                <label class="form-label"><strong>PA mmHg:</strong></label>
-                                <input class="form-control" id="pa" name="pa" type="text">
+                                <label class="form-label"><strong>Peso (Kg):</strong></label>
+                                <input class="form-control" id="peso" name="peso" type="text" oninput="calcularIMC()">
                             </div>
                             <div class="mb-3 col-md-3">
-                                <label class="form-label"><strong>Temp(ºC):</strong></label>
-                                <input class="form-control" id="temp" name="temp" type="text">
+                                <label class="form-label"><strong>Altura (m):</strong></label>
+                                <input class="form-control" id="altura" name="altura" type="text" oninput="calcularIMC()">
                             </div>
                             <div class="mb-3 col-md-3">
-                                <label class="form-label"><strong>Peso(Kg):</strong></label>
-                                <input class="form-control" id="peso" name="peso" type="text">
+                                <label class="form-label"><strong>IMC:</strong></label>
+                                <input class="form-control" id="imc" name="imc" type="text" readonly>
                             </div>
                             <div class="mb-3 col-md-3">
-                                <label class="form-label"><strong>Altura(cm):</strong></label>
-                                <input class="form-control" id="altura" name="altura" type="text">
+                                <label class="form-label"><strong>Classificação:</strong></label>
+                                <input class="form-control" id="classificacao" name="classificacao" type="text" readonly>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="mb-3 col-md-2">
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label"><strong>PA mmHg:</strong></label>
+                                <input class="form-control" id="pa" name="pa" type="text">
+                            </div>
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label"><strong>Temp(ºC):</strong></label>
+                                <input class="form-control" id="temp" name="temp" type="text">
+                            </div>
+                            <div class="mb-3 col-md-4">
                                 <label class="form-label"><strong>Gestante:</strong></label>
                                 <div class="form-check">
                                     <label class="form-check-label">
@@ -135,6 +143,8 @@
                                     </label>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="mb-3 col-md-3">
                                 <label class="form-label"><strong>Dextro (mg/dL):</strong></label>
                                 <input class="form-control" id="dextro" name="dextro" type="text">
@@ -143,11 +153,11 @@
                                 <label class="form-label"><strong>SpO2:</strong></label>
                                 <input class="form-control" id="spo2" name="spo2" type="text">
                             </div>
-                            <div class="mb-3 col-md-2">
+                            <div class="mb-3 col-md-3">
                                 <label class="form-label"><strong>F.C.:</strong></label>
                                 <input class="form-control" id="fc" name="fc" type="text">
                             </div>
-                            <div class="mb-3 col-md-2">
+                            <div class="mb-3 col-md-3">
                                 <label class="form-label"><strong>F.R.:</strong></label>
                                 <input class="form-control" id="fr" name="fr" type="text">
                             </div>
@@ -250,6 +260,51 @@
     </div>
 </div>
 <script>
+    function calcularIMC() {
+    const peso = parseFloat(document.getElementById('peso').value);
+    const altura = parseFloat(document.getElementById('altura').value);
+
+    if (!isNaN(peso) && !isNaN(altura) && altura > 0) {
+        const imc = peso / (altura * altura);
+        document.getElementById('imc').value = imc.toFixed(2);
+
+        let classificacao = '';
+        if (imc < 18.5) {
+            classificacao = 'Peso baixo';
+        } else if (imc >= 18.5 && imc <= 24.9) {
+            classificacao = 'Peso normal';
+        } else if (imc >= 25 && imc <= 29.9) {
+            classificacao = 'Acima do peso';
+        } else {
+            classificacao = 'Obesidade';
+        }
+        document.getElementById('classificacao').value = classificacao;
+    } else {
+        document.getElementById('imc').value = '';
+        document.getElementById('classificacao').value = '';
+    }
+}
+
+// Aplica máscaras aos campos de peso e altura
+document.addEventListener('DOMContentLoaded', function() {
+    Inputmask({
+        alias: 'numeric',
+        groupSeparator: '.',
+        autoGroup: true,
+        digits: 1,
+        digitsOptional: false,
+        placeholder: '0'
+    }).mask(document.getElementById('peso'));
+
+    Inputmask({
+        alias: 'numeric',
+        groupSeparator: '.',
+        autoGroup: true,
+        digits: 2,
+        digitsOptional: false,
+        placeholder: '0'
+    }).mask(document.getElementById('altura'));
+});
 
     document.getElementById('pacienteSearch').addEventListener('keyup', function() {
         var input = this.value.toLowerCase();

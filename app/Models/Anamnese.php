@@ -31,7 +31,9 @@ class Anamnese extends Model
         'alergia2',
         'alergia3',
         'anamnese',
-        'profissional_id'
+        'profissional_id',
+        'imc',
+        'classificacao'
     ];
 
     protected $dates=['deleted_at'];

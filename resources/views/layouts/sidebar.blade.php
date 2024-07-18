@@ -22,8 +22,8 @@
         <ul class="treeview-menu">
           <li><a class="treeview-item" href="{{route('agenda.index')}}"><i class="icon bi bi-calendar-plus"></i> Criar Agenda</a></li>
           <li><a class="treeview-item" href="{{route('agenda.index1')}}"><i class="icon bi bi-search"></i> Consultar Agenda</a></li>
-          <li><a class="treeview-item" href="{{route('anamnese.index')}}"><i class="icon bi bi-ui-checks"></i> Anamnese</a></li>
-          <li><a class="treeview-item" href="{{route('anamnese.index1')}}"><i class="icon bi bi bi-list-ul"></i> Histórico de Anamnese</a></li>
+          {{-- <li><a class="treeview-item" href="{{route('anamnese.index')}}"><i class="icon bi bi-ui-checks"></i> Anamnese</a></li>
+          <li><a class="treeview-item" href="{{route('anamnese.index1')}}"><i class="icon bi bi bi-list-ul"></i> Histórico de Anamnese</a></li> --}}
           <li>
             <a class="treeview-item" href="#"><i class="icon bi bi-person-add"></i>Pacientes</a>
             <ul>

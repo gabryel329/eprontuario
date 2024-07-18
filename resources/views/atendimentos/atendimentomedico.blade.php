@@ -30,6 +30,7 @@
                                 data-bs-toggle="tab">Atendimento</a></li>
                         <li class="nav-item"><a class="nav-link" href="#atendimento-prescricao"
                                 data-bs-toggle="tab">Prescrição</a></li>
+                                <hr><hr>
                         <li class="nav-item"><a class="nav-link" href="#atendimento-historico"
                                 data-bs-toggle="tab">Histórico</a></li>
                     </ul>
@@ -400,11 +401,13 @@
                                         <div><strong>Profissional ID:</strong> {{ $registro->an_profissional_id }}</div>
                                         <div class="row user">
                                             <div class="col-md-2">
-                                                <ul class="nav nav-tabs user-tabs">
-                                                    <li class="nav-item"><a class="nav-link active" href="#historico-anamnese-{{ $index }}" data-bs-toggle="tab">Anamnese</a></li>
-                                                    <li class="nav-item"><a class="nav-link" href="#historico-atendimento-{{ $index }}" data-bs-toggle="tab">Atendimento</a></li>
-                                                    <li class="nav-item"><a class="nav-link" href="#historico-prescricao-{{ $index }}" data-bs-toggle="tab">Prescrição</a></li>
-                                                </ul>
+                                                <div class="tile p-0">
+                                                    <ul class="nav flex-column nav-tabs user-tabs">
+                                                        <li class="nav-item"><a class="nav-link active" href="#historico-anamnese-{{ $index }}" data-bs-toggle="tab">Anamnese</a></li>
+                                                        <li class="nav-item"><a class="nav-link" href="#historico-atendimento-{{ $index }}" data-bs-toggle="tab">Atendimento</a></li>
+                                                        <li class="nav-item"><a class="nav-link" href="#historico-prescricao-{{ $index }}" data-bs-toggle="tab">Prescrição</a></li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                             <div class="col-md-10">
                                                 <div class="tab-content">
@@ -577,9 +580,9 @@
                                                                                     </thead>
                                                                                     <tbody id="exame-table-body">
                                                                                             @php
-                                                                                                $exames_ids = explode(',', $registro->exames_ids);
+                                                                                                $procedimentos = explode(',', $registro->procedimentos);
                                                                                             @endphp
-                                                                                            @foreach ($exames_ids as $exame_id)
+                                                                                            @foreach ($procedimentos as $exame_id)
                                                                                                 <tr class="exame-row">
                                                                                                     <td>{{ $exame_id }}</td>
                                                                                                 </tr>
@@ -596,17 +599,23 @@
                                                                                     <thead>
                                                                                         <tr>
                                                                                             <th>Remédio</th>
+                                                                                            <th>Dose</th>
+                                                                                            <th>Horas</th>
                                                                                         </tr>
                                                                                     </thead>
                                                                                     <tbody id="prescricao-table-body">
                                                                                         @php
-                                                                                            $remedios_ids = explode(',', $registro->remedios_ids);
+                                                                                            $medicamentos = explode(',', $registro->medicamentos);
+                                                                                            $doses = explode(',', $registro->dose);
+                                                                                            $horas = explode(',', $registro->horas);
                                                                                         @endphp
-                                                                                        @foreach ($remedios_ids as $remedio_id)
-                                                                                        <tr class="prescricao-row">
-                                                                                            <td>{{ $remedio_id }}</td>
-                                                                                        </tr>
-                                                                                        @endforeach
+                                                                                        @for ($i = 0; $i < count($medicamentos); $i++)
+                                                                                            <tr class="prescricao-row">
+                                                                                                <td>{{ $medicamentos[$i] ?? '' }}</td>
+                                                                                                <td>{{ $doses[$i] ?? '' }}</td>
+                                                                                                <td>{{ $horas[$i] ?? '' }}</td>
+                                                                                            </tr>
+                                                                                        @endfor
                                                                                     </tbody>
                                                                                 </table>
                                                                             </div>

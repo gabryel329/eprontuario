@@ -67,18 +67,14 @@
                 <div class="timeline-post">
                     <div class="col-md-12">
                         <ul class="nav nav-tabs user-tabs">
-                            <li class="nav-item"><a class="nav-link active" href="#agenda-chegou"
-                                    data-bs-toggle="tab">Chegou</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#agenda-marcado" data-bs-toggle="tab">Marcado</a>
-                            </li>
-                            <li class="nav-item"><a class="nav-link" href="#agenda-evadio" data-bs-toggle="tab">Evadio</a>
-                            </li>
-                            <li class="nav-item"><a class="nav-link" href="#agenda-cancelado"
-                                    data-bs-toggle="tab">Cancelado</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#agenda-chegou" data-bs-toggle="tab">Chegou</a></li>
+                            <li class="nav-item"><a class="nav-link active" href="#agenda-marcado" data-bs-toggle="tab">Marcado</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#agenda-evadio" data-bs-toggle="tab">Evadio</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#agenda-cancelado" data-bs-toggle="tab">Cancelado</a></li>
                         </ul>
                     </div>
                     <div class="tab-content">
-                        <div class="tile tab-pane active" id="agenda-chegou">
+                        <div class="tile tab-pane fade" id="agenda-chegou">
                             <table class="table table-striped" style="text-align: center">
                                 <thead>
                                     <tr>
@@ -116,7 +112,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="tile tab-pane fade" id="agenda-marcado">
+                        <div class="tile tab-pane active" id="agenda-marcado">
                             <table class="table table-striped" style="text-align: center">
                                 <thead>
                                     <tr>

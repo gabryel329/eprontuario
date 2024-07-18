@@ -31,6 +31,9 @@ class AtendimentosController extends Controller
         // Consulta para obter o histórico de atendimento do paciente
         $historico = DB::table('agendas as ag')
             ->join('pacientes as pa', 'ag.paciente_id', '=', 'pa.id')
+            ->join('profissionals as pro', 'ag.profissional_id', '=', 'pro.id')
+            ->join('procedimentos as prc', 'ag.procedimento_id', '=', 'prc.procedimento')
+            
             ->leftJoin('anamneses as an', function ($join) {
                 $join->on('an.paciente_id', '=', 'pa.id')
                     ->on(DB::raw('DATE(an.created_at)'), '=', 'ag.data');
@@ -47,14 +50,19 @@ class AtendimentosController extends Controller
                 $join->on('re.paciente_id', '=', 'pa.id')
                     ->on(DB::raw('DATE(re.created_at)'), '=', 'ag.data');
             })
+            ->leftJoin('procedimentos as proc2', 'ex.procedimento_id', '=', 'proc2.id')
+            ->leftJoin('medicamentos as med', 're.medicamento_id', '=', 'med.id')
             ->select(
                 'ag.data',
                 'pa.id as paciente_id',
+                DB::raw('STRING_AGG(DISTINCT proc2.procedimento::text, \',\') as procedimentos'),
+                DB::raw('STRING_AGG(DISTINCT med.nome::text, \',\') as medicamentos'),
                 DB::raw('STRING_AGG(DISTINCT an.id::text, \',\') as anamneses_ids'),
                 DB::raw('STRING_AGG(DISTINCT at.id::text, \',\') as atendimentos_ids'),
                 DB::raw('STRING_AGG(DISTINCT ex.id::text, \',\') as exames_ids'),
-                DB::raw('STRING_AGG(DISTINCT re.id::text, \',\') as remedios_ids'),
-                'an.profissional_id as an_profissional_id',
+                DB::raw('STRING_AGG(DISTINCT re.dose::text, \',\') as dose'),
+                DB::raw('STRING_AGG(DISTINCT re.horas::text, \',\') as horas'),
+                'pro.name as an_profissional_id',
                 'an.pa as an_pa',
                 'an.temp as an_temp',
                 'an.peso as an_peso',
@@ -82,7 +90,7 @@ class AtendimentosController extends Controller
             ->groupBy(
                 'ag.data',
                 'pa.id',
-                'an.profissional_id',
+                'pro.name',
                 'an.pa',
                 'an.temp',
                 'an.peso',
@@ -365,123 +373,122 @@ class AtendimentosController extends Controller
     }
 
     public function index1(Request $request)
-    {
-        // Recupera todos os profissionais e pacientes para o dropdown
-        $profissional = Profissional::join('users', 'profissionals.id', '=', 'users.profissional_id')
-            ->where('users.permisao_id', 1)
-            ->distinct()
-            ->get(['profissionals.id', 'profissionals.name']);
-        $paciente = Pacientes::all();
-    
-        // Filtra os parâmetros de busca da requisição
-        $data = $request->input('data', null);  // Alterado para permitir data vazia
-        $profissional_id = $request->input('profissional_id', null);  // Alterado para permitir profissional_id vazio
-        $paciente_id = $request->input('paciente_id', null);  // Alterado para permitir paciente_id vazio
-    
-        // Monta a consulta com joins e leftJoins
-        $query = DB::table('agendas as ag')
-            ->select(
-                'ag.id', // Inclui o ID da agenda como o ID do histórico
-                'ag.data',
-                'ag.id as consulta',
-                'pa.id as paciente_id',
-                'pa.name as paciente',
-                'pr.name as profissional',
-                'prc.procedimento as procedimento',
-                DB::raw('STRING_AGG(DISTINCT an.id::text, \',\') as anamneses_ids'),
-                DB::raw('STRING_AGG(DISTINCT at.id::text, \',\') as atendimentos_ids'),
-                DB::raw('STRING_AGG(DISTINCT ex.id::text, \',\') as exames_ids'),
-                DB::raw('STRING_AGG(DISTINCT re.id::text, \',\') as remedios_ids'),
-                'an.profissional_id as an_profissional_id',
-                'an.pa as an_pa',
-                'an.temp as an_temp',
-                'an.peso as an_peso',
-                'an.altura as an_altura',
-                'an.gestante as an_gestante',
-                'an.dextro as an_dextro',
-                'an.spo2 as an_spo2',
-                'an.fc as an_fc',
-                'an.fr as an_fr',
-                'an.acolhimento as an_acolhimento',
-                'an.acolhimento1 as an_acolhimento1',
-                'an.acolhimento2 as an_acolhimento2',
-                'an.acolhimento3 as an_acolhimento3',
-                'an.acolhimento4 as an_acolhimento4',
-                'an.alergia1 as an_alergia1',
-                'an.alergia2 as an_alergia2',
-                'an.alergia3 as an_alergia3',
-                'an.anamnese as an_anamnese',
-                'at.queixas as at_queixas',
-                'at.atestado as at_atestado',
-                'at.evolucao as at_evolucao',
-                'at.condicao as at_condicao',
-                DB::raw('STRING_AGG(DISTINCT proc2.procedimento::text, \',\') as exames'),
-                DB::raw('STRING_AGG(DISTINCT med.nome::text, \',\') as remedios'),
-                DB::raw('STRING_AGG(DISTINCT re.dose::text, \',\') as doses'),
-                DB::raw('STRING_AGG(DISTINCT re.horas::text, \',\') as horas')
-            )
-            ->join('profissionals as pr', 'ag.profissional_id', '=', 'pr.id')
-            ->join('pacientes as pa', 'ag.paciente_id', '=', 'pa.id')
-            ->join('procedimentos as prc', 'ag.procedimento_id', '=', 'prc.procedimento')
-            ->leftJoin('anamneses as an', function ($join) use ($data) {
-                $join->on('an.paciente_id', '=', 'pa.id');
-                if (!empty($data)) {
-                    $join->where(DB::raw('DATE(an.created_at)'), '=', $data);
-                }
-            })
-            ->leftJoin('atendimentos as at', function ($join) use ($data) {
-                $join->on('at.paciente_id', '=', 'pa.id');
-                if (!empty($data)) {
-                    $join->where(DB::raw('DATE(at.created_at)'), '=', $data);
-                }
-            })
-            ->leftJoin('exames as ex', function ($join) use ($data) {
-                $join->on('ex.paciente_id', '=', 'pa.id');
-                if (!empty($data)) {
-                    $join->where(DB::raw('DATE(ex.created_at)'), '=', $data);
-                }
-            })
-            ->leftJoin('remedios as re', function ($join) use ($data) {
-                $join->on('re.paciente_id', '=', 'pa.id');
-                if (!empty($data)) {
-                    $join->where(DB::raw('DATE(re.created_at)'), '=', $data);
-                }
-            })
-            ->leftJoin('procedimentos as proc2', 'ex.procedimento_id', '=', 'proc2.id')
-            ->leftJoin('medicamentos as med', 're.medicamento_id', '=', 'med.id');
-    
-        // Aplica os filtros apenas se os parâmetros não estiverem vazios
-        if (!empty($data)) {
-            $query->where('ag.data', $data);
-        }
-        if (!empty($paciente_id)) {
-            $query->where('pa.id', $paciente_id);
-        }
-        if (!empty($profissional_id)) {
-            $query->where('an.profissional_id', $profissional_id);
-        }
-    
-        // Finaliza a montagem da consulta
-        $historico = $query->groupBy(
-                'ag.id', // Adiciona ag.id ao groupBy
-                'prc.procedimento', 'ag.data', 'ag.id', 'pa.name', 'pr.name', 'pa.id', 'an.profissional_id',
-                'an.pa', 'an.temp', 'an.peso', 'an.altura', 'at.condicao', 'at.evolucao', 'at.atestado', 'an.spo2',
-                'an.dextro', 'an.gestante', 'at.queixas', 'an.anamnese', 'an.alergia3', 'an.alergia2', 'an.alergia1',
-                'an.acolhimento4', 'an.acolhimento3', 'an.acolhimento2', 'an.acolhimento1', 'an.acolhimento', 'an.fr', 'an.fc'
-            )
-            ->orderBy('ag.data', 'asc')
-            ->get();
-    
-        // Convert the grouped strings back to arrays
-        foreach ($historico as $h) {
-            $h->exames = !empty($h->exames) ? explode(',', $h->exames) : [];
-            $h->remedios = !empty($h->remedios) ? explode(',', $h->remedios) : [];
-            $h->doses = !empty($h->doses) ? explode(',', $h->doses) : [];
-            $h->horas = !empty($h->horas) ? explode(',', $h->horas) : [];
-        }
-    
-        return view('atendimentos.prontuarios', compact('profissional', 'paciente', 'historico'));
+{
+    // Recupera todos os profissionais e pacientes para o dropdown
+    $profissional = Profissional::join('users', 'profissionals.id', '=', 'users.profissional_id')
+        ->where('users.permisao_id', 1)
+        ->get(['profissionals.id', 'profissionals.name']);
+    $paciente = Pacientes::all();
+
+    // Filtra os parâmetros de busca da requisição
+    $data = $request->input('data', null);  // Permite data vazia
+    $profissional_id = $request->input('profissional_id', null);  // Permite profissional_id vazio
+    $paciente_id = $request->input('paciente_id', null);  // Permite paciente_id vazio
+
+    // Monta a consulta com joins e leftJoins
+    $query = DB::table('agendas as ag')
+        ->select(
+            'ag.id as consulta', 
+            'ag.data',
+            'pa.id as paciente_id',
+            'pa.name as paciente',
+            'pr.name as profissional',
+            'prc.procedimento as procedimento',
+            DB::raw('STRING_AGG(DISTINCT an.id::text, \',\') as anamneses_ids'),
+            DB::raw('STRING_AGG(DISTINCT at.id::text, \',\') as atendimentos_ids'),
+            DB::raw('STRING_AGG(DISTINCT ex.id::text, \',\') as exames_ids'),
+            DB::raw('STRING_AGG(DISTINCT re.id::text, \',\') as remedios_ids'),
+            'an.profissional_id as an_profissional_id',
+            'an.pa as an_pa',
+            'an.temp as an_temp',
+            'an.peso as an_peso',
+            'an.altura as an_altura',
+            'an.gestante as an_gestante',
+            'an.dextro as an_dextro',
+            'an.spo2 as an_spo2',
+            'an.fc as an_fc',
+            'an.fr as an_fr',
+            'an.acolhimento as an_acolhimento',
+            'an.acolhimento1 as an_acolhimento1',
+            'an.acolhimento2 as an_acolhimento2',
+            'an.acolhimento3 as an_acolhimento3',
+            'an.acolhimento4 as an_acolhimento4',
+            'an.alergia1 as an_alergia1',
+            'an.alergia2 as an_alergia2',
+            'an.alergia3 as an_alergia3',
+            'an.anamnese as an_anamnese',
+            'at.queixas as at_queixas',
+            'at.atestado as at_atestado',
+            'at.evolucao as at_evolucao',
+            'at.condicao as at_condicao',
+            DB::raw('STRING_AGG(DISTINCT proc2.procedimento::text, \',\') as exames'),
+            DB::raw('STRING_AGG(DISTINCT med.nome::text, \',\') as remedios'),
+            DB::raw('STRING_AGG(DISTINCT re.dose::text, \',\') as doses'),
+            DB::raw('STRING_AGG(DISTINCT re.horas::text, \',\') as horas')
+        )
+        ->join('profissionals as pr', 'ag.profissional_id', '=', 'pr.id')
+        ->join('pacientes as pa', 'ag.paciente_id', '=', 'pa.id')
+        ->join('procedimentos as prc', 'ag.procedimento_id', '=', 'prc.procedimento')
+        ->leftJoin('anamneses as an', function ($join) use ($data) {
+            $join->on('an.paciente_id', '=', 'pa.id');
+            if (!empty($data)) {
+                $join->where(DB::raw('DATE(an.created_at)'), '=', $data);
+            }
+        })
+        ->leftJoin('atendimentos as at', function ($join) use ($data) {
+            $join->on('at.paciente_id', '=', 'pa.id');
+            if (!empty($data)) {
+                $join->where(DB::raw('DATE(at.created_at)'), '=', $data);
+            }
+        })
+        ->leftJoin('exames as ex', function ($join) use ($data) {
+            $join->on('ex.paciente_id', '=', 'pa.id');
+            if (!empty($data)) {
+                $join->where(DB::raw('DATE(ex.created_at)'), '=', $data);
+            }
+        })
+        ->leftJoin('remedios as re', function ($join) use ($data) {
+            $join->on('re.paciente_id', '=', 'pa.id');
+            if (!empty($data)) {
+                $join->where(DB::raw('DATE(re.created_at)'), '=', $data);
+            }
+        })
+        ->leftJoin('procedimentos as proc2', 'ex.procedimento_id', '=', 'proc2.id')
+        ->leftJoin('medicamentos as med', 're.medicamento_id', '=', 'med.id');
+
+    // Aplica os filtros apenas se os parâmetros não estiverem vazios
+    if (!empty($data)) {
+        $query->where('ag.data', $data);
     }
+    if (!empty($paciente_id)) {
+        $query->where('pa.id', $paciente_id);
+    }
+    if (!empty($profissional_id)) {
+        $query->where('an.profissional_id', $profissional_id);
+    }
+
+    // Finaliza a montagem da consulta
+    $historico = $query->groupBy(
+            'ag.id', 'ag.data', 'pa.id', 'pa.name', 'pr.name', 'prc.procedimento', 'an.profissional_id',
+            'an.pa', 'an.temp', 'an.peso', 'an.altura', 'an.gestante', 'an.dextro', 'an.spo2',
+            'an.fc', 'an.fr', 'an.acolhimento', 'an.acolhimento1', 'an.acolhimento2', 'an.acolhimento3',
+            'an.acolhimento4', 'an.alergia1', 'an.alergia2', 'an.alergia3', 'an.anamnese',
+            'at.queixas', 'at.atestado', 'at.evolucao', 'at.condicao'
+        )
+        ->orderBy('ag.data', 'asc')
+        ->get();
+
+    // Convert the grouped strings back to arrays
+    foreach ($historico as $h) {
+        $h->exames = !empty($h->exames) ? explode(',', $h->exames) : [];
+        $h->remedios = !empty($h->remedios) ? explode(',', $h->remedios) : [];
+        $h->doses = !empty($h->doses) ? explode(',', $h->doses) : [];
+        $h->horas = !empty($h->horas) ? explode(',', $h->horas) : [];
+    }
+
+    return view('atendimentos.prontuarios', compact('profissional', 'paciente', 'historico'));
+}
+
       
 
 }
