@@ -130,12 +130,13 @@
                                                 <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Prontuário
-                                                            </h1>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                aria-label="Close"></button>
+                                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Prontuário</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
+                                                            <form action="{{ route('ficha') }}" method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="paciente" value="{{ $historico->paciente }}">
                                                             <div class="row user">
                                                                 <div class="col-md-12">
                                                                     <ul class="nav nav-tabs user-tabs">
@@ -209,7 +210,7 @@
                                                                                                     Queixa Principal</h4>
                                                                                                 <div class="row mb-12">
                                                                                                     <div class="col-md-12">
-                                                                                                        <textarea class="form-control" rows="15" readonly>{{ $historico->at_queixas }}</textarea>
+                                                                                                        <textarea class="form-control" rows="15" name="atendimento[at_queixas]" readonly>{{ $historico->at_queixas }}</textarea>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
@@ -221,7 +222,7 @@
                                                                                                     Evolução</h4>
                                                                                                 <div class="row mb-12">
                                                                                                     <div class="col-md-12">
-                                                                                                        <textarea class="form-control" rows="15" readonly>{{ $historico->at_evolucao }}</textarea>
+                                                                                                        <textarea class="form-control" rows="15" name="atendimento[at_evolucao]" readonly>{{ $historico->at_evolucao }}</textarea>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
@@ -233,7 +234,7 @@
                                                                                                     Atestado</h4>
                                                                                                 <div class="row mb-12">
                                                                                                     <div class="col-md-12">
-                                                                                                        <textarea class="form-control" rows="15" readonly>{{ $historico->at_atestado }}</textarea>
+                                                                                                        <textarea class="form-control" rows="15" name="atendimento[at_atestado]" readonly>{{ $historico->at_atestado }}</textarea>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
@@ -245,7 +246,7 @@
                                                                                                     Condição Fisica</h4>
                                                                                                 <div class="row mb-12">
                                                                                                     <div class="col-md-12">
-                                                                                                        <textarea class="form-control" rows="15" readonly>{{ $historico->at_condicao }}</textarea>
+                                                                                                        <textarea class="form-control" rows="15" name="atendimento[at_condicao]" readonly>{{ $historico->at_condicao }}</textarea>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
@@ -285,7 +286,7 @@
                                                                                                             <div class="row">
                                                                                                                 @foreach ($historico->exames as $exame)
                                                                                                                     <div class="col-md-12">
-                                                                                                                        <input type="text" class="form-control mb-2" value="{{ $exame }}" readonly>
+                                                                                                                        <input type="text" class="form-control mb-2" value="{{ $exame }}" name="prescricao[exames][]"  readonly>
                                                                                                                     </div>
                                                                                                                 @endforeach
                                                                                                             </div>
@@ -302,19 +303,19 @@
                                                                                                         <div class="col-md-4">
                                                                                                             <label class="form-label"><strong>Remédios</strong></label>
                                                                                                             @foreach ($historico->remedios as $index => $remedio)
-                                                                                                                <input type="text" class="form-control mb-2" value="{{ $remedio }}" readonly>
+                                                                                                                <input type="text" class="form-control mb-2" value="{{ $remedio }}" name="prescricao[remedios][]" readonly>
                                                                                                             @endforeach
                                                                                                         </div>
                                                                                                         <div class="col-md-4">
                                                                                                             <label class="form-label"><strong>Doses</strong></label>
                                                                                                             @foreach ($historico->doses as $index => $dose)
-                                                                                                                <input type="text" class="form-control mb-2" value="{{ $dose }}" readonly>
+                                                                                                                <input type="text" class="form-control mb-2" value="{{ $dose }}" name="prescricao[doses][]" readonly>
                                                                                                             @endforeach
                                                                                                         </div>
                                                                                                         <div class="col-md-4">
                                                                                                             <label class="form-label"><strong>Horas</strong></label>
                                                                                                             @foreach ($historico->horas as $index => $hora)
-                                                                                                                <input type="text" class="form-control mb-2" value="{{ $hora }}" readonly>
+                                                                                                                <input type="text" class="form-control mb-2" value="{{ $hora }}" name="prescricao[horas][]" readonly>
                                                                                                             @endforeach
                                                                                                         </div>
                                                                                                     </div>
@@ -327,6 +328,14 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            <div class="tile-footer">
+                                                                <div class="row d-print-none mt-2">
+                                                                    <div class="col-12 text-end">
+                                                                        <button type="submit" class="btn btn-primary">Imprimir</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -385,20 +394,20 @@
             </div>
         </div>
     </div>
+<script>
+function selectPaciente(id, nome) {
+    document.getElementById('paciente_id').value = id;
+    document.getElementById('edit-name').value = nome;
+    $('#pacienteModal').modal('hide');
+}
 
-    <script>
-        function selectPaciente(id, nome) {
-            document.getElementById('paciente_id').value = id;
-            document.getElementById('edit-name').value = nome;
-            $('#pacienteModal').modal('hide');
-        }
+document.getElementById('pacienteSearch').addEventListener('keyup', function() {
+    var value = this.value.toLowerCase();
+    document.querySelectorAll('#pacienteTable tbody tr').forEach(function(row) {
+        var text = row.textContent.toLowerCase();
+        row.style.display = text.includes(value) ? '' : 'none';
+    });
+});
 
-        document.getElementById('pacienteSearch').addEventListener('keyup', function() {
-            var value = this.value.toLowerCase();
-            document.querySelectorAll('#pacienteTable tbody tr').forEach(function(row) {
-                var text = row.textContent.toLowerCase();
-                row.style.display = text.includes(value) ? '' : 'none';
-            });
-        });
-    </script>
+</script>
 @endsection

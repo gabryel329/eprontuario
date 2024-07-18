@@ -10,9 +10,9 @@ use App\Http\Controllers\PainelController;
 use App\Http\Controllers\PermisoesController;
 use App\Http\Controllers\ProfissionalController;
 use App\Http\Controllers\UserController;
-use App\Models\Agenda;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,6 +113,8 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::get('/remedios/{agenda_id}/{paciente_id}', [AtendimentosController::class, 'verificarRemedio']);
     Route::post('/exames/store', [AtendimentosController::class, 'storeExame'])->name('exames.store');
     Route::get('/exames/{agenda_id}/{paciente_id}', [AtendimentosController::class, 'verificarExame']);
+
+    Route::post('/ficha', [AtendimentosController::class, 'ficha_atendimento'])->name('ficha');
 
     #Consultorio
 
