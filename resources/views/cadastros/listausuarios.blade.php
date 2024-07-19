@@ -79,9 +79,9 @@
                                                                 <div class="mb-3 col-md-3">
                                                                     <label class="form-label">Permissão</label>
                                                                     <select class="form-control" name="permisao_id">
-                                                                        @foreach ($permissoes as $permissao)
-                                                                            <option value="{{ $permissao->id }}" {{ old('permisao_id', $p->permisao_id) == $permissao->id ? 'selected' : '' }}>
-                                                                                {{ $permissao->cargo }}
+                                                                        @foreach ($permissoes as $permisao)
+                                                                            <option value="{{ $permisao->id }}" {{ old('permisao_id', $p->permisao_id) == $permisao->id ? 'selected' : '' }}>
+                                                                                {{ $permisao->cargo }}
                                                                             </option>
                                                                         @endforeach
                                                                     </select>

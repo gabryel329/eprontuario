@@ -45,19 +45,6 @@ class UserController extends Controller
 
      public function store(Request $request)
      {
-         // Validação personalizada
-         $messages = [
-             'password.min' => 'A senha deve ter pelo menos 8 caracteres.',
-             // Adicione outras mensagens personalizadas conforme necessário
-         ];
-     
-         // Validate the request inputs, including the image size
-         $request->validate([
-             'name' => 'required|string|max:255',
-             'sobrenome' => 'required|string|max:255',
-             'email' => 'required|email|unique:users,email',
-             'password' => 'required|string|min:8',
-         ], $messages);
      
          // Capitalize the input
          $nome = ucfirst($request->input('name'));
@@ -67,7 +54,7 @@ class UserController extends Controller
          $email = $request->input('email');
          $password = bcrypt($request->input('password')); // Encrypt the password
          $profissional_id = $request->input('id');
-         $permissoes = $request->input('permissao_id');
+         $permissoes = $request->input('permisao_id');
          $imagem = $request->file('imagem');
      
          if ($imagem && $imagem->isValid()) {

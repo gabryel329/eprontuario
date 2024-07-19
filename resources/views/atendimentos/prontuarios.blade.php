@@ -137,6 +137,9 @@
                                                             <form action="{{ route('ficha') }}" method="POST">
                                                                 @csrf
                                                                 <input type="hidden" name="paciente" value="{{ $historico->paciente }}">
+                                                                <input type="hidden" name="consulta" value="{{ $historico->consulta }}">
+                                                                <input type="hidden" name="cpf" value="{{ $historico->cpf }}">
+                                                                <input type="hidden" name="nasc" value="{{ $historico->nasc }}">
                                                             <div class="row user">
                                                                 <div class="col-md-12">
                                                                     <ul class="nav nav-tabs user-tabs">

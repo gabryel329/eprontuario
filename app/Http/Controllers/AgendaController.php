@@ -130,7 +130,7 @@ class AgendaController extends Controller
         $agenda = Agenda::find($request->id);
         if ($agenda) {
             if ($request->status == 'CHEGOU' && is_null($agenda->paciente_id)) {
-                return response()->json(['error' => 'Paciente não tem Cadastro.'], 400);
+                return response()->json(['error' => 'Paciente não vinculado.'], 400);
             }
             $agenda->status = $request->status;
             $agenda->save();
@@ -149,7 +149,6 @@ class AgendaController extends Controller
             'hora' => 'required|date_format:H:i',
             'paciente_id' => 'required|integer',
             'name' => 'required|string|max:255',
-            'sobrenome' => 'required|string|max:255',
         ]);
 
         // Encontrar a agenda pelo ID
@@ -161,7 +160,6 @@ class AgendaController extends Controller
         $agenda->hora = $request->hora;
         $agenda->paciente_id = $request->paciente_id;
         $agenda->name = $request->name;
-        $agenda->sobrenome = $request->sobrenome;
         $agenda->celular = $request->celular;
         $agenda->procedimento_id = $request->procedimento_id;
 

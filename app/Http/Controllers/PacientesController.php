@@ -124,7 +124,7 @@ class PacientesController extends Controller
             'imagem' => $imageName,
         ]);
     
-        return redirect()->back()->with('success', 'Paciente criado com sucesso')->with('paciente', $paciente);
+        return redirect()->route('paciente.index1')->with('success', 'Paciente criado com sucesso')->with('paciente', $paciente);
     }
     /**
      * Show the form for editing the specified resource.
@@ -221,7 +221,7 @@ class PacientesController extends Controller
         $paciente->save();
 
         // Redirect with success message
-        return redirect()->back()->with('success', 'Paciente atualizado com sucesso')->with('paciente', $paciente);
+        return redirect()->route('paciente.index1')->with('success', 'Paciente atualizado com sucesso')->with('paciente', $paciente);
     }
     
 

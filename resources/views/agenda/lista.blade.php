@@ -263,7 +263,7 @@
             var pacienteId = $(this).data('paciente-id');
 
             if (status === 'CHEGOU' && !pacienteId) {
-                if (confirm('Paciente não tem Cadastro. Deseja criar um novo paciente?')) {
+                if (confirm('Paciente não tem cadastro ou não vinculado. Deseja criar um novo paciente?')) {
                     window.location.href = "{{ route('paciente.index') }}";
                 } else {
                     $(this).val($(this).data('original-status'));

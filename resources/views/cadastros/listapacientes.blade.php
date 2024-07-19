@@ -1,9 +1,11 @@
 @extends('layouts.app')
 @section('content')
 <main class="app-content">
-    <div class="app-title">
+    <div class="app-title d-flex justify-content-between align-items-center">
         <div>
-            <h1><i class="bi bi-table"></i> Lista de Pacientes </h1>
+            <h1><i class="bi bi-table"></i> Lista de Pacientes</h1>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="window.location='{{ route('agenda.index1') }}'">Ir para Agenda</button>
         </div>
         <ul class="app-breadcrumb breadcrumb side">
             <li class="breadcrumb-item"><i class="bi bi-house-door fs-6"></i></li>
@@ -256,8 +258,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                
+                                </div>            
                             @endforeach
                         </tbody>
                     </table>
