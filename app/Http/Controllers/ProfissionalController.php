@@ -213,6 +213,10 @@ class ProfissionalController extends Controller
         $complemento = $request->input('complemento');
         $telefone = $request->input('telefone');
         $celular = $request->input('celular');
+        $cor = $request->input('cor');
+        $rg = $request->input('rg');
+        $conselho = $request->input('conselho');
+        $tipoprof_id = $request->input('tipoprof_id');
 
         if ($imagem && $imagem->isValid()) {
             $filenameWithExt = $imagem->getClientOriginalName();
@@ -254,6 +258,10 @@ class ProfissionalController extends Controller
         $profissional->complemento = $complemento;
         $profissional->telefone = $telefone;
         $profissional->celular = $celular;
+        $profissional->cor = $cor;
+        $profissional->rg = $rg;
+        $profissional->tipoprof_id = $tipoprof_id;
+        $profissional->conselho = $conselho;
 
         // Save the updated user data
         $profissional->save();
