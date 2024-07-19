@@ -33,7 +33,7 @@ return new class extends Migration
             $table->string('corem')->nullable();
             $table->string('cor')->nullable();
             $table->string('imagem')->nullable();
-            $table->integer('permiss_id')->nullable();
+            $table->integer('permisoes_id')->nullable();
             $table->foreign('permisoes_id')->references('id')->on('permisoes')->onDelete('cascade');
             $table->integer('especialidade_id')->nullable();
             $table->foreign('especialidade_id')->references('id')->on('especialidades')->onDelete('cascade');
