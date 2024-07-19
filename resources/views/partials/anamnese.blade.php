@@ -1,19 +1,29 @@
 <div class="row">
     <div class="mb-3 col-md-3">
+        <label class="form-label"><strong>Peso (Kg):</strong></label>
+        <input class="form-control" id="peso" name="peso" type="text" value="{{ $historico->an_peso }}" oninput="calcularIMC()">
+    </div>
+    <div class="mb-3 col-md-3">
+        <label class="form-label"><strong>Altura (m):</strong></label>
+        <input class="form-control" id="altura" name="altura" type="text" value="{{ $historico->an_altura }}" oninput="calcularIMC()">
+    </div>
+    <div class="mb-3 col-md-3">
+        <label class="form-label"><strong>IMC:</strong></label>
+        <input class="form-control" id="imc" name="imc" type="text" value="{{ $historico->imc }}" readonly>
+    </div>
+    <div class="mb-3 col-md-3">
+        <label class="form-label"><strong>Classificação:</strong></label>
+        <input class="form-control" id="classificacao" name="classificacao" type="text" value="{{ $historico->classificacao }}" readonly>
+    </div>
+</div>  
+<div class="row">
+    <div class="mb-3 col-md-6">
         <label class="form-label"><strong>PA mmHg:</strong></label>
         <input class="form-control" id="pa" name="pa" type="text" value="{{ $historico->an_pa }}" readonly>
     </div>
-    <div class="mb-3 col-md-3">
+    <div class="mb-3 col-md-6">
         <label class="form-label"><strong>Temp(ºC):</strong></label>
         <input class="form-control" id="temp" name="temp" type="text" value="{{ $historico->an_temp }}" readonly>
-    </div>
-    <div class="mb-3 col-md-3">
-        <label class="form-label"><strong>Peso(Kg):</strong></label>
-        <input class="form-control" id="peso" name="peso" type="text" value="{{ $historico->an_peso }}" readonly>
-    </div>
-    <div class="mb-3 col-md-3">
-        <label class="form-label"><strong>Altura(cm):</strong></label>
-        <input class="form-control" id="altura" name="altura" type="text" value="{{ $historico->an_altura }}" readonly>
     </div>
 </div>
 <div class="row">

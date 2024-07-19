@@ -77,6 +77,8 @@ class PacientesController extends Controller
         $nome_social = $request->input('nome_social');
         $nome_pai = $request->input('nome_pai');
         $nome_mae = $request->input('nome_mae');
+        $estado_civil = $request->input('estado_civil');
+        $pcd = $request->input('pcd');
         $acompanhante = $request->input('acompanhante');
         $genero = $request->input('genero');
         $certidao = $request->input('certidao');
@@ -113,6 +115,8 @@ class PacientesController extends Controller
             'nome_social' => $nome_social,
             'nome_pai' => $nome_pai,
             'nome_mae' => $nome_mae,
+            'estado_civil' => $estado_civil,
+            'pcd' => $pcd,
             'acompanhante' => $acompanhante,
             'genero' => $genero,
             'rg' => $rg,
@@ -162,6 +166,8 @@ class PacientesController extends Controller
         $nome_social = $request->input('nome_social');
         $nome_pai = $request->input('nome_pai');
         $nome_mae = $request->input('nome_mae');
+        $estado_civil = $request->input('estado_civil');
+        $pcd = $request->input('pcd');
         $acompanhante = $request->input('acompanhante');
         $genero = $request->input('genero');
         $rg = $request->input('rg');
@@ -208,6 +214,8 @@ class PacientesController extends Controller
         $paciente->nome_social = $nome_social;
         $paciente->nome_pai = $nome_pai;
         $paciente->nome_mae = $nome_mae;
+        $paciente->estado_civil = $estado_civil;
+        $paciente->pcd = $pcd;
         $paciente->acompanhante = $acompanhante;
         $paciente->genero = $genero;
         $paciente->rg = $rg;

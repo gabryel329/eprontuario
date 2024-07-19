@@ -36,6 +36,8 @@ return new class extends Migration
             $table->string('genero')->nullable();
             $table->string('rg')->nullable();
             $table->string('certidao')->nullable();
+            $table->string('pcd')->nullable();
+            $table->string('estado_civil')->nullable();
             $table->string('sus')->nullable();
             $table->string('convenio')->nullable();
             $table->string('matricula')->nullable();

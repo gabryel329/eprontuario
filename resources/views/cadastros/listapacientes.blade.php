@@ -7,10 +7,6 @@
         </div>
         <button type="button" class="btn btn-primary" onclick="window.location='{{ route('agenda.index1') }}'">Ir para Agenda</button>
         </div>
-        <ul class="app-breadcrumb breadcrumb side">
-            <li class="breadcrumb-item"><i class="bi bi-house-door fs-6"></i></li>
-            <li class="breadcrumb-item active"><a href="#">Pacientes</a></li>
-        </ul>
     </div>
     @if(session('success'))
         <div class="alert alert-success">
@@ -58,7 +54,7 @@
                                 
                                 <!-- Edit Modal -->
                                 <div class="modal fade" id="editModal{{ $item->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $item->id }}" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
+                                    <div class="modal-dialog modal-xl">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="editModalLabel{{ $item->id }}">Editar Paciente</h5>
@@ -113,9 +109,9 @@
                                                             </div>
                                                         </div>
                                                         <div class="row">
-                                                            <div class="mb-3 col-md-3">
+                                                            <div class="mb-3 col-md-4">
                                                                 <label class="form-label">RG </label>
-                                                                <input class="form-control" id="rg{{ $item->id }}" name="rg" type="text" value="{{ $item->rg }}">
+                                                                <input class="form-control" id="rg{{ $item->id }}" name="rg" type="text" value="{{ $item->rg }}" required>
                                                             </div>
                                                             <div class="mb-3 col-md-4">
                                                                 <label class="form-label">Certidão de Nascimento</label>
@@ -158,7 +154,7 @@
                                                             </div>
                                                             <div class="mb-3 col-md-4">
                                                                 <label class="form-label">Nome da Mãe</label>
-                                                                <input class="form-control" id="nome_mae{{ $item->id }}" name="nome_mae" type="text" value="{{ $item->nome_mae }}">
+                                                                <input class="form-control" id="nome_mae{{ $item->id }}" name="nome_mae" type="text" value="{{ $item->nome_mae }}" required>
                                                             </div>
                                                             <div class="mb-3 col-md-4">
                                                                 <label class="form-label">Acompanhante</label>
@@ -166,7 +162,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="row">
-                                                            <div class="mb-3 col-md-4">
+                                                            <div class="mb-3 col-md-6">
                                                                 <label class="form-label">Estado Civil</label>
                                                                 <select class="form-control" id="estado_civil{{ $item->id }}" name="estado_civil">
                                                                     <option disabled selected style="font-size:18px;color: black;">{{ $item->estado_civil }}</option>
@@ -177,33 +173,31 @@
                                                                     <option value="Separado(a)" {{ $item->estado_civil == 'Separado(a)' ? 'selected' : '' }}>Separado(a)</option>
                                                                 </select>
                                                             </div>
-                                                            <div class="mb-3 col-md-4">
+                                                            <div class="mb-3 col-md-6" id="pcd-container2">
+                                                                <label class="form-label">PCD:</label>
+                                                                <input class="form-control" id="pcd{{ $item->id }}" name="pcd" type="text" placeholder="Opcional" value="{{ $item->pcd }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="mb-3 col-md-6">
                                                                 <label class="form-label">Telefone Fixo</label>
                                                                 <input class="form-control" id="telefone_fixo{{ $item->id }}" name="telefone_fixo" type="text" value="{{ $item->telefone_fixo }}">
                                                             </div>
-                                                            <div class="mb-3 col-md-4">
+                                                            <div class="mb-3 col-md-6">
                                                                 <label class="form-label">Celular</label>
-                                                                <input class="form-control" id="celular{{ $item->id }}" name="celular" type="text" value="{{ $item->celular }}">
+                                                                <input class="form-control" id="celular{{ $item->id }}" name="celular" type="text" value="{{ $item->celular }}" required>
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="mb-3 col-md-4">
-                                                                <label class="form-label">Deficiente?</label>
-                                                                <select class="form-control" id="deficiente{{ $item->id }}" name="deficiente">
-                                                                    <option disabled selected style="font-size:18px;color: black;">{{ $item->deficiente }}</option>
-                                                                    <option value="Nao" {{ $item->deficiente == 'Nao' ? 'selected' : '' }}>Nao</option>
-                                                                    <option value="Sim" {{ $item->deficiente == 'Sim' ? 'selected' : '' }}>Sim</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="mb-3 col-md-4">
                                                                 <label class="form-label">Rua</label>
-                                                                <input class="form-control" id="rua{{ $item->id }}" name="rua" type="text" value="{{ $item->rua }}">
+                                                                <input class="form-control" id="rua{{ $item->id }}" name="rua" type="text" value="{{ $item->rua }}" required>
                                                             </div>
                                                             <div class="mb-3 col-md-2">
                                                                 <label class="form-label">Número</label>
-                                                                <input class="form-control" id="numero{{ $item->id }}" name="numero" type="text" value="{{ $item->numero }}">
+                                                                <input class="form-control" id="numero{{ $item->id }}" name="numero" type="text" value="{{ $item->numero }}" required>
                                                             </div>
-                                                            <div class="mb-3 col-md-2">
+                                                            <div class="mb-3 col-md-6">
                                                                 <label class="form-label">Complemento</label>
                                                                 <input class="form-control" id="complemento{{ $item->id }}" name="complemento" type="text" value="{{ $item->complemento }}">
                                                             </div>
@@ -211,19 +205,19 @@
                                                         <div class="row">
                                                             <div class="mb-3 col-md-4">
                                                                 <label class="form-label">Bairro</label>
-                                                                <input class="form-control" id="bairro{{ $item->id }}" name="bairro" type="text" value="{{ $item->bairro }}">
+                                                                <input class="form-control" id="bairro{{ $item->id }}" name="bairro" type="text" value="{{ $item->bairro }}" required>
                                                             </div>
                                                             <div class="mb-3 col-md-3">
                                                                 <label class="form-label">CEP</label>
-                                                                <input class="form-control" id="cep{{ $item->id }}" name="cep" type="text" value="{{ $item->cep }}" onblur="pesquisacep(this.value);">
+                                                                <input class="form-control" id="cep{{ $item->id }}" name="cep" type="text" value="{{ $item->cep }}" onblur="pesquisacep(this.value);" required>
                                                             </div>
                                                             <div class="mb-3 col-md-3">
                                                                 <label class="form-label">Cidade</label>
-                                                                <input class="form-control" id="cidade{{ $item->id }}" name="cidade" type="text" value="{{ $item->cidade }}">
+                                                                <input class="form-control" id="cidade{{ $item->id }}" name="cidade" type="text" value="{{ $item->cidade }}" required>
                                                             </div>
                                                             <div class="mb-3 col-md-2">
                                                                 <label class="form-label">Estado</label>
-                                                                <input class="form-control" id="uf{{ $item->id }}" name="uf" type="text" value="{{ $item->uf }}">
+                                                                <input class="form-control" id="uf{{ $item->id }}" name="uf" type="text" value="{{ $item->uf }}" required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -269,7 +263,7 @@
 </main>
 
 <script>
-    function pesquisacep(valor) {
+function pesquisacep(valor) {
         var cep = valor.replace(/\D/g, '');
         if (cep != "") {
             var validacep = /^[0-9]{8}$/;

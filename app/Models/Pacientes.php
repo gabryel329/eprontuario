@@ -39,6 +39,8 @@ class Pacientes extends Model
         'acompanhante',
         'nome_pai',
         'nome_mae',
+        'estado_civil',
+        'pcd',
         'sus',
         'convenio',
         'matricula',

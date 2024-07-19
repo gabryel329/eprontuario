@@ -74,20 +74,21 @@
                         </div>
                     </div>
                     <div class="row">
+                        <!-- Convenio Section -->
                         <div class="mb-3 col-md-6" id="convenio-container">
                             <label class="form-label">Convênio:</label>
                             <div class="form-check">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" id="sim" name="convenio_option" value="sim" onchange="toggleConvenio()">Sim
+                                    <input class="form-check-input" type="radio" id="convenio-sim" name="convenio_option" value="sim" onchange="toggleConvenio()">Sim
                                 </label>
                             </div>
                             <div class="form-check">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" id="nao" name="convenio_option" value="nao" onchange="toggleConvenio()">Não
+                                    <input class="form-check-input" type="radio" id="convenio-nao" name="convenio_option" value="nao" onchange="toggleConvenio()">Não
                                 </label>
                             </div>
                         </div>
-                        <div class="mb-3 col-md-3" id="convenio-select-container">
+                        <div class="mb-3 col-md-3" id="convenio-select-container" style="display:none;">
                             <label class="form-label">Selecione:</label>
                             <select class="form-control" id="convenio" name="convenio">
                                 <option disabled selected style="font-size:18px;color: black;">Escolha</option>
@@ -96,7 +97,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="mb-3 col-md-4" id="convenio-container2">
+                        <div class="mb-3 col-md-4" id="convenio-container2" style="display:none;">
                             <label class="form-label">Matricula</label>
                             <input class="form-control" id="matricula" name="matricula" type="text" value="{{ old('matricula') }}">
                         </div>
@@ -111,6 +112,37 @@
                             </select>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="mb-3 col-md-6" id="pcd-container">
+                            <label class="form-label">PCD:</label>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" id="pcd-sim" name="pcd" onchange="togglePcd()">Sim
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" id="pcd-nao" name="pcd" onchange="togglePcd()">Não
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3 col-md-3" id="pcd-container2" style="display:none;">
+                            <label class="form-label">Qual:</label>
+                            <input class="form-control" id="pcd" name="pcd_qual" type="text" value="{{ old('pcd_qual') }}">
+                        </div>
+                        <!-- Estado Civil Section -->
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label">Estado Civil</label>
+                            <select class="form-control" id="estado_civil" name="estado_civil">
+                                <option disabled selected style="font-size:18px;color: black;">{{ $item->estado_civil }}</option>
+                                <option value="Solteiro(a)" {{ $item->estado_civil == 'Solteiro(a)' ? 'selected' : '' }}>Solteiro(a)</option>
+                                <option value="Casado(a)" {{ $item->estado_civil == 'Casado(a)' ? 'selected' : '' }}>Casado(a)</option>
+                                <option value="Divorciado(a)" {{ $item->estado_civil == 'Divorciado(a)' ? 'selected' : '' }}>Divorciado(a)</option>
+                                <option value="Viuvo(a)" {{ $item->estado_civil == 'Viuvo(a)' ? 'selected' : '' }}>Viuvo(a)</option>
+                                <option value="Separado(a)" {{ $item->estado_civil == 'Separado(a)' ? 'selected' : '' }}>Separado(a)</option>
+                            </select>
+                        </div>
+                    </div>                                                      
                     <div class="row">
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Nome do Pai</label>
@@ -143,21 +175,21 @@
                         </div>
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Rua </label>
-                            <input class="form-control" name="rua" type="text" id="rua" size="60" value="{{ old('rua') }}">
+                            <input class="form-control" name="rua" type="text" id="rua" size="60" value="{{ old('rua') }}" required>
                         </div>
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Bairro</label>
-                            <input class="form-control" name="bairro" type="text" id="bairro" size="40" value="{{ old('bairro') }}">
+                            <input class="form-control" name="bairro" type="text" id="bairro" size="40" value="{{ old('bairro') }}" required>
                         </div>
                         <div class="mb-3 col-md-1">
                             <label class="form-label">Estado</label>
-                            <input class="form-control"  name="uf" type="text" id="uf" size="2" value="{{ old('uf') }}">
+                            <input class="form-control"  name="uf" type="text" id="uf" size="2" value="{{ old('uf') }}" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Cidade</label>
-                            <input class="form-control" name="cidade" type="text" id="cidade" size="40" value="{{ old('cidade') }}">
+                            <input class="form-control" name="cidade" type="text" id="cidade" size="40" value="{{ old('cidade') }}" required>
                         </div>
                         <div class="mb-3 col-md-2">
                             <label class="form-label">Numero</label>
@@ -184,11 +216,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
 <script>
-     function toggleConvenio() {
-    if ($('#sim').is(':checked')) {
+function toggleConvenio() {
+    if ($('#convenio-sim').is(':checked')) {
         $('#convenio-select-container').show();
         $('#convenio-container2').show();
-        $('#convenio-container').removeClass('col-md-6').addClass('col-md-3')
+        $('#convenio-container').removeClass('col-md-6').addClass('col-md-3');
         $('#convenio-container2').removeClass('col-md-4').addClass('col-md-3');
         $('#convenio-container3').removeClass('col-md-6').addClass('col-md-3');
     } else {
@@ -200,18 +232,33 @@
     }
 }
 
+function togglePcd() {
+    if ($('#pcd-sim').is(':checked')) {
+        $('#pcd-container').removeClass('col-md-6').addClass('col-md-3');
+        $('#pcd-container2').show().addClass('col-md-3');
+    } else {
+        $('#pcd-container').removeClass('col-md-3').addClass('col-md-6');
+        $('#pcd-container2').hide().removeClass('col-md-3');
+    }
+}
+
 $(document).ready(function() {
+    // Hide the PCD container by default
+    $('#pcd-container2').hide();
+    togglePcd();
+
     // Hide the convenio select container by default
     $('#convenio-select-container').hide();
     $('#convenio-container2').hide();
 });
 
 
-    $(document).ready(function(){
-        $('#cpf').mask('000.000.000-00');
-        $('#telefone').mask('(00) 0000-0000');
-        $('#celular').mask('(00) 00000-0000');
-    });
+$(document).ready(function(){
+    $('#cpf').mask('000.000.000-00');
+    $('#telefone').mask('(00) 0000-0000');
+    $('#celular').mask('(00) 00000-0000');
+    $('#cep').mask('00000-000');
+});
 
     function limpa_formulário_cep() {
         document.getElementById('rua').value=("");

@@ -17,6 +17,8 @@ class Anamnese extends Model
         'temp',
         'peso',
         'altura',
+        'imc',
+        'classificacao',
         'gestante',
         'dextro',
         'spo2',
@@ -32,9 +34,7 @@ class Anamnese extends Model
         'alergia3',
         'anamnese',
         'profissional_id',
-        'agenda_id',
-        'imc',
-        'classificacao'
+        'agenda_id'
     ];
 
     protected $dates=['deleted_at'];

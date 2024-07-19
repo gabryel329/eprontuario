@@ -64,6 +64,8 @@ class AtendimentosController extends Controller
                 DB::raw('STRING_AGG(DISTINCT re.horas::text, \',\') as horas'),
                 'pro.name as an_profissional_id',
                 'an.pa as an_pa',
+                'an.imc as imc',
+                'an.classificacao as classificacao',
                 'an.temp as an_temp',
                 'an.peso as an_peso',
                 'an.altura as an_altura',
@@ -112,7 +114,9 @@ class AtendimentosController extends Controller
                 'an.acolhimento1',
                 'an.acolhimento',
                 'an.fr',
-                'an.fc'
+                'an.fc',
+                'an.imc',
+                'an.classificacao'
             )
             ->orderBy('ag.data', 'asc')
             ->get();
@@ -189,6 +193,8 @@ class AtendimentosController extends Controller
                 'temp' => $request->input('temp'),
                 'peso' => $request->input('peso'),
                 'altura' => $request->input('altura'),
+                'imc' => $request->input('imc'),
+                'classificacao' => $request->input('classificacao'),
                 'gestante' => $request->input('gestante'),
                 'dextro' => $request->input('dextro'),
                 'spo2' => $request->input('spo2'),
@@ -216,6 +222,8 @@ class AtendimentosController extends Controller
                 'temp' => $request->input('temp'),
                 'peso' => $request->input('peso'),
                 'altura' => $request->input('altura'),
+                'imc' => $request->input('imc'),
+                'classificacao' => $request->input('classificacao'),
                 'gestante' => $request->input('gestante'),
                 'dextro' => $request->input('dextro'),
                 'spo2' => $request->input('spo2'),
@@ -402,6 +410,8 @@ class AtendimentosController extends Controller
                 'ag.procedimento_id as procedimento',
                 'an.profissional_id as an_profissional_id',
                 'an.pa as an_pa',
+                'an.imc as imc',
+                'an.classificacao as classificacao',
                 'an.temp as an_temp',
                 'an.peso as an_peso',
                 'an.altura as an_altura',
@@ -454,7 +464,7 @@ class AtendimentosController extends Controller
                 'an.pa', 'an.temp', 'an.peso', 'an.altura', 'an.gestante', 'an.dextro', 'an.spo2',
                 'an.fc', 'an.fr', 'an.acolhimento', 'an.acolhimento1', 'an.acolhimento2', 'an.acolhimento3',
                 'an.acolhimento4', 'an.alergia1', 'an.alergia2', 'an.alergia3', 'an.anamnese',
-                'at.queixas', 'at.atestado', 'at.evolucao', 'at.condicao'
+                'at.queixas', 'at.atestado', 'at.evolucao', 'at.condicao','an.imc','an.classificacao'
             )
             ->orderBy('ag.data', 'desc')
             ->get();

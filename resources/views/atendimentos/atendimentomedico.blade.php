@@ -51,27 +51,34 @@
                                                     type="text" value="{{ $paciente->id }}" hidden>
                                                 <input class="form-control" id="profissional_id" name="profissional_id"
                                                     type="text" value="{{ $agenda->profissional_id }}" hidden>
-                                                <input class="form-control" id="agenda_id" name="agenda_id" type="text"
-                                                    value="{{ $agenda->id }}" hidden>
+                                                <input class="form-control" id="agenda_id" name="agenda_id" type="text" value="{{ $agenda->id }}" hidden>
+                                                    <div class="row">
+                                                        <div class="mb-3 col-md-3">
+                                                            <label class="form-label"><strong>Peso (Kg):</strong></label>
+                                                            <input class="form-control" id="peso" name="peso" type="text" oninput="calcularIMC()">
+                                                        </div>
+                                                        <div class="mb-3 col-md-3">
+                                                            <label class="form-label"><strong>Altura (m):</strong></label>
+                                                            <input class="form-control" id="altura" name="altura" type="text" oninput="calcularIMC()">
+                                                        </div>
+                                                        <div class="mb-3 col-md-3">
+                                                            <label class="form-label"><strong>IMC:</strong></label>
+                                                            <input class="form-control" id="imc" name="imc" type="text" readonly>
+                                                        </div>
+                                                        <div class="mb-3 col-md-3">
+                                                            <label class="form-label"><strong>Classificação:</strong></label>
+                                                            <input class="form-control" id="classificacao" name="classificacao" type="text" readonly>
+                                                        </div>
+                                                    </div>   
                                                 <div class="row">
-                                                    <div class="mb-3 col-md-3">
+                                                    <div class="mb-3 col-md-6">
                                                         <label class="form-label"><strong>PA mmHg:</strong></label>
                                                         <input class="form-control" id="pa" name="pa"
                                                             type="text">
                                                     </div>
-                                                    <div class="mb-3 col-md-3">
+                                                    <div class="mb-3 col-md-6">
                                                         <label class="form-label"><strong>Temp(ºC):</strong></label>
                                                         <input class="form-control" id="temp" name="temp"
-                                                            type="text">
-                                                    </div>
-                                                    <div class="mb-3 col-md-3">
-                                                        <label class="form-label"><strong>Peso(Kg):</strong></label>
-                                                        <input class="form-control" id="peso" name="peso"
-                                                            type="text">
-                                                    </div>
-                                                    <div class="mb-3 col-md-3">
-                                                        <label class="form-label"><strong>Altura(cm):</strong></label>
-                                                        <input class="form-control" id="altura" name="altura"
                                                             type="text">
                                                     </div>
                                                 </div>
@@ -417,20 +424,30 @@
                                                         <div class="timeline-post">
                                                             <div class="row">
                                                                 <div class="mb-3 col-md-3">
+                                                                    <label class="form-label"><strong>Peso (Kg):</strong></label>
+                                                                    <input class="form-control" id="peso" name="peso" type="text" oninput="calcularIMC()">
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label class="form-label"><strong>Altura (m):</strong></label>
+                                                                    <input class="form-control" id="altura" name="altura" type="text" oninput="calcularIMC()">
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label class="form-label"><strong>IMC:</strong></label>
+                                                                    <input class="form-control" id="imc" name="imc" type="text" readonly>
+                                                                </div>
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label class="form-label"><strong>Classificação:</strong></label>
+                                                                    <input class="form-control" id="classificacao" name="classificacao" type="text" readonly>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="mb-3 col-md-6">
                                                                     <label class="form-label"><strong>PA mmHg:</strong></label>
                                                                     <input class="form-control" id="pa" name="pa" type="text" readonly value="{{ $registro->an_pa }}">
                                                                 </div>
-                                                                <div class="mb-3 col-md-3">
+                                                                <div class="mb-3 col-md-6">
                                                                     <label class="form-label"><strong>Temp(ºC):</strong></label>
                                                                     <input class="form-control" id="temp" name="temp" type="text" readonly value="{{ $registro->an_temp }}">
-                                                                </div>
-                                                                <div class="mb-3 col-md-3">
-                                                                    <label class="form-label"><strong>Peso(Kg):</strong></label>
-                                                                    <input class="form-control" id="peso" name="peso" type="text" readonly value="{{ $registro->an_peso }}">
-                                                                </div>
-                                                                <div class="mb-3 col-md-3">
-                                                                    <label class="form-label"><strong>Altura(cm):</strong></label>
-                                                                    <input class="form-control" id="altura" name="altura" type="text" readonly value="{{ $registro->an_altura }}">
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -640,9 +657,38 @@
             </div>
         </div>
     </main>
-    <script src="{{ asset('js/jquery-3.7.0.min.js') }}"></script>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script>
+<script src="{{ asset('js/jquery-3.7.0.min.js') }}"></script>
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<script>
+$(document).ready(function(){
+    $('#altura').mask('0.00');
+});    
+function calcularIMC() {
+    const peso = parseFloat(document.getElementById('peso').value);
+    const altura = parseFloat(document.getElementById('altura').value);
+
+    if (!isNaN(peso) && !isNaN(altura) && altura > 0) {
+        const imc = peso / (altura * altura);
+        document.getElementById('imc').value = imc.toFixed(2);
+
+        let classificacao = '';
+        if (imc < 18.5) {
+            classificacao = 'Peso baixo';
+        } else if (imc >= 18.5 && imc <= 24.9) {
+            classificacao = 'Peso normal';
+        } else if (imc >= 25 && imc <= 29.9) {
+            classificacao = 'Acima do peso';
+        } else {
+            classificacao = 'Obesidade';
+        }
+        document.getElementById('classificacao').value = classificacao;
+    } else {
+        document.getElementById('imc').value = '';
+        document.getElementById('classificacao').value = '';
+    }
+}
+
+
         $(document).ready(function() {
             var agenda_id = "{{ $agenda->id }}"; // Valor correto para a agenda_id
             var paciente_id = "{{ $paciente->id }}"; // Valor correto para o paciente_id
@@ -713,6 +759,8 @@
                         $('#temp').val(response.anamnese.temp);
                         $('#peso').val(response.anamnese.peso);
                         $('#altura').val(response.anamnese.altura);
+                        $('#imc').val(response.anamnese.imc);
+                        $('#classificacao').val(response.anamnese.classificacao);
                         $('input[name="gestante"][value="' + response.anamnese.gestante + '"]').prop(
                             'checked', true);
                         $('#dextro').val(response.anamnese.dextro);
@@ -728,6 +776,7 @@
                         $('#alergia2').val(response.anamnese.alergia2);
                         $('#alergia3').val(response.anamnese.alergia3);
                         $('#anamnese').val(response.anamnese.anamnese);
+                        $('#agenda_id').val(response.anamnese.agenda_id);
                     }
                 },
                 error: function(response) {
@@ -743,6 +792,8 @@
                     temp: $('#temp').val(),
                     peso: $('#peso').val(),
                     altura: $('#altura').val(),
+                    imc: $('#imc').val(),
+                    classificacao: $('#classificacao').val(),
                     gestante: $('input[name="gestante"]:checked').val(),
                     dextro: $('#dextro').val(),
                     spo2: $('#spo2').val(),
@@ -759,6 +810,7 @@
                     anamnese: $('#anamnese').val(),
                     paciente_id: $('#paciente_id').val(),
                     profissional_id: $('#profissional_id').val(),
+                    agenda_id: $('#agenda_id').val(),
                 };
 
                 // Enviar formulário via AJAX
