@@ -32,6 +32,7 @@ class Anamnese extends Model
         'alergia3',
         'anamnese',
         'profissional_id',
+        'agenda_id',
         'imc',
         'classificacao'
     ];
@@ -45,5 +46,9 @@ class Anamnese extends Model
     public function profissional()
     {
         return $this->belongsTo(Profissional::class, 'profissional_id');
+    }
+    public function agenda()
+    {
+        return $this->belongsTo(Agenda::class, 'agenda_id');
     }
 }

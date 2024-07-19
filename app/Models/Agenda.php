@@ -38,6 +38,11 @@ class Agenda extends Model
     {
         return $this->belongsTo(Atendimentos::class, 'agenda_id');
     }
+
+    public function anamnese()
+    {
+        return $this->belongsTo(Anamnese::class, 'agenda_id');
+    }
     public function remedio()
     {
         return $this->belongsTo(Remedio::class, 'agenda_id');

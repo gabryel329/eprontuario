@@ -51,6 +51,8 @@
                                                     type="text" value="{{ $paciente->id }}" hidden>
                                                 <input class="form-control" id="profissional_id" name="profissional_id"
                                                     type="text" value="{{ $agenda->profissional_id }}" hidden>
+                                                <input class="form-control" id="agenda_id" name="agenda_id" type="text"
+                                                    value="{{ $agenda->id }}" hidden>
                                                 <div class="row">
                                                     <div class="mb-3 col-md-3">
                                                         <label class="form-label"><strong>PA mmHg:</strong></label>
