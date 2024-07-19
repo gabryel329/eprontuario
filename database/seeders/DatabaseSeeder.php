@@ -31,8 +31,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('profissionals')->insert([
-            ['name' => 'Medico', 'sobrenome' => 'Souza', 'email' => 'admin@anb.com', 'crm' => 123456],
-            ['name' => 'Recepcao', 'sobrenome' => 'Silva', 'email' => 'cando@gmail.com', 'crm' => null],
+            ['name' => 'Medico', 'sobrenome' => 'Souza', 'email' => 'admin@anb.com'],
+            ['name' => 'Recepcao', 'sobrenome' => 'Silva', 'email' => 'cando@gmail.com'],
         ]);
 
         DB::table('users')->insert([
@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Admin',
                 'email' => 'admin@anb.com',
                 'permisao_id' => 3,
-                'profissional_id' => null,
+                'profissional_id' => 1,
                 'password' => bcrypt('12345678'),
                 'imagem' => 'LOGO_01_VERDE.png'
             ],

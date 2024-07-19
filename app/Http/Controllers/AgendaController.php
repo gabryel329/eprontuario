@@ -29,7 +29,7 @@ class AgendaController extends Controller
 
         $agendas = Agenda::all();
         $pacientes = Pacientes::all();
-        $profissional = Profissional::whereNotNull('crm')->get();
+        $profissional = Profissional::whereNotNull('conselho')->get();
         $procedimentos = Procedimentos::all();
 
         return view('agenda.criar', compact(['agendas', 'pacientes', 'profissional', 'procedimentos']));
@@ -39,7 +39,7 @@ class AgendaController extends Controller
     {
         $procedimentos = Procedimentos::all();
         $pacientes = Pacientes::all();
-        $profissionals = Profissional::whereNotNull('crm')->get();
+        $profissionals = Profissional::whereNotNull('conselho')->get();
         $agendas = collect();
 
         // Store form values in the session

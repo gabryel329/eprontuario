@@ -19,7 +19,8 @@ class Profissional extends Model
         'especialidade_id',
         'nasc',
         'cpf',
-        'crm',
+        'cor',
+        'rg',
         'cep',
         'rua',
         'bairro',
@@ -33,6 +34,8 @@ class Profissional extends Model
         'corem',
         'telefone',
         'celular',
+        'tipoprof_id',
+        'conselho'
     ];
     protected $dates=['deleted_at'];
     public function permisao()
@@ -43,6 +46,11 @@ class Profissional extends Model
     public function especialidade()
     {
         return $this->belongsTo(Especialidade::class, 'especialidade_id');
+    }
+
+    public function tipoprof()
+    {
+        return $this->belongsTo(TipoProf::class, 'tipoprof_id');
     }
 
     public function users()

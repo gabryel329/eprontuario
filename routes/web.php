@@ -9,7 +9,9 @@ use App\Http\Controllers\PacientesController;
 use App\Http\Controllers\PainelController;
 use App\Http\Controllers\PermisoesController;
 use App\Http\Controllers\ProfissionalController;
+use App\Http\Controllers\TipoProfController;
 use App\Http\Controllers\UserController;
+use App\Models\TipoProf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -45,6 +47,12 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::put('/permisoes/{id}', [PermisoesController::class, 'update'])->name('permisao.update');
     Route::delete('/permisoes/{id}', [PermisoesController::class, 'destroy'])->name('permisao.destroy');
     Route::get('/permisoes/{id}', [PermisoesController::class, 'show'])->name('permisao.show');
+
+    // TipoProf
+    Route::get('/tipoprof', [TipoProfController::class, 'index'])->name('tipoprof.index');
+    Route::post('/tipoprof', [TipoProfController::class, 'store'])->name('tipoprof.store');
+    Route::put('/tipoprof/{id}', [TipoProfController::class, 'update'])->name('tipoprof.update');
+    Route::delete('/tipoprof/{id}', [TipoProfController::class, 'destroy'])->name('tipoprof.destroy');
 
     // Especialidades
     Route::get('/especialidades', [EspecialidadeController::class, 'index'])->name('especialidade.index');

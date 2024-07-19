@@ -51,6 +51,7 @@
           <li><a class="treeview-item" href="{{route('especialidade.index')}}"><i class="icon bi bi-eyeglasses"></i> Especialidades</a></li>
           <li><a class="treeview-item" href="{{route('usuario.index')}}"><i class="icon bi bi-people"></i> Usuários</a></li>
           <li><a class="treeview-item" href="{{route('profissional.index')}}"><i class="icon bi bi-briefcase"></i> Profissional</a></li>
+          <li><a class="treeview-item" href="{{route('tipoprof.index')}}"><i class="icon bi bi-file-earmark-person"></i> Tipo Profissional</a></li>
         </ul>
       </li>
       <li><a class="app-menu__item" href="{{route('empresa.index')}}"><i class="app-menu__icon bi bi-buildings"></i><span class="app-menu__label">Empresa</span></a></li>

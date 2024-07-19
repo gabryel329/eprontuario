@@ -43,7 +43,7 @@
             <a class="btn btn-primary" href="{{route('profissional.index1')}}">Lista de Profissionais</a>
           </div>
           <div class="tile-body">
-            <form action="{{route('profissional.store')}}" method="POST" enctype="multipart/form-data">
+            <form id="profissionalForm" action="{{route('profissional.store')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
                     <div class="mb-3 col-md-8">
@@ -58,7 +58,7 @@
                 <div class="row">
                     <div class="mb-3 col-md-3">
                         <label class="form-label">Nascimento </label>
-                        <input class="form-control" id="nasc" name="nasc" type="date">
+                        <input class="form-control" id="nasc" name="nasc" type="date" value="{{ old('nasc') }}" max="{{ date('Y-m-d') }}" required>
                     </div>
                     <div class="mb-3 col-md-3">
                         <label class="form-label">CPF: </label>
@@ -67,16 +67,17 @@
                     <div class="mb-3 col-md-3">
                         <label class="form-label">Gênero</label>
                         <div class="form-check">
-                          <label class="form-check-label">
-                            <input class="form-check-input" type="radio" id="genero" name="genero" value="M">Masculino
-                          </label>
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" id="genero_m" name="genero" value="M" required>Masculino
+                            </label>
                         </div>
                         <div class="form-check">
-                          <label class="form-check-label">
-                            <input class="form-check-input" type="radio" id="genero" name="genero" value="F">Feminino
-                          </label>
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" id="genero_f" name="genero" value="F" required>Feminino
+                            </label>
                         </div>
-                      </div>
+                    </div>
+                    
                     <div class="mb-3 col-md-3">
                         <label class="form-label">Foto</label>
                         <input class="form-control" type="file" name="imagem">
@@ -85,47 +86,62 @@
                 <div class="row">
                     <div class="mb-3 col-md-4">
                         <label class="form-label">Tipo de Profissional</label>
-                        <select class="form-control" id="tipo_profissional" name="tipo_profissional" onchange="mostrarCamposEspecificos()">
-                            <option disabled selected style="font-size:18px;color: black;">Escolha</option>
-                            <option value="medico">Médico</option>
-                            <option value="enfermeiro">Enfermeiro</option>
-                            <option value="administrativo">Administrativo</option>
+                        <select class="form-control" id="tipo_profissional" name="tipoprof_id" onchange="mostrarCamposEspecificos()" required>
+                            <option disabled selected value="" style="font-size:18px;color: black;">Escolha</option>
+                            @foreach ($tipoprof as $item)
+                                <option value="{{ $item->id }}" data-conselho="{{ $item->conselho }}">{{ $item->nome }}</option>
+                            @endforeach
                         </select>
+                        <div class="invalid-feedback">Por favor, selecione um tipo de profissional.</div>
                     </div>
-                    <div class="mb-3 col-md-4 hidden" id="campo_crm">
-                        <label class="form-label">CRM</label>
-                        <input class="form-control" id="crm" name="crm" type="text">
+                    <div class="mb-3 col-md-4 hidden" id="campo_conselho">
+                        <label id="label_conselho" class="form-label"></label>
+                        <input type="text" name="conselho" class="form-control" id="input_conselho" placeholder="">
+                        <div class="invalid-feedback">Por favor, preencha o campo Conselho.</div>
                     </div>
-                    <div class="mb-3 col-md-4 hidden" id="campo_corem">
-                        <label class="form-label">COREM</label>
-                        <input class="form-control" id="corem" name="corem" type="text">
-                    </div>
-                </div>
-                <div class="row hidden" id="campos_comuns">
-                    <div class="mb-3 col-md-6">
-                        <label class="form-label">Telefone </label>
-                        <input class="form-control" id="telefone" name="telefone" type="text">
-                    </div>
-                    <div class="mb-3 col-md-6">
-                        <label class="form-label">Celular </label>
-                        <input class="form-control" id="celular" name="celular" type="text">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="mb-3 col-md-4">
+                    <div class="mb-3 col-md-4 hidden" id="campo_especialidade">
                         <label class="form-label">Especialidades</label>
                         <select class="form-control" id="especialidade_id" name="especialidade_id">
-                            <option disabled selected style="font-size:18px;color: black;">Escolha</option>
+                            <option disabled selected value="" style="font-size:18px;color: black;">Escolha</option>
                             @foreach ($especialidades as $especialidade)
                                 <option value="{{ $especialidade->id }}">{{ $especialidade->especialidade }}</option>
                             @endforeach
                         </select>
+                        <div class="invalid-feedback">Por favor, selecione uma especialidade.</div>
+                    </div>
+                </div>
+                <div class="row" id="campos_comuns">
+                    <div class="mb-3 col-md-3">
+                        <label class="form-label">R.G.</label>
+                        <input class="form-control" id="rg" name="rg" type="text" required>
+                        <div class="invalid-feedback">Por favor, preencha o campo RG.</div>
+                    </div>
+                    <div class="mb-3 col-md-3">
+                        <label class="form-label">Étnia</label>
+                        <select class="form-control" id="cor" name="cor" required>
+                            <option disabled selected value="" style="font-size:18px;color: black;">Escolha</option>       
+                            <option value="Branco">Branco</option>
+                            <option value="Preto">Preto</option>
+                            <option value="Amarelo">Amarelo</option>
+                            <option value="Pardo">Pardo</option>
+                        </select>
+                        <div class="invalid-feedback">Por favor, selecione uma cor.</div>
+                    </div>
+                    <div class="mb-3 col-md-3">
+                        <label class="form-label">Telefone</label>
+                        <input class="form-control" id="telefone" name="telefone" type="text">
+                        <div class="invalid-feedback">Por favor, preencha o campo Telefone.</div>
+                    </div>
+                    <div class="mb-3 col-md-3">
+                        <label class="form-label">Celular</label>
+                        <input class="form-control" id="celular" name="celular" type="text" required>
+                        <div class="invalid-feedback">Por favor, preencha o campo Celular.</div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="mb-3 col-md-3">
                         <label class="form-label">CEP </label>
-                        <input class="form-control" name="cep" type="text" id="cep" value="" size="10" maxlength="9" onblur="pesquisacep(this.value);">
+                        <input class="form-control" name="cep" type="text" id="cep" value="" size="10" maxlength="9" onblur="pesquisacep(this.value);" required>
                     </div>
                     <div class="mb-3 col-md-3">
                         <label class="form-label">Rua </label>
@@ -181,6 +197,17 @@ $(document).ready(function(){
         }
     });
 });
+
+document.querySelector('form').addEventListener('submit', function(event) {
+    var generoMasculino = document.getElementById('genero_m').checked;
+    var generoFeminino = document.getElementById('genero_f').checked;
+
+    if (!generoMasculino && !generoFeminino) {
+        event.preventDefault();
+        alert('Por favor, selecione um gênero.');
+    }
+});
+
 
 function limpa_formulário_cep() {
     //Limpa valores do formulário de cep.
@@ -241,18 +268,76 @@ function pesquisacep(valor) {
 }
 
 function mostrarCamposEspecificos() {
-    var tipo = document.getElementById('tipo_profissional').value;
-    document.getElementById('campo_crm').classList.add('hidden');
-    document.getElementById('campo_corem').classList.add('hidden');
-    document.getElementById('campos_comuns').classList.add('hidden');
+    var selectElement = document.getElementById('tipo_profissional');
+    var selectedOption = selectElement.options[selectElement.selectedIndex];
+    var conselho = selectedOption.getAttribute('data-conselho');
     
-    if (tipo === 'medico') {
-        document.getElementById('campo_crm').classList.remove('hidden');
-    } else if (tipo === 'enfermeiro') {
-        document.getElementById('campo_corem').classList.remove('hidden');
-    } else if (tipo === 'administrativo') {
-        document.getElementById('campos_comuns').classList.remove('hidden');
+    var campoConselho = document.getElementById('campo_conselho');
+    var labelConselho = document.getElementById('label_conselho');
+    var inputConselho = document.getElementById('input_conselho');
+    var campoEspecialidade = document.getElementById('campo_especialidade');
+    var especialidadeSelect = document.getElementById('especialidade_id');
+    
+    if (conselho && conselho !== '') {
+        labelConselho.textContent = conselho;
+        inputConselho.placeholder = '123456-BA';
+        inputConselho.setAttribute('required', true);
+        especialidadeSelect.setAttribute('required', true);
+        campoConselho.classList.remove('hidden');
+        campoEspecialidade.classList.remove('hidden');
+    } else {
+        inputConselho.removeAttribute('required');
+        especialidadeSelect.removeAttribute('required');
+        campoConselho.classList.add('hidden');
+        campoEspecialidade.classList.add('hidden');
     }
 }
+
+document.getElementById('profissionalForm').addEventListener('submit', function(event) {
+    var form = event.target;
+
+    // Verificação se o Tipo de Profissional está selecionado
+    var tipoProfissional = document.getElementById('tipo_profissional');
+    if (!tipoProfissional.value) {
+        tipoProfissional.classList.add('is-invalid');
+        event.preventDefault();
+    } else {
+        tipoProfissional.classList.remove('is-invalid');
+    }
+
+    // Verificação se os campos Conselho e Especialidade são obrigatórios e estão preenchidos
+    var conselhoRequired = !document.getElementById('campo_conselho').classList.contains('hidden');
+    var inputConselho = document.getElementById('input_conselho');
+    var especialidadeSelect = document.getElementById('especialidade_id');
+
+    if (conselhoRequired) {
+        if (!inputConselho.value) {
+            inputConselho.classList.add('is-invalid');
+            event.preventDefault();
+        } else {
+            inputConselho.classList.remove('is-invalid');
+        }
+        if (!especialidadeSelect.value) {
+            especialidadeSelect.classList.add('is-invalid');
+            event.preventDefault();
+        } else {
+            especialidadeSelect.classList.remove('is-invalid');
+        }
+    }
+
+    // Verificação se o campo Étnia está selecionado
+    var etnia = document.getElementById('cor');
+    if (!etnia.value) {
+        etnia.classList.add('is-invalid');
+        event.preventDefault();
+    } else {
+        etnia.classList.remove('is-invalid');
+    }
+});
+
+document.getElementById('tipo_profissional').addEventListener('change', function() {
+    this.classList.remove('is-invalid');
+});
+
 </script>
 @endsection

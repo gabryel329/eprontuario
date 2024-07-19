@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Especialidade;
 use App\Models\Permisoes;
 use App\Models\Profissional;
+use App\Models\TipoProf;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
@@ -18,8 +19,9 @@ class ProfissionalController extends Controller
         $profissioanls = Profissional::all();
         $permissoes = Permisoes::all();
         $especialidades = Especialidade::all();
+        $tipoprof = TipoProf::all();
     
-        return view('cadastros.profissional', compact('profissioanls', 'permissoes', 'especialidades'));
+        return view('cadastros.profissional', compact('profissioanls', 'permissoes', 'especialidades', 'tipoprof'));
     }
     
 
@@ -27,9 +29,10 @@ class ProfissionalController extends Controller
     {
         $profissioanls = Profissional::all();
         $permissoes = Permisoes::all();
+        $tipoprof = TipoProf::all();
         $especialidades = Especialidade::all();
 
-        return view('cadastros.listaprofissional', compact(['profissioanls', 'permissoes', 'especialidades']));
+        return view('cadastros.listaprofissional', compact(['profissioanls', 'permissoes', 'especialidades', 'tipoprof']));
     }
 
     /**
@@ -54,11 +57,13 @@ class ProfissionalController extends Controller
         $nasc = $request->input('nasc');
         $cpf = $request->input('cpf');
         $genero = $request->input('genero');
+        $rg = $request->input('rg');
+        $cor = $request->input('cor');
         $imagem = $request->file('imagem');
         $permisoes_id = $request->input('permisoes_id');
         $especialidade_id = $request->input('especialidade_id');
-        $crm = $request->input('crm');
-        $corem = $request->input('corem');
+        $tipoprof_id = $request->input('tipoprof_id');
+        $conselho = $request->input('conselho');
         $cep = $request->input('cep');
         $rua = $request->input('rua');
         $bairro = $request->input('bairro');
@@ -79,7 +84,7 @@ class ProfissionalController extends Controller
         $existeEmail = Profissional::where('email', $email)->first();
 
         if ($existeEmail) {
-            return redirect()->route('usuario.index')->with('error', 'Email já cadastrado!');
+            return redirect()->route('profissional.index')->with('error', 'Email já cadastrado!');
         }
 
         if ($imagem && $imagem->isValid()) {
@@ -102,11 +107,13 @@ class ProfissionalController extends Controller
                 'nasc' => $nasc,
                 'cpf' => $cpf,
                 'genero' => $genero,
+                'rg' => $rg,
+                'cor' => $cor,
                 'imagem' => $imageName,
                 'permisoes_id' => $permisoes_id,
                 'especialidade_id' => $especialidade_id,
-                'crm' => $crm,
-                'corem' => $corem,
+                'conselho' => $conselho,
+                'tipoprof_id' => $tipoprof_id,
                 'cep' => $cep,
                 'rua' => $rua,
                 'bairro' => $bairro,
@@ -126,10 +133,12 @@ class ProfissionalController extends Controller
                 'nasc' => $nasc,
                 'cpf' => $cpf,
                 'genero' => $genero,
+                'rg' => $rg,
+                'cor' => $cor,
                 'permisoes_id' => $permisoes_id,
                 'especialidade_id' => $especialidade_id,
-                'crm' => $crm,
-                'corem' => $corem,
+                'conselho' => $conselho,
+                'tipoprof_id' => $tipoprof_id,
                 'cep' => $cep,
                 'rua' => $rua,
                 'bairro' => $bairro,
@@ -188,11 +197,13 @@ class ProfissionalController extends Controller
         $nasc = $request->input('nasc');
         $cpf = $request->input('cpf');
         $genero = $request->input('genero');
+        $rg = $request->input('rg');
+        $cor = $request->input('cor');
         $imagem = $request->file('imagem');
         $permisoes_id = $request->input('permisoes_id');
         $especialidade_id = $request->input('especialidade_id');
-        $crm = $request->input('crm');
-        $corem = $request->input('corem');
+        $conselho = $request->input('conselho');
+        $tipoprof_id = $request->input('tipoprof_id');
         $cep = $request->input('cep');
         $rua = $request->input('rua');
         $bairro = $request->input('bairro');
@@ -228,10 +239,12 @@ class ProfissionalController extends Controller
         $profissional->nasc = $nasc;
         $profissional->cpf = $cpf;
         $profissional->genero = $genero;
+        $profissional->rg = $rg;
+        $profissional->cor = $cor;
         $profissional->permisoes_id = $permisoes_id;
         $profissional->especialidade_id = $especialidade_id;
-        $profissional->crm = $crm;
-        $profissional->corem = $corem;
+        $profissional->conselho = $conselho;
+        $profissional->tipoprof_id = $tipoprof_id;
         $profissional->cep = $cep;
         $profissional->rua = $rua;
         $profissional->bairro = $bairro;

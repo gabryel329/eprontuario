@@ -29,9 +29,10 @@ return new class extends Migration
             $table->string('celular')->nullable();
             $table->string('genero')->nullable();
             $table->string('rg')->nullable();
-            $table->string('crm')->nullable();
-            $table->string('corem')->nullable();
             $table->string('cor')->nullable();
+            $table->integer('tipoprof_id')->nullable();
+            $table->foreign('tipoprof_id')->references('id')->on('tipo_profs')->onDelete('cascade');
+            $table->string('conselho')->nullable();
             $table->string('imagem')->nullable();
             $table->integer('permisoes_id')->nullable();
             $table->foreign('permisoes_id')->references('id')->on('permisoes')->onDelete('cascade');
