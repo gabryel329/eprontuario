@@ -110,32 +110,52 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="mb-3 col-md-6">
-                                                            <label class="form-label">Telefone</label>
-                                                            <input class="form-control" id="telefone" name="telefone" type="text" value="{{ $item->telefone }}">
-                                                        </div>
-                                                        <div class="mb-3 col-md-6">
-                                                            <label class="form-label">Celular</label>
-                                                            <input class="form-control" id="celular" name="celular" type="text" value="{{ $item->celular }}">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div id="especialidade-div" class="mb-3 col-md-4 {{ $item->permisoes_id == 2 ? '' : 'hidden' }}">
-                                                            <label class="form-label">Especialidades</label>
-                                                            <select class="form-control" id="especialidade_id" name="especialidade_id">
-                                                                <option disabled selected style="font-size:18px;color: black;">Escolha</option>
-                                                                @foreach ($especialidades as $especialidade)
-                                                                    <option value="{{ $especialidade->id }}" {{ $item->especialidade_id == $especialidade->id ? 'selected' : '' }}>{{ $especialidade->especialidade }}</option>
+                                                        <div class="mb-3 col-md-4">
+                                                            <label class="form-label">Tipo de Profissional</label>
+                                                            <select class="form-control" id="tipo_profissional" name="tipoprof_id" onchange="mostrarCamposEspecificos()">
+                                                                <option disabled selected value="" style="font-size:18px;color: black;"></option>
+                                                                @foreach ($tipoprof as $item)
+                                                                    <option value="{{ $item->id }}" data-conselho="{{ $item->conselho }}">{{ $item->nome }}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
-                                                        <div id="crm-div" class="mb-3 col-md-4 {{ $item->permisoes_id == 2 ? '' : 'hidden' }}">
-                                                            <label class="form-label">CRM</label>
-                                                            <input class="form-control" id="crm" name="crm" type="text" value="{{ $item->crm }}">
+                                                        <div class="mb-3 col-md-4 hidden" id="campo_conselho">
+                                                            <label id="label_conselho" class="form-label"></label>
+                                                            <input type="text" name="conselho" class="form-control" id="input_conselho" placeholder="">
+                                                            <div class="invalid-feedback">Por favor, preencha o campo Conselho.</div>
                                                         </div>
-                                                        <div id="corem-div" class="mb-3 col-md-4 {{ $item->permisoes_id == 3 ? '' : 'hidden' }}">
-                                                            <label class="form-label">COREM</label>
-                                                            <input class="form-control" id="corem" name="corem" type="text" value="{{ $item->corem }}">
+                                                        <div class="mb-3 col-md-4 hidden" id="campo_especialidade">
+                                                            <label class="form-label">Especialidades</label>
+                                                            <select class="form-control" id="especialidade_id" name="especialidade_id">
+                                                                <option disabled selected value="" style="font-size:18px;color: black;"></option>
+                                                                @foreach ($especialidades as $especialidade)
+                                                                    <option value="{{ $especialidade->id }}">{{ $especialidade->especialidade }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" id="campos_comuns">
+                                                        <div class="mb-3 col-md-3">
+                                                            <label class="form-label">R.G.</label>
+                                                            <input class="form-control" id="rg" name="rg" type="text" value="{{ $item->rg }}">
+                                                        </div>
+                                                        <div class="mb-3 col-md-3">
+                                                            <label class="form-label">Étnia</label>
+                                                            <select class="form-control" id="cor" name="cor">
+                                                                <option disabled selected value="" style="font-size:18px;color: black;">{{ $item->cor }}</option>       
+                                                                <option value="Branco">Branco</option>
+                                                                <option value="Preto">Preto</option>
+                                                                <option value="Amarelo">Amarelo</option>
+                                                                <option value="Pardo">Pardo</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-3 col-md-3">
+                                                            <label class="form-label">Telefone</label>
+                                                            <input class="form-control" id="telefone" name="telefone" type="text" value="{{ $item->telefone }}">
+                                                        </div>
+                                                        <div class="mb-3 col-md-3">
+                                                            <label class="form-label">Celular</label>
+                                                            <input class="form-control" id="celular" name="celular" type="text" value="{{ $item->celular }}">
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -294,6 +314,31 @@ function pesquisacep(valor) {
         limpa_formulário_cep();
     }
 };
+   
+function mostrarCamposEspecificos() {
+    var selectElement = document.getElementById('tipo_profissional');
+    var selectedOption = selectElement.options[selectElement.selectedIndex];
+    var conselho = selectedOption.getAttribute('data-conselho');
     
+    var campoConselho = document.getElementById('campo_conselho');
+    var labelConselho = document.getElementById('label_conselho');
+    var inputConselho = document.getElementById('input_conselho');
+    var campoEspecialidade = document.getElementById('campo_especialidade');
+    var especialidadeSelect = document.getElementById('especialidade_id');
+    
+    if (conselho && conselho !== '') {
+        labelConselho.textContent = conselho;
+        inputConselho.placeholder = '123456-BA';
+        inputConselho.setAttribute('required', true);
+        especialidadeSelect.setAttribute('required', true);
+        campoConselho.classList.remove('hidden');
+        campoEspecialidade.classList.remove('hidden');
+    } else {
+        inputConselho.removeAttribute('required');
+        especialidadeSelect.removeAttribute('required');
+        campoConselho.classList.add('hidden');
+        campoEspecialidade.classList.add('hidden');
+    }
+}
 </script>
 @endsection
