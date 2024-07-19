@@ -24,6 +24,10 @@ class DatabaseSeeder extends Seeder
             ['cargo' => 'Recepção'],
             ['cargo' => 'Admin'],
         ]);
+        DB::table('tipo_profs')->insert([
+            ['nome' => 'Medico', 'conselho' => 'CRM'],
+            ['nome' => 'Recepção', 'conselho' => null],
+        ]);
 
         DB::table('especialidades')->insert([
             ['especialidade' => 'Clinico Geral'],
@@ -31,8 +35,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('profissionals')->insert([
-            ['name' => 'Medico', 'sobrenome' => 'Souza', 'email' => 'admin@anb.com'],
-            ['name' => 'Recepcao', 'sobrenome' => 'Silva', 'email' => 'cando@gmail.com'],
+            ['name' => 'Medico', 'sobrenome' => 'Souza', 'email' => 'admin@anb.com', 'conselho' => 123, 'tipoprof_id' => 1 ],
+            ['name' => 'Recepcao', 'sobrenome' => 'Silva', 'email' => 'cando@gmail.com', 'conselho' => null, 'tipoprof_id' => null],
         ]);
 
         DB::table('users')->insert([

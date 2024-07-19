@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('tipo_profs', function (Blueprint $table) {
             $table->id();
-            $table->string('nome');
-            $table->string('conselho');
+            $table->string('nome')->nullable();
+            $table->string('conselho')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
