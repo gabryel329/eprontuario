@@ -425,19 +425,19 @@
                                                             <div class="row">
                                                                 <div class="mb-3 col-md-3">
                                                                     <label class="form-label"><strong>Peso (Kg):</strong></label>
-                                                                    <input class="form-control" id="peso" name="peso" type="text" oninput="calcularIMC()">
+                                                                    <input class="form-control" id="peso" name="peso" type="text" value="{{ $registro->an_peso }}" oninput="calcularIMC()">
                                                                 </div>
                                                                 <div class="mb-3 col-md-3">
                                                                     <label class="form-label"><strong>Altura (m):</strong></label>
-                                                                    <input class="form-control" id="altura" name="altura" type="text" oninput="calcularIMC()">
+                                                                    <input class="form-control" id="altura" name="altura" type="text" value="{{ $registro->an_altura }}" oninput="calcularIMC()">
                                                                 </div>
                                                                 <div class="mb-3 col-md-3">
                                                                     <label class="form-label"><strong>IMC:</strong></label>
-                                                                    <input class="form-control" id="imc" name="imc" type="text" readonly>
+                                                                    <input class="form-control" id="imc" name="imc" type="text" value="{{ $registro->imc }}" readonly>
                                                                 </div>
                                                                 <div class="mb-3 col-md-3">
                                                                     <label class="form-label"><strong>Classificação:</strong></label>
-                                                                    <input class="form-control" id="classificacao" name="classificacao" type="text" readonly>
+                                                                    <input class="form-control" id="classificacao" name="classificacao" type="text" value="{{ $registro->classificacao }}" readonly>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
