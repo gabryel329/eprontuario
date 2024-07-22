@@ -25,6 +25,7 @@
                     <table class="table table-hover table-bordered" id="sampleTable">
                         <thead>
                             <tr>
+                                <th>#</th>
                                 <th>Nome</th>
                                 <th>E-mail</th>
                                 <th>CPF</th>
@@ -36,6 +37,7 @@
                         <tbody>
                             @foreach ($paciente as $item)
                                 <tr>
+                                    <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->email }}</td>
                                     <td>{{ $item->cpf }}</td>
@@ -181,7 +183,7 @@
                                                         <div class="row">
                                                             <div class="mb-3 col-md-6">
                                                                 <label class="form-label">Telefone Fixo</label>
-                                                                <input class="form-control" id="telefone_fixo{{ $item->id }}" name="telefone_fixo" type="text" value="{{ $item->telefone_fixo }}">
+                                                                <input class="form-control" id="telefone{{ $item->id }}" name="telefone" type="text" value="{{ $item->telefone }}">
                                                             </div>
                                                             <div class="mb-3 col-md-6">
                                                                 <label class="form-label">Celular</label>

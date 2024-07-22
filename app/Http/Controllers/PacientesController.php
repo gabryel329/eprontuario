@@ -39,22 +39,22 @@ class PacientesController extends Controller
         $cpf = $request->input('cpf');
         $existeCpf = Pacientes::where('cpf', $cpf)->first();
         if ($existeCpf) {
-            return redirect()->back()->withInput()->with('error', 'CPF já cadastrado, tente novamente');
+            return redirect()->back()->withInput()->with('error', "CPF já cadastrado: ID {$existeCpf->id}, Nome {$existeCpf->name}. Tente novamente.");
         }
-    
+
         // Verifica se já existe um paciente com o mesmo RG
         $rg = $request->input('rg');
         $existeRG = Pacientes::where('rg', $rg)->first();
         if ($existeRG) {
-            return redirect()->back()->withInput()->with('error', 'RG já cadastrado, tente novamente');
+            return redirect()->back()->withInput()->with('error', "RG já cadastrado: ID {$existeRG->id}, Nome {$existeRG->name}. Tente novamente.");
         }
-    
+
         // Verifica se já existe um paciente com o mesmo SUS, se o campo foi preenchido
         $sus = $request->input('sus');
         if (!empty($sus)) {
             $existeSUS = Pacientes::where('sus', $sus)->first();
             if ($existeSUS) {
-                return redirect()->back()->withInput()->with('error', 'SUS já cadastrado, tente novamente');
+                return redirect()->back()->withInput()->with('error', "SUS já cadastrado: ID {$existeSUS->id}, Nome {$existeSUS->name}. Tente novamente.");
             }
         }
     

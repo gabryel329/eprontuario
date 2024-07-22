@@ -128,7 +128,7 @@
                         </div>
                         <div class="mb-3 col-md-3" id="pcd-container2" style="display:none;">
                             <label class="form-label">Qual:</label>
-                            <input class="form-control" id="pcd" name="pcd_qual" type="text" value="{{ old('pcd_qual') }}">
+                            <input class="form-control" id="pcd" name="pcd" type="text" value="{{ old('pcd') }}">
                         </div>
                         <!-- Estado Civil Section -->
                         <div class="mb-3 col-md-6">
@@ -150,7 +150,7 @@
                         </div>
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Nome da Mãe</label>
-                            <input class="form-control" id="nome_mãe" name="nome_mãe" type="text" value="{{ old('nome_mãe') }}" required>
+                            <input class="form-control" id="nome_mae" name="nome_mae" type="text" value="{{ old('nome_mae') }}" required>
                         </div>
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Acompanhante</label>

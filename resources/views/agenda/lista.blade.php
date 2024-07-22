@@ -127,13 +127,9 @@
                     </a>
                 </td>
                 <td>
-                    <form id="delete-form-{{ $item->id }}" action="{{ route('agenda.destroy', $item->id) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger" onclick="return confirmDeletion(event, '{{ $item->id }}')">
-                            <i class="bi bi-x-circle"></i>
-                        </button>
-                    </form>                    
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}">
+                        Excluir
+                    </button>                    
                 </td>
                 <td>
                     <button type="button" class="btn btn-info" onclick="openEditModal('{{ $item->id }}')"><i class="bi bi-pencil-square"></i></button>
@@ -254,6 +250,27 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ $item->id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel{{ $item->id }}">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza de que deseja excluir?<strong> {{ $item->name }} </strong>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form action="{{ route('agenda.destroy', $item->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Excluir</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>  
 @endforeach
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -392,19 +409,6 @@
         document.getElementById('agenda-table').style.display = 'block';
 
         fetchAgenda(data, profissionalId);
-    }
-
-    function confirmDeletion(event, id) {
-        // Evita o envio automático do formulário
-        event.preventDefault();
-
-        // Pergunta ao usuário se ele realmente deseja excluir
-        if (confirm("Tem certeza de que deseja excluir este item?")) {
-            // Se o usuário confirmar, envia o formulário
-            document.getElementById('delete-form-' + id).submit();
-        }
-        // Caso contrário, não faz nada
-        return false;
     }
 </script>
 @endsection

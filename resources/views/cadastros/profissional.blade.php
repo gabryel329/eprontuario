@@ -125,7 +125,7 @@
                             <option value="Amarelo">Amarelo</option>
                             <option value="Pardo">Pardo</option>
                         </select>
-                        <div class="invalid-feedback">Por favor, selecione uma cor.</div>
+                        <div class="invalid-feedback">Por favor, selecione uma Étnia.</div>
                     </div>
                     <div class="mb-3 col-md-3">
                         <label class="form-label">Telefone</label>

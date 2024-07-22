@@ -69,121 +69,121 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                <form method="POST" action="{{ route('profissional.update', $item->id) }}" enctype="multipart/form-data">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <div class="row">
-                                                        <div class="mb-3 col-md-8">
-                                                            <label class="form-label">Nome Completo</label>
-                                                            <input class="form-control" id="name" name="name" type="text" value="{{ $item->name }}">
-                                                        </div>
-                                                        <div class="mb-3 col-md-4">
-                                                            <label class="form-label">E-mail</label>
-                                                            <input class="form-control" id="email" name="email" type="email" value="{{ $item->email }}">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="mb-3 col-md-3">
-                                                            <label class="form-label">Nascimento</label>
-                                                            <input class="form-control" id="nasc" name="nasc" type="date" value="{{ $item->nasc }}">
-                                                        </div>
-                                                        <div class="mb-3 col-md-3">
-                                                            <label class="form-label">CPF</label>
-                                                            <input class="form-control" id="cpf" name="cpf" type="text" value="{{ $item->cpf }}">
-                                                        </div>
-                                                        <div class="mb-3 col-md-2">
-                                                            <label class="form-label">Gênero</label>
-                                                            <div class="form-check">
-                                                                <label class="form-check-label">
-                                                                    <input class="form-check-input" type="radio" id="genero" name="genero" value="M" {{ $item->genero == 'M' ? 'checked' : '' }}>Masculino
-                                                                </label>
+                                                    <form method="POST" action="{{ route('profissional.update', $item->id) }}" enctype="multipart/form-data">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <div class="row">
+                                                            <div class="mb-3 col-md-8">
+                                                                <label class="form-label">Nome Completo</label>
+                                                                <input class="form-control" name="name" type="text" value="{{ old('name', $item->name) }}">
                                                             </div>
-                                                            <div class="form-check">
-                                                                <label class="form-check-label">
-                                                                    <input class="form-check-input" type="radio" id="genero" name="genero" value="F" {{ $item->genero == 'F' ? 'checked' : '' }}>Feminino
-                                                                </label>
+                                                            <div class="mb-3 col-md-4">
+                                                                <label class="form-label">E-mail</label>
+                                                                <input class="form-control" name="email" type="email" value="{{ old('email', $item->email) }}">
                                                             </div>
                                                         </div>
-                                                        <div class="mb-3 col-md-4">
-                                                            <label class="form-label">Foto</label>
-                                                            <input class="form-control" type="file" name="imagem">
+                                                        <div class="row">
+                                                            <div class="mb-3 col-md-3">
+                                                                <label class="form-label">Nascimento</label>
+                                                                <input class="form-control" name="nasc" type="date" value="{{ old('nasc', $item->nasc) }}">
+                                                            </div>
+                                                            <div class="mb-3 col-md-3">
+                                                                <label class="form-label">CPF</label>
+                                                                <input class="form-control" name="cpf" type="text" value="{{ old('cpf', $item->cpf) }}">
+                                                            </div>
+                                                            <div class="mb-3 col-md-2">
+                                                                <label class="form-label">Gênero</label>
+                                                                <div class="form-check">
+                                                                    <label class="form-check-label">
+                                                                        <input class="form-check-input" type="radio" name="genero" value="M" {{ old('genero', $item->genero) == 'M' ? 'checked' : '' }}>Masculino
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <label class="form-check-label">
+                                                                        <input class="form-check-input" type="radio" name="genero" value="F" {{ old('genero', $item->genero) == 'F' ? 'checked' : '' }}>Feminino
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="mb-3 col-md-4">
+                                                                <label class="form-label">Foto</label>
+                                                                <input class="form-control" type="file" name="imagem">
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="mb-3 col-md-4">
-                                                            <label class="form-label">Tipo de Profissional</label>
-                                                            <select class="form-control" id="tipo_profissional" name="tipoprof_id" onchange="mostrarCamposEspecificos()">
-                                                                <option disabled selected value="" style="font-size:18px;color: black;"></option>
-                                                                @foreach ($tipoprof as $item)
-                                                                    <option value="{{ $item->id }}" data-conselho="{{ $item->conselho }}">{{ $item->nome }}</option>
-                                                                @endforeach
-                                                            </select>
+                                                        <div class="row">
+                                                            <div class="mb-3 col-md-4">
+                                                                <label class="form-label">Tipo de Profissional</label>
+                                                                <select class="form-control" name="tipoprof_id" onchange="mostrarCamposEspecificos()">
+                                                                    <option disabled selected value="" style="font-size:18px;color: black;"></option>
+                                                                    @foreach ($tipoprof as $tipo)
+                                                                        <option value="{{ $tipo->id }}" data-conselho="{{ $tipo->conselho }}">{{ $tipo->nome }}</option>
+                                                                    @endforeach
+                                                                </select>                                                                
+                                                            </div>
+                                                            <div class="mb-3 col-md-4 hidden" id="campo_conselho">
+                                                                <label id="label_conselho" class="form-label">Conselho</label>
+                                                                <input type="text" name="conselho" class="form-control" id="input_conselho" value="{{ old('conselho', $item->conselho) }}" placeholder="">
+                                                                <div class="invalid-feedback">Por favor, preencha o campo Conselho.</div>
+                                                            </div>
+                                                            <div class="mb-3 col-md-4 hidden" id="campo_especialidade">
+                                                                <label class="form-label">Especialidades</label>
+                                                                <select class="form-control" name="especialidade_id">
+                                                                    <option disabled selected value="" style="font-size:18px;color: black;"></option>
+                                                                    @foreach ($especialidades as $especialidade)
+                                                                        <option value="{{ $especialidade->id }}" {{ old('especialidade_id', $item->especialidade_id) == $especialidade->id ? 'selected' : '' }}>{{ $especialidade->especialidade }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
                                                         </div>
-                                                        <div class="mb-3 col-md-4 hidden" id="campo_conselho">
-                                                            <label id="label_conselho" class="form-label"></label>
-                                                            <input type="text" name="conselho" class="form-control" id="input_conselho" placeholder="">
-                                                            <div class="invalid-feedback">Por favor, preencha o campo Conselho.</div>
+                                                        <div class="row" id="campos_comuns">
+                                                            <div class="mb-3 col-md-3">
+                                                                <label class="form-label">RG</label>
+                                                                <input class="form-control" name="rg" type="text" value="{{ old('rg', $item->rg) }}">
+                                                            </div>
+                                                            <div class="mb-3 col-md-3">
+                                                                <label class="form-label">Étnia</label>
+                                                                <select class="form-control" name="cor">
+                                                                    <option disabled selected value="" style="font-size:18px;color: black;">{{ old('cor', $item->cor) }}</option>
+                                                                    <option value="Branco" {{ old('cor', $item->cor) == 'Branco' ? 'selected' : '' }}>Branco</option>
+                                                                    <option value="Preto" {{ old('cor', $item->cor) == 'Preto' ? 'selected' : '' }}>Preto</option>
+                                                                    <option value="Amarelo" {{ old('cor', $item->cor) == 'Amarelo' ? 'selected' : '' }}>Amarelo</option>
+                                                                    <option value="Pardo" {{ old('cor', $item->cor) == 'Pardo' ? 'selected' : '' }}>Pardo</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="mb-3 col-md-3">
+                                                                <label class="form-label">Telefone</label>
+                                                                <input class="form-control" name="telefone" type="text" value="{{ old('telefone', $item->telefone) }}">
+                                                            </div>
+                                                            <div class="mb-3 col-md-3">
+                                                                <label class="form-label">Celular</label>
+                                                                <input class="form-control" name="celular" type="text" value="{{ old('celular', $item->celular) }}">
+                                                            </div>
                                                         </div>
-                                                        <div class="mb-3 col-md-4 hidden" id="campo_especialidade">
-                                                            <label class="form-label">Especialidades</label>
-                                                            <select class="form-control" id="especialidade_id" name="especialidade_id">
-                                                                <option disabled selected value="" style="font-size:18px;color: black;"></option>
-                                                                @foreach ($especialidades as $especialidade)
-                                                                    <option value="{{ $especialidade->id }}">{{ $especialidade->especialidade }}</option>
-                                                                @endforeach
-                                                            </select>
+                                                        <div class="row">
+                                                            <div class="mb-3 col-md-3">
+                                                                <label class="form-label">CEP</label>
+                                                                <input class="form-control" name="cep" type="text" id="cep" value="{{ old('cep', $item->cep) }}" size="10" maxlength="9" onblur="pesquisacep(this.value);">
+                                                            </div>
+                                                            <div class="mb-3 col-md-3">
+                                                                <label class="form-label">Rua</label>
+                                                                <input class="form-control" name="rua" type="text" id="rua" value="{{ old('rua', $item->rua) }}" size="60">
+                                                            </div>
+                                                            <div class="mb-3 col-md-2">
+                                                                <label class="form-label">Bairro</label>
+                                                                <input class="form-control" name="bairro" type="text" id="bairro" value="{{ old('bairro', $item->bairro) }}" size="40">
+                                                            </div>
+                                                            <div class="mb-3 col-md-3">
+                                                                <label class="form-label">Cidade</label>
+                                                                <input class="form-control" name="cidade" type="text" id="cidade" value="{{ old('cidade', $item->cidade) }}" size="40">
+                                                            </div>
+                                                            <div class="mb-3 col-md-1">
+                                                                <label class="form-label">Estado</label>
+                                                                <input class="form-control" name="uf" type="text" id="uf" value="{{ old('uf', $item->uf) }}" size="2">
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="row" id="campos_comuns">
-                                                        <div class="mb-3 col-md-3">
-                                                            <label class="form-label">R.G.</label>
-                                                            <input class="form-control" id="rg" name="rg" type="text" value="{{ $item->rg }}">
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-primary">Salvar</button>
                                                         </div>
-                                                        <div class="mb-3 col-md-3">
-                                                            <label class="form-label">Étnia</label>
-                                                            <select class="form-control" id="cor" name="cor">
-                                                                <option disabled selected value="" style="font-size:18px;color: black;">{{ $item->cor }}</option>       
-                                                                <option value="Branco">Branco</option>
-                                                                <option value="Preto">Preto</option>
-                                                                <option value="Amarelo">Amarelo</option>
-                                                                <option value="Pardo">Pardo</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="mb-3 col-md-3">
-                                                            <label class="form-label">Telefone</label>
-                                                            <input class="form-control" id="telefone" name="telefone" type="text" value="{{ $item->telefone }}">
-                                                        </div>
-                                                        <div class="mb-3 col-md-3">
-                                                            <label class="form-label">Celular</label>
-                                                            <input class="form-control" id="celular" name="celular" type="text" value="{{ $item->celular }}">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="mb-3 col-md-3">
-                                                            <label class="form-label">CEP</label>
-                                                            <input class="form-control" name="cep" type="text" id="cep" value="{{ $item->cep }}" size="10" maxlength="9" onblur="pesquisacep(this.value);">
-                                                        </div>
-                                                        <div class="mb-3 col-md-3">
-                                                            <label class="form-label">Rua</label>
-                                                            <input class="form-control" name="rua" type="text" id="rua" value="{{ $item->rua }}" size="60">
-                                                        </div>
-                                                        <div class="mb-3 col-md-2">
-                                                            <label class="form-label">Bairro</label>
-                                                            <input class="form-control" name="bairro" type="text" id="bairro" value="{{ $item->bairro }}" size="40">
-                                                        </div>
-                                                        <div class="mb-3 col-md-3">
-                                                            <label class="form-label">Cidade</label>
-                                                            <input class="form-control" name="cidade" type="text" id="cidade" value="{{ $item->cidade }}" size="40">
-                                                        </div>
-                                                        <div class="mb-3 col-md-1">
-                                                            <label class="form-label">Estado</label>
-                                                            <input class="form-control" name="uf" type="text" id="uf" value="{{ $item->uf }}" size="2">
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-primary">Salvar</button>
-                                                    </div>
-                                                </form>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
@@ -316,7 +316,7 @@ function pesquisacep(valor) {
 };
    
 function mostrarCamposEspecificos() {
-    var selectElement = document.getElementById('tipo_profissional');
+    var selectElement = document.getElementsByName('tipoprof_id')[0];
     var selectedOption = selectElement.options[selectElement.selectedIndex];
     var conselho = selectedOption.getAttribute('data-conselho');
     
@@ -340,5 +340,26 @@ function mostrarCamposEspecificos() {
         campoEspecialidade.classList.add('hidden');
     }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const selectElement = document.getElementById('tipoprof_id');
+    const inputConselho = document.getElementById('input_conselho');
+    const campoConselho = document.getElementById('campo_conselho');
+
+    function atualizarCampoConselho() {
+        const selectedValue = selectElement.value;
+        if (selectedValue == 2) {
+            inputConselho.disabled = true;
+        } else {
+            inputConselho.disabled = false;
+        }
+    }
+
+    // Adiciona o listener de mudança no select
+    selectElement.addEventListener('change', atualizarCampoConselho);
+
+    // Inicializa o estado do campo com base no valor atual do select
+    atualizarCampoConselho();
+});
 </script>
 @endsection

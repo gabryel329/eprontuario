@@ -185,58 +185,51 @@ class AgendaController extends Controller
     }
 
     public function agendaMedica(Request $request)
-{
-    $pacientes = Pacientes::all();
-
-    // Get the currently logged-in user
-    $user = auth()->user();
-    $profissionalId = $user->profissional_id;
-
-    $agendasChegou = collect();
-    $agendasMarcado = collect();
-    $agendasEvadio = collect();
-    $agendasCancelado = collect();
-
-    // Filter agendas based on logged-in user's linked professional ID
-    if ($request->has('data')) {
-        $data = $request->data;
+    {
+        $pacientes = Pacientes::all();
+    
+        // Get the currently logged-in user
+        $user = auth()->user();
+        $profissionalId = $user->profissional_id;
+    
+        // Check if a date is provided in the request; otherwise, use the current date
+        $data = $request->input('data', \Carbon\Carbon::now()->format('Y-m-d'));
+    
+        // Filter agendas based on the logged-in user's linked professional ID
         $agendasChegou = Agenda::where('profissional_id', $profissionalId)
             ->where('data', $data)
             ->where('status', 'CHEGOU')
             ->whereNotNull('paciente_id')
             ->orderBy('hora', 'asc')
             ->get();
-
+    
         $agendasMarcado = Agenda::where('profissional_id', $profissionalId)
             ->where('data', $data)
             ->where('status', 'MARCADO')
             ->whereNotNull('paciente_id')
             ->orderBy('hora', 'asc')
             ->get();
-
+    
         $agendasEvadio = Agenda::where('profissional_id', $profissionalId)
             ->where('data', $data)
             ->where('status', 'EVADIO')
             ->whereNotNull('paciente_id')
             ->orderBy('hora', 'asc')
             ->get();
-
+    
         $agendasCancelado = Agenda::where('profissional_id', $profissionalId)
             ->where('data', $data)
             ->where('status', 'CANCELADO')
             ->whereNotNull('paciente_id')
             ->orderBy('hora', 'asc')
             ->get();
-
-        // Store form values in the session (optional, adjust based on your needs)
+    
+        // Store form values in the session
         session(['data' => $data]);
-    } else {
-        // Clear session data if no filter is applied (optional)
-        session()->forget('data');
+    
+        return view('agenda.agendamedica', compact('agendasMarcado', 'agendasEvadio', 'agendasCancelado', 'agendasChegou', 'pacientes', 'data'));
     }
-
-    return view('agenda.agendamedica', compact('agendasMarcado', 'agendasEvadio', 'agendasCancelado', 'agendasChegou', 'pacientes'));
-}
+    
 
     public function storeConsultorioPainel(Request $request)
     {
