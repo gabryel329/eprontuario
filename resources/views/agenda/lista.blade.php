@@ -127,11 +127,13 @@
                     </a>
                 </td>
                 <td>
-                    <form action="{{ route('agenda.destroy', $item->id) }}" method="POST">
+                    <form id="delete-form-{{ $item->id }}" action="{{ route('agenda.destroy', $item->id) }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger"><i class="bi bi-x-circle"></i></button>
-                    </form>
+                        <button type="submit" class="btn btn-danger" onclick="return confirmDeletion(event, '{{ $item->id }}')">
+                            <i class="bi bi-x-circle"></i>
+                        </button>
+                    </form>                    
                 </td>
                 <td>
                     <button type="button" class="btn btn-info" onclick="openEditModal('{{ $item->id }}')"><i class="bi bi-pencil-square"></i></button>
@@ -390,6 +392,19 @@
         document.getElementById('agenda-table').style.display = 'block';
 
         fetchAgenda(data, profissionalId);
+    }
+
+    function confirmDeletion(event, id) {
+        // Evita o envio automático do formulário
+        event.preventDefault();
+
+        // Pergunta ao usuário se ele realmente deseja excluir
+        if (confirm("Tem certeza de que deseja excluir este item?")) {
+            // Se o usuário confirmar, envia o formulário
+            document.getElementById('delete-form-' + id).submit();
+        }
+        // Caso contrário, não faz nada
+        return false;
     }
 </script>
 @endsection
