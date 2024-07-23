@@ -193,7 +193,7 @@ class AgendaController extends Controller
         $profissionalId = $user->profissional_id;
     
         // Check if a date is provided in the request; otherwise, use the current date
-        $data = $request->input('data', \Carbon\Carbon::now()->format('Y-m-d'));
+        $data = $request->input('data', Carbon::now()->format('Y-m-d'));
     
         // Filter agendas based on the logged-in user's linked professional ID
         $agendasChegou = Agenda::where('profissional_id', $profissionalId)
@@ -223,11 +223,18 @@ class AgendaController extends Controller
             ->whereNotNull('paciente_id')
             ->orderBy('hora', 'asc')
             ->get();
+        
+        $agendasFinalizado = Agenda::where('profissional_id', $profissionalId)
+        ->where('data', $data)
+        ->where('status', 'FINALIZADO')
+        ->whereNotNull('paciente_id')
+        ->orderBy('hora', 'asc')
+        ->get();
     
         // Store form values in the session
         session(['data' => $data]);
     
-        return view('agenda.agendamedica', compact('agendasMarcado', 'agendasEvadio', 'agendasCancelado', 'agendasChegou', 'pacientes', 'data'));
+        return view('agenda.agendamedica', compact('agendasMarcado', 'agendasEvadio', 'agendasCancelado', 'agendasChegou', 'pacientes', 'data', 'agendasFinalizado'));
     }
     
 

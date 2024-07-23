@@ -67,10 +67,11 @@
                 <div class="timeline-post">
                     <div class="col-md-12">
                         <ul class="nav nav-tabs user-tabs">
-                            <li class="nav-item"><a class="nav-link" href="#agenda-chegou" data-bs-toggle="tab">Chegou</a></li>
-                            <li class="nav-item"><a class="nav-link active" href="#agenda-marcado" data-bs-toggle="tab">Marcado</a></li>
+                            <li class="nav-item"><a class="nav-link active" href="#agenda-chegou" data-bs-toggle="tab">Chegou</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#agenda-marcado" data-bs-toggle="tab">Marcado</a></li>
                             <li class="nav-item"><a class="nav-link" href="#agenda-evadio" data-bs-toggle="tab">Evadio</a></li>
                             <li class="nav-item"><a class="nav-link" href="#agenda-cancelado" data-bs-toggle="tab">Cancelado</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#agenda-finalizado" data-bs-toggle="tab">Finalizado</a></li>
                         </ul>
                     </div>
                     <div class="tab-content">
@@ -78,8 +79,9 @@
                             <table class="table table-striped" style="text-align: center">
                                 <thead>
                                     <tr>
+                                        <th>Cód.</th>
                                         <th>Hora</th>
-                                        <th>Nome</th>
+                                        <th>Paciente</th>
                                         <th>Consulta</th>
                                         <th>Chamar</th>
                                         <th>Atender</th>
@@ -88,25 +90,25 @@
                                 <tbody>
                                     @foreach ($agendasChegou as $item)
                                         <tr>
-                                            <td hidden>{{ $item->id }}</td>
-                                            <td hidden>{{ $item->paciente_id }}</td>
-                                            <td>{{ $item->hora }}</td>
-                                            <td>{{ $item->name }}</td>
-                                            <td title="{{ $item->procedimento_id }}">{{ $item->procedimento_id }}</td>
-                                            <td>
-                                                <a type="submit" class="btn btn-warning form-control chamar-btn"
-                                                    data-paciente-id="{{ $item->paciente_id }}"
-                                                    data-agenda-id="{{ $item->id }}"
-                                                    data-paciente-name="{{ $item->name }}">
-                                                    <i class="bi bi-volume-up"></i>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a type="button"
-                                                    href="{{ route('atendimento.index', [$item->id, $item->paciente_id]) }}"
-                                                    class="btn btn-info form-control"><i
-                                                        class="bi bi-file-earmark-text"></i></a>
-                                            </td>
+                                            <tr>
+                                                <td>{{ $item->id }}</td>
+                                                <td>{{ $item->hora }}</td>
+                                                <td>{{ $item->paciente->name }}</td>
+                                                <td title="{{ $item->procedimento_id }}">{{ $item->procedimento_id }}</td>
+                                                <td>
+                                                    <a type="submit" class="btn btn-warning form-control chamar-btn"
+                                                        data-paciente-id="{{ $item->paciente_id }}"
+                                                        data-agenda-id="{{ $item->id }}"
+                                                        data-paciente-name="{{ $item->name }}">
+                                                        <i class="bi bi-volume-up"></i>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a type="button"
+                                                        href="{{ route('atendimento.index', [$item->id, $item->paciente_id]) }}"
+                                                        class="btn btn-info form-control"><i
+                                                            class="bi bi-file-earmark-text"></i></a>
+                                                </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -116,18 +118,18 @@
                             <table class="table table-striped" style="text-align: center">
                                 <thead>
                                     <tr>
+                                        <th>Cód.</th>
                                         <th>Hora</th>
-                                        <th>Nome</th>
+                                        <th>Paciente</th>
                                         <th>Consulta</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($agendasMarcado as $item)
                                         <tr>
-                                            <td hidden>{{ $item->id }}</td>
-                                            <td hidden>{{ $item->paciente_id }}</td>
+                                            <td>{{ $item->id }}</td>
                                             <td>{{ $item->hora }}</td>
-                                            <td>{{ $item->name }}</td>
+                                            <td>{{ $item->paciente->name }}</td>
                                             <td title="{{ $item->procedimento_id }}">{{ $item->procedimento_id }}</td>
                                         </tr>
                                     @endforeach
@@ -138,18 +140,18 @@
                             <table class="table table-striped" style="text-align: center">
                                 <thead>
                                     <tr>
+                                        <th>Cód.</th>
                                         <th>Hora</th>
-                                        <th>Nome</th>
+                                        <th>Paciente</th>
                                         <th>Consulta</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($agendasEvadio as $item)
                                         <tr>
-                                            <td hidden>{{ $item->id }}</td>
-                                            <td hidden>{{ $item->paciente_id }}</td>
+                                            <td>{{ $item->id }}</td>
                                             <td>{{ $item->hora }}</td>
-                                            <td>{{ $item->name }}</td>
+                                            <td>{{ $item->paciente->name }}</td>
                                             <td title="{{ $item->procedimento_id }}">{{ $item->procedimento_id }}</td>
                                         </tr>
                                     @endforeach
@@ -160,18 +162,40 @@
                             <table class="table table-striped" style="text-align: center">
                                 <thead>
                                     <tr>
+                                        <th>Cód.</th>
                                         <th>Hora</th>
-                                        <th>Nome</th>
+                                        <th>Paciente</th>
                                         <th>Consulta</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($agendasCancelado as $item)
                                         <tr>
-                                            <td hidden>{{ $item->id }}</td>
-                                            <td hidden>{{ $item->paciente_id }}</td>
+                                            <td>{{ $item->id }}</td>
                                             <td>{{ $item->hora }}</td>
-                                            <td>{{ $item->name }}</td>
+                                            <td>{{ $item->paciente->name }}</td>
+                                            <td title="{{ $item->procedimento_id }}">{{ $item->procedimento_id }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tile tab-pane fade" id="agenda-finalizado">
+                            <table class="table table-striped" style="text-align: center">
+                                <thead>
+                                    <tr>
+                                        <th>Cód.</th>
+                                        <th>Hora</th>
+                                        <th>Paciente</th>
+                                        <th>Consulta</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($agendasFinalizado as $item)
+                                        <tr>
+                                            <td>{{ $item->id }}</td>
+                                            <td>{{ $item->hora }}</td>
+                                            <td>{{ $item->paciente->name }}</td>
                                             <td title="{{ $item->procedimento_id }}">{{ $item->procedimento_id }}</td>
                                         </tr>
                                     @endforeach

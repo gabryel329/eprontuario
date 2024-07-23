@@ -5,6 +5,7 @@ use App\Http\Controllers\AnamneseController;
 use App\Http\Controllers\AtendimentosController;
 use App\Http\Controllers\EmpresasController;
 use App\Http\Controllers\EspecialidadeController;
+use App\Http\Controllers\GenerateIAController;
 use App\Http\Controllers\PacientesController;
 use App\Http\Controllers\PainelController;
 use App\Http\Controllers\PermisoesController;
@@ -122,7 +123,11 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::post('/exames/store', [AtendimentosController::class, 'storeExame'])->name('exames.store');
     Route::get('/exames/{agenda_id}/{paciente_id}', [AtendimentosController::class, 'verificarExame']);
 
+    #Formularios
     Route::post('/ficha', [AtendimentosController::class, 'ficha_atendimento'])->name('ficha');
+    Route::post('/fichaAtendimento', [AtendimentosController::class, 'processarFormulario']);
+    Route::get('/fichaAtendimento', [AtendimentosController::class, 'mostrarFicha2']);
+
 
     #Consultorio
 
@@ -130,6 +135,11 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::get('/consultorio', [PainelController::class, 'index'])->name('painelConsultorio.index');
     Route::get('/painel/ultimo-registro-atualizado', [PainelController::class, 'getUltimoRegistroAtualizado']);
     Route::get('/main', [PainelController::class, 'showMain']);
+
+    #GenerateIA
+    Route::POST('/generate-ia',  [GenerateIAController::class, 'index'])->name('generateIA.index');
+
+
 
     #SalaVerificação
 

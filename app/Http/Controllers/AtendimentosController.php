@@ -32,24 +32,10 @@ class AtendimentosController extends Controller
         $historico = DB::table('agendas as ag')
             ->join('pacientes as pa', 'ag.paciente_id', '=', 'pa.id')
             ->join('profissionals as pro', 'ag.profissional_id', '=', 'pro.id')
-            ->join('procedimentos as prc', 'ag.procedimento_id', '=', 'prc.procedimento')
-            
-            ->leftJoin('anamneses as an', function ($join) {
-                $join->on('an.paciente_id', '=', 'pa.id')
-                    ->on(DB::raw('DATE(an.created_at)'), '=', 'ag.data');
-            })
-            ->leftJoin('atendimentos as at', function ($join) {
-                $join->on('at.paciente_id', '=', 'pa.id')
-                    ->on(DB::raw('DATE(at.created_at)'), '=', 'ag.data');
-            })
-            ->leftJoin('exames as ex', function ($join) {
-                $join->on('ex.paciente_id', '=', 'pa.id')
-                    ->on(DB::raw('DATE(ex.created_at)'), '=', 'ag.data');
-            })
-            ->leftJoin('remedios as re', function ($join) {
-                $join->on('re.paciente_id', '=', 'pa.id')
-                    ->on(DB::raw('DATE(re.created_at)'), '=', 'ag.data');
-            })
+            ->leftJoin('anamneses as an', 'an.agenda_id', '=', 'ag.id')
+            ->leftJoin('atendimentos as at', 'at.agenda_id', '=', 'ag.id')
+            ->leftJoin('exames as ex', 'ex.agenda_id', '=', 'ag.id')
+            ->leftJoin('remedios as re', 're.agenda_id', '=', 'ag.id')
             ->leftJoin('procedimentos as proc2', 'ex.procedimento_id', '=', 'proc2.id')
             ->leftJoin('medicamentos as med', 're.medicamento_id', '=', 'med.id')
             ->select(
@@ -57,9 +43,6 @@ class AtendimentosController extends Controller
                 'pa.id as paciente_id',
                 DB::raw('STRING_AGG(DISTINCT proc2.procedimento::text, \',\') as procedimentos'),
                 DB::raw('STRING_AGG(DISTINCT med.nome::text, \',\') as medicamentos'),
-                DB::raw('STRING_AGG(DISTINCT an.id::text, \',\') as anamneses_ids'),
-                DB::raw('STRING_AGG(DISTINCT at.id::text, \',\') as atendimentos_ids'),
-                DB::raw('STRING_AGG(DISTINCT ex.id::text, \',\') as exames_ids'),
                 DB::raw('STRING_AGG(DISTINCT re.dose::text, \',\') as dose'),
                 DB::raw('STRING_AGG(DISTINCT re.horas::text, \',\') as horas'),
                 'pro.name as an_profissional_id',
@@ -488,4 +471,32 @@ class AtendimentosController extends Controller
         // Retorne a view 'ficha' passando os dados
         return view('atendimentos.ficha')->with('dadosFormulario', $dadosFormulario);
     }
+
+    public function processarFormulario(Request $request)
+    {
+        // Supondo que você tenha o ID da agenda para atualizar
+        $agendaId = $request->input('agenda_id'); // Certifique-se de que o ID da agenda está sendo enviado no formulário
+        
+        // Atualiza o status na tabela agendas
+        DB::table('agendas')
+            ->where('id', $agendaId)
+            ->update(['status' => 'FINALIZADO']);
+        
+        // Salva os dados na sessão
+        $request->session()->put('dadosFormulario', $request->all());
+
+        // Retorna uma resposta JSON indicando sucesso
+        return response()->json(['success' => true]);
+    }
+    public function mostrarFicha2(Request $request)
+    {
+        // Recupera os dados da sessão
+        $dadosFormulario = $request->session()->get('dadosFormulario', []);
+    
+        // Retorna a view com os dados
+        return view('atendimentos.fichaAtendimento', ['dadosFormulario' => $dadosFormulario]);
+    }
+    
+
+    
 }
