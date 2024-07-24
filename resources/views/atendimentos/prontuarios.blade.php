@@ -136,7 +136,7 @@
                                                                 aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <form id="responseIA" action="{{ route('ficha') }}" method="POST">
+                                                            <form id="responseIA" action="{{ route('ficha') }}" method="POST" target="_blank">
                                                                 @csrf
                                                                 <input type="hidden" name="mae" value="{{ $historico->mae }}">
                                                                 <input type="hidden" name="genero" value="{{ $historico->genero }}">
