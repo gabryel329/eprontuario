@@ -128,7 +128,7 @@
                 </td>
                 <td>
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}">
-                        Excluir
+                        <i class="bi bi-trash"></i>
                     </button>                    
                 </td>
                 <td>

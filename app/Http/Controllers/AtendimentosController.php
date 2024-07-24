@@ -496,7 +496,60 @@ class AtendimentosController extends Controller
         // Retorna a view com os dados
         return view('atendimentos.fichaAtendimento', ['dadosFormulario' => $dadosFormulario]);
     }
-    
 
+    // YourController.php
+    public function solicitacoes(Request $request)
+    {
+        $selectedOption = $request->input('selectedOption');
+        $pacienteId = $request->input('paciente_id');
+        $agendaId = $request->input('agenda_id');
+        $profissionalId = $request->input('profissional_id');
     
+        // Determine the redirect URL based on the selected option
+        $redirectUrl = '';
+        switch ($selectedOption) {
+            case 'atestado':
+                $redirectUrl = route('formulario.atestado', [
+                    'paciente_id' => $pacienteId,
+                    'agenda_id' => $agendaId,
+                    'profissional_id' => $profissionalId
+                ]);
+                break;
+            case 'receita':
+                $redirectUrl = route('formulario.receita', [
+                    'paciente_id' => $pacienteId,
+                    'agenda_id' => $agendaId,
+                    'profissional_id' => $profissionalId
+                ]);
+                break;
+            case 'solicitacao_exame':
+                $redirectUrl = route('formulario.exame', [
+                    'paciente_id' => $pacienteId,
+                    'agenda_id' => $agendaId,
+                    'profissional_id' => $profissionalId
+                ]);
+                break;
+        }
+    
+        return response()->json(['redirect_url' => $redirectUrl]);
+    }
+
+    public function atestadoView($paciente_id, $agenda_id, $profissional_id)
+    {
+        // Lógica para a view de Atestado
+        return view('formulario.atestado', compact('paciente_id', 'agenda_id', 'profissional_id'));
+    }
+
+    public function receitaView($paciente_id, $agenda_id, $profissional_id)
+    {
+        // Lógica para a view de Receita
+        return view('formulario.receita', compact('paciente_id', 'agenda_id', 'profissional_id'));
+    }
+
+    public function exameView($paciente_id, $agenda_id, $profissional_id)
+    {
+        // Lógica para a view de Exame
+        return view('formulario.exame', compact('paciente_id', 'agenda_id', 'profissional_id'));
+    }
+
 }

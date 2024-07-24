@@ -18,8 +18,7 @@
     </style>
 </head>
 <body>
-    @foreach ($users as $user)
-        <h3>{{ $user['nome'] }}</h3>
+        <h3></h3>
         <table>
             <tr>
                 <td colspan="2">
@@ -53,6 +52,5 @@
                 <td>DATA: <input type="date" name="data_paciente"></td>
             </tr>
         </table>
-    @endforeach
 </body>
 </html>

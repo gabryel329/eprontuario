@@ -242,7 +242,7 @@
                                         <li class="nav-item"><a class="nav-link" href="#atendimento-evolucao"
                                                 data-bs-toggle="tab">Evolução</a></li>
                                         <li class="nav-item"><a class="nav-link" href="#atendimento-atestado"
-                                                data-bs-toggle="tab">Atestato</a></li>
+                                                data-bs-toggle="tab">Solicitações</a></li>
                                         <li class="nav-item"><a class="nav-link" href="#atendimento-condicao"
                                                 data-bs-toggle="tab">Condição Fisica</a></li>
                                     </ul>
@@ -280,10 +280,33 @@
                                             </div>
                                             <div class="tab-pane fade" id="atendimento-atestado">
                                                 <div class="timeline-post">
-                                                    <h4 class="line-head">Atestado</h4>
-                                                    <div class="row mb-12">
-                                                        <div class="col-md-12">
-                                                            <textarea class="form-control" rows="15" id="atestado" name="atestado"></textarea>
+                                                    <h4 class="line-head">Solicitações</h4>
+                                                    <div class="row">
+                                                        <input class="form-control" id="paciente_id" name="paciente_id" type="text" value="{{ $agenda->paciente_id }}" hidden>
+                                                        <input class="form-control" id="agenda_id" name="agenda_id" type="text" value="{{ $agenda->id }}" hidden>
+                                                        <input class="form-control" id="profissional_id" name="profissional_id" type="text" value="{{ $agenda->profissional_id }}" hidden>
+                                                        <div class="col-md-12 d-flex justify-content-between align-items-end">
+                                                            <div>
+                                                                <div class="form-check mb-2">
+                                                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="atestado">
+                                                                    <label class="form-check-label" for="flexRadioDefault1">
+                                                                        Atestado
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check mb-2">
+                                                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="receita">
+                                                                    <label class="form-check-label" for="flexRadioDefault2">
+                                                                        Receita
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check mb-2">
+                                                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" value="solicitacao_exame">
+                                                                    <label class="form-check-label" for="flexRadioDefault3">
+                                                                        Solicitação de Exame
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <button type="button" class="btn btn-primary" title="Imprimir" id="enviarAtes"><i class="bi bi-printer"></i></button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -300,7 +323,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <hr>
                                     <div class="tile-footer">
                                         @if ($agenda->status === 'FINALIZADO')
                                             <button class="btn btn-danger" type="button" id="saveButton" disabled><i
@@ -370,11 +392,13 @@
                                                 </div>
                                                 <div class="tile-footer">
                                                     @if ($agenda->status === 'FINALIZADO')
-                                                        <button class="btn btn-danger" id="saveExameButton" type="submit" disabled>
+                                                        <button class="btn btn-danger" id="saveExameButton"
+                                                            type="submit" disabled>
                                                             <i class="bi bi-check-circle-fill me-2"></i>Salvar/Atualizar
                                                         </button>
                                                     @else
-                                                        <button class="btn btn-danger" id="saveExameButton" type="submit">
+                                                        <button class="btn btn-danger" id="saveExameButton"
+                                                            type="submit">
                                                             <i class="bi bi-check-circle-fill me-2"></i>Salvar/Atualizar
                                                         </button>
                                                     @endif
@@ -440,8 +464,8 @@
                                                                 class="bi bi-check-circle-fill me-2"></i>Salvar/Atualizar</button>
                                                     @else
                                                         <button class="btn btn-danger" id="saveRemedioButton"
-                                                        type="button"><i
-                                                            class="bi bi-check-circle-fill me-2"></i>Salvar/Atualizar</button>
+                                                            type="button"><i
+                                                                class="bi bi-check-circle-fill me-2"></i>Salvar/Atualizar</button>
                                                     @endif
                                                 </div>
                                             </form>
@@ -663,9 +687,9 @@
                                                                         <li class="nav-item"><a class="nav-link"
                                                                                 href="#historico-evolucao-{{ $index }}"
                                                                                 data-bs-toggle="tab">Evolução</a></li>
-                                                                        <li class="nav-item"><a class="nav-link"
+                                                                        {{-- <li class="nav-item"><a class="nav-link"
                                                                                 href="#historico-atestado-{{ $index }}"
-                                                                                data-bs-toggle="tab">Atestado</a></li>
+                                                                                data-bs-toggle="tab">Solicitações</a></li> --}}
                                                                         <li class="nav-item"><a class="nav-link"
                                                                                 href="#historico-condicao-{{ $index }}"
                                                                                 data-bs-toggle="tab">Condição Fisica</a>
@@ -696,17 +720,17 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="tab-pane fade"
+                                                                        {{-- <div class="tab-pane fade"
                                                                             id="historico-atestado-{{ $index }}">
                                                                             <div class="timeline-post">
-                                                                                <h4 class="line-head">Atestado</h4>
+                                                                                <h4 class="line-head">Solicitações</h4>
                                                                                 <div class="row mb-12">
                                                                                     <div class="col-md-12">
                                                                                         <textarea class="form-control" rows="15" id="atestado" name="atestado" readonly>{{ $registro->at_atestado }}</textarea>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
+                                                                        </div> --}}
                                                                         <div class="tab-pane fade"
                                                                             id="historico-condicao-{{ $index }}">
                                                                             <div class="timeline-post">
@@ -1243,6 +1267,35 @@
 
                 // Fecha o modal
                 $('#confirmModal').modal('hide');
+            });
+        });
+
+        document.getElementById('enviarAtes').addEventListener('click', function() {
+            // Capture the selected radio button value
+            let selectedOption = document.querySelector('input[name="flexRadioDefault"]:checked').value;
+            
+            let paciente_id = document.getElementById('paciente_id').value;
+            let agenda_id = document.getElementById('agenda_id').value;
+            let profissional_id = document.getElementById('profissional_id').value;
+            
+            // AJAX request
+            $.ajax({
+                url: '/solicitacoes', // Your route here
+                type: 'POST',
+                data: {
+                    selectedOption: selectedOption,
+                    paciente_id: paciente_id,
+                    agenda_id: agenda_id,
+                    profissional_id: profissional_id,
+                    _token: '{{ csrf_token() }}' // Include CSRF token
+                },
+                success: function(response) {
+                    // Open the new view in another tab
+                    window.open(response.redirect_url, '_blank');
+                },
+                error: function(xhr) {
+                    console.log(xhr.responseText);
+                }
             });
         });
     </script>

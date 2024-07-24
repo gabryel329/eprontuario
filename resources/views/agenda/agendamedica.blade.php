@@ -75,7 +75,7 @@
                         </ul>
                     </div>
                     <div class="tab-content">
-                        <div class="tile tab-pane fade" id="agenda-chegou">
+                        <div class="tile tab-pane active" id="agenda-chegou">
                             <table class="table table-striped" style="text-align: center">
                                 <thead>
                                     <tr>
@@ -114,7 +114,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="tile tab-pane active" id="agenda-marcado">
+                        <div class="tile tab-pane fade" id="agenda-marcado">
                             <table class="table table-striped" style="text-align: center">
                                 <thead>
                                     <tr>
