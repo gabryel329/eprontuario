@@ -101,8 +101,7 @@
                     </div>
                     <div class="mb-3 col-md-4 hidden" id="campo_especialidade">
                         <label class="form-label">Especialidades</label>
-                        <select class="form-control" id="especialidade_id" name="especialidade_id">
-                            <option disabled selected value="" style="font-size:18px;color: black;">Escolha</option>
+                        <select class="form-control" id="especialidade_id" name="especialidade_id[]" multiple="multiple" style="width: 100%;">
                             @foreach ($especialidades as $especialidade)
                                 <option value="{{ $especialidade->id }}">{{ $especialidade->especialidade }}</option>
                             @endforeach

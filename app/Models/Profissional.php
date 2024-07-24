@@ -78,4 +78,9 @@ class Profissional extends Model
     {
         return $this->hasMany(Procedimentos::class, 'agenda_id');
     }
+    public function especialidades()
+    {
+        return $this->belongsToMany(Especialidade::class, 'especialidade_profissional');
+    }
+
 }

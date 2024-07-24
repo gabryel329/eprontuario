@@ -30,8 +30,9 @@
                         <table class="table table-hover table-bordered" id="sampleTable">
                             <thead>
                                 <tr>
+                                    <th>#</th>
                                     <th>Nome</th>
-                                    <th>Especialidade</th>
+                                    <th>Tipo de Profissional</th>
                                     <th>E-mail</th>
                                     <th>Editar</th>
                                     <th>Deletar</th>
@@ -40,8 +41,9 @@
                             <tbody>
                                 @foreach ($profissioanls as $item)
                                     <tr>
+                                        <td>{{ $item->id }}</td>
                                         <td>{{ $item->name }}</td>
-                                        <td>{{ optional($item->especialidade)->especialidade }}</td>
+                                        <td>{{ $item->tipoprof->nome }}</td>
                                         <td>{{ $item->email }}</td>
                                         <td>
                                             <div>
@@ -113,9 +115,10 @@
                                                             <div class="mb-3 col-md-4">
                                                                 <label class="form-label">Tipo de Profissional</label>
                                                                 <select class="form-control" name="tipoprof_id" onchange="mostrarCamposEspecificos()">
-                                                                    <option disabled selected value="" style="font-size:18px;color: black;"></option>
                                                                     @foreach ($tipoprof as $tipo)
-                                                                        <option value="{{ $tipo->id }}" data-conselho="{{ $tipo->conselho }}">{{ $tipo->nome }}</option>
+                                                                        <option value="{{ $tipo->id }}" {{ $item->tipoprof_id == $tipo->id ? 'selected' : '' }} data-conselho="{{ $tipo->conselho }}">
+                                                                            {{ $tipo->nome }}
+                                                                        </option>
                                                                     @endforeach
                                                                 </select>                                                                
                                                             </div>
@@ -124,15 +127,18 @@
                                                                 <input type="text" name="conselho" class="form-control" id="input_conselho" value="{{ old('conselho', $item->conselho) }}" placeholder="">
                                                                 <div class="invalid-feedback">Por favor, preencha o campo Conselho.</div>
                                                             </div>
-                                                            <div class="mb-3 col-md-4 hidden" id="campo_especialidade">
+                                                            <div class="mb-3 col-md-4">
                                                                 <label class="form-label">Especialidades</label>
-                                                                <select class="form-control" name="especialidade_id">
-                                                                    <option disabled selected value="" style="font-size:18px;color: black;"></option>
+                                                                <select class="form-control select3" name="especialidade_id[]" multiple="multiple" style="width: 100%;">
+                                                                    <option disabled value="" style="font-size:18px;color: black;"></option>
                                                                     @foreach ($especialidades as $especialidade)
-                                                                        <option value="{{ $especialidade->id }}" {{ old('especialidade_id', $item->especialidade_id) == $especialidade->id ? 'selected' : '' }}>{{ $especialidade->especialidade }}</option>
+                                                                        <option value="{{ $especialidade->id }}" 
+                                                                            {{ in_array($especialidade->id, old('especialidade_id', $item->especialidades->pluck('id')->toArray())) ? 'selected' : '' }}>
+                                                                            {{ $especialidade->especialidade }}
+                                                                        </option>
                                                                     @endforeach
                                                                 </select>
-                                                            </div>
+                                                            </div>                                                   
                                                         </div>
                                                         <div class="row" id="campos_comuns">
                                                             <div class="mb-3 col-md-3">

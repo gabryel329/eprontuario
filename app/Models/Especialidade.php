@@ -17,4 +17,8 @@ class Especialidade extends Model
     {
         return $this->hasMany(Profissional::class, 'especialidade_id');
     }
+    public function profissionais()
+    {
+        return $this->belongsToMany(Profissional::class, 'especialidade_profissional');
+    }
 }

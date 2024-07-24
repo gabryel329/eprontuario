@@ -140,6 +140,8 @@
                                                                 <input type="hidden" name="consulta" value="{{ $historico->consulta }}">
                                                                 <input type="hidden" name="cpf" value="{{ $historico->cpf }}">
                                                                 <input type="hidden" name="nasc" value="{{ $historico->nasc }}">
+                                                                <input type="hidden" name="mae" value="{{ $historico->mae }}">
+                                                                <input type="hidden" name="genero" value="{{ $historico->genero }}">
                                                             <div class="row user">
                                                                 <div class="col-md-12">
                                                                     <ul class="nav nav-tabs user-tabs">

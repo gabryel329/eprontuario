@@ -61,7 +61,7 @@ class ProfissionalController extends Controller
         $cor = $request->input('cor');
         $imagem = $request->file('imagem');
         $permisoes_id = $request->input('permisoes_id');
-        $especialidade_id = $request->input('especialidade_id');
+        $especialidade_ids = $request->input('especialidade_id'); // Este é agora um array de IDs de especialidade
         $tipoprof_id = $request->input('tipoprof_id');
         $conselho = $request->input('conselho');
         $cep = $request->input('cep');
@@ -111,7 +111,6 @@ class ProfissionalController extends Controller
                 'cor' => $cor,
                 'imagem' => $imageName,
                 'permisoes_id' => $permisoes_id,
-                'especialidade_id' => $especialidade_id,
                 'conselho' => $conselho,
                 'tipoprof_id' => $tipoprof_id,
                 'cep' => $cep,
@@ -124,6 +123,9 @@ class ProfissionalController extends Controller
                 'telefone' => $telefone,
                 'celular' => $celular,
             ]);
+
+            // Attach especialidades
+            $profissional->especialidades()->attach($especialidade_ids);
         } else {
             // Se nenhuma imagem foi enviada, crie o produto sem o campo de imagem
             $profissional = Profissional::create([
@@ -136,7 +138,6 @@ class ProfissionalController extends Controller
                 'rg' => $rg,
                 'cor' => $cor,
                 'permisoes_id' => $permisoes_id,
-                'especialidade_id' => $especialidade_id,
                 'conselho' => $conselho,
                 'tipoprof_id' => $tipoprof_id,
                 'cep' => $cep,
@@ -149,6 +150,9 @@ class ProfissionalController extends Controller
                 'telefone' => $telefone,
                 'celular' => $celular,
             ]);
+
+            // Attach especialidades
+            $profissional->especialidades()->attach($especialidade_ids);
         }
 
         // Retrieve the company data, including the logo, after it has been saved
@@ -184,90 +188,116 @@ class ProfissionalController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-    {
-        // Find the user by ID
-        $profissional = Profissional::findOrFail($id);
+{
+    // Capitalize the input
+    $nome = ucfirst($request->input('name'));
+    $sobrenome = ucfirst($request->input('sobrenome'));
 
-        // Capitalize the input
-        $nome = ucfirst($request->input('name'));
-        $sobrenome = ucfirst($request->input('sobrenome'));
+    // Get the other inputs
+    $email = $request->input('email');
+    $nasc = $request->input('nasc');
+    $cpf = $request->input('cpf');
+    $genero = $request->input('genero');
+    $rg = $request->input('rg');
+    $cor = $request->input('cor');
+    $imagem = $request->file('imagem');
+    $permisoes_id = $request->input('permisoes_id');
+    $especialidade_ids = $request->input('especialidade_id'); // Este é agora um array de IDs de especialidade
+    $tipoprof_id = $request->input('tipoprof_id');
+    $conselho = $request->input('conselho');
+    $cep = $request->input('cep');
+    $rua = $request->input('rua');
+    $bairro = $request->input('bairro');
+    $cidade = $request->input('cidade');
+    $uf = $request->input('uf');
+    $numero = $request->input('numero');
+    $complemento = $request->input('complemento');
+    $telefone = $request->input('telefone');
+    $celular = $request->input('celular');
 
-        // Get the other inputs
-        $email = $request->input('email');
-        $nasc = $request->input('nasc');
-        $cpf = $request->input('cpf');
-        $genero = $request->input('genero');
-        $rg = $request->input('rg');
-        $cor = $request->input('cor');
-        $imagem = $request->file('imagem');
-        $permisoes_id = $request->input('permisoes_id');
-        $especialidade_id = $request->input('especialidade_id');
-        $conselho = $request->input('conselho');
-        $tipoprof_id = $request->input('tipoprof_id');
-        $cep = $request->input('cep');
-        $rua = $request->input('rua');
-        $bairro = $request->input('bairro');
-        $cidade = $request->input('cidade');
-        $uf = $request->input('uf');
-        $numero = $request->input('numero');
-        $complemento = $request->input('complemento');
-        $telefone = $request->input('telefone');
-        $celular = $request->input('celular');
-        $cor = $request->input('cor');
-        $rg = $request->input('rg');
-        $conselho = $request->input('conselho');
-        $tipoprof_id = $request->input('tipoprof_id');
+    // Check if the user already exists
+    $existeProfissional = Profissional::where('cpf', $cpf)->where('id', '!=', $id)->first();
 
-        if ($imagem && $imagem->isValid()) {
-            $filenameWithExt = $imagem->getClientOriginalName();
-            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            $extension = $imagem->getClientOriginalExtension();
-            $imageName = $filename . '.' . $extension;
-
-            // Upload Image to the 'public/images/' directory
-            $imagem->move(public_path('images/'), $imageName);
-
-            // Remove the old image if exists
-            if ($profissional->imagem && file_exists(public_path('images/') . $profissional->imagem)) {
-                unlink(public_path('images/') . $profissional->imagem);
-            }
-
-            // Update the user with the new image
-            $profissional->imagem = $imageName;
-        }
-
-        // Update user attributes
-        $profissional->name = $nome;
-        $profissional->sobrenome = $sobrenome;
-        $profissional->email = $email;
-        $profissional->nasc = $nasc;
-        $profissional->cpf = $cpf;
-        $profissional->genero = $genero;
-        $profissional->rg = $rg;
-        $profissional->cor = $cor;
-        $profissional->permisoes_id = $permisoes_id;
-        $profissional->especialidade_id = $especialidade_id;
-        $profissional->conselho = $conselho;
-        $profissional->tipoprof_id = $tipoprof_id;
-        $profissional->cep = $cep;
-        $profissional->rua = $rua;
-        $profissional->bairro = $bairro;
-        $profissional->cidade = $cidade;
-        $profissional->uf = $uf;
-        $profissional->numero = $numero;
-        $profissional->complemento = $complemento;
-        $profissional->telefone = $telefone;
-        $profissional->celular = $celular;
-        $profissional->cor = $cor;
-        $profissional->rg = $rg;
-        $profissional->tipoprof_id = $tipoprof_id;
-        $profissional->conselho = $conselho;
-
-        // Save the updated user data
-        $profissional->save();
-
-        return redirect()->back()->with('success', 'Profissional atualizado com sucesso')->with('profissional', $profissional);
+    if ($existeProfissional) {
+        return redirect()->route('profissional.index')->with('error', 'Outro profissional com este CPF já existe!');
     }
+
+    $existeEmail = Profissional::where('email', $email)->where('id', '!=', $id)->first();
+
+    if ($existeEmail) {
+        return redirect()->route('profissional.index')->with('error', 'Outro profissional com este email já existe!');
+    }
+
+    $profissional = Profissional::findOrFail($id);
+
+    if ($imagem && $imagem->isValid()) {
+        $filenameWithExt = $imagem->getClientOriginalName();
+        // Get just filename
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        // Get just ext
+        $extension = $imagem->getClientOriginalExtension();
+        // Filename to store
+        $imageName = $filename . '.' . $extension;
+
+        // Upload Image to the 'public/images/' directory
+        $imagem->move(public_path('images/'), $imageName);
+
+        // Update the user
+        $profissional->update([
+            'name' => $nome,
+            'sobrenome' => $sobrenome,
+            'email' => $email,
+            'nasc' => $nasc,
+            'cpf' => $cpf,
+            'genero' => $genero,
+            'rg' => $rg,
+            'cor' => $cor,
+            'imagem' => $imageName,
+            'permisoes_id' => $permisoes_id,
+            'conselho' => $conselho,
+            'tipoprof_id' => $tipoprof_id,
+            'cep' => $cep,
+            'rua' => $rua,
+            'bairro' => $bairro,
+            'cidade' => $cidade,
+            'uf' => $uf,
+            'numero' => $numero,
+            'complemento' => $complemento,
+            'telefone' => $telefone,
+            'celular' => $celular,
+        ]);
+    } else {
+        // Update the user without the image
+        $profissional->update([
+            'name' => $nome,
+            'sobrenome' => $sobrenome,
+            'email' => $email,
+            'nasc' => $nasc,
+            'cpf' => $cpf,
+            'genero' => $genero,
+            'rg' => $rg,
+            'cor' => $cor,
+            'permisoes_id' => $permisoes_id,
+            'conselho' => $conselho,
+            'tipoprof_id' => $tipoprof_id,
+            'cep' => $cep,
+            'rua' => $rua,
+            'bairro' => $bairro,
+            'cidade' => $cidade,
+            'uf' => $uf,
+            'numero' => $numero,
+            'complemento' => $complemento,
+            'telefone' => $telefone,
+            'celular' => $celular,
+        ]);
+    }
+
+    // Sync especialidades
+    $profissional->especialidades()->sync($especialidade_ids);
+
+    return redirect()->route('profissional.index')->with('success', 'Profissional atualizado(a) com sucesso')->with('profissional', $profissional);
+}
+
 
     /**
      * Remove the specified resource from storage.

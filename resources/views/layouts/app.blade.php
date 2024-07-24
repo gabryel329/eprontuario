@@ -7,6 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- Select 2    --}}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/main.css') }}">
     <!-- Font-icon css-->
@@ -51,7 +53,8 @@ $currentDate = date('Y-m-d');
     <script src="{{ asset('js/main.js')}}"></script>
     <!-- Page specific javascripts-->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
-
+    <!-- JS do Select2 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script type="text/javascript">
         const salesData = {
             xAxis: {
@@ -144,7 +147,24 @@ $currentDate = date('Y-m-d');
         $('#sampleTable').DataTable();
     </script>
     <!-- Jquery Others Plugins -->
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.3/localization/messages_pt_BR.js"></script>    
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.3/localization/messages_pt_BR.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#especialidade_id').select2({
+                placeholder: "Escolha",
+                allowClear: true
+            });
+        });
+        $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: "Selecione uma ou mais especialidades",
+            tags: true, // Permite adicionar novas opções
+            tokenSeparators: [',', ' '], // Permite adicionar opções separadas por vírgula ou espaço
+            allowClear: true,
+            closeOnSelect: false
+        });
+    });
+    </script>
 </body>
 
 </html>

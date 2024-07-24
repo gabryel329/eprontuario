@@ -58,27 +58,45 @@
             .btn {
                 display: none;
             }
+            .equal-width {
+                width: 50%;
+            }
         }
     </style>
 </head>
+@php
+    use Carbon\Carbon;
+
+    $dataNascimento = isset($dadosFormulario['nasc']) ? new Carbon($dadosFormulario['nasc']) : null;
+    $idade = $dataNascimento ? $dataNascimento->age : '-';
+@endphp
 <body>
     <div class="form-container">
         <div class="form-header">
             <h2>Ficha de Atendimento</h2>
         </div>
         <table>
-            <table>
+            <table border="1" cellspacing="0" cellpadding="10">
                 <thead>
                     <tr>
-                        <td colspan="5" style="text-align: center"><strong>Dados do Paciente</strong></td>
+                        <th colspan="2" style="text-align: center"><strong>Dados do Paciente</strong></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr> 
-                        <td colspan="1">Nome do Paciente:{{ $dadosFormulario['paciente'] ?? '-' }}</td>
-                        <td colspan="1">ID do Atendimento:{{ $dadosFormulario['consulta'] ?? '-' }}</td>
-                        <td colspan="1">{{ $dadosFormulario['cpf'] ?? '-' }}</td>
-                        <td colspan="1">{{ $dadosFormulario['nasc'] ?? '-' }}</td>
+                    <tr>
+                        <td colspan="2">
+                            Nome do Paciente: {{ $dadosFormulario['paciente'] ?? '-' }}<br>
+                            CPF: {{ $dadosFormulario['cpf'] ?? '-' }}<br>
+                            Número de referência: {{ $dadosFormulario['consulta'] ?? '-' }}<br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="equal-width">Data de Nascimento: {{ $dadosFormulario['nasc'] ?? '-' }}</td>
+                        <td class="equal-width">Idade: {{ $idade }} anos</td>
+                    </tr>
+                    <tr>
+                        <td class="equal-width">Gênero: {{ $dadosFormulario['genero'] ?? '-' }}</td>
+                        <td class="equal-width">Nome da mãe: {{ $dadosFormulario['mae'] ?? '-' }}</td>
                     </tr>
                 </tbody>
             </table>
