@@ -38,6 +38,11 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Medico', 'sobrenome' => 'Souza', 'email' => 'admin@anb.com', 'conselho' => 123, 'tipoprof_id' => 1 ],
             ['name' => 'Recepcao', 'sobrenome' => 'Silva', 'email' => 'cando@gmail.com', 'conselho' => null, 'tipoprof_id' => null],
         ]);
+        
+        DB::table('profissional_especialidade')->insert([
+            ['profissional_id' => 1, 'especialidade_id' => 1],
+            ['profissional_id' => 1, 'especialidade_id' => 2],
+        ]);
 
         DB::table('users')->insert([
             [
