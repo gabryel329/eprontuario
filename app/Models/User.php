@@ -24,9 +24,9 @@ class User extends Authenticatable
         'email',
         'password',
         'profissional_id',
-        'permisao_id',
         'sobrenome',
         'imagem',
+        'permisao_id'
     ];
     protected $dates=['deleted_at'];
 
@@ -54,13 +54,12 @@ class User extends Authenticatable
         return $this->belongsTo(Profissional::class, 'profissional_id');
     }
 
-    public function permisao()
-    {
-        return $this->belongsTo(Permisoes::class, 'permisao_id');
-    }
-
     public function painel()
     {
         return $this->belongsTo(Painel::class, 'user_id');
+    }
+    public function permissoes()
+    {
+        return $this->belongsToMany(Permisoes::class, 'permissao_user', 'user_id', 'permisao_id');
     }
 }

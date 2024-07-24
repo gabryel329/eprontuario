@@ -69,6 +69,7 @@ class Kernel extends HttpKernel
         // Outros middlewares
         'check.session.expired' => \App\Http\Middleware\CheckSessionExpired::class,
         'check.question' => \App\Http\Middleware\CheckIfQuestionAsked::class,
+        'check.permission' => \App\Http\Middleware\AcessPermissao::class,
     ];
     
 }

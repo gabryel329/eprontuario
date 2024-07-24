@@ -13,9 +13,9 @@ class Permisoes extends Model
     protected $fillable=['cargo'];
     protected $dates=['deleted_at'];
 
-    public function user()
+    public function users()
     {
-        return $this->hasMany(User::class, 'permisao_id');
+        return $this->belongsToMany(User::class, 'permissao_user', 'permisao_id', 'user_id');
     }
 
     

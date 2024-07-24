@@ -44,54 +44,78 @@ class UserController extends Controller
      */
 
      public function store(Request $request)
-     {
-     
-         // Capitalize the input
-         $nome = ucfirst($request->input('name'));
-         $sobrenome = ucfirst($request->input('sobrenome'));
-     
-         // Get the other inputs
-         $email = $request->input('email');
-         $password = bcrypt($request->input('password')); // Encrypt the password
-         $profissional_id = $request->input('id');
-         $permissoes = $request->input('permisao_id');
-         $imagem = $request->file('imagem');
-     
-         if ($imagem && $imagem->isValid()) {
-             $filenameWithExt = $imagem->getClientOriginalName();
-             // Get just filename
-             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-             // Get just ext
-             $extension = $imagem->getClientOriginalExtension();
-             // Filename to store
-             $imageName = $filename . '.' . $extension;
-     
-             // Upload Image to the 'public/images/' directory
-             $imagem->move(public_path('images/'), $imageName);
-     
-             // Create a new user
-             $user = User::create([
-                 'name' => $nome,
-                 'sobrenome' => $sobrenome,
-                 'email' => $email,
-                 'password' => $password,
-                 'profissional_id' => $profissional_id,
-                 'imagem' => $imageName,
-                 'permisao_id' => $permissoes,
-             ]);
-         } else {
-             $user = User::create([
-                 'name' => $nome,
-                 'sobrenome' => $sobrenome,
-                 'email' => $email,
-                 'password' => $password,
-                 'profissional_id' => $profissional_id,
-                 'permisao_id' => $permissoes,
-             ]);
-         }
-     
-         return redirect()->route('usuario.index')->with('success', 'Usuário criado com sucesso')->with('user', $user);
-     }
+{
+    // Capitalize the input
+    $nome = ucfirst($request->input('name'));
+    $sobrenome = ucfirst($request->input('sobrenome'));
+
+    // Get the other inputs
+    $email = $request->input('email');
+    $password = bcrypt($request->input('password')); // Encrypt the password
+    $profissional_id = $request->input('id');
+    $permissoes = $request->input('permisao_id');
+    $imagem = $request->file('imagem');
+
+    // Debug: Check the type and value of permissoes
+    \Illuminate\Support\Facades\Log::debug('permissoes:', ['permissoes' => $permissoes]);
+
+    // Determine the permisao_id based on the first permissoes value
+    $permisao_id = 0; // Default value
+    if (is_array($permissoes) && !empty($permissoes)) {
+        $firstPermissao = $permissoes[0]; // Get the first permission
+        \Illuminate\Support\Facades\Log::debug('First Permissao:', ['firstPermissao' => $firstPermissao]);
+        if ($firstPermissao == 1) {
+            $permisao_id = 1;
+        } elseif ($firstPermissao == 2) {
+            $permisao_id = 2;
+        }
+    }
+
+    // Debug: Check the final value of permisao_id
+    \Illuminate\Support\Facades\Log::debug('Final permisao_id:', ['permisao_id' => $permisao_id]);
+
+    if ($imagem && $imagem->isValid()) {
+        $filenameWithExt = $imagem->getClientOriginalName();
+        // Get just filename
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        // Get just ext
+        $extension = $imagem->getClientOriginalExtension();
+        // Filename to store
+        $imageName = $filename . '.' . $extension;
+
+        // Upload Image to the 'public/images/' directory
+        $imagem->move(public_path('images/'), $imageName);
+
+        // Create a new user
+        $user = User::create([
+            'name' => $nome,
+            'sobrenome' => $sobrenome,
+            'email' => $email,
+            'permisao_id' => $permisao_id,
+            'password' => $password,
+            'profissional_id' => $profissional_id,
+            'imagem' => $imageName,
+        ]);
+    } else {
+        $user = User::create([
+            'name' => $nome,
+            'sobrenome' => $sobrenome,
+            'email' => $email,
+            'permisao_id' => $permisao_id,
+            'password' => $password,
+            'profissional_id' => $profissional_id,
+        ]);
+    }
+
+    // Attach permissions
+    $user->permissoes()->attach($permissoes);
+
+    // Retrieve the user data
+    $user = User::find($user->id);
+
+    return redirect()->route('usuario.index')->with('success', 'Usuário criado com sucesso')->with('user', $user);
+}
+
      
 
     /**
@@ -124,57 +148,50 @@ class UserController extends Controller
      */
     
      public function update(Request $request, $id)
-{
-    // Validate the request inputs, including the image size
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'sobrenome' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . $id,
-        'password' => 'nullable|string|min:8',
-        'imagem' => 'nullable|image|mimes:jpg,jpeg,png|max:204800', // Max size 200MB (204800 KB)
-    ]);
+    {
+        // Find the user by ID
+        $user = User::findOrFail($id);
 
-    // Find the user by ID
-    $user = User::findOrFail($id);
+        // Capitalize the input
+        $nome = ucfirst($request->input('name'));
+        $sobrenome = ucfirst($request->input('sobrenome'));
+        $email = $request->input('email');
+        $permissoes = $request->input('permisao_id'); // Correctly capture permisao_id
+        $password = $request->input('password') ? bcrypt($request->input('password')) : $user->password;
+        $imagem = $request->file('imagem');
 
-    // Capitalize the input
-    $nome = ucfirst($request->input('name'));
-    $sobrenome = ucfirst($request->input('sobrenome'));
-    $email = $request->input('email');
-    $permisao_id = $request->input('permisao_id'); // Correctly capture permisao_id
-    $password = $request->input('password') ? bcrypt($request->input('password')) : $user->password;
-    $imagem = $request->file('imagem');
+        if ($imagem && $imagem->isValid()) {
+            $filenameWithExt = $imagem->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $imagem->getClientOriginalExtension();
+            $imageName = $filename . '.' . $extension;
 
-    if ($imagem && $imagem->isValid()) {
-        $filenameWithExt = $imagem->getClientOriginalName();
-        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-        $extension = $imagem->getClientOriginalExtension();
-        $imageName = $filename . '.' . $extension;
+            // Upload Image to the 'public/images/' directory
+            $imagem->move(public_path('images/'), $imageName);
 
-        // Upload Image to the 'public/images/' directory
-        $imagem->move(public_path('images/'), $imageName);
+            // Remove the old image if exists
+            if ($user->imagem && file_exists(public_path('images/') . $user->imagem)) {
+                unlink(public_path('images/') . $user->imagem);
+            }
 
-        // Remove the old image if exists
-        if ($user->imagem && file_exists(public_path('images/') . $user->imagem)) {
-            unlink(public_path('images/') . $user->imagem);
+            // Update the user with the new image
+            $user->imagem = $imageName;
         }
 
-        // Update the user with the new image
-        $user->imagem = $imageName;
+        // Update user attributes
+        $user->name = $nome;
+        $user->sobrenome = $sobrenome;
+        $user->email = $email;
+        $user->password = $password;
+
+        // Save the updated user data
+        $user->save();
+
+        // Sync especialidades
+        $user->permissoes()->sync($permissoes);
+
+        return redirect()->back()->with('success', 'Usuário atualizado com sucesso')->with('user', $user);
     }
-
-    // Update user attributes
-    $user->name = $nome;
-    $user->sobrenome = $sobrenome;
-    $user->email = $email;
-    $user->password = $password;
-    $user->permisao_id = $permisao_id;
-
-    // Save the updated user data
-    $user->save();
-
-    return redirect()->back()->with('success', 'Usuário atualizado com sucesso')->with('user', $user);
-}
 
 
     //     /**

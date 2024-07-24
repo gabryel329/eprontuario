@@ -78,14 +78,21 @@
                                                                 </div>
                                                                 <div class="mb-3 col-md-3">
                                                                     <label class="form-label">Permissão</label>
-                                                                    <select class="form-control" name="permisao_id">
-                                                                        @foreach ($permissoes as $permisao)
-                                                                            <option value="{{ $permisao->id }}" {{ old('permisao_id', $p->permisao_id) == $permisao->id ? 'selected' : '' }}>
+                                                                    @foreach ($permissoes as $permisao)
+                                                                        <div class="form-check">
+                                                                            <input 
+                                                                                type="checkbox" 
+                                                                                class="form-check-input" 
+                                                                                id="permisao_{{ $permisao->id }}" 
+                                                                                name="permisao_id[]" 
+                                                                                value="{{ $permisao->id }}"
+                                                                                {{ $p->permissoes->contains($permisao->id) ? 'checked' : '' }}
+                                                                            >
+                                                                            <label class="form-check-label" for="permisao_{{ $permisao->id }}">
                                                                                 {{ $permisao->cargo }}
-                                                                            </option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                    
+                                                                            </label>
+                                                                        </div>
+                                                                    @endforeach
                                                                 </div>                                                                
                                                             </div>
                                                             <div class="row">

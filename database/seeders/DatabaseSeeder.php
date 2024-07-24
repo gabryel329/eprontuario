@@ -38,39 +38,45 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Medico', 'sobrenome' => 'Souza', 'email' => 'admin@anb.com', 'conselho' => 123, 'tipoprof_id' => 1 ],
             ['name' => 'Recepcao', 'sobrenome' => 'Silva', 'email' => 'cando@gmail.com', 'conselho' => null, 'tipoprof_id' => null],
         ]);
-        
-        DB::table('profissional_especialidade')->insert([
+
+        DB::table('especialidade_profissional')->insert([
             ['profissional_id' => 1, 'especialidade_id' => 1],
             ['profissional_id' => 1, 'especialidade_id' => 2],
         ]);
 
+        
         DB::table('users')->insert([
             [
                 'name' => 'Admin',
                 'email' => 'admin@anb.com',
-                'permisao_id' => 3,
                 'profissional_id' => 1,
                 'password' => bcrypt('12345678'),
-                'imagem' => 'LOGO_01_VERDE.png'
+                'imagem' => 'LOGO_01_VERDE.png',
+                'permisao_id' => 1,
             ],
             [
                 'name' => 'Admin1',
                 'email' => 'admin1@anb.com',
-                'permisao_id' => 1,
                 'profissional_id' => 1,
                 'password' => bcrypt('12345678'),
-                'imagem' => 'LOGO_01_VERDE.png'
+                'imagem' => 'LOGO_01_VERDE.png',
+                'permisao_id' => 1,
             ],
             [
                 'name' => 'Admin2',
                 'email' => 'admin2@anb.com',
-                'permisao_id' => 2,
                 'profissional_id' => 2,
                 'password' => bcrypt('12345678'),
-                'imagem' => 'LOGO_01_VERDE.png'
+                'imagem' => 'LOGO_01_VERDE.png',
+                'permisao_id' => 2,
             ],
         ]);
-
+        
+        DB::table('permissao_user')->insert([
+            ['user_id' => 1, 'permisao_id' => 1],
+            ['user_id' => 2, 'permisao_id' => 2],
+        ]);
+        
         DB::table('pacientes')->insert([
             [
                 'name' => 'Rafael',

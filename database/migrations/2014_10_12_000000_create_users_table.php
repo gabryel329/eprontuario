@@ -14,10 +14,16 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('sobrenome')->nullable();
             $table->string('email')->unique();
             $table->string('imagem')->nullable();
+            $table->string('permisao_id')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('sala')->nullable();
+            $table->integer('profissional_id')->nullable();
+            $table->foreign('profissional_id')->references('id')->on('profissionals')->onDelete('cascade');
+            
             $table->softDeletes();
             $table->timestamps();
         });

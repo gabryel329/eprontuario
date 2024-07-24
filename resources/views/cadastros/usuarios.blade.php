@@ -43,13 +43,12 @@
                             </div>
                             <div class="mb-3 col-md-4">
                                 <label class="form-label">Permissão:</label>
-                                <select class="form-control" id="permisao_id" name="permisao_id">
-                                    <option disabled selected style="font-size:18px;color: black;">Escolha</option>
+                                <select class="form-control select2" id="permisao_id" multiple name="permisao_id[]">
                                     @foreach ($permissoes as $item)
                                         <option value="{{ $item->id }}">{{ $item->cargo }}</option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div>                            
                         </div>
                         <div class="row">
                             <div class="mb-3 col-md-4">

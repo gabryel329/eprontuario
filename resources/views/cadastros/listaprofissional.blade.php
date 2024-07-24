@@ -43,7 +43,7 @@
                                     <tr>
                                         <td>{{ $item->id }}</td>
                                         <td>{{ $item->name }}</td>
-                                        <td>{{ $item->tipoprof->nome }}</td>
+                                        <td>{{ optional($item->tipoprof)->nome }}</td>
                                         <td>{{ $item->email }}</td>
                                         <td>
                                             <div>
@@ -91,7 +91,7 @@
                                                             </div>
                                                             <div class="mb-3 col-md-3">
                                                                 <label class="form-label">CPF</label>
-                                                                <input class="form-control" name="cpf" type="text" value="{{ old('cpf', $item->cpf) }}">
+                                                                <input class="form-control" name="cpf" type="text" value="{{ old('cpf', $item->cpf) }}" required>
                                                             </div>
                                                             <div class="mb-3 col-md-2">
                                                                 <label class="form-label">Gênero</label>
@@ -129,15 +129,21 @@
                                                             </div>
                                                             <div class="mb-3 col-md-4">
                                                                 <label class="form-label">Especialidades</label>
-                                                                <select class="form-control select3" name="especialidade_id[]" multiple="multiple" style="width: 100%;">
-                                                                    <option disabled value="" style="font-size:18px;color: black;"></option>
-                                                                    @foreach ($especialidades as $especialidade)
-                                                                        <option value="{{ $especialidade->id }}" 
-                                                                            {{ in_array($especialidade->id, old('especialidade_id', $item->especialidades->pluck('id')->toArray())) ? 'selected' : '' }}>
+                                                                @foreach ($especialidades as $especialidade)
+                                                                    <div class="form-check">
+                                                                        <input 
+                                                                            type="checkbox" 
+                                                                            class="form-check-input" 
+                                                                            id="especialidade_{{ $especialidade->id }}" 
+                                                                            name="especialidade_id[]" 
+                                                                            value="{{ $especialidade->id }}"
+                                                                            {{ $item->especialidades->contains($especialidade->id) ? 'checked' : '' }}
+                                                                        >
+                                                                        <label class="form-check-label" for="especialidade_{{ $especialidade->id }}">
                                                                             {{ $especialidade->especialidade }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                </select>
+                                                                        </label>
+                                                                    </div>
+                                                                @endforeach
                                                             </div>                                                   
                                                         </div>
                                                         <div class="row" id="campos_comuns">

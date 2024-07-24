@@ -13,6 +13,7 @@ use App\Models\Profissional;
 use App\Models\Remedio;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AtendimentosController extends Controller
@@ -369,8 +370,10 @@ class AtendimentosController extends Controller
     {
         // Recupera todos os profissionais e pacientes para o dropdown
         $profissional = Profissional::join('users', 'profissionals.id', '=', 'users.profissional_id')
-            ->where('users.permisao_id', 1)
-            ->get(['profissionals.id', 'profissionals.name']);
+        ->leftJoin('permissao_user', 'users.id', '=', 'permissao_user.user_id')
+        ->where('permissao_user.user_id', 1)
+        ->get(['profissionals.id', 'profissionals.name']);
+
         $paciente = Pacientes::all();
 
         // Filtra os parâmetros de busca da requisição
