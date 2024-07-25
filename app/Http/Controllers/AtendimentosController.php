@@ -481,37 +481,57 @@ class AtendimentosController extends Controller
 
     public function processarFormulario(Request $request)
     {
-        // Supondo que você tenha o ID da agenda para atualizar
         $agendaId = $request->input('agenda_id'); // Certifique-se de que o ID da agenda está sendo enviado no formulário
-        
+    
         // Atualiza o status na tabela agendas
         DB::table('agendas')
             ->where('id', $agendaId)
             ->update(['status' => 'FINALIZADO']);
-        
+    
         // Salva os dados na sessão
-        $request->session()->put('dadosFormulario', $request->all());
-
+        $dadosFormulario = $request->only([
+            'peso', 'altura', 'imc', 'classificacao', 'pa', 'temp', 'gestante', 'dextro', 'spo2',
+            'fc', 'fr', 'acolhimento', 'acolhimento1', 'acolhimento2', 'acolhimento3', 'acolhimento4',
+            'alergia1', 'alergia2', 'alergia3', 'anamnese', 'evolucao', 'queixas', 'condicao', 'agenda_id'
+        ]);
+    
+        // Adiciona exames e medicamentos aos dados do formulário
+        $dadosFormulario['exames'] = $request->input('exames', []);
+        $dadosFormulario['medicamentos'] = $request->input('medicamentos', []);
+    
+        $request->session()->put('dadosFormulario', $dadosFormulario);
+    
         // Retorna uma resposta JSON indicando sucesso
         return response()->json(['success' => true]);
     }
-    public function mostrarFicha2(Request $request)
-    {
-        // Recupera os dados da sessão
-        $dadosFormulario = $request->session()->get('dadosFormulario', []);
     
-        // Retorna a view com os dados
-        return view('atendimentos.fichaAtendimento', ['dadosFormulario' => $dadosFormulario]);
-    }
+    public function mostrarFicha2(Request $request)
+{
+    $empresa = Empresas::all();
+    // Recupera os dados da sessão
+    $dadosFormulario = $request->session()->get('dadosFormulario', []);
 
-    // YourController.php
+    // Retorna a view com os dados
+    return view('atendimentos.fichaAtendimento', [
+        'dadosFormulario' => $dadosFormulario,
+        'empresa' => $empresa
+    ]);
+}
+
+
     public function solicitacoes(Request $request)
     {
         $selectedOption = $request->input('selectedOption');
         $pacienteId = $request->input('paciente_id');
         $agendaId = $request->input('agenda_id');
         $profissionalId = $request->input('profissional_id');
-    
+        $dia = $request->input('dia_id');
+
+        // Debugging output
+        if (!$dia && $selectedOption === 'atestado') {
+            return response()->json(['error' => 'Missing parameter dia'], 400);
+        }
+
         // Determine the redirect URL based on the selected option
         $redirectUrl = '';
         switch ($selectedOption) {
@@ -519,7 +539,8 @@ class AtendimentosController extends Controller
                 $redirectUrl = route('formulario.atestado', [
                     'paciente_id' => $pacienteId,
                     'agenda_id' => $agendaId,
-                    'profissional_id' => $profissionalId
+                    'profissional_id' => $profissionalId,
+                    'dia' => $dia
                 ]);
                 break;
             case 'receita':
@@ -536,27 +557,111 @@ class AtendimentosController extends Controller
                     'profissional_id' => $profissionalId
                 ]);
                 break;
+            default:
+                return response()->json(['error' => 'Opção inválida'], 400);
         }
-    
+
         return response()->json(['redirect_url' => $redirectUrl]);
     }
 
-    public function atestadoView($paciente_id, $agenda_id, $profissional_id)
+    public function atestadoView($paciente_id, $agenda_id, $profissional_id, $dia, Request $request)
     {
-        // Lógica para a view de Atestado
-        return view('formulario.atestado', compact('paciente_id', 'agenda_id', 'profissional_id'));
+        $empresas = Empresas::all();
+        
+        $paciente = Pacientes::where('name', $paciente_id)->first();
+        if (!$paciente) {
+            abort(404, 'Paciente não encontrado');
+        }
+
+        $profissional = DB::table('profissionals')
+            ->select('profissionals.name', 'tp.nome as tipo', 'tp.conselho as conselho2', 'profissionals.conselho', 'e.especialidade')
+            ->join('especialidade_profissional as ep', 'ep.profissional_id', '=', 'profissionals.id')
+            ->join('tipo_profs as tp', 'tp.id', '=', 'profissionals.tipoprof_id')
+            ->leftJoin('especialidades as e', 'ep.especialidade_id', '=', 'e.id')
+            ->where('profissionals.name', $profissional_id)
+            ->first();
+
+        if (!$profissional) {
+            abort(404, 'Profissional não encontrado');
+        }
+
+        $currentDate = now()->format('Y-m-d');
+
+        return view('formulario.atestado', compact('paciente_id', 'agenda_id', 'profissional_id', 'dia', 'empresas', 'paciente', 'profissional', 'currentDate'));
     }
 
-    public function receitaView($paciente_id, $agenda_id, $profissional_id)
+    public function receitaView($paciente_id, $agenda_id, $profissional_id, Request $request)
     {
-        // Lógica para a view de Receita
-        return view('formulario.receita', compact('paciente_id', 'agenda_id', 'profissional_id'));
+        $empresas = Empresas::all();
+        
+        $paciente = Pacientes::where('name', $paciente_id)->first();
+        if (!$paciente) {
+            abort(404, 'Paciente não encontrado');
+        }
+    
+        $profissional = DB::table('profissionals')
+            ->select('profissionals.name', 'tp.nome as tipo', 'tp.conselho as conselho2', 'profissionals.conselho', 'e.especialidade')
+            ->join('especialidade_profissional as ep', 'ep.profissional_id', '=', 'profissionals.id')
+            ->join('tipo_profs as tp', 'tp.id', '=', 'profissionals.tipoprof_id')
+            ->leftJoin('especialidades as e', 'ep.especialidade_id', '=', 'e.id')
+            ->where('profissionals.name', $profissional_id)
+            ->first();
+    
+        if (!$profissional) {
+            abort(404, 'Profissional não encontrado');
+        }
+    
+        $remedios = DB::table('remedios as re')
+            ->select('med.nome as remedios', 're.dose', 're.horas')
+            ->join('medicamentos as med', 're.medicamento_id', '=', 'med.id')
+            ->join('profissionals as pro', 're.profissional_id', '=', 'pro.id')
+            ->join('pacientes as pac', 're.paciente_id', '=', 'pac.id')
+            ->join('agendas as ag', 're.agenda_id', '=', 'ag.id')
+            ->where('pro.name', $profissional_id)
+            ->where('pac.name', $paciente_id)
+            ->where('re.agenda_id', $agenda_id)
+            ->get();
+    
+        $currentDate = now()->format('Y-m-d');
+    
+        return view('formulario.receita', compact('paciente_id', 'agenda_id', 'profissional_id', 'empresas', 'paciente', 'profissional', 'currentDate', 'remedios'));
     }
+    
 
-    public function exameView($paciente_id, $agenda_id, $profissional_id)
+    public function exameView($paciente_id, $agenda_id, $profissional_id, Request $request)
     {
-        // Lógica para a view de Exame
-        return view('formulario.exame', compact('paciente_id', 'agenda_id', 'profissional_id'));
+        $empresas = Empresas::all();
+        
+        $paciente = Pacientes::where('name', $paciente_id)->first();
+        if (!$paciente) {
+            abort(404, 'Paciente não encontrado');
+        }
+    
+        $profissional = DB::table('profissionals')
+            ->select('profissionals.name', 'tp.nome as tipo', 'tp.conselho as conselho2', 'profissionals.conselho', 'e.especialidade')
+            ->join('especialidade_profissional as ep', 'ep.profissional_id', '=', 'profissionals.id')
+            ->join('tipo_profs as tp', 'tp.id', '=', 'profissionals.tipoprof_id')
+            ->leftJoin('especialidades as e', 'ep.especialidade_id', '=', 'e.id')
+            ->where('profissionals.name', $profissional_id)
+            ->first();
+    
+        if (!$profissional) {
+            abort(404, 'Profissional não encontrado');
+        }
+    
+        $exames = DB::table('exames as re')
+            ->select('proc.procedimento', 'proc.codigo')
+            ->join('procedimentos as proc', 're.procedimento_id', '=', 'proc.id')
+            ->join('profissionals as pro', 're.profissional_id', '=', 'pro.id')
+            ->join('pacientes as pac', 're.paciente_id', '=', 'pac.id')
+            ->join('agendas as ag', 're.agenda_id', '=', 'ag.id')
+            ->where('pro.name', $profissional_id)
+            ->where('pac.name', $paciente_id)
+            ->where('re.agenda_id', $agenda_id)
+            ->get();
+    
+        $currentDate = now()->format('Y-m-d');
+    
+        return view('formulario.exame', compact('paciente_id', 'agenda_id', 'profissional_id', 'empresas', 'paciente', 'profissional', 'currentDate', 'exames'));
     }
-
 }

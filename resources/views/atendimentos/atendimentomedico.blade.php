@@ -241,8 +241,6 @@
                                                 data-bs-toggle="tab">Queixa Principal</a></li>
                                         <li class="nav-item"><a class="nav-link" href="#atendimento-evolucao"
                                                 data-bs-toggle="tab">Evolução</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="#atendimento-atestado"
-                                                data-bs-toggle="tab">Solicitações</a></li>
                                         <li class="nav-item"><a class="nav-link" href="#atendimento-condicao"
                                                 data-bs-toggle="tab">Condição Fisica</a></li>
                                     </ul>
@@ -278,39 +276,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="tab-pane fade" id="atendimento-atestado">
-                                                <div class="timeline-post">
-                                                    <h4 class="line-head">Solicitações</h4>
-                                                    <div class="row">
-                                                        <input class="form-control" id="paciente_id" name="paciente_id" type="text" value="{{ $agenda->paciente_id }}" hidden>
-                                                        <input class="form-control" id="agenda_id" name="agenda_id" type="text" value="{{ $agenda->id }}" hidden>
-                                                        <input class="form-control" id="profissional_id" name="profissional_id" type="text" value="{{ $agenda->profissional_id }}" hidden>
-                                                        <div class="col-md-12 d-flex justify-content-between align-items-end">
-                                                            <div>
-                                                                <div class="form-check mb-2">
-                                                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="atestado">
-                                                                    <label class="form-check-label" for="flexRadioDefault1">
-                                                                        Atestado
-                                                                    </label>
-                                                                </div>
-                                                                <div class="form-check mb-2">
-                                                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="receita">
-                                                                    <label class="form-check-label" for="flexRadioDefault2">
-                                                                        Receita
-                                                                    </label>
-                                                                </div>
-                                                                <div class="form-check mb-2">
-                                                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" value="solicitacao_exame">
-                                                                    <label class="form-check-label" for="flexRadioDefault3">
-                                                                        Solicitação de Exame
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            <button type="button" class="btn btn-primary" title="Imprimir" id="enviarAtes"><i class="bi bi-printer"></i></button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
                                             <div class="tab-pane fade" id="atendimento-condicao">
                                                 <div class="timeline-post">
                                                     <h4 class="line-head">Condição Fisica</h4>
@@ -338,6 +303,40 @@
                         <div class="tab-pane fade" id="atendimento-prescricao">
                             <div class="timeline-post">
                                 <h4 class="line-head">Prescrição</h4>
+                                <div class="row">
+                                    <input class="form-control" id="paciente_id" name="paciente_id" type="text" value="{{ $agenda->paciente_id }}" hidden>
+                                    <input class="form-control" id="agenda_id" name="agenda_id" type="text" value="{{ $agenda->id }}" hidden>
+                                    <input class="form-control" id="profissional_id" name="profissional_id" type="text" value="{{ $agenda->profissional_id }}" hidden>
+                                
+                                    <input class="form-control" id="paciente_id1" name="paciente_id" type="text" value="{{ $agenda->paciente->name }}" hidden>
+                                    <input class="form-control" id="agenda_id1" name="agenda_id" type="text" value="{{ $agenda->id }}" hidden>
+                                    <input class="form-control" id="profissional_id1" name="profissional_id" type="text" value="{{ $agenda->profissional->name }}" hidden>
+                                    
+                                    <div class="col-md-12 d-flex justify-content-between align-items-center">
+                                        <div class="d-flex flex-row">
+                                            <div class="form-check mr-3" style="margin-right: 5px">
+                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="receita">
+                                                <label class="form-check-label" for="flexRadioDefault2">Receita</label>
+                                            </div>
+                                            <div class="form-check mr-3" style="margin-right: 5px">
+                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" value="solicitacao_exame">
+                                                <label class="form-check-label" for="flexRadioDefault3">Solicitação de Exame</label>
+                                            </div>
+                                            <div class="form-check mr-3" id="atestadoCheck" style="margin-right: 5px">
+                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="atestado">
+                                                <label class="form-check-label" for="flexRadioDefault1">Atestado</label>
+                                            </div>
+                                            <div id="diasInput" style="display: none;">
+                                                <input type="text" name="dia_id" id="dia_id" placeholder="Dias">
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-primary" title="Imprimir" id="enviarAtes">
+                                            <i class="bi bi-printer"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+
                                 <div class="col-md-12">
                                     <ul class="nav nav-tabs user-tabs">
                                         <li class="nav-item"><a class="nav-link active" href="#prescricao-exame"
@@ -370,7 +369,7 @@
                                                                 <tr class="exame-row">
                                                                     <td>
                                                                         <select class="form-control procedimento_id"
-                                                                            name="procedimento_id[]">
+                                                                            name="procedimento_id[]" id="procedimento_id">
                                                                             <option value="">Selecione o Procedimento
                                                                             </option>
                                                                             @foreach ($procedimento as $item)
@@ -429,7 +428,7 @@
                                                                 <tr class="prescricao-row">
                                                                     <td>
                                                                         <select class="form-control medicamento_id"
-                                                                            name="medicamento_id[]">
+                                                                            name="medicamento_id[]" id="medicamento_id">
                                                                             <option value="">Selecione o remédio
                                                                             </option>
                                                                             @foreach ($medicamento as $item)
@@ -440,11 +439,13 @@
                                                                     </td>
                                                                     <td>
                                                                         <input type="number" class="form-control dose"
-                                                                            name="dose[]" placeholder="Dose">
+                                                                            name="dose[]" placeholder="Dose"
+                                                                            id="dose">
                                                                     </td>
                                                                     <td>
                                                                         <input type="number" class="form-control horas"
-                                                                            name="horas[]" placeholder="Horas">
+                                                                            name="horas[]" placeholder="Horas"
+                                                                            id="horas">
                                                                     </td>
                                                                     <td>
                                                                         <button type="button"
@@ -1209,81 +1210,118 @@
         });
 
         $(document).ready(function() {
-            $('#enviarBtn').click(function() {
-                // Abre o modal
-                $('#confirmModal').modal('show');
-            });
+    $('#enviarBtn').click(function() {
+        // Abre o modal
+        $('#confirmModal').modal('show');
+    });
 
-            $('#confirmPrintBtn').click(function() {
-                // Coleta os valores dos campos do formulário
-                const dadosFormulario = {
-                    peso: $('#peso').val(),
-                    altura: $('#altura').val(),
-                    imc: $('#imc').val(),
-                    classificacao: $('#classificacao').val() || '',
-                    pa: $('#pa').val() || '',
-                    temp: $('#temp').val() || '',
-                    gestante: $('#gestante').val() || '',
-                    dextro: $('#dextro').val() || '',
-                    spo2: $('#spo2').val() || '',
-                    fc: $('#fc').val() || '',
-                    fr: $('#fr').val() || '',
-                    acolhimento: $('#acolhimento').val() || '',
-                    acolhimento1: $('#acolhimento1').val() || '',
-                    acolhimento2: $('#acolhimento2').val() || '',
-                    acolhimento3: $('#acolhimento3').val() || '',
-                    acolhimento4: $('#acolhimento4').val() || '',
-                    alergia1: $('#alergia1').val() || '',
-                    alergia2: $('#alergia2').val() || '',
-                    alergia3: $('#alergia3').val() || '',
-                    anamnese: $('#anamnese').val() || '',
-                    evolucao: $('#evolucao').val() || '',
-                    queixas: $('#queixas').val() || '',
-                    condicao: $('#condicao').val() || '',
-                    agenda_id: $('#agenda_id').val() // Inclua o ID da agenda
-                };
+    $('#confirmPrintBtn').click(function() {
+        // Coleta os valores dos campos do formulário
+        const dadosFormulario = {
+            peso: $('#peso').val(),
+            altura: $('#altura').val(),
+            imc: $('#imc').val(),
+            classificacao: $('#classificacao').val() || '',
+            pa: $('#pa').val() || '',
+            temp: $('#temp').val() || '',
+            gestante: $('#gestante').val() || '',
+            dextro: $('#dextro').val() || '',
+            spo2: $('#spo2').val() || '',
+            fc: $('#fc').val() || '',
+            fr: $('#fr').val() || '',
+            acolhimento: $('#acolhimento').val() || '',
+            acolhimento1: $('#acolhimento1').val() || '',
+            acolhimento2: $('#acolhimento2').val() || '',
+            acolhimento3: $('#acolhimento3').val() || '',
+            acolhimento4: $('#acolhimento4').val() || '',
+            alergia1: $('#alergia1').val() || '',
+            alergia2: $('#alergia2').val() || '',
+            alergia3: $('#alergia3').val() || '',
+            anamnese: $('#anamnese').val() || '',
+            evolucao: $('#evolucao').val() || '',
+            queixas: $('#queixas').val() || '',
+            condicao: $('#condicao').val() || '',
+            agenda_id: $('#agenda_id').val() // Inclua o ID da agenda
+        };
 
-                $.ajax({
-                    url: '/fichaAtendimento',
-                    type: 'POST',
-                    data: JSON.stringify(dadosFormulario),
-                    contentType: 'application/json',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            // Abre a nova página em uma nova aba
-                            window.open('/fichaAtendimento', '_blank');
-                        } else {
-                            alert('Ocorreu um erro. Tente novamente.');
-                        }
-                    },
-
-                    error: function(xhr) {
-                        alert('Ocorreu um erro. Tente novamente.');
-                    }
-                });
-
-                // Fecha o modal
-                $('#confirmModal').modal('hide');
-            });
+        // Coleta os dados dos exames
+        const exames = [];
+        $('#exame-table-body .exame-row').each(function() {
+            const procedimento_id = $(this).find('.procedimento_id').val();
+            if (procedimento_id) {
+                exames.push({ procedimento_id });
+            }
         });
+        dadosFormulario.exames = exames;
+
+        // Coleta os dados dos medicamentos
+        const medicamentos = [];
+        $('#prescricao-table-body .prescricao-row').each(function() {
+            const medicamento_id = $(this).find('.medicamento_id').val();
+            const dose = $(this).find('.dose').val();
+            const horas = $(this).find('.horas').val();
+            if (medicamento_id && dose && horas) {
+                medicamentos.push({ medicamento_id, dose, horas });
+            }
+        });
+        dadosFormulario.medicamentos = medicamentos;
+
+        $.ajax({
+            url: '/fichaAtendimento',
+            type: 'POST',
+            data: JSON.stringify(dadosFormulario),
+            contentType: 'application/json',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Abre a nova página em uma nova aba
+                    window.open('/fichaAtendimento', '_blank');
+                } else {
+                    alert('Ocorreu um erro. Tente novamente.');
+                }
+            },
+            error: function(xhr) {
+                alert('Ocorreu um erro. Tente novamente.');
+            }
+        });
+
+        // Fecha o modal
+        $('#confirmModal').modal('hide');
+    });
+});
+
 
         document.getElementById('enviarAtes').addEventListener('click', function() {
             // Capture the selected radio button value
-            let selectedOption = document.querySelector('input[name="flexRadioDefault"]:checked').value;
-            
-            let paciente_id = document.getElementById('paciente_id').value;
-            let agenda_id = document.getElementById('agenda_id').value;
-            let profissional_id = document.getElementById('profissional_id').value;
-            
+            let selectedOption = document.querySelector('input[name="flexRadioDefault"]:checked')?.value;
+            if (!selectedOption) {
+                console.error('Nenhuma opção selecionada.');
+                alert('Por favor, selecione uma opção.');
+                return;
+            }
+
+            let dia_id = document.getElementById('dia_id')?.value || '0';
+            console.log('Dia ID:', dia_id);
+
+            let paciente_id = document.getElementById('paciente_id1')?.value || '';
+            let agenda_id = document.getElementById('agenda_id1')?.value || '';
+            let profissional_id = document.getElementById('profissional_id1')?.value || '';
+
+            if (!paciente_id || !agenda_id || !profissional_id) {
+                console.error('Dados incompletos.');
+                alert('Dados incompletos. Por favor, verifique os campos.');
+                return;
+            }
+
             // AJAX request
             $.ajax({
                 url: '/solicitacoes', // Your route here
                 type: 'POST',
                 data: {
                     selectedOption: selectedOption,
+                    dia_id: dia_id,
                     paciente_id: paciente_id,
                     agenda_id: agenda_id,
                     profissional_id: profissional_id,
@@ -1298,5 +1336,17 @@
                 }
             });
         });
+
+        // Show/Hide input based on selected radio button
+        document.querySelectorAll('input[name="flexRadioDefault"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'atestado') {
+                    document.getElementById('diasInput').style.display = 'block';
+                } else {
+                    document.getElementById('diasInput').style.display = 'none';
+                }
+            });
+        });
+
     </script>
 @endsection
