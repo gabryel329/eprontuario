@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Agenda;
 use App\Models\Anamnese;
 use App\Models\Atendimentos;
+use App\Models\Empresas;
 use App\Models\Exames;
 use App\Models\Medicamento;
 use App\Models\Pacientes;
@@ -466,13 +467,16 @@ class AtendimentosController extends Controller
         return view('atendimentos.prontuarios', compact('profissional', 'paciente', 'historico'));
     }
 
-    public function ficha_atendimento(Request $request){
-
+    public function ficha_atendimento(Request $request)
+    {
         // Obtenha todos os dados do formulário
         $dadosFormulario = $request->all();
         
-        // Retorne a view 'ficha' passando os dados
-        return view('atendimentos.ficha')->with('dadosFormulario', $dadosFormulario);
+        // Obtenha todos os dados das empresas
+        $empresa = Empresas::all();
+        
+        // Retorne a view 'ficha' passando os dados do formulário e os dados das empresas
+        return view('atendimentos.ficha', compact('dadosFormulario', 'empresa'));
     }
 
     public function processarFormulario(Request $request)
