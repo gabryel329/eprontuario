@@ -73,10 +73,10 @@ class DatabaseSeeder extends Seeder
         ]);
         
         DB::table('permissao_user')->insert([
-            ['user_id' => 1, 'permisao_id' => 1],
+            ['user_id' => 1, 'permisao_id' => 3],
             ['user_id' => 2, 'permisao_id' => 2],
         ]);
-        
+
         DB::table('pacientes')->insert([
             [
                 'name' => 'Rafael',
