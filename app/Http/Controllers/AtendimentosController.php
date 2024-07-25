@@ -506,17 +506,17 @@ class AtendimentosController extends Controller
     }
     
     public function mostrarFicha2(Request $request)
-{
-    $empresa = Empresas::all();
-    // Recupera os dados da sessão
-    $dadosFormulario = $request->session()->get('dadosFormulario', []);
+    {
+        $empresa = Empresas::all();
+        // Recupera os dados da sessão
+        $dadosFormulario = $request->session()->get('dadosFormulario', []);
 
-    // Retorna a view com os dados
-    return view('atendimentos.fichaAtendimento', [
-        'dadosFormulario' => $dadosFormulario,
-        'empresa' => $empresa
-    ]);
-}
+        // Retorna a view com os dados
+        return view('atendimentos.fichaAtendimento', [
+            'dadosFormulario' => $dadosFormulario,
+            'empresa' => $empresa
+        ]);
+    }
 
 
     public function solicitacoes(Request $request)
