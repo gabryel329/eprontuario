@@ -55,16 +55,16 @@ class DatabaseSeeder extends Seeder
                 'permisao_id' => 1,
             ],
             [
-                'name' => 'Admin1',
-                'email' => 'admin1@anb.com',
+                'name' => 'Médico',
+                'email' => 'medico@anb.com',
                 'profissional_id' => 1,
                 'password' => bcrypt('12345678'),
                 'imagem' => 'LOGO_01_VERDE.png',
                 'permisao_id' => 1,
             ],
             [
-                'name' => 'Admin2',
-                'email' => 'admin2@anb.com',
+                'name' => 'Recepção',
+                'email' => 'recepcao@anb.com',
                 'profissional_id' => 2,
                 'password' => bcrypt('12345678'),
                 'imagem' => 'LOGO_01_VERDE.png',
@@ -74,7 +74,8 @@ class DatabaseSeeder extends Seeder
         
         DB::table('permissao_user')->insert([
             ['user_id' => 1, 'permisao_id' => 3],
-            ['user_id' => 2, 'permisao_id' => 2],
+            ['user_id' => 2, 'permisao_id' => 1],
+            ['user_id' => 3, 'permisao_id' => 2],
         ]);
 
         DB::table('pacientes')->insert([
