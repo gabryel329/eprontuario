@@ -11,9 +11,9 @@
     <title>Login - ePRONTUARIO</title>
   </head>
   <body>
-    @if ($errors->has('email'))
+    @if ($errors->has('name'))
     <div class="alert alert-danger">
-        {{ $errors->first('email') }}
+        {{ $errors->first('name') }}
     </div>
     @endif
     @if ($errors->has('password'))
@@ -33,9 +33,9 @@
             @csrf
           <h3 class="login-head"><i class="bi bi-person me-2"></i>SIGN IN</h3>
           <div class="mb-3">
-            <label class="form-label">EMAIL</label>
-            <input id="email" name="email" class="form-control" type="text" placeholder="Email" autofocus>
-            @error('email')
+            <label class="form-label">Usuario</label>
+            <input id="name" name="name" class="form-control" type="text" placeholder="Email" autofocus>
+            @error('name')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>

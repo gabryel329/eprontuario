@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use SebastianBergmann\CodeUnit\FunctionUnit;
 
 class LoginController extends Controller
 {
@@ -39,18 +40,22 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
     
-    protected function sendFailedLoginResponse(Request $request)
-    {
-        $user = \App\Models\User::where('email', $request->email)->first();
+    // protected function sendFailedLoginResponse(Request $request)
+    // {
+    //     $user = \App\Models\User::where('email', $request->email)->first();
 
-        if (!$user) {
-            throw ValidationException::withMessages([
-                'email' => [trans('E-email Incorreto')],
-            ]);
-        }
+    //     if (!$user) {
+    //         throw ValidationException::withMessages([
+    //             'email' => [trans('E-email Incorreto')],
+    //         ]);
+    //     }
 
-        throw ValidationException::withMessages([
-            'password' => [trans('Senha Incorreta')],
-        ]);
+    //     throw ValidationException::withMessages([
+    //         'password' => [trans('Senha Incorreta')],
+    //     ]);
+    // }
+
+    public function name(){
+        return 'name';
     }
 }
