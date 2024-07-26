@@ -29,6 +29,25 @@
                 <div class="tab-pane active" id="user-timeline">
                     <div class="tile user-timeline">
                         <h4 class="line">Dados</h4>
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    @if (session('error'))
+                        <div class="alert alert-warning">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                         @if ($empresa)
                             <form method="POST" action="{{ route('empresa.update', $empresa->id) }}" enctype="multipart/form-data">
                                 @csrf

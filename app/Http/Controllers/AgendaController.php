@@ -176,13 +176,19 @@ class AgendaController extends Controller
      */
     public function destroy($id)
     {
-        // Encontrar o item da agenda pelo ID e deletar
-        $agenda = Agenda::findOrFail($id);
-        $agenda->delete();
+        try {
+            // Encontrar o item da agenda pelo ID e deletar
+            $agenda = Agenda::findOrFail($id);
+            $agenda->delete();
 
-        // Retornar uma resposta JSON com uma mensagem de sucesso
-        return redirect()->back()->with('success', 'Agenda atualizada com sucesso.');
+            // Retornar uma resposta JSON com uma mensagem de sucesso
+            return response()->json(['success' => 'Agenda deletada com sucesso.']);
+        } catch (\Exception $e) {
+            // Retornar uma resposta JSON com uma mensagem de erro
+            return response()->json(['error' => 'Erro ao deletar a agenda.'], 500);
+        }
     }
+
 
     public function agendaMedica(Request $request)
     {

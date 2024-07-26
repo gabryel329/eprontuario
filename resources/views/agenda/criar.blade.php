@@ -247,35 +247,36 @@
         }
 
         function fetchAgenda(data, profissionalId) {
-            $.ajax({
-                url: '{{ route('agenda.index') }}',
-                type: 'GET',
-                data: {
-                    data: data,
-                    profissional_id: profissionalId
-                },
-                success: function(response) {
-                    var agendaBody = document.getElementById('agenda-body');
-                    agendaBody.innerHTML = '';
+    $.ajax({
+        url: '{{ route('agenda.index') }}',
+        type: 'GET',
+        data: {
+            data: data,
+            profissional_id: profissionalId
+        },
+        success: function(response) {
+            var agendaBody = document.getElementById('agenda-body');
+            agendaBody.innerHTML = ''; // Limpa o conteúdo existente
 
-                    response.agendas.forEach(function(agenda) {
-                        var row = '<tr>' +
-                            '<td>' + agenda.hora + '</td>' +
-                            '<td>' + agenda.procedimento_id + '</td>' +
-                            '<td>' + agenda.status + '</td>' +
-                            '<td>' +
-                            '<button type="button" class="btn btn-danger" onclick="deleteAgenda(' +
-                            agenda.id + ')"><i class="bi bi-x-circle"></i></button>' +
-                            '</td>' +
-                            '</tr>';
-                        agendaBody.innerHTML += row;
-                    });
-                },
-                error: function(xhr) {
-                    console.log(xhr.responseText);
-                }
+            response.agendas.forEach(function(agenda) {
+                var row = '<tr id="agenda-row-' + agenda.id + '">' +  // Adiciona ID único à linha
+                    '<td>' + agenda.hora + '</td>' +
+                    '<td>' + agenda.procedimento_id + '</td>' +
+                    '<td>' + agenda.status + '</td>' +
+                    '<td>' +
+                    '<button type="button" class="btn btn-danger" onclick="deleteAgenda(' +
+                    agenda.id + ')"><i class="bi bi-x-circle"></i></button>' +
+                    '</td>' +
+                    '</tr>';
+                agendaBody.innerHTML += row; // Adiciona a linha ao corpo da tabela
             });
+        },
+        error: function(xhr) {
+            console.log(xhr.responseText);
         }
+    });
+}
+
 
         document.getElementById('pacienteSearch').addEventListener('keyup', function() {
             var input = this.value.toLowerCase();
@@ -339,33 +340,41 @@
             });
         }
 
-        function deleteAgenda(id) {
-            if (confirm('Tem certeza de que deseja deletar esta agenda?')) {
-                $.ajax({
-                    url: '{{ url('agenda') }}/' + id,
-                    type: 'DELETE',
-                    data: {
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            alert(response.success);
-                            fetchAgenda(document.getElementById('selectedData').value, document.getElementById(
-                                'selectedProfissionalId').value);
-                        } else if (response.error) {
-                            alert(response.error);
-                        }
-                    },
-                    error: function(xhr) {
-                        if (xhr.responseJSON && xhr.responseJSON.error) {
-                            alert(xhr.responseJSON.error);
-                        } else {
-                            console.log(xhr.responseText);
-                        }
-                    }
-                });
-            }
+    function deleteAgenda(id) {
+    console.log('Tentando deletar a agenda');
+
+    if (confirm('Tem certeza de que deseja deletar esta agenda?')) {
+        // Remove a linha da tabela imediatamente
+        var row = document.getElementById('agenda-row-' + id);
+        if (row) {
+            row.remove();
+            console.log('Linha removida');
+        } else {
+            console.log('Linha não encontrada');
         }
+
+        // Faça a requisição AJAX para excluir a agenda no servidor
+        $.ajax({
+            url: '{{ url('agenda') }}/' + id,
+            type: 'DELETE',
+            data: {
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                if (response.success) {
+                    alert(response.success);
+                } else if (response.error) {
+                    alert(response.error);
+                }
+            },
+            error: function(xhr) {
+                if (xhr.responseJSON && xhr.responseJSON.error) {
+                    alert(xhr.responseJSON.error);
+                }
+            }
+        });
+    }
+}
 
         document.addEventListener('DOMContentLoaded', function() {
             const timeList = document.getElementById('time-options');
