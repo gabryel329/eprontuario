@@ -55,7 +55,7 @@ class DatabaseSeeder extends Seeder
                 'permisao_id' => 1,
             ],
             [
-                'name' => 'Médico',
+                'name' => 'Medico',
                 'email' => 'medico@anb.com',
                 'profissional_id' => 1,
                 'password' => bcrypt('12345678'),
@@ -63,7 +63,7 @@ class DatabaseSeeder extends Seeder
                 'permisao_id' => 1,
             ],
             [
-                'name' => 'Recepção',
+                'name' => 'Recepcao',
                 'email' => 'recepcao@anb.com',
                 'profissional_id' => 2,
                 'password' => bcrypt('12345678'),
