@@ -63,9 +63,7 @@
         }
         @media print {
             body {
-                margin: 0;
-                padding: 0;
-                width: 100%;
+                width: 90%;
                 height: 100%;
                 font-size: 13pt;
             }
@@ -91,12 +89,6 @@
         }
     </style>
 </head>
-@php
-    use Carbon\Carbon;
-
-    $dataNascimento = isset($dadosFormulario['nasc']) ? new Carbon($dadosFormulario['nasc']) : null;
-    $idade = $dataNascimento ? $dataNascimento->age : '-';
-@endphp
 <body>
     <div class="form-container">
         @if($empresa->isNotEmpty())
@@ -133,140 +125,187 @@
         @else
             <p style="text-align: center;">Nenhuma empresa encontrada.</p>
         @endif
+        @php
+        use Carbon\Carbon;
+    
+        // Verifica se o valor de nascimento está definido e é válido
+        $dataNascimento = isset($registro->nasc) ? new Carbon($registro->nasc) : null;
+        $idade = $dataNascimento ? $dataNascimento->age : '-';
+    @endphp
 
-
-        <table>
-            <thead>
-                <tr>
-                    <th colspan="2" class="title"><strong>Dados do Paciente</strong></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="2">
-                        Nome do Paciente: {{ $dadosFormulario['paciente'] ?? '-' }}<br>
-                        CPF: {{ $dadosFormulario['cpf'] ?? '-' }}<br>
-                        Número de referência: {{ $dadosFormulario['consulta'] ?? '-' }}<br>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="equal-width">Data de Nascimento: {{ isset($dadosFormulario['nasc']) ? (new Carbon($dadosFormulario['nasc']))->format('d/m/Y') : '-' }}</td>
-                    <td class="equal-width">Idade: {{ $idade }} anos</td>
-                </tr>
-                <tr>
-                    <td class="equal-width">Gênero: {{ $dadosFormulario['genero'] ?? '-' }}</td>
-                    <td class="equal-width">Nome da mãe: {{ $dadosFormulario['mae'] ?? '-' }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <table>
-            <thead>
-                <tr>
-                    <th colspan="9" class="title"><strong>Dados da Anamnese</strong></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="1">Pressão Arterial (PA): {{ $dadosFormulario['pa'] ?? '-' }}</td>
-                    <td colspan="1">Temperatura: {{ $dadosFormulario['temp'] ?? '-' }}ºC</td>
-                    <td colspan="1">Peso: {{ $dadosFormulario['peso'] ?? '-' }}Kg</td>
-                    <td colspan="1">Altura: {{ $dadosFormulario['altura'] ?? '-' }}cm</td>
-                    <td colspan="1">Gestante: {{ $dadosFormulario['gestante'] == 'S' ? 'Sim' : 'Não' }}</td>
-                </tr>
-                <tr>
-                    <td colspan="1">Dextro: {{ $dadosFormulario['dextro'] ?? '-' }}</td>
-                    <td colspan="1">SPO2: {{ $dadosFormulario['spo2'] ?? '-' }}</td>
-                    <td colspan="1">Frequência Cardíaca (FC): {{ $dadosFormulario['fc'] ?? '-' }}</td>
-                    <td colspan="2">Frequência Respiratória (FR): {{ $dadosFormulario['fr'] ?? '-' }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <table>
-            <thead>
-                <tr>
-                    <th colspan="5" class="title"><strong>Acolhimentos</strong></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="1">{{ $dadosFormulario['acolhimento'] ?? '-' }}</td>
-                    <td colspan="1">{{ $dadosFormulario['acolhimento1'] ?? '-' }}</td>
-                    <td colspan="1">{{ $dadosFormulario['acolhimento2'] ?? '-' }}</td>
-                    <td colspan="1">{{ $dadosFormulario['acolhimento3'] ?? '-' }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <table>
-            <thead>
-                <tr>
-                    <th colspan="5" class="title"><strong>Alergias</strong></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="1"> {{ $dadosFormulario['alergia1'] ?? '-' }}</td>
-                    <td colspan="1"> {{ $dadosFormulario['alergia2'] ?? '-' }}</td>
-                    <td colspan="1"> {{ $dadosFormulario['alergia3'] ?? '-' }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <table>
-            <thead>
-                <tr>
-                    <th colspan="5" class="title"><strong>Anamnese Geral</strong></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="5">{{ $dadosFormulario['anamnese'] ?? '-' }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <table>
-            <thead>
-                <tr>
-                    <th colspan="5" class="title"><strong>Dados do Atendimento</strong></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td >Queixas: {{ $dadosFormulario['atendimento']['at_queixas'] ?? '-' }}</td>
-                    <td c>Evolução: {{ $dadosFormulario['atendimento']['at_evolucao'] ?? '-' }}</td>
-                    <td >Condição Física: {{ $dadosFormulario['atendimento']['at_condicao'] ?? '-' }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <table>
-            <thead>
-                <tr>
-                    <th colspan="5" class="title"><strong>Dados da Prescrição</strong></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="1">
-                        Exames:
-                        @foreach ($dadosFormulario['prescricao']['exames'] ?? [] as $exame)
-                            <li>{{ $exame }}</li>
-                        @endforeach
-                    </td>
-                    <td colspan="1">
-                        Medicação:
-                        <ul>
-                            @foreach ($dadosFormulario['prescricao']['remedios'] ?? [] as $index => $remedio)
-                                <li>{{ $remedio }} / Doses: {{ $dadosFormulario['prescricao']['doses'][$index] ?? '-' }} / Horas: {{ $dadosFormulario['prescricao']['horas'][$index] ?? '-' }}</li>
-                            @endforeach
-                        </ul>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>  
+        @foreach($historico as $registro)
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="2" class="title"><strong>Dados do Paciente</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="2">
+                            Nome do Paciente: {{ $registro->paciente }}<br>
+                            CPF: {{ $registro->cpf }}<br>
+                            Cód. de Cadastro: {{ $registro->paciente_id }}<br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="equal-width">Data de Nascimento: {{ $registro->nasc }}</td>
+                        <td class="equal-width">Idade: {{ $idade }} anos</td>
+                    </tr>
+                    <tr>
+                        <td class="equal-width">Gênero: {{ $registro->genero }}</td>
+                        <td class="equal-width">Nome da mãe: {{ $registro->mae }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="9" class="title"><strong>Dados da Anamnese</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="1">Pressão Arterial (PA): {{ $registro->an_pa }}</td>
+                        <td colspan="1">Temperatura: {{ $registro->an_temp }}ºC</td>
+                        <td colspan="1">Peso: {{ $registro->an_peso }}Kg</td>
+                        <td colspan="1">Altura: {{ $registro->an_altura }}cm</td>
+                        <td colspan="1">Gestante: {{ $registro->an_gestante }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="1">Dextro: {{ $registro->an_dextro }}</td>
+                        <td colspan="1">SPO2: {{ $registro->an_spo2 }}</td>
+                        <td colspan="1">Frequência Cardíaca (FC): {{ $registro->an_fc }}</td>
+                        <td colspan="2">Frequência Respiratória (FR): {{ $registro->an_fr }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="5" class="title"><strong>Acolhimentos</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="1">{{ $registro->an_acolhimento }}</td>
+                        <td colspan="1">{{ $registro->an_acolhimento1 }}</td>
+                        <td colspan="1">{{ $registro->an_acolhimento2 }}</td>
+                        <td colspan="1">{{ $registro->an_acolhimento3 }}</td>
+                        <td colspan="1">{{ $registro->an_acolhimento4 }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="5" class="title"><strong>Alergias</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="1">{{ $registro->an_alergia1 }}</td>
+                        <td colspan="1">{{ $registro->an_alergia2 }}</td>
+                        <td colspan="1">{{ $registro->an_alergia3 }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="5" class="title"><strong>Anamnese Geral</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="5">{{ $registro->an_anamnese }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="5" class="title"><strong>Dados do Atendimento</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Queixas: {{ $registro->at_queixas }}</td>
+                        <td>Evolução: {{ $registro->at_evolucao }}</td>
+                        <td>Condição Física: {{ $registro->at_condicao }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="2" class="title"><strong>Dados da Prescrição</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <strong>Procedimentos:</strong>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th><strong>Código</strong></th>
+                                        <th><strong>Procedimento</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $codigos = explode(',', $registro->codigos);
+                                        $procedimentos = explode(',', $registro->procedimentos);
+                                        $maxLength = max(count($codigos), count($procedimentos));
+                                    @endphp
+            
+                                    @for ($i = 0; $i < $maxLength; $i++)
+                                        <tr>
+                                            <td>{{ $codigos[$i] ?? '' }}</td>
+                                            <td>{{ $procedimentos[$i] ?? '' }}</td>
+                                        </tr>
+                                    @endfor
+                                </tbody>
+                            </table>
+                        </td>
+                        <td>
+                            <strong>Medicação:</strong>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th><strong>Medicamento</strong></th>
+                                        <th><strong>Dose</strong></th>
+                                        <th><strong>Hora</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $medicamentos = explode(',', $registro->medicamentos);
+                                        $doses = explode(',', $registro->doses);
+                                        $horas = explode(',', $registro->horas);
+                                        $maxLength = max(count($medicamentos), count($doses), count($horas));
+                                    @endphp
+            
+                                    @for ($i = 0; $i < $maxLength; $i++)
+                                        <tr>
+                                            <td>{{ $medicamentos[$i] ?? '' }}</td>
+                                            <td>{{ $doses[$i] ?? '' }}</td>
+                                            <td>{{ $horas[$i] ?? '' }}</td>
+                                        </tr>
+                                    @endfor
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        @endforeach
+    </div>
 </body>
 <script>
-    // window.onload = function() {
-    //     window.print();
-    //     window.close(); // Opcional: fechar automaticamente a janela após a impressão
-    // }
+    window.onload = function() {
+        window.print();
+    }
 </script>
 </html>

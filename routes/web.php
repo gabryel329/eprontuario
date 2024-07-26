@@ -141,8 +141,8 @@ Route::middleware(['check.session.expired'])->group(function () {
 
     #Formularios
     Route::post('/ficha', [AtendimentosController::class, 'ficha_atendimento'])->name('ficha');
-    Route::post('/fichaAtendimento', [AtendimentosController::class, 'processarFormulario']);
-    Route::get('/fichaAtendimento', [AtendimentosController::class, 'mostrarFicha2']);
+
+    Route::post('/ficha_atendimento', [AtendimentosController::class, 'processarFormulario'])->name('processarFormulario');
 
     Route::post('/solicitacoes', [AtendimentosController::class, 'solicitacoes']);
     Route::get('/formulario/atestado/{paciente_id}/{agenda_id}/{profissional_id}/{dia}', [AtendimentosController::class, 'atestadoView'])->name('formulario.atestado');

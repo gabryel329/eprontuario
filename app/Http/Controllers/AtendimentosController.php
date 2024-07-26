@@ -480,43 +480,111 @@ class AtendimentosController extends Controller
     }
 
     public function processarFormulario(Request $request)
-    {
-        $agendaId = $request->input('agenda_id'); // Certifique-se de que o ID da agenda está sendo enviado no formulário
+{
+    $agendaId = $request->input('agenda_id1');
     
-        // Atualiza o status na tabela agendas
-        DB::table('agendas')
-            ->where('id', $agendaId)
-            ->update(['status' => 'FINALIZADO']);
-    
-        // Salva os dados na sessão
-        $dadosFormulario = $request->only([
-            'peso', 'altura', 'imc', 'classificacao', 'pa', 'temp', 'gestante', 'dextro', 'spo2',
-            'fc', 'fr', 'acolhimento', 'acolhimento1', 'acolhimento2', 'acolhimento3', 'acolhimento4',
-            'alergia1', 'alergia2', 'alergia3', 'anamnese', 'evolucao', 'queixas', 'condicao', 'agenda_id'
-        ]);
-    
-        // Adiciona exames e medicamentos aos dados do formulário
-        $dadosFormulario['exames'] = $request->input('exames', []);
-        $dadosFormulario['medicamentos'] = $request->input('medicamentos', []);
-    
-        $request->session()->put('dadosFormulario', $dadosFormulario);
-    
-        // Retorna uma resposta JSON indicando sucesso
-        return response()->json(['success' => true]);
+    // Verifica se o ID da agenda é válido
+    if (is_null($agendaId)) {
+        return redirect()->back()->with('error', 'ID da agenda não encontrado.');
     }
-    
-    public function mostrarFicha2(Request $request)
-    {
-        $empresa = Empresas::all();
-        // Recupera os dados da sessão
-        $dadosFormulario = $request->session()->get('dadosFormulario', []);
 
-        // Retorna a view com os dados
-        return view('atendimentos.fichaAtendimento', [
-            'dadosFormulario' => $dadosFormulario,
-            'empresa' => $empresa
-        ]);
-    }
+    // Atualiza o status na tabela agendas
+    DB::table('agendas')
+        ->where('id', $agendaId)
+        ->update(['status' => 'FINALIZADO']);
+
+    $empresa = Empresas::all();
+
+    $historico = DB::table('agendas as ag')
+        ->join('pacientes as pa', 'ag.paciente_id', '=', 'pa.id')
+        ->join('profissionals as pro', 'ag.profissional_id', '=', 'pro.id')
+        ->leftJoin('anamneses as an', 'an.agenda_id', '=', 'ag.id')
+        ->leftJoin('atendimentos as at', 'at.agenda_id', '=', 'ag.id')
+        ->leftJoin('exames as ex', 'ex.agenda_id', '=', 'ag.id')
+        ->leftJoin('remedios as re', 're.agenda_id', '=', 'ag.id')
+        ->leftJoin('procedimentos as proc2', 'ex.procedimento_id', '=', 'proc2.id')
+        ->leftJoin('medicamentos as med', 're.medicamento_id', '=', 'med.id')
+        ->select(
+            'ag.data',
+            'pa.name as paciente',
+            'pa.cpf as cpf',
+            'pa.nasc as nasc',
+            'pa.nome_mae as mae',
+            'pa.genero as genero',
+            'pa.id as paciente_id',
+            DB::raw('STRING_AGG(DISTINCT proc2.procedimento::text, \',\') as procedimentos'),
+            DB::raw('STRING_AGG(DISTINCT proc2.codigo::text, \',\') as codigos'),
+            DB::raw('STRING_AGG(DISTINCT med.nome::text, \',\') as medicamentos'),
+            DB::raw('STRING_AGG(DISTINCT re.dose::text, \',\') as doses'),
+            DB::raw('STRING_AGG(DISTINCT re.horas::text, \',\') as horas'),
+            'pro.name as an_profissional_id',
+            'an.pa as an_pa',
+            'an.imc as imc',
+            'an.classificacao as classificacao',
+            'an.temp as an_temp',
+            'an.peso as an_peso',
+            'an.altura as an_altura',
+            'an.gestante as an_gestante',
+            'an.dextro as an_dextro',
+            'an.spo2 as an_spo2',
+            'an.fc as an_fc',
+            'an.fr as an_fr',
+            'an.acolhimento as an_acolhimento',
+            'an.acolhimento1 as an_acolhimento1',
+            'an.acolhimento2 as an_acolhimento2',
+            'an.acolhimento3 as an_acolhimento3',
+            'an.acolhimento4 as an_acolhimento4',
+            'an.alergia1 as an_alergia1',
+            'an.alergia2 as an_alergia2',
+            'an.alergia3 as an_alergia3',
+            'an.anamnese as an_anamnese',
+            'at.queixas as at_queixas',
+            'at.atestado as at_atestado',
+            'at.evolucao as at_evolucao',
+            'at.condicao as at_condicao'
+        )
+        ->where('ag.id', $agendaId)
+        ->groupBy(
+            'ag.data',
+            'pa.id',
+            'pa.name',
+            'pro.name',
+            'an.pa',
+            'an.temp',
+            'an.peso',
+            'an.altura',
+            'at.condicao',
+            'at.evolucao',
+            'at.atestado',
+            'an.spo2',
+            'an.dextro',
+            'an.gestante',
+            'at.queixas',
+            'an.anamnese',
+            'an.alergia3',
+            'an.alergia2',
+            'an.alergia1',
+            'an.acolhimento4',
+            'an.acolhimento3',
+            'an.acolhimento2',
+            'an.acolhimento1',
+            'an.acolhimento',
+            'an.fr',
+            'an.fc',
+            'an.imc',
+            'an.classificacao'
+        )
+        ->orderBy('ag.data', 'asc')
+        ->get();
+    
+    return view('atendimentos.fichaAtendimento', [
+        'agenda_id' => $agendaId,
+        'historico' => $historico,
+        'empresa' => $empresa
+    ]);
+}
+
+    
 
 
     public function solicitacoes(Request $request)
