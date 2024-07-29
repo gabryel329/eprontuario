@@ -3,6 +3,7 @@
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\AnamneseController;
 use App\Http\Controllers\AtendimentosController;
+use App\Http\Controllers\ConvenioController;
 use App\Http\Controllers\EmpresasController;
 use App\Http\Controllers\EspecialidadeController;
 use App\Http\Controllers\GenerateIAController;
@@ -64,8 +65,13 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::get('/profissional', [ProfissionalController::class, 'index'])->name('profissional.index');
         Route::get('/tipoprof', [TipoProfController::class, 'index'])->name('tipoprof.index');
         Route::get('/empresa', [EmpresasController::class, 'index'])->name('empresa.index');
+        Route::get('/convenio', [ConvenioController::class, 'index'])->name('convenio.index');
     });
 
+    Route::post('/convenio', [ConvenioController::class, 'store'])->name('convenio.store');
+    Route::put('/convenio/{id}', [ConvenioController::class, 'update'])->name('convenio.update');
+    Route::delete('/convenio/{id}', [ConvenioController::class, 'destroy'])->name('convenio.destroy');
+    Route::get('/convenio/{id}', [ConvenioController::class, 'show'])->name('convenio.show');
 
     Route::post('/permisoes', [PermisoesController::class, 'store'])->name('permisao.store');
     Route::put('/permisoes/{id}', [PermisoesController::class, 'update'])->name('permisao.update');

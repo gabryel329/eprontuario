@@ -68,6 +68,8 @@
                             class="icon bi bi-briefcase"></i> Profissional</a></li>
                 <li><a class="treeview-item" href="{{ route('tipoprof.index') }}"><i
                             class="icon bi bi-file-earmark-person"></i> Tipo Profissional</a></li>
+                <li><a class="treeview-item" href="{{ route('convenio.index') }}"><i 
+                    class="icon bi bi-building-fill-add"></i> Convenios</a></li>
             </ul>
         </li>
         <li><a class="app-menu__item" href="{{ route('empresa.index') }}"><i
