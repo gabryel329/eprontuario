@@ -1,184 +1,208 @@
 @extends('layouts.app')
+
 @section('content')
 <main class="app-content">
-    <div class="app-title">
+    <div class="app-title d-flex justify-content-between align-items-center">
         <div>
             <h1><i class="bi bi-table"></i> Lista de Profissionais</h1>
         </div>
-        <ul class="app-breadcrumb breadcrumb side">
-            <li class="breadcrumb-item"><i class="bi bi-house-door fs-6"></i></li>
-            <li class="breadcrumb-item">Administração</li>
-            <li class="breadcrumb-item active"><a href="#">Profissionais</a></li>
-        </ul>
     </div>
-    @if(session('success'))
+
+    @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
-    @if(session('error'))
+
+    @if (session('error'))
         <div class="alert alert-warning">
             {{ session('error') }}
         </div>
     @endif
-    <div class="row">
-        <div class="col-md-12">
-            <div class="tile">
-                <div class="tile-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered" id="sampleTable">
-                            <thead>
+
+    <div class="col-md-12">
+        <div class="tile">
+            <h3 class="tile-title">Editar Honorários</h3>
+            <div class="tile-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered text-center">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nome</th>
+                                <th>Nº Conselho</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($profissioanls as $item)
                                 <tr>
-                                    <th>#</th>
-                                    <th>Nome</th>
-                                    <th>E-mail</th>
-                                    <th>Honorario</th>
+                                    <td>{{ $item->id }}</td>
+                                    <td>{{ $item->name }}</td>
+                                    <td>{{ $item->conselho }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}">
+                                            <i class="icon bi bi-arrow-right-circle-fill"></i>
+                                        </button>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($profissioanls as $item)
-                                    <tr>
-                                        <td>{{ $item->id }}</td>
-                                        <td>{{ $item->name }}</td>
-                                        <td>{{ $item->email }}</td>
-                                        <td>
-                                            <div>
-                                                <button type="button" class="btn btn-info" data-bs-toggle="modal"
-                                                    data-bs-target="#editModal{{ $item->id }}">
-                                                    Editar
-                                                </button>
+
+                                <!-- Edit Modal -->
+                                <div class="modal fade" id="editModal{{ $item->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $item->id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-xl">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editModalLabel{{ $item->id }}">Honorários</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
-                                        </td>
-                                    </tr>
-                                    <!-- Modal for Editing -->
-                                    <div class="modal fade" id="editModal{{ $item->id }}" tabindex="-1"
-                                        aria-labelledby="editModalLabel{{ $item->id }}" aria-hidden="true">
-                                        <div class="modal-dialog modal-xl">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="editModalLabel{{ $item->id }}">Editar Profissional</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form method="POST" action="{{ route('profissional.update', $item->id) }}" enctype="multipart/form-data">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <div class="row">
-                                                            <div class="mb-3 col-md-8">
-                                                                <label class="form-label">Nome Completo</label>
-                                                                <input class="form-control" name="name" type="text" value="{{ old('name', $item->name) }}">
-                                                            </div>
-                                                            <div class="mb-3 col-md-4">
-                                                                <label class="form-label">E-mail</label>
-                                                                <input class="form-control" name="email" type="email" value="{{ old('email', $item->email) }}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">Nascimento</label>
-                                                                <input class="form-control" name="nasc" type="date" value="{{ old('nasc', $item->nasc) }}">
-                                                            </div>
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">CPF</label>
-                                                                <input class="form-control" name="cpf" type="text" value="{{ old('cpf', $item->cpf) }}" required>
-                                                            </div>
-                                                            <div class="mb-3 col-md-2">
-                                                                <label class="form-label">Gênero</label>
-                                                                <div class="form-check">
-                                                                    <label class="form-check-label">
-                                                                        <input class="form-check-input" type="radio" name="genero" value="M" {{ old('genero', $item->genero) == 'M' ? 'checked' : '' }}>Masculino
-                                                                    </label>
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <label class="form-check-label">
-                                                                        <input class="form-check-input" type="radio" name="genero" value="F" {{ old('genero', $item->genero) == 'F' ? 'checked' : '' }}>Feminino
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="mb-3 col-md-4">
-                                                                <label class="form-label">Foto</label>
-                                                                <input class="form-control" type="file" name="imagem">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="mb-3 col-md-4 hidden" id="campo_conselho">
-                                                                <label id="label_conselho" class="form-label">Conselho</label>
-                                                                <input type="text" name="conselho" class="form-control" id="input_conselho" value="{{ old('conselho', $item->conselho) }}" placeholder="">
-                                                                <div class="invalid-feedback">Por favor, preencha o campo Conselho.</div>
-                                                            </div>                                                  
-                                                        </div>
-                                                        <div class="row" id="campos_comuns">
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">RG</label>
-                                                                <input class="form-control" name="rg" type="text" value="{{ old('rg', $item->rg) }}">
-                                                            </div>
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">Étnia</label>
-                                                                <select class="form-control" name="cor">
-                                                                    <option disabled selected value="" style="font-size:18px;color: black;">{{ old('cor', $item->cor) }}</option>
-                                                                    <option value="Branco" {{ old('cor', $item->cor) == 'Branco' ? 'selected' : '' }}>Branco</option>
-                                                                    <option value="Preto" {{ old('cor', $item->cor) == 'Preto' ? 'selected' : '' }}>Preto</option>
-                                                                    <option value="Amarelo" {{ old('cor', $item->cor) == 'Amarelo' ? 'selected' : '' }}>Amarelo</option>
-                                                                    <option value="Pardo" {{ old('cor', $item->cor) == 'Pardo' ? 'selected' : '' }}>Pardo</option>
+                                            <div class="modal-body">
+                                                <form method="POST" action="{{ route('honorario.store') }}" id="form-{{ $item->id }}">
+                                                    @csrf
+                                                    <input type="hidden" name="profissional_id" value="{{ $item->id }}">
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-2">
+                                                                <label for="convenio" class="form-label">Selecione o convênio</label>
+                                                                <select name="convenio_id" class="form-select" id="convenio{{ $item->id }}">
+                                                                    @foreach ($convenios as $convenio)
+                                                                        <option value="{{ $convenio->id }}" {{ old('convenio_id', $item->convenio_id) == $convenio->id ? 'selected' : '' }}>{{ $convenio->nome }}</option>
+                                                                    @endforeach
                                                                 </select>
                                                             </div>
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">Telefone</label>
-                                                                <input class="form-control" name="telefone" type="text" value="{{ old('telefone', $item->telefone) }}">
-                                                            </div>
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">Celular</label>
-                                                                <input class="form-control" name="celular" type="text" value="{{ old('celular', $item->celular) }}">
-                                                            </div>
+                                                            <hr class="my-3">
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">CEP</label>
-                                                                <input class="form-control" name="cep" type="text" id="cep" value="{{ old('cep', $item->cep) }}" size="10" maxlength="9" onblur="pesquisacep(this.value);">
+                                                    </div>
+                                
+                                                    <div id="procedimentos-container-{{ $item->id }}">
+                                                        @forelse ($item->honorarios ?? [] as $index => $honorario)
+                                                            <div class="row mb-3">
+                                                                <div class="col-md-2">
+                                                                    <label for="codigo{{ $item->id }}_{{ $index }}" class="form-label">Código</label>
+                                                                    <input type="text" name="codigo[]" id="codigo{{ $item->id }}_{{ $index }}" class="form-control" value="{{ $honorario->codigo }}" readonly>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label for="procedimento{{ $item->id }}_{{ $index }}" class="form-label">Procedimento</label>
+                                                                    <select id="procedimento{{ $item->id }}_{{ $index }}" name="procedimento_id[]" class="form-select" onchange="updateCodigo(this)">
+                                                                        <option value="">Escolha o procedimento</option>
+                                                                        @foreach ($procedimentos as $procedimento)
+                                                                            <option value="{{ $procedimento->id }}" data-codigo="{{ $procedimento->codigo }}" {{ $honorario->procedimento_id == $procedimento->id ? 'selected' : '' }}>
+                                                                                {{ $procedimento->procedimento }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label for="porcentagem{{ $item->id }}_{{ $index }}" class="form-label">Porcentagem</label>
+                                                                    <input type="text" name="porcentagem[]" id="porcentagem{{ $item->id }}_{{ $index }}" class="form-control" value="{{ $honorario->porcentagem }}">
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label for="acao" class="form-label">Ações</label>
+                                                                    <div class="d-flex justify-content-between">
+                                                                        <button type="button" class="btn btn-success" onclick="addLancamento({{ $item->id }})">Adicionar</button>
+                                                                        @if ($index > 0)
+                                                                            <button type="button" class="btn btn-danger" onclick="removeLancamento(this)">Remover</button>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">Rua</label>
-                                                                <input class="form-control" name="rua" type="text" id="rua" value="{{ old('rua', $item->rua) }}" size="60">
+                                                        @empty
+                                                            <div class="row mb-3">
+                                                                <div class="col-md-2">
+                                                                    <label for="codigo{{ $item->id }}_0" class="form-label">Código</label>
+                                                                    <input type="text" name="codigo[]" id="codigo{{ $item->id }}_0" class="form-control" readonly>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label for="procedimento{{ $item->id }}_0" class="form-label">Procedimento</label>
+                                                                    <select id="procedimento{{ $item->id }}_0" name="procedimento_id[]" class="form-select" onchange="updateCodigo(this)">
+                                                                        <option value="">Escolha o procedimento</option>
+                                                                        @foreach ($procedimentos as $procedimento)
+                                                                            <option value="{{ $procedimento->id }}" data-codigo="{{ $procedimento->codigo }}">
+                                                                                {{ $procedimento->procedimento }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label for="porcentagem{{ $item->id }}_0" class="form-label">Porcentagem</label>
+                                                                    <input type="text" name="porcentagem[]" id="porcentagem{{ $item->id }}_0" class="form-control">
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label for="acao" class="form-label">Ações</label>
+                                                                    <div class="d-flex justify-content-between">
+                                                                        <button type="button" class="btn btn-success" onclick="addLancamento({{ $item->id }})">Adicionar</button>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                            <div class="mb-3 col-md-2">
-                                                                <label class="form-label">Bairro</label>
-                                                                <input class="form-control" name="bairro" type="text" id="bairro" value="{{ old('bairro', $item->bairro) }}" size="40">
-                                                            </div>
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">Cidade</label>
-                                                                <input class="form-control" name="cidade" type="text" id="cidade" value="{{ old('cidade', $item->cidade) }}" size="40">
-                                                            </div>
-                                                            <div class="mb-3 col-md-1">
-                                                                <label class="form-label">Estado</label>
-                                                                <input class="form-control" name="uf" type="text" id="uf" value="{{ old('uf', $item->uf) }}" size="2">
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="submit" class="btn btn-primary">Salvar</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
+                                                        @endforelse
+                                                    </div>
+                                                    <button type="button" class="btn btn-primary" onclick="submitForm({{ $item->id }})">Salvar</button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                                </div>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 </main>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-
 <script>
-$(document).ready(function(){
-    $('#cnpj').mask('00.000.000/0000-00');
-    $('#telefone').mask('(00) 0000-0000');
-    $('#celular').mask('(00) 00000-0000');
-});
+function updateCodigo(selectElement) {
+    const row = selectElement.closest('.row.mb-3');
+    const codigoInput = row.querySelector('input[name="codigo[]"]');
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
+    codigoInput.value = selectedOption.getAttribute('data-codigo');
+}
+
+window.addLancamento = function(profissionalId) {
+    const container = document.getElementById('procedimentos-container-' + profissionalId);
+    const newRow = container.querySelector('.row.mb-3').cloneNode(true);
+    const index = container.querySelectorAll('.row.mb-3').length;
+
+    newRow.querySelectorAll('input').forEach(input => input.value = '');
+    newRow.querySelectorAll('select').forEach(select => {
+        select.selectedIndex = 0;
+        updateCodigo(select);
+    });
+
+    newRow.querySelectorAll('[id]').forEach(element => {
+        const newId = element.id.replace(/\d+$/, index);
+        element.id = newId;
+        if (element.name) {
+            element.name = element.name.replace(/\d+$/, index);
+        }
+    });
+
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.className = 'btn btn-danger';
+    removeButton.textContent = 'Remover';
+    removeButton.onclick = function() {
+        newRow.remove();
+    };
+
+    newRow.querySelector('.col-md-2:last-child').appendChild(removeButton);
+    container.appendChild(newRow);
+};
+
+window.removeLancamento = function(button) {
+    button.closest('.row.mb-3').remove();
+};
+
+window.submitForm = function(profissionalId) {
+    const form = document.getElementById('form-' + profissionalId);
+    const convenio = document.getElementById('convenio' + profissionalId).value;
+    const procedures = form.querySelectorAll('select[name="procedimento_id[]"]');
+
+    procedures.forEach(procedure => {
+        procedure.querySelector(`option[value="${procedure.value}"]`).dataset.codigo;
+    });
+
+    form.submit();
+};
 </script>
 @endsection
