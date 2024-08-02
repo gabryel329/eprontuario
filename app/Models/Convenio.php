@@ -13,4 +13,15 @@ class Convenio extends Model
     protected $table='convenios';
     protected $fillable=['cnpj', 'ans', 'nome', 'cep', 'rua', 'bairro', 'cidade', 'uf', 'numero', 'complemento', 'celular', 'telefone'];
     protected $dates=['deleted_at'];
+
+    public function procedimentos()
+    {
+        return $this->belongsToMany(Procedimentos::class, 'convenio_procedimento')->withPivot('valor')->withTimestamps();
+    }
+
+    public function convenioProcedimentos()
+{
+    return $this->hasMany(ConvenioProcedimento::class);
+}
+
 }

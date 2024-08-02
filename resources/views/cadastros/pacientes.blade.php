@@ -91,9 +91,9 @@
                         <div class="mb-3 col-md-3" id="convenio-select-container" style="display:none;">
                             <label class="form-label">Selecione:</label>
                             <select class="form-control" id="convenio" name="convenio">
-                                <option disabled selected style="font-size:18px;color: black;">Escolha</option>
-                                @foreach ($paciente as $item)
-                                    <option value="{{ $item->id }}">{{ $item->convenio }}</option>
+                                <option disabled selected>Escolha</option>
+                                @foreach ($convenios as $item)
+                                    <option value="{{ $item->id }}">{{ $item->nome }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -193,7 +193,7 @@
                         </div>
                         <div class="mb-3 col-md-2">
                             <label class="form-label">Numero</label>
-                            <input class="form-control" name="numero" type="text" id="numero" size="40" value="{{ old('numero') }}">
+                            <input class="form-control" name="numero" type="text" id="numero" size="40" value="{{ old('numero') }}" required>
                         </div>
                         <div class="mb-3 col-md-6">
                             <label class="form-label">Complemento</label>

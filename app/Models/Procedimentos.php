@@ -23,4 +23,9 @@ class Procedimentos extends Model
     {
         return $this->belongsTo(Exames::class, 'procedimento_id');
     }
+
+    public function convenios()
+    {
+        return $this->belongsToMany(Convenio::class, 'convenio_procedimento')->withPivot('valor')->withTimestamps();
+    }
 }

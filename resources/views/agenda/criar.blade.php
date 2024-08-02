@@ -77,9 +77,24 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="mb-2 col-md-12">
+                                    <div class="mb-2 col-md-6">
                                         <label class="form-label"><strong>Contato :</strong></label>
                                         <input class="form-control" id="celular" name="celular" type="text">
+                                    </div>
+                                    <div class="mb-2 col-md-6">
+                                        <label class="form-label"><strong>Particular :</strong></label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" value="S" name="particular" id="particular">
+                                            <label class="form-check-label" for="particular">
+                                              Sim
+                                            </label>
+                                          </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="radio" value="N" name="particular" id="particular" checked>
+                                            <label class="form-check-label" for="particular">
+                                              Não
+                                            </label>
+                                          </div>
                                     </div>
                                 </div>
                                 <div class="row">

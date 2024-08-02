@@ -68,6 +68,11 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::get('/convenio', [ConvenioController::class, 'index'])->name('convenio.index');
     });
 
+    Route::get('/convenioProcedimento', [ConvenioController::class, 'convenioProcedimentoIndex'])->name('convenioProcedimento.index');
+    Route::post('/convenioProcedimento', [ConvenioController::class, 'convenioProcedimentoStore'])->name('convenioProcedimento.store');
+    Route::post('/convenioProcedimento/{id}', [ConvenioController::class, 'convenioProcedimentoDelete'])->name('convenioProcedimento.delete');
+
+
     Route::post('/convenio', [ConvenioController::class, 'store'])->name('convenio.store');
     Route::put('/convenio/{id}', [ConvenioController::class, 'update'])->name('convenio.update');
     Route::delete('/convenio/{id}', [ConvenioController::class, 'destroy'])->name('convenio.destroy');

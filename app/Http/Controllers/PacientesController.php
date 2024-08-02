@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Convenio;
 use App\Models\Pacientes;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -14,8 +15,9 @@ class PacientesController extends Controller
     public function index()
     {
         $paciente = Pacientes::all();
+        $convenios = Convenio::all();
 
-        return view('cadastros.pacientes', compact(['paciente']));
+        return view('cadastros.pacientes', compact(['paciente', 'convenios']));
     }
 
     public function index1()

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Convenio;
+use App\Models\ConvenioProcedimento;
+use App\Models\Procedimentos;
 use Illuminate\Http\Request;
 
 class ConvenioController extends Controller
@@ -129,4 +131,70 @@ class ConvenioController extends Controller
     
         return redirect()->route('convenio.index')->with('error', 'Convenio excluída com sucesso!');
     } 
+
+    public function convenioProcedimentoIndex()
+    {
+        $convenios = Convenio::with('convenioProcedimentos.procedimento')->get();
+        $procedimentos = Procedimentos::all();
+        $convProces = ConvenioProcedimento::all();
+        return view('financeiro.convenioProcedimento', compact('convenios', 'procedimentos', 'convProces'));
+    }
+
+    public function convenioProcedimentoStore(Request $request)
+    {
+        // Validação dos dados recebidos
+        $validatedData = $request->validate([
+            'codigo.*' => 'required|string',
+            'procedimento_id.*' => 'required|integer|exists:procedimentos,id',
+            'valor.*' => 'required|numeric',
+            'convenio_id.*' => 'required|integer|exists:convenios,id',
+        ]);
+
+        // Processar cada linha do formulário
+        $success = true;
+        foreach ($request->input('convenio_id') as $index => $convenioId) {
+            $procedimentoId = $request->input('procedimento_id')[$index];
+            $codigo = $request->input('codigo')[$index];
+            $valor = $request->input('valor')[$index];
+
+            // Verifica se o registro já existe
+            $existingRecord = ConvenioProcedimento::where('convenio_id', $convenioId)
+                ->where('procedimento_id', $procedimentoId)
+                ->first();
+
+            if ($existingRecord) {
+                // Se o registro já existe, pula para o próximo
+                continue;
+            }
+
+            // Cria um novo registro
+            $convenioProcedimento = new ConvenioProcedimento();
+            $convenioProcedimento->convenio_id = $convenioId;
+            $convenioProcedimento->procedimento_id = $procedimentoId;
+            $convenioProcedimento->codigo = $codigo;
+            $convenioProcedimento->valor = $valor;
+            
+            // Salva o registro
+            if (!$convenioProcedimento->save()) {
+                $success = false;
+            }
+        }
+
+        // Retorna uma resposta JSON
+        if ($success) {
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Erro ao salvar dados.'], 500);
+        }
+    }
+   
+    public function convenioProcedimentoDelete(string $id)
+    {
+        $convProces = ConvenioProcedimento::findOrFail($id);
+    
+        $convProces->delete();
+    
+        return redirect()->back()->with('error', 'Excluída com sucesso!');
+    } 
+
 }
