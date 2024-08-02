@@ -141,60 +141,81 @@ class ConvenioController extends Controller
     }
 
     public function convenioProcedimentoStore(Request $request)
-    {
-        // Validação dos dados recebidos
-        $validatedData = $request->validate([
-            'codigo.*' => 'required|string',
-            'procedimento_id.*' => 'required|integer|exists:procedimentos,id',
-            'valor.*' => 'required|numeric',
-            'convenio_id.*' => 'required|integer|exists:convenios,id',
-        ]);
+{
+    $success = true;
+    $convenioIdList = $request->input('convenio_id');
 
-        // Processar cada linha do formulário
-        $success = true;
-        foreach ($request->input('convenio_id') as $index => $convenioId) {
-            $procedimentoId = $request->input('procedimento_id')[$index];
-            $codigo = $request->input('codigo')[$index];
-            $valor = $request->input('valor')[$index];
+    foreach ($convenioIdList as $index => $convenioId) {
+        $procedimentoId = $request->input('procedimento_id')[$index];
+        $codigo = $request->input('codigo')[$index];
+        $valor = $request->input('valor')[$index];
 
-            // Verifica se o registro já existe
-            $existingRecord = ConvenioProcedimento::where('convenio_id', $convenioId)
-                ->where('procedimento_id', $procedimentoId)
-                ->first();
+        if (empty($procedimentoId)) {
+            // Skip if procedimento_id is null or empty
+            continue;
+        }
 
-            if ($existingRecord) {
-                // Se o registro já existe, pula para o próximo
-                continue;
+        $existingRecord = ConvenioProcedimento::where('convenio_id', $convenioId)
+            ->where('procedimento_id', $procedimentoId)
+            ->first();
+
+        if ($existingRecord) {
+            // Update existing record if necessary
+            $updateNeeded = false;
+            if ($existingRecord->codigo != $codigo) {
+                $existingRecord->codigo = $codigo;
+                $updateNeeded = true;
+            }
+            if ($existingRecord->valor != $valor) {
+                $existingRecord->valor = $valor;
+                $updateNeeded = true;
             }
 
-            // Cria um novo registro
+            if ($updateNeeded) {
+                if (!$existingRecord->save()) {
+                    $success = false;
+                }
+            }
+        } else {
+            // Create a new record if it doesn't exist
             $convenioProcedimento = new ConvenioProcedimento();
             $convenioProcedimento->convenio_id = $convenioId;
             $convenioProcedimento->procedimento_id = $procedimentoId;
             $convenioProcedimento->codigo = $codigo;
             $convenioProcedimento->valor = $valor;
-            
-            // Salva o registro
+
             if (!$convenioProcedimento->save()) {
                 $success = false;
             }
         }
-
-        // Retorna uma resposta JSON
-        if ($success) {
-            return response()->json(['success' => true]);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Erro ao salvar dados.'], 500);
-        }
     }
+
+    // Return a JSON response
+    if ($success) {
+        return response()->json(['success' => true]);
+    } else {
+        return response()->json(['success' => false, 'message' => 'Erro ao salvar dados.'], 500);
+    }
+}
    
     public function convenioProcedimentoDelete(string $id)
     {
         $convProces = ConvenioProcedimento::findOrFail($id);
-    
         $convProces->delete();
-    
-        return redirect()->back()->with('error', 'Excluída com sucesso!');
+
+        return redirect()->back()->with('success', 'Excluído com sucesso!');
     } 
+
+    public function bulkDestroy(Request $request)
+{
+    $ids = $request->input('ids');
+
+    if (is_array($ids)) {
+        ConvenioProcedimento::destroy($ids);
+        return redirect()->route('convenioProcedimento.index')->with('success', 'Itens excluídos com sucesso!');
+    }
+
+    return redirect()->route('convenioProcedimento.index')->with('error', 'Erro ao excluir itens!');
+}
 
 }

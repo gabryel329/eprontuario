@@ -7,6 +7,7 @@ use App\Http\Controllers\ConvenioController;
 use App\Http\Controllers\EmpresasController;
 use App\Http\Controllers\EspecialidadeController;
 use App\Http\Controllers\GenerateIAController;
+use App\Http\Controllers\HonorarioController;
 use App\Http\Controllers\PacientesController;
 use App\Http\Controllers\PainelController;
 use App\Http\Controllers\PermisoesController;
@@ -70,8 +71,10 @@ Route::middleware(['check.session.expired'])->group(function () {
 
     Route::get('/convenioProcedimento', [ConvenioController::class, 'convenioProcedimentoIndex'])->name('convenioProcedimento.index');
     Route::post('/convenioProcedimento', [ConvenioController::class, 'convenioProcedimentoStore'])->name('convenioProcedimento.store');
-    Route::post('/convenioProcedimento/{id}', [ConvenioController::class, 'convenioProcedimentoDelete'])->name('convenioProcedimento.delete');
+    Route::delete('/convenioProcedimento/bulkDestroy', [ConvenioController::class, 'bulkDestroy'])->name('convenioProcedimento.bulkDestroy');
 
+    Route::get('/Honorario', [HonorarioController::class, 'index'])->name('Honorario.index');
+    Route::post('/Honorario', [HonorarioController::class, 'store'])->name('Honorario.store');
 
     Route::post('/convenio', [ConvenioController::class, 'store'])->name('convenio.store');
     Route::put('/convenio/{id}', [ConvenioController::class, 'update'])->name('convenio.update');

@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignId('procedimento_id')->constrained('procedimentos')->onDelete('cascade');
             $table->string('valor')->nullable();
             $table->string('codigo')->nullable();
-            $table->timestamps();
             $table->unique(['convenio_id', 'procedimento_id']);
+            $table->timestamps();
         });
     }
 
