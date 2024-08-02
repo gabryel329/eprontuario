@@ -22,7 +22,6 @@
 
     <div class="col-md-12">
         <div class="tile">
-            <h3 class="tile-title">Editar Honorários</h3>
             <div class="tile-body">
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered text-center">
@@ -30,12 +29,12 @@
                             <tr>
                                 <th>#</th>
                                 <th>Nome</th>
-                                <th>Nº Conselho</th>
-                                <th>Ações</th>
+                                <th>Conselho</th>
+                                <th>Selecionar</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($profissioanls as $item)
+                            @foreach ($profissionais as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
@@ -52,91 +51,50 @@
                                     <div class="modal-dialog modal-xl">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="editModalLabel{{ $item->id }}">Honorários</h5>
+                                                <h5 class="modal-title" id="editModalLabel{{ $item->id }}">Honorário Médico</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form method="POST" action="{{ route('honorario.store') }}" id="form-{{ $item->id }}">
+                                                <form method="POST" class="ajax-form" data-convenio-id="{{ $item->id }}">
                                                     @csrf
-                                                    <input type="hidden" name="profissional_id" value="{{ $item->id }}">
                                                     <div class="row mb-3">
                                                         <div class="col-md-12">
-                                                            <div class="col-md-2">
-                                                                <label for="convenio" class="form-label">Selecione o convênio</label>
-                                                                <select name="convenio_id" class="form-select" id="convenio{{ $item->id }}">
-                                                                    @foreach ($convenios as $convenio)
-                                                                        <option value="{{ $convenio->id }}" {{ old('convenio_id', $item->convenio_id) == $convenio->id ? 'selected' : '' }}>{{ $convenio->nome }}</option>
+                                                            <select name="convenio_id" class="form-select" required>
+                                                                <option value="">Escolha o Convênio</option>
+                                                                @foreach ($convenios as $convenio)
+                                                                    <option value="{{ $convenio->id }}">{{ $convenio->nome }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div id="procedimentos-container-{{ $item->id }}">
+                                                        <div class="row mb-3 linha">
+                                                            <input type="hidden" name="profissional_id[]" value="{{ $item->id }}" class="form-control" required>
+                                                            <div class="col-2">
+                                                                <input type="text" name="codigo[]" class="form-control" placeholder="Código" readonly required>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <select name="procedimento_id[]" class="form-select" onchange="updateCodigo(this)" required>
+                                                                    <option value="">Escolha o Procedimento</option>
+                                                                    @foreach ($procedimentos as $procedimento)
+                                                                        <option value="{{ $procedimento->id }}" data-codigo="{{ $procedimento->codigo }}">{{ $procedimento->procedimento }}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </div>
-                                                            <hr class="my-3">
+                                                            <div class="col-2">
+                                                                <input type="text" name="porcentagem[]" class="form-control" placeholder="Porcentagem" required>
+                                                            </div>
+                                                            <div class="col-2">
+                                                                <div>
+                                                                    <button type="button" class="btn btn-success" onclick="addLancamento({{ $item->id }})"><i class="icon bi bi-plus-circle"></i></button>
+                                                                    <button type="button" class="btn btn-danger" onclick="removeLancamento(this)"><i class="icon bi bi-dash-circle"></i></button>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                
-                                                    <div id="procedimentos-container-{{ $item->id }}">
-                                                        @forelse ($item->honorarios ?? [] as $index => $honorario)
-                                                            <div class="row mb-3">
-                                                                <div class="col-md-2">
-                                                                    <label for="codigo{{ $item->id }}_{{ $index }}" class="form-label">Código</label>
-                                                                    <input type="text" name="codigo[]" id="codigo{{ $item->id }}_{{ $index }}" class="form-control" value="{{ $honorario->codigo }}" readonly>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <label for="procedimento{{ $item->id }}_{{ $index }}" class="form-label">Procedimento</label>
-                                                                    <select id="procedimento{{ $item->id }}_{{ $index }}" name="procedimento_id[]" class="form-select" onchange="updateCodigo(this)">
-                                                                        <option value="">Escolha o procedimento</option>
-                                                                        @foreach ($procedimentos as $procedimento)
-                                                                            <option value="{{ $procedimento->id }}" data-codigo="{{ $procedimento->codigo }}" {{ $honorario->procedimento_id == $procedimento->id ? 'selected' : '' }}>
-                                                                                {{ $procedimento->procedimento }}
-                                                                            </option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <label for="porcentagem{{ $item->id }}_{{ $index }}" class="form-label">Porcentagem</label>
-                                                                    <input type="text" name="porcentagem[]" id="porcentagem{{ $item->id }}_{{ $index }}" class="form-control" value="{{ $honorario->porcentagem }}">
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <label for="acao" class="form-label">Ações</label>
-                                                                    <div class="d-flex justify-content-between">
-                                                                        <button type="button" class="btn btn-success" onclick="addLancamento({{ $item->id }})">Adicionar</button>
-                                                                        @if ($index > 0)
-                                                                            <button type="button" class="btn btn-danger" onclick="removeLancamento(this)">Remover</button>
-                                                                        @endif
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        @empty
-                                                            <div class="row mb-3">
-                                                                <div class="col-md-2">
-                                                                    <label for="codigo{{ $item->id }}_0" class="form-label">Código</label>
-                                                                    <input type="text" name="codigo[]" id="codigo{{ $item->id }}_0" class="form-control" readonly>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <label for="procedimento{{ $item->id }}_0" class="form-label">Procedimento</label>
-                                                                    <select id="procedimento{{ $item->id }}_0" name="procedimento_id[]" class="form-select" onchange="updateCodigo(this)">
-                                                                        <option value="">Escolha o procedimento</option>
-                                                                        @foreach ($procedimentos as $procedimento)
-                                                                            <option value="{{ $procedimento->id }}" data-codigo="{{ $procedimento->codigo }}">
-                                                                                {{ $procedimento->procedimento }}
-                                                                            </option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <label for="porcentagem{{ $item->id }}_0" class="form-label">Porcentagem</label>
-                                                                    <input type="text" name="porcentagem[]" id="porcentagem{{ $item->id }}_0" class="form-control">
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <label for="acao" class="form-label">Ações</label>
-                                                                    <div class="d-flex justify-content-between">
-                                                                        <button type="button" class="btn btn-success" onclick="addLancamento({{ $item->id }})">Adicionar</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        @endforelse
                                                     </div>
                                                     <button type="button" class="btn btn-primary" onclick="submitForm({{ $item->id }})">Salvar</button>
                                                 </form>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -151,58 +109,90 @@
 </main>
 
 <script>
-function updateCodigo(selectElement) {
-    const row = selectElement.closest('.row.mb-3');
-    const codigoInput = row.querySelector('input[name="codigo[]"]');
-    const selectedOption = selectElement.options[selectElement.selectedIndex];
-    codigoInput.value = selectedOption.getAttribute('data-codigo');
-}
-
-window.addLancamento = function(profissionalId) {
-    const container = document.getElementById('procedimentos-container-' + profissionalId);
-    const newRow = container.querySelector('.row.mb-3').cloneNode(true);
-    const index = container.querySelectorAll('.row.mb-3').length;
-
-    newRow.querySelectorAll('input').forEach(input => input.value = '');
-    newRow.querySelectorAll('select').forEach(select => {
-        select.selectedIndex = 0;
-        updateCodigo(select);
-    });
-
-    newRow.querySelectorAll('[id]').forEach(element => {
-        const newId = element.id.replace(/\d+$/, index);
-        element.id = newId;
-        if (element.name) {
-            element.name = element.name.replace(/\d+$/, index);
+    function updateCodigo(selectElement) {
+        const row = selectElement.closest('.linha');
+        if (row) {
+            const codigoInput = row.querySelector('input[name="codigo[]"]');
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            if (codigoInput && selectedOption) {
+                codigoInput.value = selectedOption.getAttribute('data-codigo');
+            }
         }
-    });
+    }
 
-    const removeButton = document.createElement('button');
-    removeButton.type = 'button';
-    removeButton.className = 'btn btn-danger';
-    removeButton.textContent = 'Remover';
-    removeButton.onclick = function() {
-        newRow.remove();
-    };
+    function addLancamento(profissionalId) {
+        const container = document.getElementById('procedimentos-container-' + profissionalId);
+        if (container) {
+            const newRow = container.querySelector('.linha').cloneNode(true);
+            newRow.querySelectorAll('input').forEach(input => input.value = '');
+            const select = newRow.querySelector('select[name="procedimento_id[]"]');
+            if (select) {
+                select.value = '';
+            }
+            container.appendChild(newRow);
+        }
+    }
 
-    newRow.querySelector('.col-md-2:last-child').appendChild(removeButton);
-    container.appendChild(newRow);
-};
+    function removeLancamento(button) {
+        const row = button.closest('.linha');
+        const container = row.parentElement;
+        if (container && container.children.length > 1) {
+            row.remove();
+        }
+    }
 
-window.removeLancamento = function(button) {
-    button.closest('.row.mb-3').remove();
-};
+    function submitForm(profissionalId) {
+        const container = document.getElementById(`procedimentos-container-${profissionalId}`);
+        const convenioId = container.closest('.modal-content').querySelector('select[name="convenio_id"]').value;
 
-window.submitForm = function(profissionalId) {
-    const form = document.getElementById('form-' + profissionalId);
-    const convenio = document.getElementById('convenio' + profissionalId).value;
-    const procedures = form.querySelectorAll('select[name="procedimento_id[]"]');
+        let valid = true;
+        const formData = new FormData();
+        
+        container.querySelectorAll('.linha').forEach((row, index) => {
+            const codigo = row.querySelector(`input[name="codigo[]"]`);
+            const procedimentoId = row.querySelector(`select[name="procedimento_id[]"]`);
+            const porcentagem = row.querySelector(`input[name="porcentagem[]"]`);
 
-    procedures.forEach(procedure => {
-        procedure.querySelector(`option[value="${procedure.value}"]`).dataset.codigo;
-    });
+            if (!codigo.value || !procedimentoId.value || !porcentagem.value) {
+                valid = false;
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
 
-    form.submit();
-};
+            formData.append(`codigo[${index}]`, codigo.value);
+            formData.append(`procedimento_id[${index}]`, procedimentoId.value);
+            formData.append(`porcentagem[${index}]`, porcentagem.value);
+            formData.append(`convenio_id[${index}]`, convenioId);
+            formData.append(`profissional_id[${index}]`, profissionalId);
+        });
+
+        if (!valid) {
+            return;
+        }
+
+        fetch("{{ route('Honorario.store') }}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Response Data:', data);
+            if (data.success) {
+                alert('Dados salvos com sucesso!');
+                $('#editModal' + profissionalId).modal('hide');
+            } else {
+                alert('Erro ao salvar dados!');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Erro ao salvar dados!');
+        });
+    }
+
 </script>
 @endsection

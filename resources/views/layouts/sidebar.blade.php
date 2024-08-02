@@ -76,8 +76,8 @@
             class="app-menu__icon bi bi-cash-coin"></i><span class="app-menu__label">Financeiro</span><i
             class="treeview-indicator bi bi-chevron-right"></i></a>
             <ul class="treeview-menu">
-                {{-- <li><a class="treeview-item" href="{{ route('honorario.index') }}"><i 
-                    class="icon bi bi-building-fill-add"></i> Honorario Médico</a></li> --}}
+                <li><a class="treeview-item" href="{{ route('Honorario.index') }}"><i 
+                    class="icon bi bi-building-fill-add"></i> Honorario Médico</a></li>
                 <li><a class="treeview-item" href="{{ route('convenioProcedimento.index') }}"><i 
                     class="icon bi bi-list-task"></i> Valor Procedimento</a></li>
             </ul>

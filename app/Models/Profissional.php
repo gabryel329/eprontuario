@@ -82,4 +82,10 @@ class Profissional extends Model
     {
         return $this->belongsToMany(Especialidade::class, 'especialidade_profissional');
     }
+
+    public function honorarios()
+    {
+        return $this->hasMany(Honorario::class);
+    }
+
 }

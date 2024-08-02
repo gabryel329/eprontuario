@@ -7,6 +7,7 @@ use App\Models\Honorario;
 use App\Models\Procedimentos;
 use App\Models\Profissional;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class HonorarioController extends Controller
 {
@@ -16,39 +17,55 @@ class HonorarioController extends Controller
     public function index()
     {
         $honorario = Honorario::all();
-        $profissioanls = Profissional::all();
+        $profissionais = Profissional::with('honorarios')->get(); // Certifique-se de carregar a relação
         $procedimentos = Procedimentos::all();
         $convenios = Convenio::all();
 
-        return view('financeiro.honorario', compact(['honorario', 'profissioanls', 'procedimentos', 'convenios']));
+        return view('financeiro.honorario', compact('honorario', 'profissionais', 'procedimentos', 'convenios'));
     }
+
 
     public function store(Request $request)
-{
-    $validated = $request->validate([
-        'profissional_id' => 'required|exists:profissionals,id',
-        'convenio_id' => 'nullable|exists:convenios,id',
-        'procedimentos' => 'required|array',
-        'procedimentos.*.procedimento_id' => 'required|exists:procedimentos,id',
-        'procedimentos.*.porcentagem' => 'required|string',
-    ]);
-
-    foreach ($validated['procedimentos'] as $procedimento) {
-        Honorario::create([
-            'profissional_id' => $validated['profissional_id'],
-            'convenio_id' => $validated['convenio_id'] ?? null,
-            'procedimento_id' => $procedimento['procedimento_id'],
-            'porcentagem' => $procedimento['porcentagem'],
-        ]);
-    }
-
-    return response()->json(['success' => true, 'message' => 'Dados salvos com sucesso!']);
-}
-
-    public function honorarios()
     {
-        return $this->hasMany(Honorario::class);
+        // Validação dos dados recebidos
+        $validatedData = $request->validate([
+            'codigo.*' => 'required|string',
+            'procedimento_id.*' => 'required|integer|exists:procedimentos,id',
+            'porcentagem.*' => 'required|numeric',
+            'convenio_id.*' => 'required|integer|exists:convenios,id',
+            'profissional_id.*' => 'required|integer|exists:profissionals,id',
+        ]);
+
+        // Inicializar uma variável de sucesso
+        $success = true;
+
+        // Iterar sobre os dados validados e salvar cada registro
+        foreach ($validatedData['convenio_id'] as $index => $convenioId) {
+            $procedimentoId = $validatedData['procedimento_id'][$index];
+            $codigo = $validatedData['codigo'][$index];
+            $porcentagem = $validatedData['porcentagem'][$index];
+            $profissionalId = $validatedData['profissional_id'][$index];
+
+            // Verifica se o registro já existe
+            $existingRecord = Honorario::where('convenio_id', $convenioId)
+                ->where('procedimento_id', $procedimentoId)
+                ->first();
+
+            if (!$existingRecord) {
+                // Cria um novo registro se ele não existir
+                $convenioProcedimento = new Honorario();
+                $convenioProcedimento->convenio_id = $convenioId;
+                $convenioProcedimento->procedimento_id = $procedimentoId;
+                $convenioProcedimento->codigo = $codigo;
+                $convenioProcedimento->porcentagem = $porcentagem;
+                $convenioProcedimento->profissional_id = $profissionalId;
+                $convenioProcedimento->save();
+            }
+        }
+
+        return response()->json(['success' => $success]);
     }
+
 
 
     /**
