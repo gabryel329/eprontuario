@@ -80,6 +80,8 @@
                     class="icon bi bi-building-fill-add"></i> Honorario Médico</a></li>
                 <li><a class="treeview-item" href="{{ route('convenioProcedimento.index') }}"><i 
                     class="icon bi bi-list-task"></i> Valor Procedimento</a></li>
+                <li><a class="treeview-item" href="{{ route('relatorioFinanceiro.index') }}"><i 
+                    class="icon bi bi-file-bar-graph"></i> Relatório</a></li>
             </ul>
         </li>
         <li><a class="app-menu__item" href="{{ route('empresa.index') }}"><i

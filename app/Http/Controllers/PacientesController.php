@@ -23,8 +23,9 @@ class PacientesController extends Controller
     public function index1()
     {
         $paciente = Pacientes::all();
+        $convenios = Convenio::all();
 
-        return view('cadastros.listapacientes', compact(['paciente']));
+        return view('cadastros.listapacientes', compact(['paciente', 'convenios']));
     }
 
     public function create()

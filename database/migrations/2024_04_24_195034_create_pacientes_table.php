@@ -39,7 +39,7 @@ return new class extends Migration
             $table->string('pcd')->nullable();
             $table->string('estado_civil')->nullable();
             $table->string('sus')->nullable();
-            $table->string('convenio')->nullable();
+            $table->integer('convenio')->nullable();
             $table->string('matricula')->nullable();
             $table->string('cor')->nullable();
             $table->string('imagem')->nullable();

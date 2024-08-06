@@ -174,6 +174,9 @@ Route::middleware(['check.session.expired'])->group(function () {
     #GenerateIA
     Route::POST('/generate-ia',  [GenerateIAController::class, 'index'])->name('generateIA.index');
 
+    #RelatorioFinanceiro
+    Route::get('/relatorioFinanceiro', [HonorarioController::class, 'relatorioFinanceiroIndex'])->name('relatorioFinanceiro.index');
+Route::post('/relatorioFinanceiro', [HonorarioController::class, 'relatorioFinanceiroIndex']);
 
 
     #SalaVerificação

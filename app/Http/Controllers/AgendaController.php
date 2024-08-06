@@ -72,7 +72,6 @@ class AgendaController extends Controller
         $name = ucfirst($request->input('name'));
         $sobrenome = ucfirst($request->input('sobrenome'));
         $celular = $request->input('celular');
-        $particular = $request->input('particular');
         $procedimento_id = $request->input('procedimento_id');
         $profissional_id = $request->input('profissional_id');
         $paciente_id = $request->input('paciente_id');
@@ -95,7 +94,6 @@ class AgendaController extends Controller
             'data' => $data,
             'hora' => $hora,
             'name' => $name,
-            'particular' => $particular,
             'sobrenome' => $sobrenome,
             'celular' => $celular,
             'procedimento_id' => $procedimento_id,

@@ -31,7 +31,7 @@
       <div class="login-box">
         <form class="login-form" method="POST" action="{{ route('login') }}">
             @csrf
-          <h3 class="login-head"><i class="bi bi-person me-2"></i>SIGN IN</h3>
+          <h3 class="login-head"><i class="bi bi-person me-2"></i>Login</h3>
           <div class="mb-3">
             <label class="form-label">Usuario</label>
             <input id="name" name="name" class="form-control" type="text" placeholder="Email" autofocus>
