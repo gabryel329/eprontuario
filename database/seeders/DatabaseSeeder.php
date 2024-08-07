@@ -97,6 +97,42 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
+        DB::table('feriados')->insert([
+            [
+                'data' => '2024-01-01',
+                'feriado' => 'Ano Novo'
+            ],
+            [
+                'data' => '2024-04-21',
+                'feriado' => 'Tiradentes'
+            ],
+            [
+                'data' => '2024-05-01',
+                'feriado' => 'Dia do Trabalho'
+            ],
+            [
+                'data' => '2024-09-07',
+                'feriado' => 'Independência do Brasil'
+            ],
+            [
+                'data' => '2024-10-12',
+                'feriado' => 'Nossa Senhora Aparecida'
+            ],
+            [
+                'data' => '2024-11-02',
+                'feriado' => 'Finados'
+            ],
+            [
+                'data' => '2024-11-15',
+                'feriado' => 'Proclamação da República'
+            ],
+            [
+                'data' => '2024-12-25',
+                'feriado' => 'Natal'
+            ],
+        ]);
+    
+
         DB::table('medicamentos')->insert([
             ['nome' => 'abatacepte'],
             ['nome' => 'acetazolamida'],
