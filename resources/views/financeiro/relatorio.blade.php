@@ -82,6 +82,11 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $totalValorConsulta = 0;
+                                    $totalValorClinica = 0;
+                                    $totalValorProfissional = 0;
+                                @endphp
                                 @foreach ($resultados as $resultado)
                                     <tr>
                                         <td>{{ $resultado->hora }} - {{ $resultado->data }}</td>
@@ -93,12 +98,23 @@
                                         @php
                                             $valorClinica = $resultado->valor * (1 - $resultado->porcentagem / 100);
                                             $valorProfissional = $resultado->valor * ($resultado->porcentagem / 100);
+                                            $totalValorConsulta += $resultado->valor;
+                                            $totalValorClinica += $valorClinica;
+                                            $totalValorProfissional += $valorProfissional;
                                         @endphp
                                         <td>R${{ number_format($valorClinica, 2, ',', '.') }}</td>
                                         <td>R${{ number_format($valorProfissional, 2, ',', '.') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="5" style="text-align: right;">Total:</th>
+                                    <th style="color: red;">R${{ number_format($totalValorConsulta, 2, ',', '.') }}</th>
+                                    <th style="color: red;">R${{ number_format($totalValorClinica, 2, ',', '.') }}</th>
+                                    <th style="color: red;">R${{ number_format($totalValorProfissional, 2, ',', '.') }}</th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>

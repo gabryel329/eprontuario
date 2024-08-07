@@ -74,7 +74,10 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::delete('/convenioProcedimento/bulkDestroy', [ConvenioController::class, 'bulkDestroy'])->name('convenioProcedimento.bulkDestroy');
 
     Route::get('/Honorario', [HonorarioController::class, 'index'])->name('Honorario.index');
-    Route::post('/Honorario', [HonorarioController::class, 'store'])->name('Honorario.store');
+    Route::post('/Honorario', [HonorarioController::class, 'store'])->name('honorario.store');
+    Route::get('/honorarios/{profissionalId}', [HonorarioController::class, 'getHonorariosByProfissional'])->name('honorarios.getByProfissional');
+    Route::post('/honorarios/{id}', [HonorarioController::class, 'update'])->name('honorarios.update');
+    Route::post('/honorario/delete-selected', [HonorarioController::class, 'bulkDestroy'])->name('honorario.deleteSelected');
 
     Route::post('/convenio', [ConvenioController::class, 'store'])->name('convenio.store');
     Route::put('/convenio/{id}', [ConvenioController::class, 'update'])->name('convenio.update');

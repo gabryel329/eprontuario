@@ -18,7 +18,7 @@ class HonorarioController extends Controller
     public function index()
     {
         $honorario = Honorario::all();
-        $profissionais = Profissional::with('honorarios')->get(); // Certifique-se de carregar a relação
+        $profissionais = Profissional::with('honorarios')->whereNotNull('conselho')->get();
         $procedimentos = Procedimentos::all();
         $convenios = Convenio::all();
 
@@ -36,36 +36,42 @@ class HonorarioController extends Controller
             'convenio_id.*' => 'required|integer|exists:convenios,id',
             'profissional_id.*' => 'required|integer|exists:profissionals,id',
         ]);
-
+    
         // Inicializar uma variável de sucesso
         $success = true;
-
+    
         // Iterar sobre os dados validados e salvar cada registro
         foreach ($validatedData['convenio_id'] as $index => $convenioId) {
             $procedimentoId = $validatedData['procedimento_id'][$index];
             $codigo = $validatedData['codigo'][$index];
             $porcentagem = $validatedData['porcentagem'][$index];
             $profissionalId = $validatedData['profissional_id'][$index];
-
+    
             // Verifica se o registro já existe
             $existingRecord = Honorario::where('convenio_id', $convenioId)
                 ->where('procedimento_id', $procedimentoId)
+                ->where('profissional_id', $profissionalId)
                 ->first();
-
+    
             if (!$existingRecord) {
                 // Cria um novo registro se ele não existir
-                $convenioProcedimento = new Honorario();
-                $convenioProcedimento->convenio_id = $convenioId;
-                $convenioProcedimento->procedimento_id = $procedimentoId;
-                $convenioProcedimento->codigo = $codigo;
-                $convenioProcedimento->porcentagem = $porcentagem;
-                $convenioProcedimento->profissional_id = $profissionalId;
-                $convenioProcedimento->save();
+                $honorario = new Honorario();
+                $honorario->convenio_id = $convenioId;
+                $honorario->procedimento_id = $procedimentoId;
+                $honorario->codigo = $codigo;
+                $honorario->porcentagem = $porcentagem;
+                $honorario->profissional_id = $profissionalId;
+                $honorario->save();
+            } else {
+                // Se o registro já existe, atualiza a porcentagem
+                $existingRecord->porcentagem = $porcentagem;
+                $existingRecord->save();
             }
         }
-
+    
         return response()->json(['success' => $success]);
     }
+    
 
 
 
@@ -106,74 +112,101 @@ class HonorarioController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-{
-
-    // Remove existing records for this profissional
-    Honorario::where('profissional_id', $id)->delete();
-
-    // Save new records
-    foreach ($request->input('procedimentos', []) as $procedimento) {
-        Honorario::create([
-            'profissional_id' => $id,
-            'convenio_id' => 'convenio_id',
-            'procedimento_id' => 'procedimento_id',
-            'porcentagem' => 'porcentagem',
-            'codigo' => 'codigo',
-        ]);
-    }
-
-    return response()->json(['success' => true, 'message' => 'Atualizado com sucesso']);
-}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Honorario $honorario)
     {
-        //
+
+        // Remove existing records for this profissional
+        Honorario::where('profissional_id', $id)->delete();
+
+        // Save new records
+        foreach ($request->input('procedimentos', []) as $procedimento) {
+            Honorario::create([
+                'profissional_id' => $id,
+                'convenio_id' => 'convenio_id',
+                'procedimento_id' => 'procedimento_id',
+                'porcentagem' => 'porcentagem',
+                'codigo' => 'codigo',
+            ]);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Atualizado com sucesso']);
     }
+
+
     public function relatorioFinanceiroIndex(Request $request)
-{
-    $convenios = DB::table('convenios')->pluck('nome', 'id');
-    $profissionals = DB::table('profissionals')->pluck('name', 'id');
+    {
+        $convenios = DB::table('convenios')->pluck('nome', 'id');
+        $profissionals = DB::table('profissionals')->pluck('name', 'id');
 
-    $resultados = null;
-    if ($request->isMethod('post')) {
-        $dataInicio = $request->input('data_inicio');
-        $dataFim = $request->input('data_fim');
-        $convenioId = $request->input('convenio_id');
-        $profissionalId = $request->input('profissional_id');
+        $resultados = null;
+        if ($request->isMethod('post')) {
+            $dataInicio = $request->input('data_inicio');
+            $dataFim = $request->input('data_fim');
+            $convenioId = $request->input('convenio_id');
+            $profissionalId = $request->input('profissional_id');
 
-        $query = DB::table('agendas as ag')
-            ->select('ag.hora', 'ag.data', 'prof.name', 'proc.procedimento', 'conv.nome', 'hon.porcentagem', 'conpro.valor')
-            ->join('procedimentos as proc', 'proc.procedimento', '=', 'ag.procedimento_id')
-            ->join('profissionals as prof', 'prof.id', '=', 'ag.profissional_id')
-            ->join('pacientes as pac', 'pac.id', '=', 'ag.paciente_id')
-            ->leftJoin('convenios as conv', 'conv.id', '=', 'pac.convenio')
-            ->leftJoin('convenio_procedimento as conpro', 'conpro.procedimento_id', '=', 'proc.id')
-            ->leftJoin('honorarios as hon', 'hon.procedimento_id', '=', 'proc.id')
-            ->distinct();
+            $query = DB::table('agendas as ag')
+                ->select('ag.hora', 'ag.data', 'prof.name', 'proc.procedimento', 'conv.nome', 'hon.porcentagem', 'conpro.valor')
+                ->join('procedimentos as proc', 'proc.procedimento', '=', 'ag.procedimento_id')
+                ->join('profissionals as prof', 'prof.id', '=', 'ag.profissional_id')
+                ->join('pacientes as pac', 'pac.id', '=', 'ag.paciente_id')
+                ->leftJoin('convenios as conv', 'conv.id', '=', 'pac.convenio')
+                ->leftJoin('convenio_procedimento as conpro', 'conpro.procedimento_id', '=', 'proc.id')
+                ->leftJoin('honorarios as hon', 'hon.procedimento_id', '=', 'proc.id')
+                ->distinct();
 
-        if ($dataInicio) {
-            $query->whereDate('ag.data', '>=', $dataInicio);
+            if ($dataInicio) {
+                $query->whereDate('ag.data', '>=', $dataInicio);
+            }
+
+            if ($dataFim) {
+                $query->whereDate('ag.data', '<=', $dataFim);
+            }
+
+            if ($convenioId) {
+                $query->where('conv.id', '=', $convenioId);
+            }
+
+            if ($profissionalId) {
+                $query->where('prof.id', '=', $profissionalId);
+            }
+
+            $resultados = $query->get();
         }
 
-        if ($dataFim) {
-            $query->whereDate('ag.data', '<=', $dataFim);
-        }
-
-        if ($convenioId) {
-            $query->where('conv.id', '=', $convenioId);
-        }
-
-        if ($profissionalId) {
-            $query->where('prof.id', '=', $profissionalId);
-        }
-
-        $resultados = $query->get();
+        return view('financeiro.relatorio', compact('convenios', 'profissionals', 'resultados'));
     }
 
-    return view('financeiro.relatorio', compact('convenios', 'profissionals', 'resultados'));
-}
+    public function getHonorariosByProfissional($profissionalId)
+    {
+        $honorarios = Honorario::where('profissional_id', $profissionalId)->get();
+        return response()->json($honorarios);
+    }
+
+
+
+
+    public function destroy($id)
+    {
+        try {
+            $honorario = Honorario::findOrFail($id);
+            $honorario->delete();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Erro ao remover lançamento.']);
+        }
+    }
+
+    public function bulkDestroy(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (is_array($ids)) {
+            Honorario::destroy($ids);
+            return response()->json(['success' => true, 'message' => 'Excluido com sucesso']);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Excluido com sucesso']);
+    }
 
 }
