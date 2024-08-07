@@ -112,7 +112,7 @@
                                     <tbody>
                                         @foreach ($historico as $historico)
                                             <tr>
-                                                <td>{{ $historico->consulta }}{{ $historico->an_pa }}</td>
+                                                <td>{{ $historico->consulta }}</td>
                                                 <td>{{ $historico->data }}</td>
                                                 <td>{{ $historico->paciente }}</td>
                                                 <td>{{ $historico->profissional }}</td>
@@ -170,8 +170,7 @@
                                                                             <div class="tab-pane active"
                                                                                 id="atendimento-anamnese-{{ $historico->consulta }}">
                                                                                 <div class="timeline-post">
-                                                                                    <h4 class="line-head">Anamnese
-                                                                                        {{ $historico->an_pa }}</h4>
+                                                                                    <h4 class="line-head">Anamnese</h4>
                                                                                     <div class="row mb-12">
                                                                                         <div class="col-md-12">
                                                                                             <div class="tile-body">

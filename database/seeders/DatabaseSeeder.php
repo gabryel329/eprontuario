@@ -19,6 +19,10 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+        DB::table('convenios')->insert([
+            ['nome' => 'Particular'],
+            ['nome' => 'Amil'],
+        ]);
         DB::table('permisoes')->insert([
             ['cargo' => 'Medico'],
             ['cargo' => 'Recepção'],
@@ -81,11 +85,13 @@ class DatabaseSeeder extends Seeder
         DB::table('pacientes')->insert([
             [
                 'name' => 'Rafael',
-                'sobrenome' => 'Souza'
+                'sobrenome' => 'Souza',
+                'convenio' => '1'
             ],
             [
                 'name' => 'Igor',
-                'sobrenome' => 'Tavares'
+                'sobrenome' => 'Tavares',
+                'convenio' => '2'
             ],
         ]);
 

@@ -128,9 +128,8 @@
                                                             <div class="mb-3 col-md-4">
                                                                 <label class="form-label">Convênio:</label>
                                                                 <select class="form-control" id="convenio{{ $item->id }}" name="convenio">
-                                                                    <option disabled selected style="font-size:18px;color: black;">{{ optional($item->convenio)->nome }}</option>
                                                                     @foreach ($convenios as $convenio)
-                                                                        <option value="{{ $convenio->id }}" {{ $convenio->id == $item->convenio_id ? 'selected' : '' }}>{{ $convenio->nome }}</option>
+                                                                        <option value="{{ $convenio->id }}" {{ $convenio->id == $item->convenio ? 'selected' : '' }}>{{ $convenio->nome }}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </div>                                                            
