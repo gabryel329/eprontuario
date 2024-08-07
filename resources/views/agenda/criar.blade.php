@@ -174,82 +174,61 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var dateInput = document.getElementById('data');
-            var today = new Date().toISOString().split('T')[0];
-            dateInput.setAttribute('min', today);
+    var dateInput = document.getElementById('data');
+    var today = new Date().toISOString().split('T')[0];
+    dateInput.setAttribute('min', today);
 
-            dateInput.addEventListener('input', function() {
-                var selectedDate = new Date(this.value);
-                var dayOfWeek = selectedDate.getUTCDay(); // Domingo = 0, Segunda = 1, etc.
+    dateInput.addEventListener('input', function() {
+        var selectedDate = new Date(this.value);
+        var dayOfWeek = selectedDate.getUTCDay(); // Domingo = 0, Segunda = 1, etc.
 
-                if (dayOfWeek === 0) {
-                    alert('Domingos não são permitidos. Por favor, escolha outro dia.');
-                    this.value = '';
-                }
-            });
-        });
-
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            const day = ("0" + date.getDate()).slice(-2);
-            const month = ("0" + (date.getMonth() + 1)).slice(-2);
-            const year = date.getFullYear();
-            return `${day}/${month}/${year}`;
+        if (dayOfWeek === 0) {
+            alert('Domingos não são permitidos. Por favor, escolha outro dia.');
+            this.value = '';
         }
+    });
+});
 
         function showAdditionalFields() {
-            var data = document.getElementById('data').value;
-            var profissionalId = document.getElementById('profissional_id').value;
-            var profissionalName = document.getElementById('profissional_id').options[document.getElementById('profissional_id').selectedIndex].text;
+    var data = document.getElementById('data').value;
+    var profissionalId = document.getElementById('profissional_id').value;
+    var profissionalName = document.getElementById('profissional_id').options[document.getElementById('profissional_id').selectedIndex].text;
 
-            if (!data) {
-                alert('Por favor, selecione uma data.');
-                return;
-            }
+    if (!data) {
+        alert('Por favor, selecione uma data.');
+        return;
+    }
 
-            if (!profissionalId || profissionalId === "Escolha") {
-                alert('Por favor, selecione um médico.');
-                return;
-            }
+    if (!profissionalId || profissionalId === "Escolha") {
+        alert('Por favor, selecione um médico.');
+        return;
+    }
 
-            if (isHoliday(data)) {
-                alert('A data selecionada é um feriado. Por favor, escolha outra data.');
-                return;
-            }
+    if (isHoliday(data)) {
+        alert('A data selecionada é um feriado. Por favor, escolha outra data.');
+        return;
+    }
 
+    // Ajusta a data para o formato YYYY-MM-DD para a verificação do dia da semana
+    var formattedDate = formatDateToISO(data);
 
-            document.getElementById('selectedData').value = data;
-            document.getElementById('selectedProfissionalId').value = profissionalId;
+    document.getElementById('selectedData').value = data;
+    document.getElementById('selectedProfissionalId').value = profissionalId;
 
-            document.getElementById('displaySelectedData').innerText = data;
-            document.getElementById('displaySelectedProfissional').innerText = 'Dr(a): ' + profissionalName;
+    document.getElementById('displaySelectedData').innerText = data;
+    document.getElementById('displaySelectedProfissional').innerText = 'Dr(a): ' + profissionalName;
 
-            document.getElementById('initial-form').style.display = 'none';
-            document.getElementById('additional-fields').style.display = 'block';
-            document.getElementById('agenda-table').style.display = 'block';
+    document.getElementById('initial-form').style.display = 'none';
+    document.getElementById('additional-fields').style.display = 'block';
+    document.getElementById('agenda-table').style.display = 'block';
 
-            fetchAgenda(data, profissionalId);
+    fetchAgenda(data, profissionalId);
+}
+
+        function formatDateToISO(dateString) {
+            var parts = dateString.split('/');
+            return `${parts[2]}-${parts[1]}-${parts[0]}`;
         }
-
-        const currentYear = new Date().getFullYear();
-        const feriados = [
-            `${currentYear}-01-01`, // Ano Novo
-            `${currentYear}-02-12`, // Carnaval (segunda-feira)
-            `${currentYear}-02-13`, // Carnaval (terça-feira)
-            `${currentYear}-02-14`, // Quarta-feira de Cinzas (ponto facultativo até às 14h)
-            `${currentYear}-03-29`, // Paixão de Cristo
-            `${currentYear}-04-21`, // Tiradentes
-            `${currentYear}-05-01`, // Dia do Trabalho
-            `${currentYear}-05-30`, // Corpus Christi
-            `${currentYear}-06-24`, // São João
-            `${currentYear}-07-02`, // Independência da Bahia
-            `${currentYear}-09-07`, // Independência do Brasil
-            `${currentYear}-10-12`, // Nossa Senhora Aparecida
-            `${currentYear}-11-02`, // Finados
-            `${currentYear}-11-15`, // Proclamação da República
-            `${currentYear}-12-08`, // Nossa Senhora da Conceição da Praia
-            `${currentYear}-12-25`  // Natal
-        ];
 
         function isHoliday(data) {
             return feriados.includes(data);
