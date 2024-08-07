@@ -160,6 +160,7 @@
             <td>{{ $dia }} dias afastados das suas atividades.</td>
         </tr>
     </table>
+    <p>Obs: {{ $obs }}</p>
     <br>
     <div class="signature">
         <p>___________________________________</p>

@@ -328,7 +328,8 @@
                                                 <label class="form-check-label" for="flexRadioDefault1">Atestado</label>
                                             </div>
                                             <div id="diasInput" style="display: none;">
-                                                <input type="text" name="dia_id" id="dia_id" placeholder="Dias">
+                                                <input type="number" name="dia_id" id="dia_id" placeholder="Dias">
+                                                <input type="text" name="obs_id" id="obs_id" placeholder="Observação">
                                             </div>
                                         </div>
                                         <button type="button" class="btn btn-primary" title="Imprimir" id="enviarAtes">
@@ -1230,6 +1231,7 @@
             }
 
             let dia_id = document.getElementById('dia_id')?.value || '0';
+            let obs_id = document.getElementById('obs_id')?.value || '-';
             console.log('Dia ID:', dia_id);
 
             let paciente_id = document.getElementById('paciente_id1')?.value || '';
@@ -1249,6 +1251,7 @@
                 data: {
                     selectedOption: selectedOption,
                     dia_id: dia_id,
+                    obs_id: obs_id,
                     paciente_id: paciente_id,
                     agenda_id: agenda_id,
                     profissional_id: profissional_id,
