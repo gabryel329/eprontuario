@@ -13,8 +13,8 @@
     <main class="app-content">
         <div class="app-title">
             <div>
-                <h1><i class="bi bi-ui-checks"></i> Criar Agenda<span id="displaySelectedProfissional"
-                        class="selected-info"></span>
+                <h1><i class="bi bi-ui-checks"></i> Criar Agenda
+                    <span id="displaySelectedProfissional" class="selected-info"></span>
                     <span id="displaySelectedData" class="selected-info"></span>
                 </h1>
             </div>
@@ -189,6 +189,14 @@
             });
         });
 
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const day = ("0" + date.getDate()).slice(-2);
+            const month = ("0" + (date.getMonth() + 1)).slice(-2);
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
         function showAdditionalFields() {
             var data = document.getElementById('data').value;
             var profissionalId = document.getElementById('profissional_id').value;
@@ -209,11 +217,12 @@
                 return;
             }
 
+
             document.getElementById('selectedData').value = data;
             document.getElementById('selectedProfissionalId').value = profissionalId;
 
             document.getElementById('displaySelectedData').innerText = data;
-            document.getElementById('displaySelectedProfissional').innerText = profissionalName;
+            document.getElementById('displaySelectedProfissional').innerText = 'Dr(a): ' + profissionalName;
 
             document.getElementById('initial-form').style.display = 'none';
             document.getElementById('additional-fields').style.display = 'block';
