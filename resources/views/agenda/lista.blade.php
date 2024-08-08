@@ -77,8 +77,12 @@
                 <h3 class="tile-title">Lista das Consultas</h3>
                 <span class="selected-info">
                     @if(session('data') || session('profissional_id'))
-                        Data: {{ session('data') ?? 'N/A' }} - 
-                        Médico: 
+                        @php
+                            $data = session('data');
+                            $formattedDate = $data ? \Carbon\Carbon::parse($data)->format('d/m/Y') : 'N/A';
+                        @endphp
+                        Data: {{ $formattedDate }} - 
+                        Dr(a):
                         @if(session('profissional_id'))
                             @php
                                 $profissional = $profissionals->firstWhere('id', session('profissional_id'));
