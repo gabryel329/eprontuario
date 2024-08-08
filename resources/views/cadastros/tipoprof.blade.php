@@ -53,7 +53,7 @@
                   <div class="tile-footer">
                     <div class="row">
                       <div class="col-md-8 col-md-offset-3">
-                        <button class="btn btn-primary" type="submit"><i class="bi bi-check-circle-fill me-2"></i>Novo</button>
+                        <button class="btn btn-primary" type="submit"><i class="bi bi-check-circle-fill me-2"></i>Salvar</button>
                       </div>
                     </div>
                   </div>
