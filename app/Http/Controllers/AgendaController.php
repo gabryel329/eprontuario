@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agenda;
+use App\Models\Feriado;
 use App\Models\Pacientes;
 use App\Models\Painel;
 use App\Models\Procedimentos;
@@ -31,8 +32,9 @@ class AgendaController extends Controller
         $pacientes = Pacientes::all();
         $profissional = Profissional::whereNotNull('conselho')->get();
         $procedimentos = Procedimentos::all();
+        $feriado = Feriado::all();
 
-        return view('agenda.criar', compact(['agendas', 'pacientes', 'profissional', 'procedimentos']));
+        return view('agenda.criar', compact(['agendas', 'pacientes', 'profissional', 'procedimentos', 'feriado']));
     }
 
     public function index1(Request $request)
@@ -285,4 +287,21 @@ class AgendaController extends Controller
         }
     }
 
+
+    public function verificarFeriado(Request $request)
+{
+    $data = $request->input('data');
+    
+    // Verificar se a data é um domingo
+    $isSunday = Carbon::parse($data)->isSunday();
+
+    // Verificar se a data é um feriado
+    $isHoliday = Feriado::where('data', $data)->exists();
+
+    return response()->json([
+        'isHoliday' => $isHoliday,
+        'isSunday' => $isSunday,
+        'data' => $data
+    ]);
+}
 }

@@ -93,6 +93,7 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::put('/agenda/{id}', [AgendaController::class, 'update'])->name('agenda.update');
     Route::delete('/agenda/{id}', [AgendaController::class, 'destroy'])->name('agenda.destroy');
     Route::post('/agenda/update-status', [AgendaController::class, 'updateStatus'])->name('agenda.updateStatus');
+    Route::post('/verificar-feriado', [AgendaController::class, 'verificarFeriado']);
     Route::post('/consultorioPainel/update', [AgendaController::class, 'updateConsultorioPainel'])->name('consultorioPainel.update');
 
     // Pacientes
