@@ -126,7 +126,7 @@
                                                                 </div>
                                                                 <div class="col-2">
                                                                     <input type="text" name="porcentagem[]"
-                                                                        class="form-control" placeholder="Valor" required>
+                                                                        class="form-control" placeholder="%" required>
                                                                 </div>
                                                                 <div class="col-2">
                                                                     <div>

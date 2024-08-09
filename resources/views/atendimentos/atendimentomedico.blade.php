@@ -304,6 +304,26 @@
                         <div class="tab-pane fade" id="atendimento-prescricao">
                             <div class="timeline-post">
                                 <h4 class="line-head">Prescrição</h4>
+                                <div class="col-md-12 d-flex justify-content-between align-items-center">
+                                    <div class="d-flex flex-row">
+                                        <div class="col-md-4">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="receita">
+                                            <label class="form-check-label" for="flexRadioDefault2">Receita</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" value="solicitacao_exame">
+                                            <label class="form-check-label" for="flexRadioDefault3">Solicitação de Exame</label>
+                                        </div>
+                                        <div class="col-md-4" id="atestadoCheck">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="atestado">
+                                            <label class="form-check-label" for="flexRadioDefault1">Atestado</label>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-primary" title="Imprimir" id="enviarAtes">
+                                        <i class="bi bi-printer"></i>
+                                    </button>
+                                </div>
+                                <hr>
                                 <div class="row">
                                     <input class="form-control" id="paciente_id" name="paciente_id" type="text" value="{{ $agenda->paciente_id }}" hidden>
                                     <input class="form-control" id="agenda_id" name="agenda_id" type="text" value="{{ $agenda->id }}" hidden>
@@ -312,33 +332,65 @@
                                     <input class="form-control" id="paciente_id1" name="paciente_id" type="text" value="{{ $agenda->paciente->name }}" hidden>
                                     <input class="form-control" id="agenda_id1" name="agenda_id" type="text" value="{{ $agenda->id }}" hidden>
                                     <input class="form-control" id="profissional_id1" name="profissional_id" type="text" value="{{ $agenda->profissional->name }}" hidden>
-                                    
-                                    <div class="col-md-12 d-flex justify-content-between align-items-center">
-                                        <div class="d-flex flex-row">
-                                            <div class="form-check mr-3" style="margin-right: 5px">
-                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="receita">
-                                                <label class="form-check-label" for="flexRadioDefault2">Receita</label>
-                                            </div>
-                                            <div class="form-check mr-3" style="margin-right: 5px">
-                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" value="solicitacao_exame">
-                                                <label class="form-check-label" for="flexRadioDefault3">Solicitação de Exame</label>
-                                            </div>
-                                            <div class="form-check mr-3" id="atestadoCheck" style="margin-right: 5px">
-                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="atestado">
-                                                <label class="form-check-label" for="flexRadioDefault1">Atestado</label>
-                                            </div>
-                                            <div id="diasInput" style="display: none;">
-                                                <input type="number" name="dia_id" id="dia_id" placeholder="Dias">
-                                                <input type="text" name="obs_id" id="obs_id" placeholder="Observação">
+                                </div>
+                                <span id="diasInput" style="display: none;">
+                                    <div class="row d-flex">
+                                        <div class="col-md-2">
+                                            <label class="form-label">Qtd de dias</label>
+                                            <input type="number" class="form-control" name="dia_id" id="dia_id">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">Cid</label>
+                                            <div class="input-group">
+                                                <input class="form-control" id="cid" name="cid" type="text">
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cidModal">
+                                                    <i class="bi bi-search"></i>
+                                                </button>
                                             </div>
                                         </div>
-                                        <button type="button" class="btn btn-primary" title="Imprimir" id="enviarAtes">
-                                            <i class="bi bi-printer"></i>
-                                        </button>
+                                        <div class="col-md-8">
+                                            <label class="form-label">Observação</label>
+                                            <input type="text" class="form-control" name="obs_id" id="obs_id">
+                                        </div>
+                                    </div>
+                                </span>
+                                <div class="modal fade" id="cidModal" tabindex="-1" aria-labelledby="cidModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="cidModalLabel">Selecione o Cid</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <input class="form-control" id="cidSearch" type="text" placeholder="Pesquisar por cid 10 ou descrição...">
+                                                </div>
+                                                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                                    <table class="table table-hover" id="cidTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>cid 10</th>
+                                                                <th>Descrição</th>
+                                                                <th>Ação</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($cid as $p)
+                                                                <tr>
+                                                                    <td>{{ $p->cid10 }}</td>
+                                                                    <td>{{ $p->descr }}</td>
+                                                                    <td>
+                                                                        <button class="btn btn-primary" type="button" onclick="selectCid('{{ $p->id }}', '{{ $p->cid10 }}')">Selecionar</button>
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                
-
                                 <div class="col-md-12">
                                     <ul class="nav nav-tabs user-tabs">
                                         <li class="nav-item"><a class="nav-link active" href="#prescricao-exame"
@@ -1230,8 +1282,9 @@
                 return;
             }
 
-            let dia_id = document.getElementById('dia_id')?.value || '0';
+            let dia_id = document.getElementById('dia_id')?.value || '-';
             let obs_id = document.getElementById('obs_id')?.value || '-';
+            let cid = document.getElementById('cid')?.value || '-';
             console.log('Dia ID:', dia_id);
 
             let paciente_id = document.getElementById('paciente_id1')?.value || '';
@@ -1252,6 +1305,7 @@
                     selectedOption: selectedOption,
                     dia_id: dia_id,
                     obs_id: obs_id,
+                    cid: cid,
                     paciente_id: paciente_id,
                     agenda_id: agenda_id,
                     profissional_id: profissional_id,
@@ -1278,5 +1332,25 @@
             });
         });
 
+        function selectCid(id, cid10) {
+        document.getElementById('cid').value = cid10;
+        var modal = bootstrap.Modal.getInstance(document.getElementById('cidModal'));
+        modal.hide();
+    }
+
+    document.getElementById('cidSearch').addEventListener('keyup', function() {
+        var input = this.value.toLowerCase();
+        var rows = document.getElementById('cidTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+        for (var i = 0; i < rows.length; i++) {
+            var name = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
+            var descr = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+            if (name.indexOf(input) > -1 || descr.indexOf(input) > -1) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+    });
     </script>
 @endsection

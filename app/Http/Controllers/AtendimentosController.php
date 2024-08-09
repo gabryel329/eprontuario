@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Agenda;
 use App\Models\Anamnese;
 use App\Models\Atendimentos;
+use App\Models\Cid;
 use App\Models\Empresas;
 use App\Models\Exames;
 use App\Models\Medicamento;
@@ -27,6 +28,7 @@ class AtendimentosController extends Controller
         $agenda = Agenda::findOrFail($agenda_id);
         $medicamento = Medicamento::all();
         $procedimento = Procedimentos::all();
+        $cid = Cid::all();
 
         $paciente = Pacientes::findOrFail($paciente_id);
 
@@ -106,7 +108,7 @@ class AtendimentosController extends Controller
             ->orderBy('ag.data', 'asc')
             ->get();
 
-        return view('atendimentos.atendimentomedico', compact('agenda', 'paciente', 'medicamento', 'procedimento', 'historico'));
+        return view('atendimentos.atendimentomedico', compact('agenda', 'cid', 'paciente', 'medicamento', 'procedimento', 'historico'));
     }
 
 
@@ -442,7 +444,7 @@ class AtendimentosController extends Controller
             $query->where('pa.id', $paciente_id);
         }
         if (!empty($profissional_id)) {
-            $query->where('an.profissional_id', $profissional_id);
+            $query->where('ag.profissional_id', $profissional_id);
         }
 
         // Finaliza a montagem da consulta
@@ -595,6 +597,7 @@ class AtendimentosController extends Controller
         $profissionalId = $request->input('profissional_id');
         $dia = $request->input('dia_id');
         $obs = $request->input('obs_id');
+        $cid = $request->input('cid');
 
         // Debugging output
         if (!$dia && $selectedOption === 'atestado') {
@@ -611,6 +614,7 @@ class AtendimentosController extends Controller
                     'profissional_id' => $profissionalId,
                     'dia' => $dia,
                     'obs' => $obs,
+                    'cid' => $cid,
                 ]);
                 break;
             case 'receita':
@@ -634,7 +638,7 @@ class AtendimentosController extends Controller
         return response()->json(['redirect_url' => $redirectUrl]);
     }
 
-    public function atestadoView($paciente_id, $agenda_id, $profissional_id, $dia, $obs, Request $request)
+    public function atestadoView($paciente_id, $agenda_id, $profissional_id, $dia, $obs, $cid, Request $request)
     {
         $empresas = Empresas::all();
         
@@ -657,7 +661,7 @@ class AtendimentosController extends Controller
 
         $currentDate = now()->format('Y-m-d');
 
-        return view('formulario.atestado', compact('paciente_id', 'agenda_id', 'profissional_id', 'obs', 'dia', 'empresas', 'paciente', 'profissional', 'currentDate'));
+        return view('formulario.atestado', compact('paciente_id', 'agenda_id', 'profissional_id', 'obs', 'cid', 'dia', 'empresas', 'paciente', 'profissional', 'currentDate'));
     }
 
     public function receitaView($paciente_id, $agenda_id, $profissional_id, Request $request)

@@ -38,30 +38,39 @@ class AgendaController extends Controller
     }
 
     public function index1(Request $request)
-    {
-        $procedimentos = Procedimentos::all();
-        $pacientes = Pacientes::all();
-        $profissionals = Profissional::whereNotNull('conselho')->get();
-        $agendas = collect();
+{
+    $procedimentos = Procedimentos::all();
+    $pacientes = Pacientes::all();
+    $profissionals = Profissional::whereNotNull('conselho')->get();
+    $agendas = collect();
 
-        // Store form values in the session
-        if ($request->has('data') && $request->has('profissional_id')) {
-            session([
-                'data' => $request->data,
-                'profissional_id' => $request->profissional_id
-            ]);
+    // Store form values in the session
+    if ($request->has('data') || $request->has('profissional_id')) {
+        $query = Agenda::query();
 
-            $agendas = Agenda::where('profissional_id', $request->profissional_id)
-                ->where('data', $request->data)
-                ->orderBy('hora', 'asc')
-                ->get();
+        if ($request->has('data')) {
+            session(['data' => $request->data]);
+            $query->where('data', $request->data);
         } else {
-            // Clear session data if no filter is applied
-            session()->forget(['data', 'profissional_id']);
+            session()->forget('data');
         }
 
-        return view('agenda.lista', compact('profissionals', 'agendas', 'pacientes', 'procedimentos'));
+        if ($request->has('profissional_id')) {
+            session(['profissional_id' => $request->profissional_id]);
+            $query->where('profissional_id', $request->profissional_id);
+        } else {
+            session()->forget('profissional_id');
+        }
+
+        $agendas = $query->orderBy('hora', 'asc')->get();
+    } else {
+        // Clear session data if no filter is applied
+        session()->forget(['data', 'profissional_id']);
     }
+
+    return view('agenda.lista', compact('profissionals', 'agendas', 'pacientes', 'procedimentos'));
+}
+
 
     /**
      * Store a newly created resource in storage.
