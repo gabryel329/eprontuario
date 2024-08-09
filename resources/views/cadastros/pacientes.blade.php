@@ -20,29 +20,29 @@
                     @csrf
                     <div class="row">
                         <div class="mb-3 col-md-6">
-                            <label class="form-label">Nome Completo</label>
+                            <label class="form-label">Nome Completo:</label>
                             <input class="form-control" id="name" name="name" type="text" value="{{ old('name') }}">
                         </div>
                         <div class="mb-3 col-md-3">
-                            <label class="form-label">E-mail</label>
+                            <label class="form-label">E-mail:</label>
                             <input class="form-control" id="email" name="email" type="email" value="{{ old('email') }}">
                         </div>
                         <div class="mb-3 col-md-3">
-                            <label class="form-label">Nome Social</label>
-                            <input class="form-control" id="nome_social" name="nome_social" type="text" value="{{ old('nome_social') }}">
+                            <label class="form-label">Nome Social:</label>
+                            <input class="form-control" id="nome_social" name="nome_social" type="text" placeholder="Opcional" value="{{ old('nome_social') }}">
                         </div>
                     </div>
                     <div class="row">
                         <div class="mb-3 col-md-3">
-                            <label class="form-label">Nascimento </label>
+                            <label class="form-label">Nascimento:</label>
                             <input class="form-control" id="nasc" name="nasc" type="date" value="{{ old('nasc') }}" max="{{ date('Y-m-d') }}">
                         </div>
                         <div class="mb-3 col-md-3">
-                            <label class="form-label">CPF </label>
+                            <label class="form-label">CPF: </label>
                             <input class="form-control" id="cpf" name="cpf" type="text" value="{{ old('cpf') }}" required>
                         </div>
                         <div class="mb-3 col-md-3">
-                            <label class="form-label">Gênero</label>
+                            <label class="form-label">Gênero:</label>
                             <div class="form-check">
                               <label class="form-check-label">
                                 <input class="form-check-input" type="radio" id="genero" name="genero" value="M" {{ old('genero') == 'M' ? 'checked' : '' }}>Masculino
@@ -146,7 +146,7 @@
                     <div class="row">
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Nome do Pai</label>
-                            <input class="form-control" id="nome_pai" name="nome_pai" type="text" value="{{ old('nome_pai') }}">
+                            <input class="form-control" id="nome_pai" name="nome_pai" type="text" placeholder="Opcional" value="{{ old('nome_pai') }}">
                         </div>
                         <div class="mb-3 col-md-4">
                             <label class="form-label">Nome da Mãe</label>
@@ -258,6 +258,9 @@ $(document).ready(function(){
     $('#telefone').mask('(00) 0000-0000');
     $('#celular').mask('(00) 00000-0000');
     $('#cep').mask('00000-000');
+    $('#rg').mask('00.000.000-0');
+    $('#certidao').mask('00.000.000-00');
+    $('#sus').mask('000.0000.0000.0000');
 });
 
     function limpa_formulário_cep() {

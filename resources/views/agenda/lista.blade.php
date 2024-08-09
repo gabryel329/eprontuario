@@ -47,11 +47,11 @@
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
-                                <label class="form-label">Data</label>
+                                <label class="form-label"><Strong>Data:</Strong></label>
                                 <input name="data" id="data" class="form-control" type="date" value="{{ session('data', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Médico</label>
+                                <label class="form-label"><Strong>Médico:</Strong></label>
                                 <select class="form-control" id="profissional_id" name="profissional_id">
                                     <option disabled selected style="font-size:18px;color: black;">Escolha</option>
                                     @foreach ($profissionals as $item)

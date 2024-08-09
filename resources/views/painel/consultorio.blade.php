@@ -13,26 +13,72 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css') }}">
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/LOGO_01_VERDE.png') }}">
+    <style>
+        /* Ajuste para garantir que o cabeçalho preencha toda a largura da tela */
+        .app-header {
+            display: flex;
+            justify-content: center; /* Alinha o conteúdo horizontalmente no centro */
+            align-items: center;     /* Alinha o conteúdo verticalmente no centro */
+            height: 60px;            /* Ajuste a altura conforme necessário */
+            width: 100%;             /* Faz o cabeçalho ocupar toda a largura da tela */
+            background-color: #145046;  /* Adicione uma cor de fundo para contraste */
+            position: fixed;         /* Faz o cabeçalho ficar fixo no topo da página */
+            top: 0;                  /* Posiciona o cabeçalho no topo da página */
+            left: 0;                 /* Posiciona o cabeçalho no lado esquerdo da página */
+            z-index: 1000;           /* Garante que o cabeçalho fique acima de outros elementos */
+        }
+
+        .app-header__logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: auto; /* Ajuste a largura do link conforme necessário */
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Alinha verticalmente o conteúdo dentro do div */
+            height: 100%;        /* Faz o conteúdo ocupar toda a altura do cabeçalho */
+        }
+
+        .header-image {
+            max-height: 50px; /* Ajuste a altura máxima da imagem para se adequar ao cabeçalho */
+            max-width: 100%;  /* Garante que a imagem não ultrapasse a largura do cabeçalho */
+        }
+        
+        .app-content {
+            min-height: calc(100vh - 60px); /* Ajusta a altura mínima do conteúdo principal */
+            margin-top: 60px;              /* Adiciona margem superior para o cabeçalho fixo */
+            padding: 30px;
+            background-color: #1D695C;
+        }
+
+        .card-body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* Outras regras de estilo podem permanecer inalteradas */
+    </style>
 </head>
 
-<style>
-    .app-content {
-        height: 100vh;
-    }
-
-    .card-body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-    }
-</style>
-
-<body class="app sidebar-mini">
+<body>
+    <header class="app-header">
+        <a class="app-header__logo" href="/home">
+            <div class="header-content">
+                <img src="{{ asset('images/LOGO_01_HORIZONTAL.png') }}" alt="ePRONTUARIO" class="header-image">
+            </div>
+        </a>
+    </header>
+    
     <!-- Sidebar menu-->
-    <aside class="app-sidebar">
+    <aside class="app-sidebar" style="background-color: #1D695C">
         <div class="app-sidebar__user-name" style="text-align: center;">
-            <h5 style="color: white; text-transform: uppercase; font-weight: bold;">Pacientes Chamados</h5>
+            <h5 style="color: aliceblue">Pacientes Chamados</h5>
+            <hr>
         </div>
         <ul class="app-menu" style="text-align: center; text-transform: uppercase; font-weight: bold;">
             <h1></h1>
@@ -49,6 +95,7 @@
                     </span>
                 </a>
             </li>
+            <hr>
             @endforeach
         </ul>
     </aside>

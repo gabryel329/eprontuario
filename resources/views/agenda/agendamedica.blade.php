@@ -12,12 +12,12 @@
     <main class="app-content">
         <div class="app-title">
             <div>
-                <h1><i class="bi bi-ui-checks"></i> Agenda Medica</h1>
+                <h1><i class="bi bi-ui-checks"></i> Agenda Médica</h1>
             </div>
             <ul class="app-breadcrumb breadcrumb">
                 <li class="breadcrumb-item"><i class="bi bi-house-door fs-6"></i></li>
                 <li class="breadcrumb-item">Atendimento</li>
-                <li class="breadcrumb-item"><a href="#">Agenda Medica</a></li>
+                <li class="breadcrumb-item"><a href="#">Agenda Médica</a></li>
             </ul>
         </div>
         @if ($errors->any())
@@ -47,7 +47,7 @@
                             @csrf
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label class="form-label">Data</label>
+                                    <label class="form-label"><strong>Data:</strong></label>
                                     <input name="data" id="data" class="form-control" type="date"
                                         value="{{ session('data', \Carbon\Carbon::now()->format('Y-m-d')) }}">
                                 </div>
@@ -69,7 +69,7 @@
                         <ul class="nav nav-tabs user-tabs">
                             <li class="nav-item"><a class="nav-link active" href="#agenda-chegou" data-bs-toggle="tab">Chegou</a></li>
                             <li class="nav-item"><a class="nav-link" href="#agenda-marcado" data-bs-toggle="tab">Marcado</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#agenda-evadio" data-bs-toggle="tab">Evadio</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#agenda-evadiu" data-bs-toggle="tab">Evadido</a></li>
                             <li class="nav-item"><a class="nav-link" href="#agenda-cancelado" data-bs-toggle="tab">Cancelado</a></li>
                             <li class="nav-item"><a class="nav-link" href="#agenda-finalizado" data-bs-toggle="tab">Finalizado</a></li>
                         </ul>
@@ -80,7 +80,7 @@
                                 <thead>
                                     <tr>
                                         <th>Cód.</th>
-                                        <th>Hora</th>
+                                        <th>Horário</th>
                                         <th>Paciente</th>
                                         <th>Consulta</th>
                                         <th>Chamar</th>
@@ -119,7 +119,7 @@
                                 <thead>
                                     <tr>
                                         <th>Cód.</th>
-                                        <th>Hora</th>
+                                        <th>Horário</th>
                                         <th>Paciente</th>
                                         <th>Consulta</th>
                                     </tr>
@@ -141,7 +141,7 @@
                                 <thead>
                                     <tr>
                                         <th>Cód.</th>
-                                        <th>Hora</th>
+                                        <th>Horário</th>
                                         <th>Paciente</th>
                                         <th>Consulta</th>
                                     </tr>
@@ -163,7 +163,7 @@
                                 <thead>
                                     <tr>
                                         <th>Cód.</th>
-                                        <th>Hora</th>
+                                        <th>Horário</th>
                                         <th>Paciente</th>
                                         <th>Consulta</th>
                                     </tr>
@@ -185,7 +185,7 @@
                                 <thead>
                                     <tr>
                                         <th>Cód.</th>
-                                        <th>Hora</th>
+                                        <th>Horário</th>
                                         <th>Paciente</th>
                                         <th>Consulta</th>
                                     </tr>
@@ -238,8 +238,7 @@
                         }
                     })
                     .catch(error => {
-                        console.error('Erro:', error);
-                        alert('Erro ao salvar os dados');
+                        // console.error('Erro:', error);
                     });
             });
         });

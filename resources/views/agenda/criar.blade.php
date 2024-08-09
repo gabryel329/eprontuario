@@ -10,141 +10,138 @@
     }
 </style>
 @section('content')
-    <main class="app-content">
-        <div class="app-title">
-            <div>
-                <h1><i class="bi bi-ui-checks"></i> Criar Agenda
-                    <span id="displaySelectedProfissional" class="selected-info"></span>
-                    <span id="displaySelectedData" class="selected-info"></span>
-                </h1>
-            </div>
-            <ul class="app-breadcrumb breadcrumb">
-                <li class="breadcrumb-item"><i class="bi bi-house-door fs-6"></i></li>
-                <li class="breadcrumb-item">Agenda</li>
-                <li class="breadcrumb-item"><a href="#">Criar Agenda</a></li>
-            </ul>
+<main class="app-content">
+    <div class="app-title">
+        <div>
+            <h1><i class="bi bi-ui-checks"></i> Agenda
+                <span id="displaySelectedProfissional" class="selected-info"></span>
+                <span id="displaySelectedData" class="selected-info"></span>
+            </h1>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="tile">
-                    <h3 class="tile-title">
-                        Novo
-                    </h3>
-                    <div class="tile-body">
-                        <div id="initial-form">
-                            <div class="mb-3">
-                                <label class="form-label">Data</label>
-                                <input class="form-control" id="data" name="data" type="date" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Médico</label>
-                                <select class="form-control" id="profissional_id" name="profissional_id" required>
-                                    <option disabled selected style="font-size:18px;color: black;">Escolha</option>
-                                    @foreach ($profissional as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <button type="button" class="btn btn-primary"
-                                onclick="showAdditionalFields()">Confirmar</button>
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="bi bi-house-door fs-6"></i></li>
+            <li class="breadcrumb-item">Agenda</li>
+            <li class="breadcrumb-item"><a href="#">Criar Agenda</a></li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="tile">
+                <h3 class="tile-title">
+                    Novo
+                </h3>
+                <div class="tile-body">
+                    <div id="initial-form">
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Data:</strong></label>
+                            <input class="form-control" id="data" name="data" type="date" required>
                         </div>
-                        <div id="additional-fields" style="display: none;">
-                            <form id="agenda-form" method="POST" action="{{ route('agenda.store') }}"
-                                class="form-horizontal">
-                                @csrf
-                                <input type="hidden" id="selectedData" name="data">
-                                <input type="hidden" id="selectedProfissionalId" name="profissional_id">
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Médico:</strong></label>
+                            <select class="form-control" id="profissional_id" name="profissional_id" required>
+                                <option disabled selected style="font-size:18px;color: black;">Escolha</option>
+                                @foreach ($profissional as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-primary"
+                            onclick="showAdditionalFields()">Confirmar</button>
+                    </div>
+                    <div id="additional-fields" style="display: none;">
+                        <form id="agenda-form" method="POST" action="{{ route('agenda.store') }}"
+                            class="form-horizontal">
+                            @csrf
+                            <input type="hidden" id="selectedData" name="data">
+                            <input type="hidden" id="selectedProfissionalId" name="profissional_id">
+                            <div class="row">
+                                <div class="mb-3 col-md-6">
+                                    <label class="form-label"><strong>Horário:</strong></label>
+                                    <input class="form-control" id="hora" name="hora" type="time" list="time-options" required>
+                                    <datalist id="time-options"></datalist>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label class="form-label"><Strong>Selecione o Paciente:</Strong></label>
+                                    <button type="button" class="btn btn-primary form-control" data-bs-toggle="modal"
+                                        data-bs-target="#pacienteModal">
+                                        <i class="bi bi-person-add"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col-md-12">
+                                    <label class="form-label"><strong>Nome:</strong></label>
+                                    <input class="form-control" id="paciente_id" name="paciente_id" type="text" hidden>
+                                    <input class="form-control" id="name" name="name" type="text" placeholder="Nome do Paciente">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-2 col-md-12">
+                                    <label class="form-label"><strong>Contato:</strong></label>
+                                    <input class="form-control" id="celular" name="celular" type="text" placeholder="Telefone Para Contato">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col-md-12">
+                                    <label class="form-label"><strong>Consulta:</strong></label>
+                                    <select class="form-control" id="procedimento_id" name="procedimento_id" required>
+                                        <option value="">Selecione o Procedimento
+                                        </option>
+                                        @foreach ($procedimentos as $item)
+                                            <option value="{{ $item->procedimento }}">
+                                                {{ $item->procedimento }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="tile-footer">
                                 <div class="row">
-                                    <div class="mb-3 col-md-6">
-                                        <label class="form-label">Hora</label>
-                                        <input class="form-control" id="hora" name="hora" type="time" list="time-options" required>
-                                        <datalist id="time-options"></datalist>
-                                    </div>
-                                    <div class="mb-3 col-md-6">
-                                        <label class="form-label">Selecione o Paciente</label>
-                                        <button type="button" class="btn btn-primary form-control" data-bs-toggle="modal"
-                                            data-bs-target="#pacienteModal">
-                                            <i class="bi bi-person-add"></i>
+                                    <div class="col-md-8 col-md-offset-3">
+                                        <button class="btn btn-primary" type="button" onclick="storeAgenda()">
+                                            <i class="bi bi-check-circle-fill me-2"></i>Adicionar
                                         </button>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="mb-3 col-md-12">
-                                        <label class="form-label"><strong>Nome:</strong></label>
-                                        <input class="form-control" id="paciente_id" name="paciente_id" type="text"
-                                            hidden>
-                                        <input class="form-control" id="name" name="name" type="text">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="mb-2 col-md-12">
-                                        <label class="form-label"><strong>Contato :</strong></label>
-                                        <input class="form-control" id="celular" name="celular" type="text">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="mb-3 col-md-12">
-                                        <label class="form-label">Consulta</label>
-                                        <select class="form-control" id="procedimento_id" name="procedimento_id" required>
-                                            <option value="">Selecione o Procedimento
-                                            </option>
-                                            @foreach ($procedimentos as $item)
-                                                <option value="{{ $item->procedimento }}">
-                                                    {{ $item->procedimento }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="tile-footer">
-                                    <div class="row">
-                                        <div class="col-md-8 col-md-offset-3">
-                                            <button class="btn btn-primary" type="button" onclick="storeAgenda()">
-                                                <i class="bi bi-check-circle-fill me-2"></i>Adicionar
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-
+                            </div>
+                        </form>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-6" id="agenda-table" style="display: none;">
-                <div class="tile">
-                    <h3 class="tile-title">Agenda
-                    </h3>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Hora</th>
-                                <th>Consulta</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="agenda-body">
-                            <!-- Os dados da agenda serão inseridos aqui via AJAX -->
-                        </tbody>
-                    </table>
+
                 </div>
             </div>
         </div>
-    </main>
-
-    <div class="modal fade" id="pacienteModal" tabindex="-1" aria-labelledby="pacienteModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="pacienteModalLabel">Selecione o Paciente</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="col-md-6" id="agenda-table" style="display: none;">
+            <div class="tile">
+                <h3 class="tile-title">Agenda</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Hora</th>
+                            <th>Consulta</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="agenda-body">
+                        <!-- Os dados da agenda serão inseridos aqui -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+<div class="modal fade" id="pacienteModal" tabindex="-1" aria-labelledby="pacienteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pacienteModalLabel">Selecione o Paciente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <input class="form-control" id="pacienteSearch" type="text" placeholder="Pesquisar por nome ou CPF...">
                 </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <input class="form-control" id="pacienteSearch" type="text"
-                            placeholder="Pesquisar por nome ou CPF...">
-                    </div>
-                    <table class="table table-hover" id="pacienteTable">
+                <div class="table-responsive">
+                    <table class="table table-hover text-center">
                         <thead>
                             <tr>
                                 <th>Nome</th>
@@ -171,9 +168,9 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
     var dateInput = document.getElementById('data');
     var today = new Date().toISOString().split('T')[0];
     dateInput.setAttribute('min', today);
@@ -321,68 +318,67 @@ function checkHoliday(dateString) {
     });
 }
 
+document.getElementById('pacienteSearch').addEventListener('keyup', function() {
+    var input = this.value.toLowerCase();
+    var rows = document.getElementById('pacienteTable').getElementsByTagName('tbody')[0]
+        .getElementsByTagName('tr');
 
-        document.getElementById('pacienteSearch').addEventListener('keyup', function() {
-            var input = this.value.toLowerCase();
-            var rows = document.getElementById('pacienteTable').getElementsByTagName('tbody')[0]
-                .getElementsByTagName('tr');
+    for (var i = 0; i < rows.length; i++) {
+        var name = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
+        var cpf = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+        if (name.indexOf(input) > -1 || cpf.indexOf(input) > -1) {
+            rows[i].style.display = "";
+        } else {
+            rows[i].style.display = "none";
+        }
+    }
+});
 
-            for (var i = 0; i < rows.length; i++) {
-                var name = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
-                var cpf = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
-                if (name.indexOf(input) > -1 || cpf.indexOf(input) > -1) {
-                    rows[i].style.display = "";
-                } else {
-                    rows[i].style.display = "none";
-                }
-            }
+function selectPaciente(id, name) {
+    document.getElementById('name').value = name;
+    document.getElementById('paciente_id').value = id;
+    var modal = bootstrap.Modal.getInstance(document.getElementById('pacienteModal'));
+    modal.hide();
+}
+
+function storeAgenda() {
+    var form = $('#agenda-form');
+    var data = form.serializeArray();
+    if (!$('#paciente_id').val()) {
+        data = data.filter(function(item) {
+            return item.name !== 'paciente_id';
         });
+    }
+    var hora = document.getElementById('hora').value;
+    var procedimento = document.getElementById('procedimento_id').value;
 
-        function selectPaciente(id, name) {
-            document.getElementById('name').value = name;
-            document.getElementById('paciente_id').value = id;
-            var modal = bootstrap.Modal.getInstance(document.getElementById('pacienteModal'));
-            modal.hide();
-        }
+    if (!hora || !procedimento) {
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return false;
+    }
 
-        function storeAgenda() {
-            var form = $('#agenda-form');
-            var data = form.serializeArray();
-            if (!$('#paciente_id').val()) {
-                data = data.filter(function(item) {
-                    return item.name !== 'paciente_id';
-                });
+    $.ajax({
+        url: form.attr('action'),
+        type: 'POST',
+        data: $.param(data),
+        success: function(response) {
+            if (response.success) {
+                alert(response.success);
+                fetchAgenda(document.getElementById('selectedData').value, document.getElementById(
+                    'selectedProfissionalId').value);
+            } else if (response.error) {
+                alert(response.error);
             }
-            var hora = document.getElementById('hora').value;
-            var procedimento = document.getElementById('procedimento_id').value;
-
-            if (!hora || !procedimento) {
-                alert('Por favor, preencha todos os campos obrigatórios.');
-                return false;
+        },
+        error: function(xhr) {
+            if (xhr.responseJSON && xhr.responseJSON.error) {
+                alert(xhr.responseJSON.error);
+            } else {
+                console.log(xhr.responseText);
             }
-
-            $.ajax({
-                url: form.attr('action'),
-                type: 'POST',
-                data: $.param(data),
-                success: function(response) {
-                    if (response.success) {
-                        alert(response.success);
-                        fetchAgenda(document.getElementById('selectedData').value, document.getElementById(
-                            'selectedProfissionalId').value);
-                    } else if (response.error) {
-                        alert(response.error);
-                    }
-                },
-                error: function(xhr) {
-                    if (xhr.responseJSON && xhr.responseJSON.error) {
-                        alert(xhr.responseJSON.error);
-                    } else {
-                        console.log(xhr.responseText);
-                    }
-                }
-            });
         }
+    });
+}
 
     function deleteAgenda(id) {
     console.log('Tentando deletar a agenda');
@@ -420,16 +416,16 @@ function checkHoliday(dateString) {
     }
 }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const timeList = document.getElementById('time-options');
-            for (let i = 0; i < 24 * 2; i++) {
-                const hour = Math.floor(i / 2).toString().padStart(2, '0');
-                const minutes = (i % 2 === 0) ? '00' : '30';
-                const timeOption = `${hour}:${minutes}`;
-                const option = document.createElement('option');
-                option.value = timeOption;
-                timeList.appendChild(option);
-            }
-        });
-    </script>
+document.addEventListener('DOMContentLoaded', function() {
+    const timeList = document.getElementById('time-options');
+    for (let i = 0; i < 24 * 2; i++) {
+        const hour = Math.floor(i / 2).toString().padStart(2, '0');
+        const minutes = (i % 2 === 0) ? '00' : '30';
+        const timeOption = `${hour}:${minutes}`;
+        const option = document.createElement('option');
+        option.value = timeOption;
+        timeList.appendChild(option);
+    }
+});
+</script>
 @endsection
