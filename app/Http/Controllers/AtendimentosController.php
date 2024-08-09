@@ -444,7 +444,7 @@ class AtendimentosController extends Controller
             $query->where('pa.id', $paciente_id);
         }
         if (!empty($profissional_id)) {
-            $query->where('an.profissional_id', $profissional_id);
+            $query->where('ag.profissional_id', $profissional_id);
         }
 
         // Finaliza a montagem da consulta
