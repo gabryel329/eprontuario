@@ -136,7 +136,7 @@
         @endif
     
     <h3>Dr(a). {{ $profissional->name }}</h3>
-    <p>{{ $profissional->tipo }} - {{ $profissional->especialidade }} - {{ $profissional->conselho2 }}: {{ $profissional->conselho }}</p>
+    <p>{{ $profissional->tipo }} - {{ $profissional->especialidade }} - {{ $profissional->conselho2 }}: {{ $profissional->conselho }} - CID: {{ $cid }}</p>
     <p>Atesto para os devidos fins, que o(a):</p>
     <table>
         <tr>
