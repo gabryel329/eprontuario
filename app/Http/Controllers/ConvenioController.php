@@ -190,13 +190,15 @@ class ConvenioController extends Controller
         }
     }
 
-    // Return a JSON response
     if ($success) {
-        return response()->json(['success' => true]);
+        // Redirect with a success message
+        return redirect()->back()->with('success', 'Dados salvos com sucesso!');
     } else {
-        return response()->json(['success' => false, 'message' => 'Erro ao salvar dados.'], 500);
+        // Redirect with an error message
+        return redirect()->back()->with('error', 'Erro ao salvar dados.');
     }
 }
+
    
     public function convenioProcedimentoDelete(string $id)
     {
@@ -210,12 +212,18 @@ class ConvenioController extends Controller
 {
     $ids = $request->input('ids');
 
-    if (is_array($ids)) {
-        ConvenioProcedimento::destroy($ids);
-        return redirect()->route('convenioProcedimento.index')->with('success', 'Itens excluídos com sucesso!');
+    if (is_array($ids) && !empty($ids)) {
+        $deleted = ConvenioProcedimento::destroy($ids);
+
+        if ($deleted) {
+            return response()->json(['success' => true, 'message' => 'Itens excluídos com sucesso!']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Erro ao excluir itens!'], 500);
+        }
     }
 
-    return redirect()->route('convenioProcedimento.index')->with('error', 'Erro ao excluir itens!');
+    return response()->json(['success' => false, 'message' => 'Nenhum item selecionado!'], 400);
 }
+
 
 }

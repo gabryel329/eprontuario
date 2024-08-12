@@ -214,18 +214,22 @@ class UserController extends Controller
 
 
     public function salvarSala(Request $request)
-    {
-        $user = User::find($request->input('user_id'));
+{
+    $user = User::find($request->input('user_id'));
 
-        if ($user) {
-            $user->sala = $request->input('sala');
-            $user->save();
+    if ($user) {
+        $user->sala = $request->input('sala');
+        $user->save();
 
-            $request->session()->put('question_asked', true);
+        // Marca a pergunta como respondida na sessão
+        $request->session()->put('question_asked', true);
 
-            return response()->json(['success' => true]);
-        }
-
-        return response()->json(['success' => false, 'message' => 'User not found'], 404);
+        // Retorna uma resposta JSON com uma mensagem de sucesso
+        return response()->json(['success' => true, 'message' => 'Resposta salva com sucesso!']);
     }
+
+    // Retorna uma resposta JSON com uma mensagem de erro
+    return response()->json(['success' => false, 'message' => 'Usuário não encontrado'], 404);
+}
+
 }

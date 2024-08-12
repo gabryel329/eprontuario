@@ -20,13 +20,11 @@
                 {{ session('success') }}
             </div>
         @endif
-
         @if (session('error'))
             <div class="alert alert-warning">
                 {{ session('error') }}
             </div>
         @endif
-
         <div class="col-md-12">
             <div class="tile">
                 <div class="tile-body">
@@ -215,6 +213,19 @@ function deleteSelectedItems(convenioId) {
         },
         body: JSON.stringify({ ids: selectedIds })
     })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            location.reload(); // Recarregar a página
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Erro ao excluir os itens!');
+    });
 }
 
 function handleRemoveLancamento(button, id) {
@@ -254,28 +265,32 @@ function submitForm(convenioId) {
         return;
     }
 
-    fetch("{{ route('convenioProcedimento.store') }}", {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Response Data:', data);
-        if (data.success) {
-            alert('Dados salvos com sucesso!');
-            $('#editModal' + convenioId).modal('hide');
-        } else {
-            alert('Erro ao salvar dados!');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Erro ao salvar dados!');
+    const formUrl = "{{ route('convenioProcedimento.store') }}";
+
+    // Create a temporary form to redirect with the data
+    const tempForm = document.createElement('form');
+    tempForm.method = 'POST';
+    tempForm.action = formUrl;
+    tempForm.style.display = 'none';
+
+    // Add CSRF token
+    const csrfTokenInput = document.createElement('input');
+    csrfTokenInput.type = 'hidden';
+    csrfTokenInput.name = '_token';
+    csrfTokenInput.value = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    tempForm.appendChild(csrfTokenInput);
+
+    // Append form data
+    formData.forEach((value, key) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = value;
+        tempForm.appendChild(input);
     });
+
+    document.body.appendChild(tempForm);
+    tempForm.submit();
 }
 </script>
 @endsection

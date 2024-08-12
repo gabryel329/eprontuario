@@ -33,6 +33,7 @@
     </style>
 
     <main class="app-content">
+        <div id="messageContainer"></div>
         <div class="content">
             @if ($empresa)
                 <h1>{{ $empresa->name }}</h1>
@@ -91,11 +92,26 @@
                         sala: resposta
                     },
                     success: function(response) {
-                        alert('Resposta salva com sucesso!');
+                        // Esconde o modal
                         $('#saveModal').modal('hide');
+
+                        // Exibe a mensagem de sucesso no frontend
+                        $('#messageContainer').html(`
+                            <div class="alert alert-success">
+                                ${response.message}
+                            </div>
+                        `);
                     },
                     error: function(xhr, status, error) {
-                        alert('Ocorreu um erro ao salvar a resposta.');
+                        // Esconde o modal
+                        $('#saveModal').modal('hide');
+
+                        // Exibe a mensagem de erro no frontend
+                        $('#messageContainer').html(`
+                            <div class="alert alert-warning">
+                                Ocorreu um erro ao salvar a resposta.
+                            </div>
+                        `);
                     }
                 });
             }
