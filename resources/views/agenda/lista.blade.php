@@ -254,6 +254,7 @@
             </div>
         </div>
     </div>
+    {{-- Modal para excluir --}}
     <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ $item->id }}" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
