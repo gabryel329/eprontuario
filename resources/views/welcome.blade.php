@@ -33,7 +33,7 @@
             @csrf
           <h3 class="login-head"><i class="bi bi-person me-2"></i>Login</h3>
           <div class="mb-3">
-            <label class="form-label">Usuario</label>
+            <label class="form-label">Usuário</label>
             <input id="name" name="name" class="form-control" type="text" autofocus>
             @error('name')
                 <span class="invalid-feedback" role="alert">
