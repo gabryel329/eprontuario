@@ -42,8 +42,8 @@
             @enderror
           </div>
           <div class="mb-3">
-            <label class="form-label">PASSWORD</label>
-            <input class="form-control" id="password" name="password" type="password" placeholder="Password">
+            <label class="form-label">Senha</label>
+            <input class="form-control" id="password" name="password" type="password" placeholder="Senha">
             @error('password')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
