@@ -34,7 +34,7 @@
           <h3 class="login-head"><i class="bi bi-person me-2"></i>Login</h3>
           <div class="mb-3">
             <label class="form-label">Usuario</label>
-            <input id="name" name="name" class="form-control" type="text" placeholder="Email" autofocus>
+            <input id="name" name="name" class="form-control" type="text" autofocus>
             @error('name')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -43,7 +43,7 @@
           </div>
           <div class="mb-3">
             <label class="form-label">Senha</label>
-            <input class="form-control" id="password" name="password" type="password" placeholder="Senha">
+            <input class="form-control" id="password" name="password" type="password" >
             @error('password')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
