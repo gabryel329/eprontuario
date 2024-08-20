@@ -155,21 +155,17 @@ $currentDate = date('Y-m-d');
                 allowClear: true
             });
         });
-
         $(document).ready(function() {
             $('#permisao_id').select2({
                 placeholder: "Escolha",
                 allowClear: true
             });
         });
-
         $(document).ready(function() {
         $('.select2').select2({
-            placeholder: "Selecione uma ou mais especialidades",
-            tags: true, // Permite adicionar novas opções
-            tokenSeparators: [',', ' '], // Permite adicionar opções separadas por vírgula ou espaço
+            placeholder: "Selecione um procedimento",
             allowClear: true,
-            closeOnSelect: false
+            closeOnSelect: true
         });
     });
     </script>

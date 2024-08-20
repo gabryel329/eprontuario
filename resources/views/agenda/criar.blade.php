@@ -81,17 +81,23 @@
                                     <input class="form-control" id="celular" name="celular" type="text" placeholder="Telefone Para Contato">
                                 </div>
                             </div>
+                            <br>
                             <div class="row">
-                                <div class="mb-3 col-md-12">
-                                    <label class="form-label"><strong>Consulta:</strong></label>
-                                    <select class="form-control" id="procedimento_id" name="procedimento_id" required>
-                                        <option value="">Selecione o Procedimento
-                                        </option>
-                                        @foreach ($procedimentos as $item)
-                                            <option value="{{ $item->procedimento }}">
-                                                {{ $item->procedimento }}</option>
-                                        @endforeach
-                                    </select>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label"><strong>Código:</strong></label>
+                                        <input type="text" name="codigo[]" value="" class="form-control" readonly disabled>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label"><strong>Consulta:</strong></label>
+                                        <br>
+                                        <select class="select2 form-control" id="procedimento_id" name="procedimento_id" style="width: 100%" required onchange="updateCodigo(this)">
+                                            <option value="" data-codigo="">Selecione o Procedimento</option>
+                                            @foreach ($procedimentos as $item)
+                                                <option value="{{ $item->procedimento }}" data-codigo="{{ $item->codigo }}">{{ $item->procedimento }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="tile-footer">
@@ -170,6 +176,12 @@
     </div>
 </div>
 <script>
+function updateCodigo(selectElement) {
+        const row = selectElement.closest('.row.mb-3');
+        const codigoInput = row.querySelector('input[name="codigo[]"]');
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+        codigoInput.value = selectedOption.getAttribute('data-codigo');
+    }
 document.addEventListener('DOMContentLoaded', function() {
     var dateInput = document.getElementById('data');
     var today = new Date().toISOString().split('T')[0];
