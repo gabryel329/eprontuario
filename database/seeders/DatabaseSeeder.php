@@ -97,7 +97,7 @@ class DatabaseSeeder extends Seeder
 
         DB::table('empresas')->insert([
             [
-                'name' => 'A&B',
+                'name' => 'Nome da CLinica',
                 'cnpj' => '0000000000',
                 'imagem' => 'LOGO_01_VERDE.png'
             ],
