@@ -62,4 +62,8 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Permisoes::class, 'permissao_user', 'user_id', 'permisao_id');
     }
+    public function guiatiss()
+    {
+        return $this->belongsTo(GuiaTiss::class, 'user_id');
+    }
 }

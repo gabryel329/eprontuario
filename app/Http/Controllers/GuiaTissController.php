@@ -12,7 +12,9 @@ class GuiaTissController extends Controller
      */
     public function index()
     {
-        //
+        $guiatiss = Guiatiss::all();
+
+        return view('financeiro.guiatiss', compact('guiatiss'));
     }
 
     /**

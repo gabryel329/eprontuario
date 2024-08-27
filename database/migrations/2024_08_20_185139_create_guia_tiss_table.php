@@ -13,7 +13,28 @@ return new class extends Migration
     {
         Schema::create('guia_tiss', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->integer('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('registro_ans'); // Registro ANS da operadora
+            $table->string('numero_guia_prestador'); // Número da guia do prestador
+            $table->string('numero_carteira'); // Número da carteira do beneficiário
+            $table->string('nome_beneficiario'); // Nome do beneficiário
+            $table->date('data_atendimento'); // Data do atendimento
+            $table->time('hora_inicio_atendimento'); // Hora de início do atendimento
+            $table->string('tipo_consulta'); // Tipo de consulta
+            $table->string('indicacao_acidente')->nullable(); // Indicação de acidente
+            $table->string('codigo_tabela'); // Código da tabela usada para procedimentos
+            $table->string('codigo_procedimento'); // Código do procedimento realizado
+            $table->decimal('valor_procedimento', 10, 2); // Valor do procedimento realizado
+            $table->string('nome_profissional'); // Nome do profissional que realizou o atendimento
+            $table->string('sigla_conselho'); // Sigla do conselho profissional (CRM, etc.)
+            $table->string('numero_conselho'); // Número do conselho profissional
+            $table->string('uf_conselho'); // UF do conselho profissional
+            $table->string('cbo'); // Código CBO (Classificação Brasileira de Ocupações)
+            $table->text('observacao')->nullable(); // Observações adicionais
+            $table->string('hash')->nullable(); // Hash para validação de integridade
+            $table->timestamps(); // Timestamps para created_at e updated_at
+            $table->softDeletes();
         });
     }
 

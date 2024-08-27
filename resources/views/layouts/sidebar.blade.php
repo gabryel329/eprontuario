@@ -81,7 +81,7 @@
                         class="app-menu__icon bi bi-cash-coin"></i><span class="app-menu__label">Financeiro</span><i
                         class="treeview-indicator bi bi-chevron-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a class="treeview-item" href="#"><i
+                    <li><a class="treeview-item" href="{{ route('guiatiss.index') }}"><i
                         class="icon bi bi-file-earmark-arrow-up"></i> Guia TISS</a></li>
 
                     <li><a class="treeview-item" href="{{ route('Honorario.index') }}"><i
