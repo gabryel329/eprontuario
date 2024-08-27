@@ -73,6 +73,8 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::get('/guia/listar', [GuiaTissController::class, 'listarGuiasPorConvenio'])->name('guias.listar');
     });
 
+    Route::post('/guias', [GuiaTissController::class, 'store'])->name('guiatiss.store');
+
     Route::get('/convenioProcedimento', [ConvenioController::class, 'convenioProcedimentoIndex'])->name('convenioProcedimento.index');
     Route::post('/convenioProcedimento', [ConvenioController::class, 'convenioProcedimentoStore'])->name('convenioProcedimento.store');
     Route::delete('/convenioProcedimento/bulkDestroy', [ConvenioController::class, 'bulkDestroy'])->name('convenioProcedimento.bulkDestroy');

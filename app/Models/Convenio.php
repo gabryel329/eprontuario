@@ -20,8 +20,13 @@ class Convenio extends Model
     }
 
     public function convenioProcedimentos()
-{
-    return $this->hasMany(ConvenioProcedimento::class);
-}
+    {
+        return $this->hasMany(ConvenioProcedimento::class);
+    }
+
+    public function guiatiss()
+    {
+        return $this->hasMany(GuiaTiss::class, 'convenio_id');
+    }
 
 }
