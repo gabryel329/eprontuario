@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('convenio_id')->nullable();
+            $table->foreign('convenio_id')->references('id')->on('convenios')->onDelete('cascade');
             $table->string('registro_ans'); // Registro ANS da operadora
             $table->string('numero_guia_prestador'); // Número da guia do prestador
             $table->string('numero_carteira'); // Número da carteira do beneficiário

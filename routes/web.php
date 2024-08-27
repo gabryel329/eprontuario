@@ -68,7 +68,9 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::get('/tipoprof', [TipoProfController::class, 'index'])->name('tipoprof.index');
         Route::get('/empresa', [EmpresasController::class, 'index'])->name('empresa.index');
         Route::get('/convenio', [ConvenioController::class, 'index'])->name('convenio.index');
-        Route::get('/tiss', [GuiaTissController::class, 'index'])->name('guiatiss.index');
+
+        Route::get('/guias', [GuiaTissController::class, 'index'])->name('guiatiss.index');
+        Route::get('/guia/listar', [GuiaTissController::class, 'listarGuiasPorConvenio'])->name('guias.listar');
     });
 
     Route::get('/convenioProcedimento', [ConvenioController::class, 'convenioProcedimentoIndex'])->name('convenioProcedimento.index');
@@ -182,7 +184,7 @@ Route::middleware(['check.session.expired'])->group(function () {
 
     #RelatorioFinanceiro
     Route::get('/relatorioFinanceiro', [HonorarioController::class, 'relatorioFinanceiroIndex'])->name('relatorioFinanceiro.index');
-Route::post('/relatorioFinanceiro', [HonorarioController::class, 'relatorioFinanceiroIndex']);
+    Route::post('/relatorioFinanceiro', [HonorarioController::class, 'relatorioFinanceiroIndex']);
 
 
     #SalaVerificação

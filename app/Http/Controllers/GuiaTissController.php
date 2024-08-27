@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Convenio;
 use App\Models\GuiaTiss;
 use Illuminate\Http\Request;
 
@@ -12,11 +13,23 @@ class GuiaTissController extends Controller
      */
     public function index()
     {
-        $guiatiss = Guiatiss::all();
-
-        return view('financeiro.guiatiss', compact('guiatiss'));
+        // Retorna os convênios na carga inicial
+        $convenios = Convenio::all();
+        return view('financeiro.guiatiss', compact('convenios'));
     }
 
+    public function listarGuiasPorConvenio(Request $request)
+    {
+        $convenio_id = $request->get('convenio_id');
+
+        if (!$convenio_id) {
+            return response()->json(['error' => 'Convênio não encontrado.'], 404);
+        }
+
+        $guiatiss = Guiatiss::where('convenio_id', $convenio_id)->get();
+
+        return response()->json(['guias' => $guiatiss]);
+    }
     /**
      * Show the form for creating a new resource.
      */
