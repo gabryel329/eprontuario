@@ -61,7 +61,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="novoGuiaModalLabel">Novo Guia</h5>
+                    <h5 class="modal-title" id="novoGuiaModalLabel">Guia de Consulta</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -69,13 +69,132 @@
                         @csrf
                         <input type="hidden" id="convenio_id_hidden" name="convenio_id">
                         <div class="row">
-                            <!-- Formulário com os campos -->
-                            <div class="mb-3 col-md-6">
-                                <label class="form-label">Registro ANS:</label>
+                            <div class="mb-3 col-md-2">
+                                <label class="form-label"><strong>1- Registro ANS</strong></label>
                                 <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
                             </div>
-                            <div class="mb-3 col-md-6">
-                                <label class="form-label">Número da Guia do Prestador:</label>
+                            <div class="mb-3 col-md-2">
+                                <label class="form-label">2- Nº da guia no prestador</label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                            <div class="mb-3 col-md-2">
+                                <label class="form-label">3- Nº da guia operadora</label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                            <div class="mb-3 col-md-2">
+                                <label class="form-label"><strong>Nº Fatura</strong></label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                            <div class="mb-3 col-md-2">
+                                <label class="form-label"><strong>ID da Solicitação</strong></label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                            <div class="mb-3 col-md-2">
+                                <label class="form-label"><strong>Status da guia</strong></label>
+                                <input class="form-control" id="numero_guia_prestador" name="numero_guia_prestador" type="text" value="{{ old('numero_guia_prestador') }}">
+                            </div>
+                        </div>
+                        <hr>
+                        <h6>Dados do beneficiário (Paciente)</h6>
+                        <div class="row">
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">4- Nº da carteira do beneficiário</label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">5- Validade da Carteira</label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">6- Recém-nascido</label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-md-8">
+                                <label class="form-label">7- Nome do beneficiário</label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">8- Cartão Nacional de Saúde</label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                        </div>
+                        <hr>
+                        <h6>Dados do contratado</h6>
+                        <div class="row">
+                            <div class="mb-3 col-md-5">
+                                <label class="form-label">9- Cód. do contratado executante na operação</label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                            <div class="mb-3 col-md-5">
+                                <label class="form-label">10- Nome do contratado executante</label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                            <div class="mb-3 col-md-2">
+                                <label class="form-label">11- CNES</label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">12- Nome do profissional</label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                            <div class="mb-3 col-md-2">
+                                <label class="form-label">13- Conselho</label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                            <div class="mb-3 col-md-2">
+                                <label class="form-label">14- Nº profissional</label>
+                                <input class="form-control" id="numero_guia_prestador" name="numero_guia_prestador" type="text" value="{{ old('numero_guia_prestador') }}">
+                            </div>
+                            <div class="mb-3 col-md-2">
+                                <label class="form-label">15- UF</label>
+                                <input class="form-control" id="numero_guia_prestador" name="numero_guia_prestador" type="text" value="{{ old('numero_guia_prestador') }}">
+                            </div>
+                            <div class="mb-3 col-md-2">
+                                <label class="form-label">16- CBO</label>
+                                <input class="form-control" id="numero_guia_prestador" name="numero_guia_prestador" type="text" value="{{ old('numero_guia_prestador') }}">
+                            </div>
+                        </div>
+                        <hr>
+                        <h6>Dados do Atendimento/Procedimento realizado</h6>
+                        <div class="row">
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">17- Indicação de acidente</label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">18- Data da realização</label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">19- Tipo de consulta</label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-md-3">
+                                <label class="form-label">20- Tabela</label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                            <div class="mb-3 col-md-3">
+                                <label class="form-label">21- Cód. do procedimento</label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                            <div class="mb-3 col-md-3">
+                                <label class="form-label">Descrição procediemento</label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                            <div class="mb-3 col-md-3">
+                                <label class="form-label">22- Valor do procedimento</label>
+                                <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-md-12">
+                                <label class="form-label">23- Observação / Justificatica</label>
                                 <input class="form-control" id="numero_guia_prestador" name="numero_guia_prestador" type="text" value="{{ old('numero_guia_prestador') }}">
                             </div>
                         </div>
