@@ -43,18 +43,55 @@ class GuiaTissController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    // Capturar todos os dados enviados
-    $data = $request->all();
+    {
+        $user_id = auth()->id();
 
-    $data['user_id'] = Auth::id();
-    // Criar a nova entrada no banco de dados
-    $guiaTiss = GuiaTiss::create($data);
+        $convenio_id = $request->input('convenio_id');
+        $registro_ans = $request->input('registro_ans');
+        $numero_guia_prestador = $request->input('numero_guia_prestador');
+        $numero_carteira = $request->input('numero_carteira');
+        $nome_beneficiario = $request->input('nome_beneficiario');
+        $data_atendimento = $request->input('data_atendimento');
+        $hora_inicio_atendimento = $request->input('hora_inicio_atendimento');
+        $tipo_consulta = $request->input('tipo_consulta');
+        $indicacao_acidente = $request->input('indicacao_acidente');
+        $codigo_tabela = $request->input('codigo_tabela');
+        $codigo_procedimento = $request->input('codigo_procedimento');
+        $valor_procedimento = $request->input('valor_procedimento');
+        $nome_profissional = $request->input('nome_profissional');
+        $sigla_conselho = $request->input('sigla_conselho');
+        $numero_conselho = $request->input('numero_conselho');
+        $uf_conselho = $request->input('uf_conselho');
+        $cbo = $request->input('cbo');
+        $observacao = $request->input('observacao');
+        $hash = $request->input('hash');
 
-    return redirect()->back()->with('success', 'Guia TISS criada com sucesso');
-}
 
+        $guiaTiss = GuiaTiss::create([
+            'user_id' => $user_id,
+            'convenio_id' => $convenio_id,
+            'registro_ans' => $registro_ans,
+            'numero_guia_prestador' => $numero_guia_prestador,
+            'numero_carteira' => $numero_carteira,
+            'nome_beneficiario' => $nome_beneficiario,
+            'data_atendimento' => $data_atendimento,
+            'hora_inicio_atendimento' => $hora_inicio_atendimento,
+            'tipo_consulta' => $tipo_consulta,
+            'indicacao_acidente' => $indicacao_acidente,
+            'codigo_tabela' => $codigo_tabela,
+            'codigo_procedimento' => $codigo_procedimento,
+            'valor_procedimento' => $valor_procedimento,
+            'nome_profissional' => $nome_profissional,
+            'sigla_conselho' => $sigla_conselho,
+            'numero_conselho' => $numero_conselho,
+            'uf_conselho' => $uf_conselho,
+            'cbo' => $cbo,
+            'observacao' => $observacao,
+            'hash' => $hash,
+        ]);
 
+        return redirect()->back()->with('success', 'Guia TISS criada com sucesso')->with('guiaTiss', $guiaTiss);
+    }
 
     /**
      * Display the specified resource.
