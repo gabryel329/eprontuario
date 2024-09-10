@@ -99,7 +99,8 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Nome da CLinica',
                 'cnpj' => '0000000000',
-                'imagem' => 'LOGO_01_VERDE.png'
+                'imagem' => 'LOGO_01_VERDE.png',
+                'licenca' => '2030-01-01'
             ],
         ]);
 

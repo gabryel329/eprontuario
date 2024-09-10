@@ -34,6 +34,8 @@ class Empresas extends Model
         'crm',
         'fantasia',
         'imagem',
+        'licenca',
+        'contrato',
     ];
     protected $dates=['deleted_at'];
 }
