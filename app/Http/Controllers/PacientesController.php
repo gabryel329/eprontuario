@@ -32,7 +32,7 @@ class PacientesController extends Controller
     {
         //
     }
-
+    
     /**
      * Store a newly created resource in storage.
      */
@@ -267,5 +267,13 @@ class PacientesController extends Controller
         $paciente->delete();
 
         return redirect()->back()->with('success', 'Paciente excluído com Sucesso!');
+    }
+
+    public function handleWebcamError(Request $request)
+    {
+        // Armazena o erro na sessão
+        $request->session()->flash('error', $request->input('error'));
+        
+        return response()->json(['success' => true]);
     }
 }

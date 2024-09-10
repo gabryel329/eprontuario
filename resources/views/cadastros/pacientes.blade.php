@@ -240,8 +240,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
 <script language="JavaScript">
-    $(document).ready(function() {
-    // Configura a webcam
+$(document).ready(function() {
     Webcam.set({
         width: 320,
         height: 240,
@@ -249,27 +248,38 @@
         jpeg_quality: 90
     });
 
+    Webcam.on('error', function(err) {
+        
+        $.ajax({
+            type: "POST",
+            url: "{{ route('handleWebcamError') }}",
+            data: {
+                _token: '{{ csrf_token() }}',
+                error: "Webcam não foi encontrada"
+            },
+            success: function(response) {
+            },
+            error: function(response) {
+            }
+        });
+    });
+
     Webcam.attach('#my_camera');
 
-    // Recarrega a câmera quando o modal for fechado
-    $('#photoModal').on('hidden.bs.modal', function () {
-        Webcam.reset();
-        Webcam.attach('#my_camera');
-    });
+    // Função para capturar a imagem
+    window.takeSnapshot = function() {
+        Webcam.snap(function(data_uri) {
+            // Exibe a imagem capturada no modal
+            document.getElementById('modal-photo-result').innerHTML = '<img src="'+data_uri+'"/>';
+            // Armazena a imagem base64 em um input escondido
+            document.querySelector('.image-tag').value = data_uri;
+
+            // Abre o modal para mostrar a imagem capturada
+            $('#photoModal').modal('show');
+        });
+    };
 });
 
-// Função para capturar a imagem
-function takeSnapshot() {
-    Webcam.snap(function(data_uri) {
-        // Exibe a imagem capturada no modal
-        document.getElementById('modal-photo-result').innerHTML = '<img src="'+data_uri+'"/>';
-        // Armazena a imagem base64 em um input escondido
-        document.querySelector('.image-tag').value = data_uri;
-
-        // Abre o modal
-        $('#photoModal').modal('show');
-    });
-}
 
 </script>
 <script>
