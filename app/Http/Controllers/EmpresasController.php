@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Empresas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class EmpresasController extends Controller
@@ -23,14 +24,19 @@ class EmpresasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Find the company by ID
+        // Verifica se o usuário tem a permissão '3'
+        if (!Auth::user()->permissoes->contains('id', 3)) {
+            return redirect()->back()->with('error', 'Você não tem permissão para atualizar os dados da empresa.');
+        }
+
+        // Encontra a empresa pelo ID
         $empresa = Empresas::findOrFail($id);
 
-        // Capitalize the input where appropriate
+        // Capitaliza o nome e o fantasia
         $name = ucfirst($request->input('name'));
         $fantasia = ucfirst($request->input('fantasia'));
 
-        // Get the other inputs
+        // Obter os outros inputs
         $telefone = $request->input('telefone');
         $cnpj = $request->input('cnpj');
         $email = $request->input('email');
@@ -44,27 +50,29 @@ class EmpresasController extends Controller
         $medico = $request->input('medico');
         $crm = $request->input('crm');
         $imagem = $request->file('imagem');
+        $contrato = $request->input('contrato');
+        $licenca = $request->input('licenca');
 
-        // Check if a new image is uploaded and is valid
+        // Verifica se uma nova imagem foi enviada e é válida
         if ($imagem && $imagem->isValid()) {
             $filenameWithExt = $imagem->getClientOriginalName();
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $imagem->getClientOriginalExtension();
             $imageName = $filename . '_' . time() . '.' . $extension;
 
-            // Upload Image to the 'public/images/' directory
+            // Faz o upload da imagem para o diretório 'public/images/'
             $imagem->move(public_path('images/'), $imageName);
 
-            // Remove the old image if it exists
+            // Remove a imagem antiga, se existir
             if ($empresa->imagem && file_exists(public_path('images/') . $empresa->imagem)) {
                 unlink(public_path('images/') . $empresa->imagem);
             }
 
-            // Update the company with the new image
+            // Atualiza a empresa com a nova imagem
             $empresa->imagem = $imageName;
         }
 
-        // Update company attributes
+        // Atualiza os atributos da empresa
         $empresa->name = $name;
         $empresa->fantasia = $fantasia;
         $empresa->telefone = $telefone;
@@ -79,10 +87,13 @@ class EmpresasController extends Controller
         $empresa->celular = $celular;
         $empresa->medico = $medico;
         $empresa->crm = $crm;
+        $empresa->licenca = $licenca;
+        $empresa->contrato = $contrato;
 
-        // Save the updated company data
+        // Salva os dados atualizados da empresa
         $empresa->save();
 
         return redirect()->back()->with('success', 'Empresa atualizada com sucesso')->with('empresa', $empresa);
     }
+
 }
