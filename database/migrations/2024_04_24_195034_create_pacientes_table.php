@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('pacientes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('sobrenome');
+            $table->string('sobrenome')->nullable();
             $table->string('email')->nullable();
             $table->date('nasc')->nullable();
             $table->string('cpf')->nullable();

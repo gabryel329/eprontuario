@@ -56,7 +56,11 @@
                           </div>
                         <div class="mb-3 col-md-3">
                             <label class="form-label">Foto</label>
-                            <input class="form-control" type="file" name="imagem">
+                            <div id="my_camera" hidden></div>
+                            <br/>
+                            <button type="button" class="btn btn-primary" onclick="takeSnapshot()">Tirar Foto</button>
+                            <input type="hidden" name="imagem" class="image-tag">
+                            <div id="results"></div>
                         </div>
                     </div>
                     <div class="row">
@@ -205,6 +209,26 @@
                             <button class="btn btn-primary" type="submit"><i class="bi bi-check-circle-fill me-2"></i>Salva</button>
                         </div>
                     </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="photoModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="photoModalLabel">Capturar Foto</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                            <div class="modal-body">
+                                <div id="my_camera_modal"></div>
+                                <div id="modal-photo-result" class="text-center mt-3"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-primary" onclick="takeSnapshot()">Tirar Foto</button>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
                 </form>
             </div>
           </div>
@@ -214,7 +238,40 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
+<script language="JavaScript">
+    $(document).ready(function() {
+    // Configura a webcam
+    Webcam.set({
+        width: 320,
+        height: 240,
+        image_format: 'jpeg',
+        jpeg_quality: 90
+    });
 
+    Webcam.attach('#my_camera');
+
+    // Recarrega a câmera quando o modal for fechado
+    $('#photoModal').on('hidden.bs.modal', function () {
+        Webcam.reset();
+        Webcam.attach('#my_camera');
+    });
+});
+
+// Função para capturar a imagem
+function takeSnapshot() {
+    Webcam.snap(function(data_uri) {
+        // Exibe a imagem capturada no modal
+        document.getElementById('modal-photo-result').innerHTML = '<img src="'+data_uri+'"/>';
+        // Armazena a imagem base64 em um input escondido
+        document.querySelector('.image-tag').value = data_uri;
+
+        // Abre o modal
+        $('#photoModal').modal('show');
+    });
+}
+
+</script>
 <script>
 function toggleConvenio() {
     if ($('#convenio-sim').is(':checked')) {

@@ -90,12 +90,26 @@ class PacientesController extends Controller
         $cor = $request->input('cor');
         $imagem = $request->file('imagem');
     
-        if ($imagem && $imagem->isValid()) {
-            $filenameWithExt = $imagem->getClientOriginalName();
-            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            $extension = $imagem->getClientOriginalExtension();
-            $imageName = $filename . '.' . $extension;
-            $imagem->move(public_path('images/'), $imageName);
+        $imagem_base64 = $request->input('imagem');
+    
+        if ($imagem_base64) {
+            // Remove o prefixo "data:image/jpeg;base64," ou "data:image/png;base64," da string base64
+            $image_parts = explode(";base64,", $imagem_base64);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];  // Obtém o tipo da imagem (jpeg, png, etc.)
+            $image_base64 = base64_decode($image_parts[1]);  // Decodifica a string base64
+
+            // Cria um nome único para a imagem e define o caminho onde será salva
+            $imageName = uniqid() . '.' . $image_type;
+            $filePath = public_path('images/') . $imageName;
+
+            // Salva a imagem no diretório 'public/images'
+            $result = file_put_contents($filePath, $image_base64);
+            
+            // Verifica se houve erro ao salvar o arquivo
+            if ($result === false) {
+                return redirect()->back()->with('error', 'Erro ao salvar a imagem.');
+            }
         } else {
             $imageName = null;
         }
