@@ -86,12 +86,12 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Rafael',
                 'sobrenome' => 'Souza',
-                'convenio' => '1'
+                'convenio_id' => '1'
             ],
             [
                 'name' => 'Igor',
                 'sobrenome' => 'Tavares',
-                'convenio' => '2'
+                'convenio_id' => '2'
             ],
         ]);
 

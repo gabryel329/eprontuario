@@ -166,6 +166,10 @@ Route::middleware(['check.session.expired'])->group(function () {
     #Formularios
     Route::post('/ficha', [AtendimentosController::class, 'ficha_atendimento'])->name('ficha');
 
+    // web.php
+    Route::get('/paciente/ficha/{id}', [PacientesController::class, 'fichaPaciente'])->name('paciente.ficha');
+
+    
     Route::post('/ficha_atendimento', [AtendimentosController::class, 'processarFormulario'])->name('processarFormulario');
 
     Route::post('/solicitacoes', [AtendimentosController::class, 'solicitacoes']);

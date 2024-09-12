@@ -32,6 +32,7 @@
                                 <th>Celular</th>
                                 <th>Editar</th>
                                 <th>Deletar</th>
+                                <th>Imprimir</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -51,6 +52,9 @@
                                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}">
                                             Excluir
                                         </button>
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('paciente.ficha', $item->id) }}" class="btn btn-primary" target="_blank">Imprimir</a>
                                     </td>
                                 </tr>
                                 
@@ -129,7 +133,8 @@
                                                                 <label class="form-label">Convênio:</label>
                                                                 <select class="form-control" id="convenio{{ $item->id }}" name="convenio">
                                                                     @foreach ($convenios as $convenio)
-                                                                        <option value="{{ $convenio->id }}" {{ $convenio->id == $item->convenio ? 'selected' : '' }}>{{ $convenio->nome }}</option>
+                                                                    <option value="{{ $convenio->id }}" {{ $convenio->id == $item->convenio ? 'selected' : '' }}>{{ $convenio->nome }}</option>
+
                                                                     @endforeach
                                                                 </select>
                                                             </div>                                                            

@@ -79,4 +79,9 @@ class Pacientes extends Model
     {
         return $this->belongsTo(Painel::class, 'paciente_id');
     }
+    public function convenio()
+    {
+        return $this->belongsTo(Convenio::class, 'convenio_id');
+    }
+
 }

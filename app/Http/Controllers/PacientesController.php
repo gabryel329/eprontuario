@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Convenio;
 use App\Models\Pacientes;
+use App\Models\Empresas;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -260,6 +261,39 @@ class PacientesController extends Controller
         // Redirect with success message
         return redirect()->route('paciente.index1')->with('success', 'Paciente atualizado com sucesso')->with('paciente', $paciente);
     }
+
+    // PacienteController.php
+    public function fichaPaciente($id)
+{
+    // Busque os dados do paciente pelo id
+    $paciente = Pacientes::find($id);
+
+    // Verifique se o paciente foi encontrado
+    if (!$paciente) {
+        return redirect()->back()->with('error', 'Paciente não encontrado.');
+    }
+
+    // Busque os dados da empresa
+    $empresa = Empresas::all();
+
+    // Verifique se o paciente tem um convenio_id
+    $nomeConvenio = '-'; // Defina um valor padrão caso o convênio não seja encontrado
+
+    if ($paciente->convenio_id) {
+        // Busque o convênio correspondente ao convenio_id do paciente
+        $convenio = Convenios::find($paciente->convenio_id);
+
+        // Se o convênio for encontrado, atribua o nome do convênio
+        if ($convenio) {
+            $nomeConvenio = $convenio->nome;
+        }
+    }
+    
+    // Retorne a view 'ficha' com os dados do paciente, da empresa e do nome do convênio
+    return view('formulario.fichapaciente', compact('paciente', 'empresa', 'nomeConvenio'));
+}
+
+
     
 
 

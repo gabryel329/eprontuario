@@ -38,6 +38,10 @@ return new class extends Migration
             $table->foreign('permisoes_id')->references('id')->on('permisoes')->onDelete('cascade');
             $table->integer('especialidade_id')->nullable();
             $table->foreign('especialidade_id')->references('id')->on('especialidades')->onDelete('cascade');
+            $table->string('valor')->nullable();
+            $table->string('porcentagem')->nullable();
+            $table->string('material')->nullable();
+            $table->string('medicamento')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
