@@ -281,7 +281,7 @@ class PacientesController extends Controller
 
     if ($paciente->convenio_id) {
         // Busque o convênio correspondente ao convenio_id do paciente
-        $convenio = Convenios::find($paciente->convenio_id);
+        $convenio = Convenio::find($paciente->convenio_id);
 
         // Se o convênio for encontrado, atribua o nome do convênio
         if ($convenio) {

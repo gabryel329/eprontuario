@@ -133,7 +133,8 @@
                                                                 <label class="form-label">Convênio:</label>
                                                                 <select class="form-control" id="convenio{{ $item->id }}" name="convenio">
                                                                     @foreach ($convenios as $convenio)
-                                                                    <option value="{{ $convenio->id }}" {{ $convenio->id == $item->convenio ? 'selected' : '' }}>{{ $convenio->nome }}</option>
+                                                                    <option value="{{ $convenio->id }}" {{ $convenio->id == $item->convenio_id ? 'selected' : '' }}>{{ $convenio->nome }}</option>
+
 
                                                                     @endforeach
                                                                 </select>
