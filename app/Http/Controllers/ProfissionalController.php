@@ -73,6 +73,10 @@ class ProfissionalController extends Controller
         $complemento = $request->input('complemento');
         $telefone = $request->input('telefone');
         $celular = $request->input('celular');
+        $valor = $request->input('valor');
+        $porcentagem = $request->input('porcentagem');
+        $material = $request->input('material');
+        $medicamento = $request->input('medicamento');
 
         // Check if the user already exists
         $existeProfissional = Profissional::where('cpf', $cpf)->first();
@@ -122,6 +126,10 @@ class ProfissionalController extends Controller
                 'complemento' => $complemento,
                 'telefone' => $telefone,
                 'celular' => $celular,
+                'material' => $material,
+                'medicamento' => $medicamento,
+                'valor' => $valor,
+                'porcentagem' => $porcentagem,
             ]);
 
             // Attach especialidades
@@ -149,6 +157,10 @@ class ProfissionalController extends Controller
                 'complemento' => $complemento,
                 'telefone' => $telefone,
                 'celular' => $celular,
+                'material' => $material,
+                'medicamento' => $medicamento,
+                'valor' => $valor,
+                'porcentagem' => $porcentagem,
             ]);
 
             // Attach especialidades
@@ -214,6 +226,10 @@ class ProfissionalController extends Controller
         $complemento = $request->input('complemento');
         $telefone = $request->input('telefone');
         $celular = $request->input('celular');
+        $valor = $request->input('valor');
+        $porcentagem = $request->input('porcentagem');
+        $material = $request->input('material');
+        $medicamento = $request->input('medicamento');
 
         // Check if the user already exists
         $existeProfissional = Profissional::where('cpf', $cpf)->where('id', '!=', $id)->first();
@@ -265,6 +281,10 @@ class ProfissionalController extends Controller
                 'complemento' => $complemento,
                 'telefone' => $telefone,
                 'celular' => $celular,
+                'material' => $material,
+                'medicamento' => $medicamento,
+                'valor' => $valor,
+                'porcentagem' => $porcentagem,
             ]);
         } else {
             // Update the user without the image
@@ -289,6 +309,10 @@ class ProfissionalController extends Controller
                 'complemento' => $complemento,
                 'telefone' => $telefone,
                 'celular' => $celular,
+                'material' => $material,
+                'medicamento' => $medicamento,
+                'valor' => $valor,
+                'porcentagem' => $porcentagem,
             ]);
         }
 

@@ -18,29 +18,30 @@
     </div>
     <ul class="app-menu">
         <li><a class="app-menu__item active" href="/home"><i class="app-menu__icon bi bi-speedometer"></i><span
-                    class="app-menu__label">Página Inicial</span></a></li>
+                    class="app-menu__label">Inicio</span></a></li>
         @if (Auth::user()->permissoes->pluck('id')->intersect([2, 3])->isNotEmpty())
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
                         class="app-menu__icon bi bi-person-workspace"></i><span
-                        class="app-menu__label">Recepção</span><i
+                        class="app-menu__label">Agendamento</span><i
                         class="treeview-indicator bi bi-chevron-right"></i></a>
                 <ul class="treeview-menu">
                     <li><a class="treeview-item" href="{{ route('agenda.index') }}"><i
                                 class="icon bi bi-calendar-plus"></i>
-                            Criar Agenda</a></li>
+                            Agenda Recepção</a></li>
                     <li><a class="treeview-item" href="{{ route('agenda.index1') }}"><i class="icon bi bi-search"></i>
-                            Consultar Agenda</a></li>
-                    {{-- <li><a class="treeview-item" href="{{route('anamnese.index')}}"><i class="icon bi bi-ui-checks"></i> Anamnese</a></li>
-                <li><a class="treeview-item" href="{{route('anamnese.index1')}}"><i class="icon bi bi bi-list-ul"></i> Histórico de Anamnese</a></li> --}}
+                            Disponibilidade</a></li>
                     <li>
                         <a class="treeview-item" href="#"><i class="icon bi bi-person-add"></i>Pacientes</a>
                         <ul>
                             <li><a class="treeview-item" href="{{ route('paciente.index') }}"><i
                                         class="icon bi bi-plus-circle"></i> Novo</a></li>
                             <li><a class="treeview-item" href="{{ route('paciente.index1') }}"><i
-                                        class="icon bi bi-person-lines-fill"></i> Lista de Pacientes</a></li>
+                                        class="icon bi bi-person-lines-fill"></i> Buscar Paciente</a></li>
                         </ul>
                     </li>
+                    {{-- <li><a class="treeview-item" href="{{route('anamnese.index')}}"><i class="icon bi bi-ui-checks"></i> Anamnese</a></li>
+                <li><a class="treeview-item" href="{{route('anamnese.index1')}}"><i class="icon bi bi bi-list-ul"></i> Histórico de Anamnese</a></li> --}}
+                    
                 </ul>
             </li>
         @endif
@@ -73,6 +74,7 @@
                                 class="icon bi bi-file-earmark-person"></i> Tipo Profissional</a></li>
                     <li><a class="treeview-item" href="{{ route('convenio.index') }}"><i
                                 class="icon bi bi-building-fill-add"></i> Convenios</a></li>
+                    
                 </ul>
             </li>
         @endif

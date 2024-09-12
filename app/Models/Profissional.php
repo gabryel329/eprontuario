@@ -35,6 +35,10 @@ class Profissional extends Model
         'telefone',
         'celular',
         'tipoprof_id',
+        'porcentagem',
+        'valor',
+        'material',
+        'medicamento',
         'conselho'
     ];
     protected $dates=['deleted_at'];

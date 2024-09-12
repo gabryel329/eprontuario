@@ -12,11 +12,11 @@
 <main class="app-content">
     <div class="app-title">
         <div>
-            <h1><i class="bi bi-ui-checks"></i> Consultar Agenda</h1>
+            <h1><i class="bi bi-ui-checks"></i> Consultar Marcação</h1>
         </div>
         <ul class="app-breadcrumb breadcrumb">
             <li class="breadcrumb-item"><i class="bi bi-house-door fs-6"></i></li>
-            <li class="breadcrumb-item">Agenda</li>
+            <li class="breadcrumb-item">Marcação</li>
             <li class="breadcrumb-item"><a href="#">Consultar</a></li>
         </ul>
     </div>
@@ -102,6 +102,7 @@
             <th>Nome</th>
             <th>CPF</th>
             <th>Contato</th>
+            <th>Medico</th>
             <th>Consulta</th>
             <th>Status</th>
             <th>Chamar</th>
@@ -116,6 +117,7 @@
                 <td>{{ $item->paciente->name ?? $item->name }}</td>
                 <td>{{ optional($item->paciente)->cpf ?? 'PACIENTE SEM CPF' }}</td>
                 <td>{{ $item->celular }}</td>
+                <td>{{ optional($item->profissional)->name ?? '-' }}</td>
                 <td>{{ $item->procedimento_id }}</td>
                 <td>
                     <select class="form-control status-select" data-id="{{ $item->id }}" data-paciente-id="{{ $item->paciente_id }}">

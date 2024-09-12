@@ -87,6 +87,9 @@ class PacientesController extends Controller
         $certidao = $request->input('certidao');
         $convenio = $request->input('convenio');
         $matricula = $request->input('matricula');
+        $plano = $request->input('plano');
+        $titular = $request->input('titular');
+        $produto = $request->input('produto');
         $cor = $request->input('cor');
         $imagem = $request->file('imagem');
     
@@ -141,6 +144,9 @@ class PacientesController extends Controller
             'sus' => $sus,
             'convenio' => $convenio,
             'matricula' => $matricula,
+            'plano' => $plano,
+            'titular' => $titular,
+            'produto' => $produto,
             'cor' => $cor,
             'imagem' => $imageName,
         ]);
@@ -192,6 +198,9 @@ class PacientesController extends Controller
         $sus = $request->input('sus');
         $convenio = $request->input('convenio');
         $matricula = $request->input('matricula');
+        $plano = $request->input('plano');
+        $titular = $request->input('titular');
+        $produto = $request->input('produto');
         $cor = $request->input('cor');
         $imagem = $request->file('imagem');
 
@@ -240,6 +249,9 @@ class PacientesController extends Controller
         $paciente->sus = $sus;
         $paciente->convenio = $convenio;
         $paciente->matricula = $matricula;
+        $paciente->plano = $plano;
+        $paciente->titular = $titular;
+        $paciente->produto = $produto;
         $paciente->cor = $cor;
 
         // Save the updated paciente data

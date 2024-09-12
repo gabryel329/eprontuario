@@ -92,7 +92,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="mb-3 col-md-3" id="convenio-select-container" style="display:none;">
+                        <div class="mb-3 col-md-2" id="convenio-select-container" style="display:none;">
                             <label class="form-label">Selecione:</label>
                             <select class="form-control" id="convenio" name="convenio">
                                 <option disabled selected>Escolha</option>
@@ -101,11 +101,37 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="mb-3 col-md-4" id="convenio-container2" style="display:none;">
+                        <div class="mb-3 col-md-2" id="convenio-container2" style="display:none;">
                             <label class="form-label">Matricula</label>
                             <input class="form-control" id="matricula" name="matricula" type="text" value="{{ old('matricula') }}">
                         </div>
-                        <div class="mb-3 col-md-6" id="convenio-container3">
+                        <div class="mb-3 col-md-2" id="convenio-container4" style="display:none;">
+                            <label class="form-label">Plano</label>
+                            <input class="form-control" id="plano" name="plano" type="text" value="{{ old('plano') }}">
+                        </div>
+                        <div class="mb-3 col-md-2" id="convenio-container5" style="display:none;">
+                            <label class="form-label">Produto</label>
+                            <input class="form-control" id="produto" name="produto" type="text" value="{{ old('produto') }}">
+                        </div>
+                        <div class="mb-3 col-md-2" id="convenio-container6" style="display:none;">
+                            <label class="form-label">Titular</label>
+                            <input class="form-control" id="titular" name="titular" type="text" value="{{ old('titular') }}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- Estado Civil Section -->
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label">Estado Civil</label>
+                            <select class="form-control" id="estado_civil" name="estado_civil">
+                                <option disabled selected style="font-size:18px;color: black;">{{ $item->estado_civil }}</option>
+                                <option value="Solteiro(a)" {{ $item->estado_civil == 'Solteiro(a)' ? 'selected' : '' }}>Solteiro(a)</option>
+                                <option value="Casado(a)" {{ $item->estado_civil == 'Casado(a)' ? 'selected' : '' }}>Casado(a)</option>
+                                <option value="Divorciado(a)" {{ $item->estado_civil == 'Divorciado(a)' ? 'selected' : '' }}>Divorciado(a)</option>
+                                <option value="Viuvo(a)" {{ $item->estado_civil == 'Viuvo(a)' ? 'selected' : '' }}>Viuvo(a)</option>
+                                <option value="Separado(a)" {{ $item->estado_civil == 'Separado(a)' ? 'selected' : '' }}>Separado(a)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-md-4">
                             <label class="form-label">Étnia</label>
                             <select class="form-control" id="cor" name="cor" required>
                                 <option disabled selected style="font-size:18px;color: black;">Escolha</option>       
@@ -115,9 +141,7 @@
                                 <option value="Pardo">Pardo</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="mb-3 col-md-6" id="pcd-container">
+                        <div class="mb-3 col-md-4" id="pcd-container">
                             <label class="form-label">PCD:</label>
                             <div class="form-check">
                                 <label class="form-check-label">
@@ -130,21 +154,9 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="mb-3 col-md-3" id="pcd-container2" style="display:none;">
+                        <div class="mb-3 col-md-2" id="pcd-container2" style="display:none;">
                             <label class="form-label">Qual:</label>
                             <input class="form-control" id="pcd" name="pcd" type="text" value="{{ old('pcd') }}">
-                        </div>
-                        <!-- Estado Civil Section -->
-                        <div class="mb-3 col-md-6">
-                            <label class="form-label">Estado Civil</label>
-                            <select class="form-control" id="estado_civil" name="estado_civil">
-                                <option disabled selected style="font-size:18px;color: black;">{{ $item->estado_civil }}</option>
-                                <option value="Solteiro(a)" {{ $item->estado_civil == 'Solteiro(a)' ? 'selected' : '' }}>Solteiro(a)</option>
-                                <option value="Casado(a)" {{ $item->estado_civil == 'Casado(a)' ? 'selected' : '' }}>Casado(a)</option>
-                                <option value="Divorciado(a)" {{ $item->estado_civil == 'Divorciado(a)' ? 'selected' : '' }}>Divorciado(a)</option>
-                                <option value="Viuvo(a)" {{ $item->estado_civil == 'Viuvo(a)' ? 'selected' : '' }}>Viuvo(a)</option>
-                                <option value="Separado(a)" {{ $item->estado_civil == 'Separado(a)' ? 'selected' : '' }}>Separado(a)</option>
-                            </select>
                         </div>
                     </div>                                                      
                     <div class="row">
@@ -287,25 +299,35 @@ function toggleConvenio() {
     if ($('#convenio-sim').is(':checked')) {
         $('#convenio-select-container').show();
         $('#convenio-container2').show();
-        $('#convenio-container').removeClass('col-md-6').addClass('col-md-3');
-        $('#convenio-container2').removeClass('col-md-4').addClass('col-md-3');
-        $('#convenio-container3').removeClass('col-md-6').addClass('col-md-3');
+        $('#convenio-container4').show();
+        $('#convenio-container5').show();
+        $('#convenio-container6').show();
+        $('#convenio-container').removeClass('col-md-6').addClass('col-md-2');
+        $('#convenio-container2').removeClass('col-md-2').addClass('col-md-2');
+        $('#convenio-container4').removeClass('col-md-2').addClass('col-md-2');
+        $('#convenio-container5').removeClass('col-md-2').addClass('col-md-2');
+        $('#convenio-container6').removeClass('col-md-2').addClass('col-md-2');
     } else {
         $('#convenio-select-container').hide();
         $('#convenio-container2').hide();
-        $('#convenio-container').removeClass('col-md-3').addClass('col-md-6');
-        $('#convenio-container2').removeClass('col-md-3').addClass('col-md-4');
-        $('#convenio-container3').removeClass('col-md-3').addClass('col-md-6');
+        $('#convenio-container4').hide();
+        $('#convenio-container5').hide();
+        $('#convenio-container6').hide();
+        $('#convenio-container').removeClass('col-md-2').addClass('col-md-6');
+        $('#convenio-container2').removeClass('col-md-2').addClass('col-md-2');
+        $('#convenio-container4').removeClass('col-md-2').addClass('col-md-2');
+        $('#convenio-container5').removeClass('col-md-2').addClass('col-md-2');
+        $('#convenio-container6').removeClass('col-md-2').addClass('col-md-2');
     }
 }
 
 function togglePcd() {
     if ($('#pcd-sim').is(':checked')) {
-        $('#pcd-container').removeClass('col-md-6').addClass('col-md-3');
-        $('#pcd-container2').show().addClass('col-md-3');
+        $('#pcd-container').removeClass('col-md-4').addClass('col-md-2');
+        $('#pcd-container2').show().addClass('col-md-2');
     } else {
-        $('#pcd-container').removeClass('col-md-3').addClass('col-md-6');
-        $('#pcd-container2').hide().removeClass('col-md-3');
+        $('#pcd-container').removeClass('col-md-2').addClass('col-md-4');
+        $('#pcd-container2').hide().removeClass('col-md-2');
     }
 }
 

@@ -13,15 +13,15 @@
 <main class="app-content">
     <div class="app-title">
         <div>
-            <h1><i class="bi bi-ui-checks"></i> Agenda
+            <h1><i class="bi bi-ui-checks"></i> Marcação
                 <span id="displaySelectedProfissional" class="selected-info"></span>
                 <span id="displaySelectedData" class="selected-info"></span>
             </h1>
         </div>
         <ul class="app-breadcrumb breadcrumb">
             <li class="breadcrumb-item"><i class="bi bi-house-door fs-6"></i></li>
-            <li class="breadcrumb-item">Agenda</li>
-            <li class="breadcrumb-item"><a href="#">Criar Agenda</a></li>
+            <li class="breadcrumb-item">Marcação</li>
+            <li class="breadcrumb-item"><a href="#">Criar Marcação</a></li>
         </ul>
     </div>
     <div class="row">
@@ -122,7 +122,7 @@
                     <thead>
                         <tr>
                             <th>Hora</th>
-                            <th>Consulta</th>
+                            <th>Marcação</th>
                             <th>Status</th>
                             <th>Ações</th>
                         </tr>
