@@ -56,7 +56,6 @@
                           </div>
                         <div class="mb-3 col-md-3">
                             <label class="form-label">Foto</label>
-                            <div id="my_camera" hidden></div>
                             <br/>
                             <button type="button" class="btn btn-primary" onclick="takeSnapshot()">Tirar Foto</button>
                             <input type="hidden" name="imagem" class="image-tag">
@@ -232,6 +231,7 @@
                         </div>
                             <div class="modal-body">
                                 <div id="my_camera_modal"></div>
+                                <div id="my_camera"></div>
                                 <div id="modal-photo-result" class="text-center mt-3"></div>
                             </div>
                             <div class="modal-footer">
@@ -253,6 +253,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
 <script language="JavaScript">
 $(document).ready(function() {
+    // Configura a webcam
     Webcam.set({
         width: 320,
         height: 240,
@@ -260,39 +261,52 @@ $(document).ready(function() {
         jpeg_quality: 90
     });
 
-    Webcam.on('error', function(err) {
-        
-        $.ajax({
-            type: "POST",
-            url: "{{ route('handleWebcamError') }}",
-            data: {
-                _token: '{{ csrf_token() }}',
-                error: "Webcam não foi encontrada"
-            },
-            success: function(response) {
-            },
-            error: function(response) {
-            }
-        });
-    });
+    // Verifica se a webcam está conectada
+    function checkCameraConnection() {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                console.log("Câmera conectada com sucesso.");
+                Webcam.attach('#my_camera'); // Conecta a câmera ao elemento
+            })
+            .catch(function(err) {
+                console.error("Erro ao acessar a webcam: ", err.message);
+                displayCameraError("Não foi possível acessar a webcam. Por favor, conecte sua câmera.");
 
-    Webcam.attach('#my_camera');
+                // Envia o erro para o backend Laravel via AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('webcam.check') }}",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        error: err.message // Envia a mensagem de erro exata
+                    },
+                    success: function(response) {
+                        if (response.status === 'error') {
+                            $('#error-container').html('<div class="alert alert-warning">Erro ao conectar a câmera: ' + response.error + '</div>');
+                        }
+                    },
+                    error: function(xhr) {
+                        console.log("Erro na requisição AJAX.");
+                    }
+                });
+            });
+    }
+
+    checkCameraConnection(); // Verifica a conexão da câmera ao carregar a página
 
     // Função para capturar a imagem
     window.takeSnapshot = function() {
         Webcam.snap(function(data_uri) {
             // Exibe a imagem capturada no modal
             document.getElementById('modal-photo-result').innerHTML = '<img src="'+data_uri+'"/>';
-            // Armazena a imagem base64 em um input escondido
             document.querySelector('.image-tag').value = data_uri;
 
-            // Abre o modal para mostrar a imagem capturada
-            $('#photoModal').modal('show');
+            // Abre o modal usando Bootstrap 5
+            var photoModal = new bootstrap.Modal(document.getElementById('photoModal'));
+            photoModal.show();
         });
     };
 });
-
-
 </script>
 <script>
 function toggleConvenio() {

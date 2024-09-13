@@ -7,6 +7,8 @@ use App\Models\Pacientes;
 use App\Models\Empresas;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class PacientesController extends Controller
 {
@@ -317,9 +319,23 @@ class PacientesController extends Controller
 
     public function handleWebcamError(Request $request)
     {
-        // Armazena o erro na sessão
-        $request->session()->flash('error', $request->input('error'));
-        
-        return response()->json(['success' => true]);
+        session()->flash('error', 'Webcam não foi encontrada');
+        return response()->json(['message' => 'Error message stored in session']);
+    }
+
+    public function checkWebcam(Request $request)
+    {
+        // Verifica se o erro foi enviado
+        if ($request->has('error')) {
+            // Armazena o erro na sessão
+            Session::flash('error', $request->error);
+            
+            // Retorna uma resposta de erro
+            return response()->json([
+                'status' => 'error'
+            ], 200); // 200 para garantir que o Ajax entenda que foi bem sucedido
+        }
+
+        return response()->json(['status' => 'success']);
     }
 }

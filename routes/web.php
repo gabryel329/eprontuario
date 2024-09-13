@@ -109,6 +109,8 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::delete('/pacientes/{id}', [PacientesController::class, 'destroy'])->name('paciente.destroy');
     Route::get('/pacientes/{id}', [PacientesController::class, 'show'])->name('paciente.show');
     Route::post('/webcam-error', [PacientesController::class, 'handleWebcamError'])->name('handleWebcamError');
+    Route::post('/webcam-check', [PacientesController::class, 'checkWebcam'])->name('webcam.check');
+
 
     // Anamnese
     Route::get('/anamnese', [AnamneseController::class, 'index'])->name('anamnese.index');
