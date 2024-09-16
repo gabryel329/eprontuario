@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Convenio;
+use App\Models\Disponibilidade;
 use App\Models\Honorario;
 use App\Models\Procedimentos;
 use App\Models\Profissional;
@@ -72,6 +73,45 @@ class HonorarioController extends Controller
         return response()->json(['success' => $success]);
     }
     
+    public function saveDisponibilidade(Request $request)
+    {
+
+        // Verifique se o profissional já existe e atualize, caso exista
+        $profissional = Profissional::find($request->input('profissional_id'));
+
+        if ($profissional) {
+            // Atualize os dados do profissional
+            $profissional->update([
+                // Atualize outros campos conforme necessário
+            ]);
+
+            // Salve ou atualize os dados na tabela 'disponibilidades'
+            Disponibilidade::updateOrCreate(
+                ['profissional_id' => $request->input('profissional_id')],
+                [
+                    'porcentagem' => $request->input('porcentagem'),
+                    'valor' => $request->input('valor'),
+                    'material' => $request->input('material'),
+                    'medicamento' => $request->input('medicamento'),
+                    'manha_dom' => $request->input('manha_dom'),
+                    'manha_seg' => $request->input('manha_seg'),
+                    'manha_ter' => $request->input('manha_ter'),
+                    'manha_qua' => $request->input('manha_qua'),
+                    'manha_qui' => $request->input('manha_qui'),
+                    'manha_sex' => $request->input('manha_sex'),
+                    'manha_sab' => $request->input('manha_sab'),
+                    'inicio' => $request->input('inicio'),
+                    'fim' => $request->input('fim'),
+                    'intervalo' => $request->input('intervalo'),
+                ]
+            );
+
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['success' => false, 'error' => 'Profissional não encontrado.']);
+        }
+    }
+
 
 
 

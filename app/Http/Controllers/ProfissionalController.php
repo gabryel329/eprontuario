@@ -78,6 +78,40 @@ class ProfissionalController extends Controller
         $material = $request->input('material');
         $medicamento = $request->input('medicamento');
 
+        // Get day and schedule inputs
+        $manha_dom = $request->input('manha_dom');
+        $manha_seg = $request->input('manha_seg');
+        $manha_ter = $request->input('manha_ter');
+        $manha_qua = $request->input('manha_qua');
+        $manha_qui = $request->input('manha_qui');
+        $manha_sex = $request->input('manha_sex');
+        $manha_sab = $request->input('manha_sab');
+        $inihonorariomanha = $request->input('inihonorariomanha');
+        $interhonorariomanha = $request->input('interhonorariomanha');
+        $fimhonorariomanha = $request->input('fimhonorariomanha');
+
+        $tarde_dom = $request->input('tarde_dom');
+        $tarde_seg = $request->input('tarde_seg');
+        $tarde_ter = $request->input('tarde_ter');
+        $tarde_qua = $request->input('tarde_qua');
+        $tarde_qui = $request->input('tarde_qui');
+        $tarde_sex = $request->input('tarde_sex');
+        $tarde_sab = $request->input('tarde_sab');
+        $inihonorariotarde = $request->input('inihonorariotarde');
+        $interhonorariotarde = $request->input('interhonorariotarde');
+        $fimhonorariotarde = $request->input('fimhonorariotarde');
+
+        $noite_dom = $request->input('noite_dom');
+        $noite_seg = $request->input('noite_seg');
+        $noite_ter = $request->input('noite_ter');
+        $noite_qua = $request->input('noite_qua');
+        $noite_qui = $request->input('noite_qui');
+        $noite_sex = $request->input('noite_sex');
+        $noite_sab = $request->input('noite_sab');
+        $inihonorarionoite = $request->input('inihonorarionoite');
+        $interhonorarionoite = $request->input('interhonorarionoite');
+        $fimhonorarionoite = $request->input('fimhonorarionoite');
+        
         // Check if the user already exists
         $existeProfissional = Profissional::where('cpf', $cpf)->first();
 
@@ -130,6 +164,42 @@ class ProfissionalController extends Controller
                 'medicamento' => $medicamento,
                 'valor' => $valor,
                 'porcentagem' => $porcentagem,
+                
+                // Manhã
+                'manha_dom' => $manha_dom,
+                'manha_seg' => $manha_seg,
+                'manha_ter' => $manha_ter,
+                'manha_qua' => $manha_qua,
+                'manha_qui' => $manha_qui,
+                'manha_sex' => $manha_sex,
+                'manha_sab' => $manha_sab,
+                'inihonorariomanha' => $inihonorariomanha,
+                'interhonorariomanha' => $interhonorariomanha,
+                'fimhonorariomanha' => $fimhonorariomanha,
+
+                // Tarde
+                'tarde_dom' => $tarde_dom,
+                'tarde_seg' => $tarde_seg,
+                'tarde_ter' => $tarde_ter,
+                'tarde_qua' => $tarde_qua,
+                'tarde_qui' => $tarde_qui,
+                'tarde_sex' => $tarde_sex,
+                'tarde_sab' => $tarde_sab,
+                'inihonorariotarde' => $inihonorariotarde,
+                'interhonorariotarde' => $interhonorariotarde,
+                'fimhonorariotarde' => $fimhonorariotarde,
+
+                // Noite
+                'noite_dom' => $noite_dom,
+                'noite_seg' => $noite_seg,
+                'noite_ter' => $noite_ter,
+                'noite_qua' => $noite_qua,
+                'noite_qui' => $noite_qui,
+                'noite_sex' => $noite_sex,
+                'noite_sab' => $noite_sab,
+                'inihonorarionoite' => $inihonorarionoite,
+                'interhonorarionoite' => $interhonorarionoite,
+                'fimhonorarionoite' => $fimhonorarionoite,
             ]);
 
             // Attach especialidades
@@ -161,17 +231,50 @@ class ProfissionalController extends Controller
                 'medicamento' => $medicamento,
                 'valor' => $valor,
                 'porcentagem' => $porcentagem,
-            ]);
 
+                // Manhã
+                'manha_dom' => $manha_dom,
+                'manha_seg' => $manha_seg,
+                'manha_ter' => $manha_ter,
+                'manha_qua' => $manha_qua,
+                'manha_qui' => $manha_qui,
+                'manha_sex' => $manha_sex,
+                'manha_sab' => $manha_sab,
+                'inihonorariomanha' => $inihonorariomanha,
+                'interhonorariomanha' => $interhonorariomanha,
+                'fimhonorariomanha' => $fimhonorariomanha,
+
+                // Tarde
+                'tarde_dom' => $tarde_dom,
+                'tarde_seg' => $tarde_seg,
+                'tarde_ter' => $tarde_ter,
+                'tarde_qua' => $tarde_qua,
+                'tarde_qui' => $tarde_qui,
+                'tarde_sex' => $tarde_sex,
+                'tarde_sab' => $tarde_sab,
+                'inihonorariotarde' => $inihonorariotarde,
+                'interhonorariotarde' => $interhonorariotarde,
+                'fimhonorariotarde' => $fimhonorariotarde,
+
+                // Noite
+                'noite_dom' => $noite_dom,
+                'noite_seg' => $noite_seg,
+                'noite_ter' => $noite_ter,
+                'noite_qua' => $noite_qua,
+                'noite_qui' => $noite_qui,
+                'noite_sex' => $noite_sex,
+                'noite_sab' => $noite_sab,
+                'inihonorarionoite' => $inihonorarionoite,
+                'interhonorarionoite' => $interhonorarionoite,
+                'fimhonorarionoite' => $fimhonorarionoite,
+            ]);
             // Attach especialidades
             $profissional->especialidades()->attach($especialidade_ids);
         }
 
-        // Retrieve the company data, including the logo, after it has been saved
-        $profissional = Profissional::first();
-
-        return redirect()->route('profissional.index')->with('success', 'Profissional criado(a) com sucesso')->with('profissional', $profissional);
+        return redirect()->route('profissional.index')->with('success', 'Profissional cadastrado com sucesso!');
     }
+
     /**
      * Display the specified resource.
      */
@@ -214,7 +317,7 @@ class ProfissionalController extends Controller
         $cor = $request->input('cor');
         $imagem = $request->file('imagem');
         $permisoes_id = $request->input('permisoes_id');
-        $especialidade_ids = $request->input('especialidade_id'); // Este é agora um array de IDs de especialidade
+        $especialidade_ids = $request->input('especialidade_id'); // Este é um array de IDs de especialidade
         $tipoprof_id = $request->input('tipoprof_id');
         $conselho = $request->input('conselho');
         $cep = $request->input('cep');
@@ -231,34 +334,66 @@ class ProfissionalController extends Controller
         $material = $request->input('material');
         $medicamento = $request->input('medicamento');
 
-        // Check if the user already exists
-        $existeProfissional = Profissional::where('cpf', $cpf)->where('id', '!=', $id)->first();
+        // Horários
+        // Manhã
+        $manha_dom = $request->input('manha_dom');
+        $manha_seg = $request->input('manha_seg');
+        $manha_ter = $request->input('manha_ter');
+        $manha_qua = $request->input('manha_qua');
+        $manha_qui = $request->input('manha_qui');
+        $manha_sex = $request->input('manha_sex');
+        $manha_sab = $request->input('manha_sab');
+        $inihonorariomanha = $request->input('inihonorariomanha');
+        $interhonorariomanha = $request->input('interhonorariomanha');
+        $fimhonorariomanha = $request->input('fimhonorariomanha');
 
+        // Tarde
+        $tarde_dom = $request->input('tarde_dom');
+        $tarde_seg = $request->input('tarde_seg');
+        $tarde_ter = $request->input('tarde_ter');
+        $tarde_qua = $request->input('tarde_qua');
+        $tarde_qui = $request->input('tarde_qui');
+        $tarde_sex = $request->input('tarde_sex');
+        $tarde_sab = $request->input('tarde_sab');
+        $inihonorariotarde = $request->input('inihonorariotarde');
+        $interhonorariotarde = $request->input('interhonorariotarde');
+        $fimhonorariotarde = $request->input('fimhonorariotarde');
+
+        // Noite
+        $noite_dom = $request->input('noite_dom');
+        $noite_seg = $request->input('noite_seg');
+        $noite_ter = $request->input('noite_ter');
+        $noite_qua = $request->input('noite_qua');
+        $noite_qui = $request->input('noite_qui');
+        $noite_sex = $request->input('noite_sex');
+        $noite_sab = $request->input('noite_sab');
+        $inihonorarionoite = $request->input('inihonorarionoite');
+        $interhonorarionoite = $request->input('interhonorarionoite');
+        $fimhonorarionoite = $request->input('fimhonorarionoite');
+
+        // Verificar se já existe um profissional com o mesmo CPF ou email
+        $existeProfissional = Profissional::where('cpf', $cpf)->where('id', '!=', $id)->first();
         if ($existeProfissional) {
             return redirect()->route('profissional.index')->with('error', 'Outro profissional com este CPF já existe!');
         }
 
         $existeEmail = Profissional::where('email', $email)->where('id', '!=', $id)->first();
-
         if ($existeEmail) {
             return redirect()->route('profissional.index')->with('error', 'Outro profissional com este email já existe!');
         }
 
+        // Buscar o profissional existente
         $profissional = Profissional::findOrFail($id);
 
+        // Atualizar a imagem se houver
         if ($imagem && $imagem->isValid()) {
             $filenameWithExt = $imagem->getClientOriginalName();
-            // Get just filename
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            // Get just ext
             $extension = $imagem->getClientOriginalExtension();
-            // Filename to store
             $imageName = $filename . '.' . $extension;
 
-            // Upload Image to the 'public/images/' directory
             $imagem->move(public_path('images/'), $imageName);
 
-            // Update the user
             $profissional->update([
                 'name' => $nome,
                 'sobrenome' => $sobrenome,
@@ -285,9 +420,45 @@ class ProfissionalController extends Controller
                 'medicamento' => $medicamento,
                 'valor' => $valor,
                 'porcentagem' => $porcentagem,
+
+                // Manhã
+                'manha_dom' => $manha_dom,
+                'manha_seg' => $manha_seg,
+                'manha_ter' => $manha_ter,
+                'manha_qua' => $manha_qua,
+                'manha_qui' => $manha_qui,
+                'manha_sex' => $manha_sex,
+                'manha_sab' => $manha_sab,
+                'inihonorariomanha' => $inihonorariomanha,
+                'interhonorariomanha' => $interhonorariomanha,
+                'fimhonorariomanha' => $fimhonorariomanha,
+
+                // Tarde
+                'tarde_dom' => $tarde_dom,
+                'tarde_seg' => $tarde_seg,
+                'tarde_ter' => $tarde_ter,
+                'tarde_qua' => $tarde_qua,
+                'tarde_qui' => $tarde_qui,
+                'tarde_sex' => $tarde_sex,
+                'tarde_sab' => $tarde_sab,
+                'inihonorariotarde' => $inihonorariotarde,
+                'interhonorariotarde' => $interhonorariotarde,
+                'fimhonorariotarde' => $fimhonorariotarde,
+
+                // Noite
+                'noite_dom' => $noite_dom,
+                'noite_seg' => $noite_seg,
+                'noite_ter' => $noite_ter,
+                'noite_qua' => $noite_qua,
+                'noite_qui' => $noite_qui,
+                'noite_sex' => $noite_sex,
+                'noite_sab' => $noite_sab,
+                'inihonorarionoite' => $inihonorarionoite,
+                'interhonorarionoite' => $interhonorarionoite,
+                'fimhonorarionoite' => $fimhonorarionoite,
             ]);
         } else {
-            // Update the user without the image
+            // Atualizar o usuário sem a imagem
             $profissional->update([
                 'name' => $nome,
                 'sobrenome' => $sobrenome,
@@ -313,14 +484,51 @@ class ProfissionalController extends Controller
                 'medicamento' => $medicamento,
                 'valor' => $valor,
                 'porcentagem' => $porcentagem,
+
+                // Manhã
+                'manha_dom' => $manha_dom,
+                'manha_seg' => $manha_seg,
+                'manha_ter' => $manha_ter,
+                'manha_qua' => $manha_qua,
+                'manha_qui' => $manha_qui,
+                'manha_sex' => $manha_sex,
+                'manha_sab' => $manha_sab,
+                'inihonorariomanha' => $inihonorariomanha,
+                'interhonorariomanha' => $interhonorariomanha,
+                'fimhonorariomanha' => $fimhonorariomanha,
+
+                // Tarde
+                'tarde_dom' => $tarde_dom,
+                'tarde_seg' => $tarde_seg,
+                'tarde_ter' => $tarde_ter,
+                'tarde_qua' => $tarde_qua,
+                'tarde_qui' => $tarde_qui,
+                'tarde_sex' => $tarde_sex,
+                'tarde_sab' => $tarde_sab,
+                'inihonorariotarde' => $inihonorariotarde,
+                'interhonorariotarde' => $interhonorariotarde,
+                'fimhonorariotarde' => $fimhonorariotarde,
+
+                // Noite
+                'noite_dom' => $noite_dom,
+                'noite_seg' => $noite_seg,
+                'noite_ter' => $noite_ter,
+                'noite_qua' => $noite_qua,
+                'noite_qui' => $noite_qui,
+                'noite_sex' => $noite_sex,
+                'noite_sab' => $noite_sab,
+                'inihonorarionoite' => $inihonorarionoite,
+                'interhonorarionoite' => $interhonorarionoite,
+                'fimhonorarionoite' => $fimhonorarionoite,
             ]);
         }
 
-        // Sync especialidades
+        // Atualizar as especialidades do profissional
         $profissional->especialidades()->sync($especialidade_ids);
 
-        return redirect()->route('profissional.index1')->with('success', 'Profissional atualizado(a) com sucesso')->with('profissional', $profissional);
+        return redirect()->route('profissional.index')->with('success', 'Profissional atualizado com sucesso!');
     }
+
 
 
     /**

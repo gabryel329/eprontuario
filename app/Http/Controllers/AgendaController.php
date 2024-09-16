@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agenda;
+use App\Models\Convenio;
+use App\Models\Especialidade;
 use App\Models\Feriado;
 use App\Models\Pacientes;
 use App\Models\Painel;
@@ -10,6 +12,7 @@ use App\Models\Procedimentos;
 use App\Models\Profissional;
 use App\Models\User;
 use Carbon\Carbon;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -35,6 +38,63 @@ class AgendaController extends Controller
         $feriado = Feriado::all();
 
         return view('agenda.criar', compact(['agendas', 'pacientes', 'profissional', 'procedimentos', 'feriado']));
+    }
+
+    public function index3(Request $request)
+    {
+        $especialidades = Especialidade::all();
+        $profissionais = collect(); // Default empty collection for "profissionais"
+
+        if ($request->has('especialidade_id')) {
+            $especialidadeId = $request->input('especialidade_id');
+            $profissionais = DB::table('especialidade_profissional as ep')
+                ->join('profissionals as p', 'p.id', '=', 'ep.profissional_id')
+                ->join('especialidades as e', 'e.id', '=', 'ep.especialidade_id')
+                ->where('e.id', $especialidadeId)
+                ->select('p.id', 'p.name')
+                ->get();
+        }
+        $convenios = Convenio::all();
+        $agendas = Agenda::all();
+        $pacientes = Pacientes::all();
+        $procedimentos = Procedimentos::all();
+        $feriado = Feriado::all();
+
+        return view('agenda.marcacao', compact('especialidades', 'convenios','profissionais', 'agendas', 'pacientes', 'procedimentos', 'feriado'));
+    }
+
+    public function getProfissionais($especialidadeId)
+    {
+        $profissionais = DB::table('especialidade_profissional as ep')
+            ->join('profissionals as p', 'p.id', '=', 'ep.profissional_id')
+            ->join('especialidades as e', 'e.id', '=', 'ep.especialidade_id')
+            ->where('e.id', $especialidadeId)
+            ->select('p.id', 'p.name')
+            ->get();
+    
+        return response()->json(['profissionais' => $profissionais]);
+    }
+
+    public function getDisponibilidade($profissional_id)
+    {
+        $profissional = Profissional::find($profissional_id);
+
+        $dias_disponiveis = [
+            'domingo' => $profissional->manha_dom,
+            'segunda' => $profissional->manha_seg,
+            'terca' => $profissional->manha_ter,
+            'quarta' => $profissional->manha_qua,
+            'quinta' => $profissional->manha_qui,
+            'sexta' => $profissional->manha_sex,
+            'sabado' => $profissional->manha_sab,
+        ];
+
+        return response()->json([
+            'dias_disponiveis' => $dias_disponiveis,
+            'inicio_horario' => $profissional->inihonorariomanha,
+            'intervalo' => $profissional->interhonorariomanha,
+            'fim_horario' => $profissional->fimhonorariomanha,
+        ]);
     }
 
     public function index1(Request $request)

@@ -75,6 +75,12 @@ Route::middleware(['check.session.expired'])->group(function () {
 
         Route::get('/guias-honorarios', [GuiaHonorarioController::class, 'index'])->name('guia_honorario.index');
         Route::post('/guias-honorarios', [GuiaHonorarioController::class, 'store'])->name('guia_honorario.store');
+
+        Route::get('/marcacao', [AgendaController::class, 'index3'])->name('agenda.index3');
+        Route::get('/get-profissionais/{especialidadeId}', [AgendaController::class, 'getProfissionais']);
+        Route::get('/get-disponibilidade/{profissional_id}', [AgendaController::class, 'getDisponibilidade']);
+
+        Route::post('/save-disponibilidade', [HonorarioController::class, 'saveDisponibilidade']);
     });
 
     Route::post('/guias', [GuiaTissController::class, 'store'])->name('guiatiss.store');

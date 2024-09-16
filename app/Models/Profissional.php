@@ -39,8 +39,45 @@ class Profissional extends Model
         'valor',
         'material',
         'medicamento',
-        'conselho'
+        'conselho',
+    
+        // Campos de dias e horários para manhã
+        'manha_dom',
+        'manha_seg',
+        'manha_ter',
+        'manha_qua',
+        'manha_qui',
+        'manha_sex',
+        'manha_sab',
+        'inihonorariomanha',
+        'interhonorariomanha',
+        'fimhonorariomanha',
+    
+        // Campos de dias e horários para tarde
+        'tarde_dom',
+        'tarde_seg',
+        'tarde_ter',
+        'tarde_qua',
+        'tarde_qui',
+        'tarde_sex',
+        'tarde_sab',
+        'inihonorariotarde',
+        'interhonorariotarde',
+        'fimhonorariotarde',
+    
+        // Campos de dias e horários para noite
+        'noite_dom',
+        'noite_seg',
+        'noite_ter',
+        'noite_qua',
+        'noite_qui',
+        'noite_sex',
+        'noite_sab',
+        'inihonorarionoite',
+        'interhonorarionoite',
+        'fimhonorarionoite'
     ];
+    
     protected $dates=['deleted_at'];
     public function permisao()
     {
@@ -90,6 +127,11 @@ class Profissional extends Model
     public function honorarios()
     {
         return $this->hasMany(Honorario::class);
+    }
+
+    public function disponibilidade()
+    {
+        return $this->hasOne(Disponibilidade::class, 'profissional_id');
     }
 
 }

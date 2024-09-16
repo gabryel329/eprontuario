@@ -227,244 +227,78 @@
                                         </div>
                                         <hr>
                                         <h4>Atendimento</h4>
-                                        <p>Turno:</p>
-                                        <div class="col-md-12">
-                                            <ul class="nav nav-tabs user-tabs">
-                                                <li class="nav-item"><a class="nav-link active" href="#manha"
-                                                        data-bs-toggle="tab">Manhã</a></li>
-                                                <li class="nav-item"><a class="nav-link" href="#tarde"
-                                                        data-bs-toggle="tab">Tarde</a></li>
-                                                <li class="nav-item"><a class="nav-link" href="#noite"
-                                                        data-bs-toggle="tab">Noite</a></li>
-                                            </ul>
-                                        </div>
                                         <div class="tab-content">
-                                            <div class="tile tab-pane active" id="manha">
-                                                <div class="tile-body">
-                                                    <div class="row">
-                                                        <div class="mb-3 col-md-6">
-                                                            <label class="form-label">Dias</label>
-                                                            <div class="d-flex align-items-center">
-                                                                <div class="form-check me-3">
-                                                                    <label class="form-check-label"
-                                                                        for="manha_dom">D</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="manha_dom" name="manha_dom"
-                                                                        value="S">
-                                                                </div>
-                                                                <div class="form-check me-3">
-                                                                    <label class="form-check-label"
-                                                                        for="manha_seg">S</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="manha_seg" name="manha_seg"
-                                                                        value="S">
-                                                                </div>
-                                                                <div class="form-check me-3">
-                                                                    <label class="form-check-label"
-                                                                        for="manha_ter">T</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="manha_ter" name="manha_ter"
-                                                                        value="S">
-                                                                </div>
-                                                                <div class="form-check me-3">
-                                                                    <label class="form-check-label"
-                                                                        for="manha_qua">Q</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="manha_qua" name="manha_qua"
-                                                                        value="S">
-                                                                </div>
-                                                                <div class="form-check me-3">
-                                                                    <label class="form-check-label"
-                                                                        for="manha_qui">Q</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="manha_qui" name="manha_qui"
-                                                                        value="S">
-                                                                </div>
-                                                                <div class="form-check me-3">
-                                                                    <label class="form-check-label"
-                                                                        for="manha_sex">S</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="manha_sex" name="manha_sex"
-                                                                        value="S">
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <label class="form-check-label"
-                                                                        for="manha_sab">S</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="manha_sab" name="manha_sab"
-                                                                        value="S">
-                                                                </div>
+                                            <div class="tile-body">
+                                                <div class="row">
+                                                    <div class="mb-3 col-md-6">
+                                                        <label class="form-label">Dias</label>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="form-check me-3">
+                                                                <label class="form-check-label"
+                                                                    for="manha_dom">D</label>
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    id="manha_dom" name="manha_dom"
+                                                                    value="S">
+                                                            </div>
+                                                            <div class="form-check me-3">
+                                                                <label class="form-check-label"
+                                                                    for="manha_seg">S</label>
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    id="manha_seg" name="manha_seg"
+                                                                    value="S">
+                                                            </div>
+                                                            <div class="form-check me-3">
+                                                                <label class="form-check-label"
+                                                                    for="manha_ter">T</label>
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    id="manha_ter" name="manha_ter"
+                                                                    value="S">
+                                                            </div>
+                                                            <div class="form-check me-3">
+                                                                <label class="form-check-label"
+                                                                    for="manha_qua">Q</label>
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    id="manha_qua" name="manha_qua"
+                                                                    value="S">
+                                                            </div>
+                                                            <div class="form-check me-3">
+                                                                <label class="form-check-label"
+                                                                    for="manha_qui">Q</label>
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    id="manha_qui" name="manha_qui"
+                                                                    value="S">
+                                                            </div>
+                                                            <div class="form-check me-3">
+                                                                <label class="form-check-label"
+                                                                    for="manha_sex">S</label>
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    id="manha_sex" name="manha_sex"
+                                                                    value="S">
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <label class="form-check-label"
+                                                                    for="manha_sab">S</label>
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    id="manha_sab" name="manha_sab"
+                                                                    value="S">
                                                             </div>
                                                         </div>
-                                                        <div class="mb-3 col-md-2">
-                                                            <label class="form-label">Inicio</label>
-                                                            <input class="form-control" id="inihonorariomanha"
-                                                                name="inihonorariomanha" type="text" placeholder="00:00">
-                                                        </div>
-                                                        <div class="mb-3 col-md-2">
-                                                            <label class="form-label">Intervalo</label>
-                                                            <input class="form-control" id="interhonorariomanha"
-                                                                name="interhonorariomanha" type="text" placeholder="00">
-                                                        </div>
-                                                        <div class="mb-3 col-md-2">
-                                                            <label class="form-label">Fim</label>
-                                                            <input class="form-control" id="fimhonorariomanha"
-                                                                name="fimhonorariomanha" type="text" placeholder="00:00">
-                                                        </div>
                                                     </div>
-
-                                                </div>
-                                            </div>
-                                            <div class="tile tab-pane" id="tarde">
-                                                <div class="tile-body">
-                                                    <div class="row">
-                                                        <div class="mb-3 col-md-6">
-                                                            <label class="form-label">Dias</label>
-                                                            <div class="d-flex align-items-center">
-                                                                <div class="form-check me-3">
-                                                                    <label class="form-check-label"
-                                                                        for="tarde_dom">D</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="tarde_dom" name="tarde_dom"
-                                                                        value="S">
-                                                                </div>
-                                                                <div class="form-check me-3">
-                                                                    <label class="form-check-label"
-                                                                        for="tarde_seg">S</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="tarde_seg" name="tarde_seg"
-                                                                        value="S">
-                                                                </div>
-                                                                <div class="form-check me-3">
-                                                                    <label class="form-check-label"
-                                                                        for="tarde_ter">T</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="tarde_ter" name="tarde_ter"
-                                                                        value="S">
-                                                                </div>
-                                                                <div class="form-check me-3">
-                                                                    <label class="form-check-label"
-                                                                        for="tarde_qua">Q</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="tarde_qua" name="tarde_qua"
-                                                                        value="S">
-                                                                </div>
-                                                                <div class="form-check me-3">
-                                                                    <label class="form-check-label"
-                                                                        for="tarde_qui">Q</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="tarde_qui" name="tarde_qui"
-                                                                        value="S">
-                                                                </div>
-                                                                <div class="form-check me-3">
-                                                                    <label class="form-check-label"
-                                                                        for="tarde_sex">S</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="tarde_sex" name="tarde_sex"
-                                                                        value="S">
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <label class="form-check-label"
-                                                                        for="tarde_sab">S</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="tarde_sab" name="tarde_sab"
-                                                                        value="S">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="mb-3 col-md-2">
-                                                            <label class="form-label">Inicio</label>
-                                                            <input class="form-control" id="inihonorariotarde"
-                                                                name="inihonorariotarde" type="text" placeholder="00:00">
-                                                        </div>
-                                                        <div class="mb-3 col-md-2">
-                                                            <label class="form-label">Intervalo</label>
-                                                            <input class="form-control" id="interhonorariotarde"
-                                                                name="interhonorariotarde" type="text" placeholder="00">
-                                                        </div>
-                                                        <div class="mb-3 col-md-2">
-                                                            <label class="form-label">Fim</label>
-                                                            <input class="form-control" id="fimhonorariotarde"
-                                                                name="fimhonorariotarde" type="text" placeholder="00:00">
-                                                        </div>
+                                                    <div class="mb-3 col-md-2">
+                                                        <label class="form-label">Inicio</label>
+                                                        <input class="form-control" id="inihonorariomanha"
+                                                            name="inihonorariomanha" type="time" placeholder="00:00">
                                                     </div>
-
-                                                </div>
-                                            </div>
-                                            <div class="tile tab-pane" id="noite">
-                                                <div class="tile-body">
-                                                    <div class="row">
-                                                        <div class="mb-3 col-md-6">
-                                                            <label class="form-label">Dias</label>
-                                                            <div class="d-flex align-items-center">
-                                                                <div class="form-check me-3">
-                                                                    <label class="form-check-label"
-                                                                        for="noite_dom">D</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="noite_dom" name="noite_dom"
-                                                                        value="S">
-                                                                </div>
-                                                                <div class="form-check me-3">
-                                                                    <label class="form-check-label"
-                                                                        for="noite_seg">S</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="noite_seg" name="noite_seg"
-                                                                        value="S">
-                                                                </div>
-                                                                <div class="form-check me-3">
-                                                                    <label class="form-check-label"
-                                                                        for="noite_ter">T</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="noite_ter" name="noite_ter"
-                                                                        value="S">
-                                                                </div>
-                                                                <div class="form-check me-3">
-                                                                    <label class="form-check-label"
-                                                                        for="noite_qua">Q</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="noite_qua" name="noite_qua"
-                                                                        value="S">
-                                                                </div>
-                                                                <div class="form-check me-3">
-                                                                    <label class="form-check-label"
-                                                                        for="noite_qui">Q</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="noite_qui" name="noite_qui"
-                                                                        value="S">
-                                                                </div>
-                                                                <div class="form-check me-3">
-                                                                    <label class="form-check-label"
-                                                                        for="noite_sex">S</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="noite_sex" name="noite_sex"
-                                                                        value="S">
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <label class="form-check-label"
-                                                                        for="noite_sab">S</label>
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="noite_sab" name="noite_sab"
-                                                                        value="S">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="mb-3 col-md-2">
-                                                            <label class="form-label">Inicio</label>
-                                                            <input class="form-control" id="inihonorarionoite"
-                                                                name="inihonorarionoite" type="text" placeholder="00:00">
-                                                        </div>
-                                                        <div class="mb-3 col-md-2">
-                                                            <label class="form-label">Intervalo</label>
-                                                            <input class="form-control" id="interhonorarionoite"
-                                                                name="interhonorarionoite" type="text" placeholder="00">
-                                                        </div>
-                                                        <div class="mb-3 col-md-2">
-                                                            <label class="form-label">Fim</label>
-                                                            <input class="form-control" id="fimhonorarionoite"
-                                                                name="fimhonorarionoite" type="text" placeholder="00:00">
-                                                        </div>
+                                                    <div class="mb-3 col-md-2">
+                                                        <label class="form-label">Intervalo</label>
+                                                        <input class="form-control" id="interhonorariomanha"
+                                                            name="interhonorariomanha" type="text" placeholder="00">
                                                     </div>
-
+                                                    <div class="mb-3 col-md-2">
+                                                        <label class="form-label">Fim</label>
+                                                        <input class="form-control" id="fimhonorariomanha"
+                                                            name="fimhonorariomanha" type="time" placeholder="00:00">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
