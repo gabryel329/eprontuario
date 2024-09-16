@@ -162,7 +162,7 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::put('/empresa/{id}', [EmpresasController::class, 'update'])->name('empresa.update');
 
     // Profissional
-
+    Route::get('profissionais/{id}/edit', [ProfissionalController::class, 'edit'])->name('profissional.edit');
     Route::get('/listaprofissional', [ProfissionalController::class, 'index1'])->name('profissional.index1');
     Route::post('/profissional', [ProfissionalController::class, 'store'])->name('profissional.store');
     Route::put('/profissional/{id}', [ProfissionalController::class, 'update'])->name('profissional.update');
