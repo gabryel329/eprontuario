@@ -42,7 +42,7 @@ class Pacientes extends Model
         'estado_civil',
         'pcd',
         'sus',
-        'convenio',
+        'convenio_id',
         'matricula',
         'plano',
         'titular',

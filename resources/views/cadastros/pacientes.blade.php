@@ -57,7 +57,7 @@
                         <div class="mb-3 col-md-3">
                             <label class="form-label">Foto</label>
                             <br/>
-                            <button type="button" class="btn btn-primary" onclick="takeSnapshot()">Tirar Foto</button>
+                            <button type="button" class="btn btn-primary" id="openModalButton">Tirar Foto</button>
                             <input type="hidden" name="imagem" class="image-tag">
                             <div id="results"></div>
                         </div>
@@ -93,7 +93,7 @@
                         </div>
                         <div class="mb-3 col-md-2" id="convenio-select-container" style="display:none;">
                             <label class="form-label">Selecione:</label>
-                            <select class="form-control" id="convenio" name="convenio">
+                            <select class="form-control" id="convenio_id" name="convenio_id">
                                 <option disabled selected>Escolha</option>
                                 @foreach ($convenios as $item)
                                     <option value="{{ $item->id }}">{{ $item->nome }}</option>
@@ -221,26 +221,28 @@
                         </div>
                     </div>
 
-                    <!-- Modal -->
-                    <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="photoModalLabel" aria-hidden="true">
+                <!-- Modal -->
+                <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="photoModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="photoModalLabel">Capturar Foto</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                            <div class="modal-body">
-                                <div id="my_camera_modal"></div>
-                                <div id="my_camera"></div>
-                                <div id="modal-photo-result" class="text-center mt-3"></div>
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="photoModalLabel">Capturar Foto</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body d-flex flex-column align-items-center">
+                                <!-- Câmera centralizada vertical e horizontalmente -->
+                                <div id="my_camera_modal" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;"></div>
+                                <!-- Resultado da foto centralizado -->
+                                <div id="modal-photo-result" class="mt-3" style="width: 100%; display: flex; justify-content: center; align-items: center;"></div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <button type="button" class="btn btn-primary" onclick="takeSnapshot()">Tirar Foto</button>
+                                <button type="button" class="btn btn-primary" id="snapshot-button">Tirar Foto</button>
+                                <button type="button" class="btn btn-primary d-none" id="retake-button">Tirar outra Foto</button>
                             </div>
                         </div>
                     </div>
-                    </div>
+                </div>
                 </form>
             </div>
           </div>
@@ -266,7 +268,7 @@ $(document).ready(function() {
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(function(stream) {
                 console.log("Câmera conectada com sucesso.");
-                Webcam.attach('#my_camera'); // Conecta a câmera ao elemento
+                Webcam.attach('#my_camera_modal'); // Conecta a câmera ao elemento
             })
             .catch(function(err) {
                 console.error("Erro ao acessar a webcam: ", err.message);
@@ -292,20 +294,36 @@ $(document).ready(function() {
             });
     }
 
-    checkCameraConnection(); // Verifica a conexão da câmera ao carregar a página
+    checkCameraConnection();
+    // Função para abrir o modal e conectar a webcam
+    $('#openModalButton').click(function() {
+        // Abre o modal
+        $('#photoModal').modal('show');
+        // Conecta a webcam no modal
+        Webcam.attach('#my_camera_modal');
+    });
 
-    // Função para capturar a imagem
-    window.takeSnapshot = function() {
+    // Função para capturar a foto e exibi-la no mesmo modal
+    $('#snapshot-button').click(function() {
         Webcam.snap(function(data_uri) {
-            // Exibe a imagem capturada no modal
-            document.getElementById('modal-photo-result').innerHTML = '<img src="'+data_uri+'"/>';
-            document.querySelector('.image-tag').value = data_uri;
-
-            // Abre o modal usando Bootstrap 5
-            var photoModal = new bootstrap.Modal(document.getElementById('photoModal'));
-            photoModal.show();
+            // Substitui o feed da câmera pela imagem capturada
+            $('#my_camera_modal').html('<img src="'+data_uri+'" class="img-fluid"/>');
+            // Coloca a imagem capturada no campo de input hidden para envio posterior
+            $('.image-tag').val(data_uri);
+            // Alterna os botões
+            $('#snapshot-button').addClass('d-none'); // Esconde o botão de tirar foto
+            $('#retake-button').removeClass('d-none'); // Mostra o botão de tirar outra foto
         });
-    };
+    });
+
+    // Função para tirar outra foto (reativar a câmera)
+    $('#retake-button').click(function() {
+        // Reanexar a câmera à div
+        Webcam.attach('#my_camera_modal');
+        // Alternar os botões de volta
+        $('#retake-button').addClass('d-none'); // Esconde o botão de tirar outra foto
+        $('#snapshot-button').removeClass('d-none'); // Mostra o botão de tirar foto
+    });
 });
 </script>
 <script>

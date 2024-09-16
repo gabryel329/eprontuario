@@ -88,7 +88,7 @@ class PacientesController extends Controller
         $acompanhante = $request->input('acompanhante');
         $genero = $request->input('genero');
         $certidao = $request->input('certidao');
-        $convenio = $request->input('convenio');
+        $convenio_id = $request->input('convenio_id');
         $matricula = $request->input('matricula');
         $plano = $request->input('plano');
         $titular = $request->input('titular');
@@ -145,7 +145,7 @@ class PacientesController extends Controller
             'rg' => $rg,
             'certidao' => $certidao,
             'sus' => $sus,
-            'convenio' => $convenio,
+            'convenio_id' => $convenio_id,
             'matricula' => $matricula,
             'plano' => $plano,
             'titular' => $titular,

@@ -39,11 +39,8 @@ return new class extends Migration
         $table->string('pcd')->nullable();
         $table->string('estado_civil')->nullable();
         $table->string('sus')->nullable();
-        
-        // Corrigir o tipo da chave estrangeira
         $table->unsignedBigInteger('convenio_id')->nullable();
-        $table->foreign('convenio_id')->references('id')->on('convenios')->onDelete('cascade');
-        
+        $table->foreign('convenio_id')->references('id')->on('convenios')->onDelete('cascade');     
         $table->string('matricula')->nullable();
         $table->string('plano')->nullable();
         $table->string('titular')->nullable();
