@@ -199,7 +199,7 @@ class PacientesController extends Controller
         $rg = $request->input('rg');
         $certidao = $request->input('certidao');
         $sus = $request->input('sus');
-        $convenio = $request->input('convenio');
+        $convenio_id = $request->input('convenio_id');
         $matricula = $request->input('matricula');
         $plano = $request->input('plano');
         $titular = $request->input('titular');
@@ -250,7 +250,7 @@ class PacientesController extends Controller
         $paciente->rg = $rg;
         $paciente->certidao = $certidao;
         $paciente->sus = $sus;
-        $paciente->convenio = $convenio;
+        $paciente->convenio_id = $convenio_id;
         $paciente->matricula = $matricula;
         $paciente->plano = $plano;
         $paciente->titular = $titular;
@@ -263,6 +263,9 @@ class PacientesController extends Controller
         // Redirect with success message
         return redirect()->route('paciente.index1')->with('success', 'Paciente atualizado com sucesso')->with('paciente', $paciente);
     }
+
+
+
 
     // PacienteController.php
     public function fichaPaciente($id)

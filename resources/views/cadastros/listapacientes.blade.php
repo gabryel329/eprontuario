@@ -67,166 +67,161 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form method="POST"
-                                                    action="{{ route('paciente.update', $item->id) }}"
-                                                    enctype="multipart/form-data">
+                                                <form method="POST" action="{{ route('paciente.update', $item->id) }}" enctype="multipart/form-data">
                                                     @csrf
                                                     @method('PUT')
-                                                    <div class="row">
+                                                    <div class="modal-body">
                                                         <div class="row">
                                                             <div class="mb-3 col-md-6">
                                                                 <label class="form-label">Nome Completo</label>
-                                                                <input class="form-control" id="name{{ $item->id }}" name="name" type="text" value="{{ $item->name }}">
+                                                                <input class="form-control" name="name" type="text" value="{{ old('name', $item->name) }}">
                                                             </div>
-                                                            <div class="mb-3 col-md-3">
+                                                            <div class="mb-3 col-md-6">
                                                                 <label class="form-label">E-mail</label>
-                                                                <input class="form-control" id="email{{ $item->id }}" name="email" type="text" value="{{ $item->email }}">
-                                                            </div>
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">Nome Social</label>
-                                                                <input class="form-control" id="nome_social{{ $item->id }}" name="nome_social" type="text" value="{{ $item->nome_social }}">
+                                                                <input class="form-control" name="email" type="email" value="{{ old('email', $item->email) }}">
                                                             </div>
                                                         </div>
                                                         <div class="row">
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">Nascimento </label>
-                                                                <input class="form-control" id="nasc{{ $item->id }}" name="nasc" type="date" value="{{ $item->nasc }}">
+                                                            <div class="mb-3 col-md-6">
+                                                                <label class="form-label">CPF</label>
+                                                                <input class="form-control" name="cpf" type="text" value="{{ old('cpf', $item->cpf) }}">
                                                             </div>
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">CPF </label>
-                                                                <input class="form-control" id="cpf{{ $item->id }}" name="cpf" type="text" value="{{ $item->cpf }}">
+                                                            <div class="mb-3 col-md-6">
+                                                                <label class="form-label">RG</label>
+                                                                <input class="form-control" name="rg" type="text" value="{{ old('rg', $item->rg) }}">
                                                             </div>
-                                                            <div class="mb-3 col-md-3">
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="mb-3 col-md-4">
+                                                                <label class="form-label">Nascimento</label>
+                                                                <input class="form-control" name="nasc" type="date" value="{{ old('nasc', $item->nasc) }}">
+                                                            </div>
+                                                            <div class="mb-3 col-md-4">
+                                                                <label class="form-label">Nome Social</label>
+                                                                <input class="form-control" name="nome_social" type="text" value="{{ old('nome_social', $item->nome_social) }}">
+                                                            </div>
+                                                            <div class="mb-3 col-md-4">
                                                                 <label class="form-label">Gênero</label>
                                                                 <div class="form-check">
                                                                     <label class="form-check-label">
-                                                                        <input class="form-check-input" type="radio" id="generoM{{ $item->id }}" name="genero" value="M" {{ $item->genero == 'M' ? 'checked' : '' }}>Masculino
+                                                                        <input class="form-check-input" type="radio" name="genero" value="M" {{ old('genero', $item->genero) == 'M' ? 'checked' : '' }}> Masculino
                                                                     </label>
                                                                 </div>
                                                                 <div class="form-check">
                                                                     <label class="form-check-label">
-                                                                        <input class="form-check-input" type="radio" id="generoF{{ $item->id }}" name="genero" value="F" {{ $item->genero == 'F' ? 'checked' : '' }}>Feminino
+                                                                        <input class="form-check-input" type="radio" name="genero" value="F" {{ old('genero', $item->genero) == 'F' ? 'checked' : '' }}> Feminino
                                                                     </label>
-                                                                </div>
                                                             </div>
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">Foto</label>
-                                                                <input class="form-control" type="file" name="imagem">
-                                                            </div>
+                                                        </div>    
                                                         </div>
                                                         <div class="row">
-                                                            <div class="mb-3 col-md-4">
-                                                                <label class="form-label">RG </label>
-                                                                <input class="form-control" id="rg{{ $item->id }}" name="rg" type="text" value="{{ $item->rg }}" required>
-                                                            </div>
-                                                            <div class="mb-3 col-md-4">
+                                                            <div class="mb-3 col-md-6">
                                                                 <label class="form-label">Certidão de Nascimento</label>
-                                                                <input class="form-control" id="certidao{{ $item->id }}" name="certidao" type="text" value="{{ $item->certidao }}">
+                                                                <input class="form-control" name="certidao" type="text" value="{{ old('certidao', $item->certidao) }}">
                                                             </div>
-                                                            <div class="mb-3 col-md-4">
+                                                            <div class="mb-3 col-md-6">
                                                                 <label class="form-label">SUS</label>
-                                                                <input class="form-control" id="sus{{ $item->id }}" name="sus" type="text" value="{{ $item->sus }}">
+                                                                <input class="form-control" name="sus" type="text" value="{{ old('sus', $item->sus) }}">
                                                             </div>
                                                         </div>
                                                         <div class="row">
-                                                            <div class="mb-3 col-md-4">
-                                                                <label class="form-label">Convênio:</label>
-                                                                <select class="form-control" id="convenio{{ $item->id }}" name="convenio">
+                                                            <div class="mb-3 col-md-2">
+                                                                <label class="form-label">Convênio</label>
+                                                                <select class="form-control" name="convenio_id">
+                                                                    <option value="">Selecione</option>
                                                                     @foreach ($convenios as $convenio)
-                                                                    <option value="{{ $convenio->id }}" {{ $convenio->id == $item->convenio_id ? 'selected' : '' }}>{{ $convenio->nome }}</option>
-
-
+                                                                        <option value="{{ $convenio->id }}" {{ old('convenio_id', $item->convenio_id) == $convenio->id ? 'selected' : '' }}>{{ $convenio->nome }}</option>
                                                                     @endforeach
                                                                 </select>
-                                                            </div>                                                            
-                                                            <div class="mb-3 col-md-4">
-                                                                <label class="form-label">Matricula</label>
-                                                                <input class="form-control" id="matricula{{ $item->id }}" name="matricula" type="text" value="{{ $item->matricula }}">
                                                             </div>
                                                             <div class="mb-3 col-md-4">
-                                                                <label class="form-label">Cor</label>
-                                                                <select class="form-control" id="cor{{ $item->id }}" name="cor">
-                                                                    <option disabled selected style="font-size:18px;color: black;">{{ $item->cor }}</option>       
-                                                                    <option value="Branco" {{ $item->cor == 'Branco' ? 'selected' : '' }}>Branco</option>
-                                                                    <option value="Preto" {{ $item->cor == 'Preto' ? 'selected' : '' }}>Preto</option>
-                                                                    <option value="Amarelo" {{ $item->cor == 'Amarelo' ? 'selected' : '' }}>Amarelo</option>
-                                                                    <option value="Pardo" {{ $item->cor == 'Pardo' ? 'selected' : '' }}>Pardo</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="mb-3 col-md-4">
-                                                                <label class="form-label">Nome do Pai</label>
-                                                                <input class="form-control" id="nome_pai{{ $item->id }}" name="nome_pai" type="text" value="{{ $item->nome_pai }}">
-                                                            </div>
-                                                            <div class="mb-3 col-md-4">
-                                                                <label class="form-label">Nome da Mãe</label>
-                                                                <input class="form-control" id="nome_mae{{ $item->id }}" name="nome_mae" type="text" value="{{ $item->nome_mae }}" required>
-                                                            </div>
-                                                            <div class="mb-3 col-md-4">
-                                                                <label class="form-label">Acompanhante</label>
-                                                                <input class="form-control" id="acompanhante{{ $item->id }}" name="acompanhante" type="text" value="{{ $item->acompanhante }}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="mb-3 col-md-6">
-                                                                <label class="form-label">Estado Civil</label>
-                                                                <select class="form-control" id="estado_civil{{ $item->id }}" name="estado_civil">
-                                                                    <option disabled selected style="font-size:18px;color: black;">{{ $item->estado_civil }}</option>
-                                                                    <option value="Solteiro(a)" {{ $item->estado_civil == 'Solteiro(a)' ? 'selected' : '' }}>Solteiro(a)</option>
-                                                                    <option value="Casado(a)" {{ $item->estado_civil == 'Casado(a)' ? 'selected' : '' }}>Casado(a)</option>
-                                                                    <option value="Divorciado(a)" {{ $item->estado_civil == 'Divorciado(a)' ? 'selected' : '' }}>Divorciado(a)</option>
-                                                                    <option value="Viuvo(a)" {{ $item->estado_civil == 'Viuvo(a)' ? 'selected' : '' }}>Viuvo(a)</option>
-                                                                    <option value="Separado(a)" {{ $item->estado_civil == 'Separado(a)' ? 'selected' : '' }}>Separado(a)</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="mb-3 col-md-6" id="pcd-container2">
-                                                                <label class="form-label">PCD:</label>
-                                                                <input class="form-control" id="pcd{{ $item->id }}" name="pcd" type="text" placeholder="Opcional" value="{{ $item->pcd }}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="mb-3 col-md-6">
-                                                                <label class="form-label">Telefone Fixo</label>
-                                                                <input class="form-control" id="telefone{{ $item->id }}" name="telefone" type="text" value="{{ $item->telefone }}">
-                                                            </div>
-                                                            <div class="mb-3 col-md-6">
-                                                                <label class="form-label">Celular</label>
-                                                                <input class="form-control" id="celular{{ $item->id }}" name="celular" type="text" value="{{ $item->celular }}" required>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="mb-3 col-md-4">
-                                                                <label class="form-label">Rua</label>
-                                                                <input class="form-control" id="rua{{ $item->id }}" name="rua" type="text" value="{{ $item->rua }}" required>
+                                                                <label class="form-label">Matrícula</label>
+                                                                <input class="form-control" name="matricula" type="text" value="{{ old('matricula', $item->matricula) }}">
                                                             </div>
                                                             <div class="mb-3 col-md-2">
-                                                                <label class="form-label">Número</label>
-                                                                <input class="form-control" id="numero{{ $item->id }}" name="numero" type="text" value="{{ $item->numero }}" required>
-                                                            </div>
-                                                            <div class="mb-3 col-md-6">
-                                                                <label class="form-label">Complemento</label>
-                                                                <input class="form-control" id="complemento{{ $item->id }}" name="complemento" type="text" value="{{ $item->complemento }}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="mb-3 col-md-4">
-                                                                <label class="form-label">Bairro</label>
-                                                                <input class="form-control" id="bairro{{ $item->id }}" name="bairro" type="text" value="{{ $item->bairro }}" required>
-                                                            </div>
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">CEP</label>
-                                                                <input class="form-control" id="cep{{ $item->id }}" name="cep" type="text" value="{{ $item->cep }}" onblur="pesquisacep(this.value);" required>
-                                                            </div>
-                                                            <div class="mb-3 col-md-3">
-                                                                <label class="form-label">Cidade</label>
-                                                                <input class="form-control" id="cidade{{ $item->id }}" name="cidade" type="text" value="{{ $item->cidade }}" required>
+                                                                <label class="form-label">Plano</label>
+                                                                <input class="form-control" name="plano" type="text" value="{{ old('plano', $item->plano) }}">
                                                             </div>
                                                             <div class="mb-3 col-md-2">
-                                                                <label class="form-label">Estado</label>
-                                                                <input class="form-control" id="uf{{ $item->id }}" name="uf" type="text" value="{{ $item->uf }}" required>
+                                                                <label class="form-label">Titular</label>
+                                                                <input class="form-control" name="titular" type="text" value="{{ old('titular', $item->titular) }}">
+                                                            </div>
+                                                            <div class="mb-3 col-md-2">
+                                                                <label class="form-label">Produto</label>
+                                                                <input class="form-control" name="produto" type="text" value="{{ old('produto', $item->produto) }}">
                                                             </div>
                                                         </div>
+                                                    <div class="row">
+                                                        <div class="mb-3 col-md-3">
+                                                            <label class="form-label">Cor</label>
+                                                            <input class="form-control" name="cor" type="text" value="{{ old('cor', $item->cor) }}">
+                                                        </div>
+                                                        <div class="mb-3 col-md-3">
+                                                            <label class="form-label">Nome do Pai</label>
+                                                            <input class="form-control" name="nome_pai" type="text" value="{{ old('nome_pai', $item->nome_pai) }}">
+                                                        </div>
+                                                        <div class="mb-3 col-md-3">
+                                                            <label class="form-label">Nome da Mãe</label>
+                                                            <input class="form-control" name="nome_mae" type="text" value="{{ old('nome_mae', $item->nome_mae) }}">
+                                                        </div>
+                                                        <div class="mb-3 col-md-3">
+                                                            <label class="form-label">Acompanhante</label>
+                                                            <input class="form-control" name="acompanhante" type="text" value="{{ old('acompanhante', $item->acompanhante) }}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="mb-3 col-md-4">
+                                                            <label class="form-label">Estado Civil</label>
+                                                            <select class="form-control" name="estado_civil">
+                                                                <option value="">Selecione</option>
+                                                                <option value="Solteiro(a)" {{ old('estado_civil', $item->estado_civil) == 'Solteiro(a)' ? 'selected' : '' }}>Solteiro(a)</option>
+                                                                <option value="Casado(a)" {{ old('estado_civil', $item->estado_civil) == 'Casado(a)' ? 'selected' : '' }}>Casado(a)</option>
+                                                                <option value="Divorciado(a)" {{ old('estado_civil', $item->estado_civil) == 'Divorciado(a)' ? 'selected' : '' }}>Divorciado(a)</option>
+                                                                <option value="Viuvo(a)" {{ old('estado_civil', $item->estado_civil) == 'Viuvo(a)' ? 'selected' : '' }}>Viuvo(a)</option>
+                                                                <option value="Separado(a)" {{ old('estado_civil', $item->estado_civil) == 'Separado(a)' ? 'selected' : '' }}>Separado(a)</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-3 col-md-4">
+                                                            <label class="form-label">PCD</label>
+                                                            <input class="form-control" name="pcd" type="text" value="{{ old('pcd', $item->pcd) }}">
+                                                        </div>
+                                                        <div class="mb-3 col-md-4">
+                                                            <label class="form-label">Imagem</label>
+                                                            <input class="form-control" name="imagem" type="file">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="mb-3 col-md-4">
+                                                            <label class="form-label">CEP</label>
+                                                            <input class="form-control" name="cep" type="text" value="{{ old('cep', $item->cep) }}" onblur="pesquisacep(this.value);">
+                                                        </div>
+                                                        <div class="mb-3 col-md-4">
+                                                            <label class="form-label">Rua</label>
+                                                            <input class="form-control" name="rua" type="text" value="{{ old('rua', $item->rua) }}">
+                                                        </div>
+                                                        <div class="mb-3 col-md-4">
+                                                            <label class="form-label">Bairro</label>
+                                                            <input class="form-control" name="bairro" type="text" value="{{ old('bairro', $item->bairro) }}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="mb-3 col-md-3">
+                                                            <label class="form-label">Número</label>
+                                                            <input class="form-control" name="numero" type="text" value="{{ old('numero', $item->numero) }}">
+                                                        </div>
+                                                        <div class="mb-3 col-md-3">
+                                                            <label class="form-label">Complemento</label>
+                                                            <input class="form-control" name="complemento" type="text" value="{{ old('complemento', $item->complemento) }}">
+                                                        </div>
+                                                        <div class="mb-3 col-md-3">
+                                                            <label class="form-label">Cidade</label>
+                                                            <input class="form-control" name="cidade" type="text" value="{{ old('cidade', $item->cidade) }}">
+                                                        </div>
+                                                        <div class="mb-3 col-md-3">
+                                                            <label class="form-label">Estado</label>
+                                                            <input class="form-control" name="uf" type="text" value="{{ old('uf', $item->uf) }}">
+                                                        </div>
+                                                    </div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -237,6 +232,9 @@
                                         </div>
                                     </div>
                                 </div>
+
+
+
 
                                 <!-- Delete Confirmation Modal -->
                                 <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ $item->id }}" aria-hidden="true">
