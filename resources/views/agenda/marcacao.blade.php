@@ -102,7 +102,7 @@
             <div class="col-md-6" id="calendario">
                 <div class="tile">
                     <h3 class="tile-title">Data</h3>
-                    <div id="calendar"></div>
+                    <input class="form-control" type="date" id="data-selecionada">
                 </div>
                 <ul id="lista-horarios">
                     <!-- Horários disponíveis serão listados aqui -->
@@ -160,32 +160,8 @@
             </div>
         </div>
     </div>
-    <!-- JS do FullCalendar e do plugin de interação -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/locales/pt-br.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/interaction.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth', // Visualização mensal
-                locale: 'pt-br',             // Idioma em português
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                dateClick: function(info) {
-                    var selectedDate = info.dateStr; // Captura a data selecionada
-                    document.getElementById('selectedData').value = selectedDate; // Atribui ao campo oculto
-                    alert('Consulta marcada para o dia: ' + selectedDate);
 
-                    // Mostrar a lista de horários disponíveis
-                    fetchHorariosDisponiveis(selectedDate);
-                },
-            });
-            calendar.render();
-        });
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             const especialidadeSelect = document.getElementById('especialidade');
