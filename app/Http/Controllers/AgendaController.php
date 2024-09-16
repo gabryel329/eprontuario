@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Agenda;
 use App\Models\Convenio;
+use App\Models\Disponibilidade;
 use App\Models\Especialidade;
 use App\Models\Feriado;
 use App\Models\Pacientes;
@@ -12,6 +13,7 @@ use App\Models\Procedimentos;
 use App\Models\Profissional;
 use App\Models\User;
 use Carbon\Carbon;
+use DateTime;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,6 +42,13 @@ class AgendaController extends Controller
         return view('agenda.criar', compact(['agendas', 'pacientes', 'profissional', 'procedimentos', 'feriado']));
     }
 
+    public function geraAgenda(Request $request)
+    {
+        $profissionais = Profissional::whereNotNull('conselho')->get();
+
+        return view('agenda.geraragenda', compact(['profissionais']));
+    }
+
     public function index3(Request $request)
     {
         $especialidades = Especialidade::all();
@@ -60,7 +69,7 @@ class AgendaController extends Controller
         $procedimentos = Procedimentos::all();
         $feriado = Feriado::all();
 
-        return view('agenda.marcacao', compact('especialidades', 'convenios','profissionais', 'agendas', 'pacientes', 'procedimentos', 'feriado'));
+        return view('agenda.marcacao', compact('especialidades', 'convenios', 'profissionais', 'agendas', 'pacientes', 'procedimentos', 'feriado'));
     }
 
     public function getProfissionais($especialidadeId)
@@ -71,15 +80,117 @@ class AgendaController extends Controller
             ->where('e.id', $especialidadeId)
             ->select('p.id', 'p.name')
             ->get();
-    
+
+        // Verifique se algum dado foi encontrado
+        if ($profissionais->isEmpty()) {
+            return response()->json(['message' => 'Nenhum profissional encontrado para a especialidade selecionada.'], 404);
+        }
+
         return response()->json(['profissionais' => $profissionais]);
     }
 
-    public function getDisponibilidade($profissional_id)
-    {
-        $profissional = Profissional::find($profissional_id);
 
-        $dias_disponiveis = [
+    public function getEspecialidades($profissionalId)
+    {
+        $especialidades = DB::table('especialidade_profissional as ep')
+            ->join('especialidades as e', 'e.id', '=', 'ep.especialidade_id')
+            ->where('ep.profissional_id', $profissionalId)
+            ->select('e.id', 'e.especialidade')
+            ->get();
+
+        if ($especialidades->isEmpty()) {
+            return response()->json(['message' => 'Nenhuma especialidade encontrada para o profissional selecionado.'], 404);
+        }
+
+        // Retornar apenas as especialidades em formato JSON
+        return response()->json($especialidades);
+    }
+
+    public function GerarAgendaStore(Request $request)
+{
+    // Coleta dos dados do request
+    $profissionalId = $request->input('profissional_id');
+    $especialidadeId = $request->input('especialidade_id');
+    $turno = $request->input('turno');
+    $inicio = $request->input('inihonorariomanha'); // Formato: HH:MM
+    $intervalo = $request->input('interhonorariomanha'); // Intervalo em minutos
+    $fim = $request->input('fimhonorariomanha'); // Formato: HH:MM
+
+    // Coleta dos dados de disponibilidade para os dias da semana
+    $manha_dom = $request->input('manha_dom') ? 'S' : null;
+    $manha_seg = $request->input('manha_seg') ? 'S' : null;
+    $manha_ter = $request->input('manha_ter') ? 'S' : null;
+    $manha_qua = $request->input('manha_qua') ? 'S' : null;
+    $manha_qui = $request->input('manha_qui') ? 'S' : null;
+    $manha_sex = $request->input('manha_sex') ? 'S' : null;
+    $manha_sab = $request->input('manha_sab') ? 'S' : null;
+
+    // Convertendo os horários para o formato DateTime
+    $inicio = \DateTime::createFromFormat('H:i', $inicio);
+    $fim = \DateTime::createFromFormat('H:i', $fim);
+    $intervalo = (int) $intervalo;
+
+    // Calcula os horários disponíveis
+    $disponibilidades = [];
+    while ($inicio <= $fim) {
+        $disponibilidade = [
+            'profissional_id' => $profissionalId,
+            'especialidade_id' => $especialidadeId,
+            'turno' => $turno,
+            'hora' => $inicio->format('H:i'),
+            'material' => null,
+            'medicamento' => null,
+            'manha_dom' => $manha_dom,
+            'manha_seg' => $manha_seg,
+            'manha_ter' => $manha_ter,
+            'manha_qua' => $manha_qua,
+            'manha_qui' => $manha_qui,
+            'manha_sex' => $manha_sex,
+            'manha_sab' => $manha_sab,
+            'inicio' => $inicio->format('H:i'),
+            'fim' => $fim->format('H:i'),
+            'intervalo' => $intervalo
+        ];
+
+        $disponibilidades[] = $disponibilidade;
+
+        // Incrementa o horário pelo intervalo
+        $inicio->modify("+{$intervalo} minutes");
+    }
+
+    // Verifica se já existem registros para o profissional_id, especialidade_id e turno
+    $existingDisponibilidades = \DB::table('disponibilidades')
+        ->where('profissional_id', $profissionalId)
+        ->where('especialidade_id', $especialidadeId)
+        ->where('turno', $turno)
+        ->pluck('hora')
+        ->toArray(); // Converte a coleção para um array
+
+    // Filtra as novas disponibilidades para remover aquelas que já existem
+    $newDisponibilidades = array_filter($disponibilidades, function($disponibilidade) use ($existingDisponibilidades) {
+        return !in_array($disponibilidade['hora'], $existingDisponibilidades);
+    });
+
+    // Insere as novas disponibilidades no banco de dados
+    \DB::table('disponibilidades')->insert($newDisponibilidades);
+
+    // Redireciona com sucesso
+    return redirect()->route('profissional.index1')->with('success', 'Disponibilidade salva com sucesso!');
+}
+
+
+
+
+
+    public function getDisponibilidade($profissionalId)
+    {
+        $profissional = Profissional::find($profissionalId);
+
+        if (!$profissional) {
+            return response()->json(['error' => 'Profissional não encontrado.'], 404);
+        }
+
+        $diasDisponiveis = [
             'domingo' => $profissional->manha_dom,
             'segunda' => $profissional->manha_seg,
             'terca' => $profissional->manha_ter,
@@ -90,7 +201,7 @@ class AgendaController extends Controller
         ];
 
         return response()->json([
-            'dias_disponiveis' => $dias_disponiveis,
+            'dias_disponiveis' => $diasDisponiveis,
             'inicio_horario' => $profissional->inihonorariomanha,
             'intervalo' => $profissional->interhonorariomanha,
             'fim_horario' => $profissional->fimhonorariomanha,
@@ -98,38 +209,38 @@ class AgendaController extends Controller
     }
 
     public function index1(Request $request)
-{
-    $procedimentos = Procedimentos::all();
-    $pacientes = Pacientes::all();
-    $profissionals = Profissional::whereNotNull('conselho')->get();
-    $agendas = collect();
+    {
+        $procedimentos = Procedimentos::all();
+        $pacientes = Pacientes::all();
+        $profissionals = Profissional::whereNotNull('conselho')->get();
+        $agendas = collect();
 
-    // Store form values in the session
-    if ($request->has('data') || $request->has('profissional_id')) {
-        $query = Agenda::query();
+        // Store form values in the session
+        if ($request->has('data') || $request->has('profissional_id')) {
+            $query = Agenda::query();
 
-        if ($request->has('data')) {
-            session(['data' => $request->data]);
-            $query->where('data', $request->data);
+            if ($request->has('data')) {
+                session(['data' => $request->data]);
+                $query->where('data', $request->data);
+            } else {
+                session()->forget('data');
+            }
+
+            if ($request->has('profissional_id')) {
+                session(['profissional_id' => $request->profissional_id]);
+                $query->where('profissional_id', $request->profissional_id);
+            } else {
+                session()->forget('profissional_id');
+            }
+
+            $agendas = $query->orderBy('hora', 'asc')->get();
         } else {
-            session()->forget('data');
+            // Clear session data if no filter is applied
+            session()->forget(['data', 'profissional_id']);
         }
 
-        if ($request->has('profissional_id')) {
-            session(['profissional_id' => $request->profissional_id]);
-            $query->where('profissional_id', $request->profissional_id);
-        } else {
-            session()->forget('profissional_id');
-        }
-
-        $agendas = $query->orderBy('hora', 'asc')->get();
-    } else {
-        // Clear session data if no filter is applied
-        session()->forget(['data', 'profissional_id']);
+        return view('agenda.lista', compact('profissionals', 'agendas', 'pacientes', 'procedimentos'));
     }
-
-    return view('agenda.lista', compact('profissionals', 'agendas', 'pacientes', 'procedimentos'));
-}
 
 
     /**
@@ -154,10 +265,10 @@ class AgendaController extends Controller
 
         if ($existeAgenda) {
             if ($request->ajax()) {
-                return response()->json(['error' => 'Já existe Consulta para este horário.'], 400);
+                return response()->json(['error' => 'JÃ¡ existe Consulta para este horÃ¡rio.'], 400);
             }
 
-            return redirect()->back()->with('error', 'Já existe Consulta para este horário.');
+            return redirect()->back()->with('error', 'JÃ¡ existe Consulta para este horÃ¡rio.');
         }
 
         // Criar um novo item na agenda
@@ -201,13 +312,13 @@ class AgendaController extends Controller
         $agenda = Agenda::find($request->id);
         if ($agenda) {
             if ($request->status == 'CHEGOU' && is_null($agenda->paciente_id)) {
-                return response()->json(['error' => 'Paciente não vinculado.'], 400);
+                return response()->json(['error' => 'Paciente nÃ£o vinculado.'], 400);
             }
             $agenda->status = $request->status;
             $agenda->save();
             return response()->json(['success' => 'Status atualizado com sucesso.']);
         } else {
-            return response()->json(['error' => 'Agenda não encontrada.'], 404);
+            return response()->json(['error' => 'Agenda nÃ£o encontrada.'], 404);
         }
     }
 
@@ -235,7 +346,7 @@ class AgendaController extends Controller
         $agenda->celular = $request->celular;
         $agenda->procedimento_id = $request->procedimento_id;
 
-        // Salvar as mudanças
+        // Salvar as mudanÃ§as
         $agenda->save();
 
         // Redirecionar de volta com uma mensagem de sucesso
@@ -265,14 +376,14 @@ class AgendaController extends Controller
     public function agendaMedica(Request $request)
     {
         $pacientes = Pacientes::all();
-    
+
         // Get the currently logged-in user
         $user = auth()->user();
         $profissionalId = $user->profissional_id;
-    
+
         // Check if a date is provided in the request; otherwise, use the current date
         $data = $request->input('data', Carbon::now()->format('Y-m-d'));
-    
+
         // Filter agendas based on the logged-in user's linked professional ID
         $agendasChegou = Agenda::where('profissional_id', $profissionalId)
             ->where('data', $data)
@@ -280,41 +391,41 @@ class AgendaController extends Controller
             ->whereNotNull('paciente_id')
             ->orderBy('hora', 'asc')
             ->get();
-    
+
         $agendasMarcado = Agenda::where('profissional_id', $profissionalId)
             ->where('data', $data)
             ->where('status', 'MARCADO')
             ->whereNotNull('paciente_id')
             ->orderBy('hora', 'asc')
             ->get();
-    
+
         $agendasEvadio = Agenda::where('profissional_id', $profissionalId)
             ->where('data', $data)
             ->where('status', 'EVADIO')
             ->whereNotNull('paciente_id')
             ->orderBy('hora', 'asc')
             ->get();
-    
+
         $agendasCancelado = Agenda::where('profissional_id', $profissionalId)
             ->where('data', $data)
             ->where('status', 'CANCELADO')
             ->whereNotNull('paciente_id')
             ->orderBy('hora', 'asc')
             ->get();
-        
+
         $agendasFinalizado = Agenda::where('profissional_id', $profissionalId)
-        ->where('data', $data)
-        ->where('status', 'FINALIZADO')
-        ->whereNotNull('paciente_id')
-        ->orderBy('hora', 'asc')
-        ->get();
-    
+            ->where('data', $data)
+            ->where('status', 'FINALIZADO')
+            ->whereNotNull('paciente_id')
+            ->orderBy('hora', 'asc')
+            ->get();
+
         // Store form values in the session
         session(['data' => $data]);
-    
+
         return view('agenda.agendamedica', compact('agendasMarcado', 'agendasEvadio', 'agendasCancelado', 'agendasChegou', 'pacientes', 'data', 'agendasFinalizado'));
     }
-    
+
 
     public function storeConsultorioPainel(Request $request)
     {
@@ -325,10 +436,10 @@ class AgendaController extends Controller
         $agendaId = $request->input('agenda_id');
         $pacienteId = $request->input('paciente_id');
 
-        // Verificar se já existe um registro com o mesmo agenda_id
+        // Verificar se jÃ¡ existe um registro com o mesmo agenda_id
         $painel = Painel::where('agenda_id', $agendaId)
-                ->where('permisao_id', $permisaoId)
-                ->first();
+            ->where('permisao_id', $permisaoId)
+            ->first();
 
 
         if ($painel) {
@@ -342,7 +453,7 @@ class AgendaController extends Controller
 
             return response()->json(['success' => 'Painel atualizado com sucesso']);
         } else {
-            // Se não existe, crie um novo registro
+            // Se nÃ£o existe, crie um novo registro
             $painel = new Painel();
             $painel->paciente_id = $pacienteId;
             $painel->agenda_id = $agendaId;
@@ -358,19 +469,19 @@ class AgendaController extends Controller
 
 
     public function verificarFeriado(Request $request)
-{
-    $data = $request->input('data');
-    
-    // Verificar se a data é um domingo
-    $isSunday = Carbon::parse($data)->isSunday();
+    {
+        $data = $request->input('data');
 
-    // Verificar se a data é um feriado
-    $isHoliday = Feriado::where('data', $data)->exists();
+        // Verificar se a data Ã© um domingo
+        $isSunday = Carbon::parse($data)->isSunday();
 
-    return response()->json([
-        'isHoliday' => $isHoliday,
-        'isSunday' => $isSunday,
-        'data' => $data
-    ]);
-}
+        // Verificar se a data Ã© um feriado
+        $isHoliday = Feriado::where('data', $data)->exists();
+
+        return response()->json([
+            'isHoliday' => $isHoliday,
+            'isSunday' => $isSunday,
+            'data' => $data
+        ]);
+    }
 }
