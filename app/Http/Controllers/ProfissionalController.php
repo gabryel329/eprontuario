@@ -272,7 +272,7 @@ class ProfissionalController extends Controller
             $profissional->especialidades()->attach($especialidade_ids);
         }
 
-        return redirect()->route('profissional.index')->with('success', 'Profissional cadastrado com sucesso!');
+        return redirect()->back('profissional.index')->with('success', 'Profissional cadastrado com sucesso!');
     }
 
     /**
@@ -294,10 +294,15 @@ class ProfissionalController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Profissional $profissional)
-    {
-        //
-    }
+    public function edit($id)
+{
+    $profissional = Profissional::findOrFail($id);
+    $tipoprof = TipoProf::all(); // Se necessário
+    $especialidades = Especialidade::all(); // Se necessário
+
+    return view('cadastros.editprofissional', compact('profissional', 'tipoprof', 'especialidades'));
+}
+
 
     /**
      * Update the specified resource in storage.
@@ -526,7 +531,7 @@ class ProfissionalController extends Controller
         // Atualizar as especialidades do profissional
         $profissional->especialidades()->sync($especialidade_ids);
 
-        return redirect()->route('profissional.index')->with('success', 'Profissional atualizado com sucesso!');
+        return redirect()->back()->with('success', 'Profissional atualizado com sucesso!');
     }
 
 

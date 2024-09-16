@@ -139,17 +139,22 @@
     </thead>
     <tbody>
         <tr>
-            <td colspan="2">
-                Nome do Paciente: {{ $paciente->name ?? '-' }}<br>
-                Nome Social: {{ $paciente->nome_social ?? '-' }}<br>
-                CPF: {{ $paciente->cpf ?? '-' }}<br>
-                RG: {{ $paciente->rg ?? '-' }}<br>
-                Certidão de Nascimento: {{ $paciente->certidao ?? '-' }}<br>
-                SUS: {{ $paciente->sus ?? '-' }}<br>
-                Convênio: {{ $nomeConvenio }}<br>
-                Matrícula: {{ $paciente->matricula ?? '-' }}<br>
-                Número de referência: {{ $paciente->consulta ?? '-' }}<br>
-            </td>
+        <td colspan="21" style="position: relative;">
+            @if(isset($paciente->imagem))
+                <img src="{{ asset('images/' . $paciente->imagem) }}" alt="Imagem de {{ $paciente->name }}" style="max-width: 150px; position: absolute; top: 50%; right: 0; transform: translateY(-50%);">
+            @else
+                <p>Imagem não disponível</p>
+            @endif
+            Nome do Paciente: {{ $paciente->name ?? '-' }}<br>
+            Nome Social: {{ $paciente->nome_social ?? '-' }}<br>
+            CPF: {{ $paciente->cpf ?? '-' }}<br>
+            RG: {{ $paciente->rg ?? '-' }}<br>
+            Certidão de Nascimento: {{ $paciente->certidao ?? '-' }}<br>
+            SUS: {{ $paciente->sus ?? '-' }}<br>
+            Convênio: {{ $nomeConvenio }}<br>
+            Matrícula: {{ $paciente->matricula ?? '-' }}<br>
+            Número de referência: {{ $paciente->consulta ?? '-' }}<br>
+        </td>
         </tr>
         <tr>
             <td class="equal-width">Data de Nascimento: {{ isset($paciente->nasc) ? (new Carbon($paciente->nasc))->format('d/m/Y') : '-' }}</td>

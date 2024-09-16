@@ -47,10 +47,9 @@
                                         <td>{{ $item->email }}</td>
                                         <td>
                                             <div>
-                                                <button type="button" class="btn btn-info" data-bs-toggle="modal"
-                                                    data-bs-target="#editModal{{ $item->id }}">
-                                                    Editar
-                                                </button>
+                                            <a href="{{ route('profissional.edit', $item->id) }}" class="btn btn-info">
+                                                Editar
+                                            </a>
                                             </div>
                                         </td>
                                         <td>

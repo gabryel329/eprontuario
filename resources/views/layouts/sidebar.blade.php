@@ -19,6 +19,19 @@
     <ul class="app-menu">
         <li><a class="app-menu__item active" href="/home"><i class="app-menu__icon bi bi-speedometer"></i><span
                     class="app-menu__label">Inicio</span></a></li>
+                    @if (Auth::user()->permissoes->pluck('id')->intersect([2, 3])->isNotEmpty())
+                        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
+                                    class="app-menu__icon bi bi-calendar-range"></i><span
+                                    class="app-menu__label">Call-Center</span><i
+                                    class="treeview-indicator bi bi-chevron-right"></i></a>
+                            <ul class="treeview-menu">
+                                <li><a class="treeview-item" href="#"><i
+                                            class="icon bi bi-calendar2-plus"></i> Gerar Agenda</a></li>
+                                <li><a class="treeview-item" href="{{ route('agenda.index') }}"><i
+                                            class="icon bi bi-telephone-plus"></i> Marcação de Consultas</a></li>
+                            </ul>
+                        </li>
+                    @endif
         @if (Auth::user()->permissoes->pluck('id')->intersect([2, 3])->isNotEmpty())
             <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
                         class="app-menu__icon bi bi-person-workspace"></i><span
