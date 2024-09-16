@@ -7,6 +7,7 @@ use App\Http\Controllers\ConvenioController;
 use App\Http\Controllers\EmpresasController;
 use App\Http\Controllers\EspecialidadeController;
 use App\Http\Controllers\GenerateIAController;
+use App\Http\Controllers\GuiaHonorarioController;
 use App\Http\Controllers\GuiaTissController;
 use App\Http\Controllers\HonorarioController;
 use App\Http\Controllers\PacientesController;
@@ -71,6 +72,9 @@ Route::middleware(['check.session.expired'])->group(function () {
 
         Route::get('/guias', [GuiaTissController::class, 'index'])->name('guiatiss.index');
         Route::get('/guia/listar', [GuiaTissController::class, 'listarGuiasPorConvenio'])->name('guias.listar');
+
+        Route::get('/guias-honorarios', [GuiaHonorarioController::class, 'index'])->name('guia_honorario.index');
+        Route::post('/guias-honorarios', [GuiaHonorarioController::class, 'store'])->name('guia_honorario.store');
     });
 
     Route::post('/guias', [GuiaTissController::class, 'store'])->name('guiatiss.store');

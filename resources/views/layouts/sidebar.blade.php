@@ -104,6 +104,32 @@
                     
                 </ul>
             </li>
+            <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i
+                        class="app-menu__icon bi bi-cash-coin"></i><span class="app-menu__label">Faturamento</span><i
+                        class="treeview-indicator bi bi-chevron-right"></i></a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a class="treeview-item" href="#"><i
+                            class="icon bi bi-file-bar-graph"></i>Emissão de Guias</a>
+                        <ul>
+                            <li>
+                                <a class="treeview-item" href="{{ route('guia_honorario.index') }}"><i
+                                class="icon bi bi-cash"></i> Guia de Honorários</a>
+                            </li>
+                            <li>
+                                <a class="treeview-item" href="{{ route('relatorioFinanceiro.index') }}"><i
+                                class="icon bi bi-cash"></i> Guia SP/SADT</a>
+                            </li>
+                            <li>
+                                <a class="treeview-item" href="{{ route('relatorioFinanceiro.index') }}"><i
+                                class="icon bi bi-cash"></i> Guia de Consulta</a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                    
+                </ul>
+            </li>
         @endif
         @if (Auth::user()->permissoes->pluck('id')->intersect([3])->isNotEmpty())
             <li><a class="app-menu__item" href="{{ route('empresa.index') }}"><i

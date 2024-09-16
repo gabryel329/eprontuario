@@ -16,7 +16,7 @@ class GuiaTissController extends Controller
     {
         $guiatiss = GuiaTiss::all();
         $convenios = Convenio::all();
-        return view('financeiro.guiatiss', compact('guiatiss', 'convenios'));
+        return view('guias.guiatiss', compact('guiatiss', 'convenios'));
     }
 
     public function listarGuiasPorConvenio(Request $request)
