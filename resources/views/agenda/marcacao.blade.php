@@ -1,5 +1,11 @@
 @extends('layouts.app')
+<style>
+    .text-danger {
+    color: red;
+    font-weight: bold;
+}
 
+</style>
 @section('content')
     <main class="app-content">
         <div class="app-title">
@@ -40,8 +46,7 @@
                                 @csrf
                                 <input type="hidden" id="selectedData" name="data">
                                 <input type="hidden" id="selectedEspecialidadeId">
-                                <!-- Existing form code -->
-
+                                
                                 <div class="mb-3">
                                     <label class="form-label"><strong>Profissional:</strong></label>
                                     <select class="form-control" id="profissional" name="profissional_id" required>
@@ -102,11 +107,19 @@
             <div class="col-md-6" id="calendario">
                 <div class="tile">
                     <h3 class="tile-title">Data</h3>
-                    <input class="form-control" type="date" id="data-selecionada">
+                    <input id="dataInput" class="form-control" type="date">
                 </div>
-                <ul id="lista-horarios">
-                    <!-- Horários disponíveis serão listados aqui -->
-                </ul>
+                <table class="table mt-3" id="horariosTable">
+                    <thead>
+                        <tr>
+                            <th>Horário</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Horários serão inseridos aqui pelo JavaScript -->
+                    </tbody>
+                </table>
                 <div class="mb-2 col-md-6">
                     <label class="form-label"><strong>Convênio:</strong></label>
                     <select class="form-control" id="convenio" name="convenio_id" required>
@@ -163,185 +176,131 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            const especialidadeSelect = document.getElementById('especialidade');
-
-            especialidadeSelect.addEventListener('change', function() {
-                showAdditionalFields();
-            });
-            
-            function showAdditionalFields() {
-                const especialidadeId = especialidadeSelect.value;
-                const especialidadeName = especialidadeSelect.options[especialidadeSelect.selectedIndex].text;
-
-                if (!especialidadeId || especialidadeId === "Escolha") {
-                    alert('Por favor, selecione uma especialidade.');
-                    return;
-                }
-
-                const data = new FormData();
-                data.append('data', document.getElementById('selectedData').value);
-
-                fetch('/verificar-feriado', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': token
-                    },
-                    body: JSON.stringify({
-                        data: data.get('data')
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.isHoliday) {
-                        alert('A data selecionada é um feriado.');
-                    } else if (data.isSunday) {
-                        alert('A data selecionada é um domingo.');
-                    } else {
-                        const formattedData = formatDate(data.data);
-
-                        document.getElementById('selectedData').value = data.data;
-                        document.getElementById('selectedEspecialidadeId').value = especialidadeId;
-
-                        document.getElementById('displaySelectedData').innerText = formattedData;
-                        document.getElementById('displaySelectedEspecialidade').innerText = 'Especialidade: ' + especialidadeName;
-
-                        document.getElementById('initial-form').style.display = 'none';
-                        document.getElementById('additional-fields').style.display = 'block';
-                    }
-                })
-                .catch(error => console.error('Erro:', error));
-            }
-
-            function formatDate(dateString) {
-                const date = new Date(dateString);
-                return date.toLocaleDateString(); // Modify as needed
-            }
-
-            window.selectPaciente = function(id, name, celular) {
-                document.getElementById('paciente_id').value = id;
-                document.getElementById('name').value = name;
-                document.getElementById('celular').value = celular;
-                $('#pacienteModal').modal('hide');
-            }
-
-            window.updateCodigo = function(select) {
-                const codigo = select.options[select.selectedIndex].dataset.codigo;
-                document.querySelector('input[name="codigo[]"]').value = codigo;
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            const especialidadeSelect2 = document.getElementById('especialidade');
-            const profissionalSelect2 = document.getElementById('profissional');
-
-            especialidadeSelect2.addEventListener('change', function() {
-                const especialidadeId = especialidadeSelect2.value;
-                if (especialidadeId) {
-                    fetchProfissionais(especialidadeId);
-                }
-            });
-
-            function fetchProfissionais(especialidadeId) {
-                fetch(`/get-profissionais/${especialidadeId}`, {
-                    method: 'GET',
-                    headers: {
-                        'X-CSRF-TOKEN': token
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Clear previous options
-                    profissionalSelect2.innerHTML = '<option disabled selected>Escolha</option>';
-                    // Populate new options
-                    data.profissionais.forEach(profissional => {
-                        const option = document.createElement('option');
-                        option.value = profissional.id;
-                        option.textContent = profissional.name;
-                        profissionalSelect2.appendChild(option);
-                    });
-                })
-                .catch(error => console.error('Erro:', error));
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const especialidadeSelect = document.getElementById('especialidade');
     const profissionalSelect = document.getElementById('profissional');
-    const dataSelecionadaInput = document.getElementById('data-selecionada');
-
+    const dataInput = document.getElementById('dataInput');
+    const horariosTable = document.getElementById('horariosTable').querySelector('tbody');
     let diasDisponiveis = {};
-    let inicioHorario, intervalo, fimHorario;
 
-    profissionalSelect.addEventListener('change', function() {
-        const profissionalId = profissionalSelect.value;
-
-        if (profissionalId) {
-            fetch(`/get-disponibilidade/${profissionalId}`, {
-                method: 'GET',
-                headers: {
-                    'X-CSRF-TOKEN': token
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                diasDisponiveis = data.dias_disponiveis;
-                inicioHorario = data.inicio_horario;
-                intervalo = data.intervalo;
-                fimHorario = data.fim_horario;
-
-                // Destacar os dias disponíveis no calendário
-                highlightAvailableDays();
-            })
-            .catch(error => console.error('Erro:', error));
-        }
+    // Atualiza os campos adicionais quando a especialidade muda
+    especialidadeSelect.addEventListener('change', function() {
+        showAdditionalFields();
+        fetchProfissionais(especialidadeSelect.value); // Função para buscar profissionais
     });
 
-    dataSelecionadaInput.addEventListener('change', function() {
-        const selectedDate = new Date(dataSelecionadaInput.value);
-        const diaSemana = getDiaSemana(selectedDate);
+    function showAdditionalFields() {
+        const especialidadeId = especialidadeSelect.value;
+        const especialidadeName = especialidadeSelect.options[especialidadeSelect.selectedIndex].text;
 
-        if (diasDisponiveis[diaSemana]) {
-            gerarHorarios(inicioHorario, intervalo, fimHorario);
-        } else {
-            document.getElementById('lista-horarios').innerHTML = '<li>Não há horários disponíveis para este dia.</li>';
+        if (!especialidadeId) {
+            alert('Por favor, selecione uma especialidade.');
+            return;
         }
+
+        const data = new FormData();
+        data.append('data', document.getElementById('selectedData').value);
+
+        fetch('/verificar-feriado', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': token
+            },
+            body: JSON.stringify({ data: data.get('data') })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.isHoliday) {
+                alert('A data selecionada é um feriado.');
+            } else if (data.isSunday) {
+                alert('A data selecionada é um domingo.');
+            } else {
+                document.getElementById('selectedEspecialidadeId').value = especialidadeId;
+                document.getElementById('displaySelectedEspecialidade').innerText = `Especialidade: ${especialidadeName}`;
+                document.getElementById('additional-fields').style.display = 'block';
+                document.getElementById('selectedData').value = dataInput.value;
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function fetchProfissionais(especialidadeId) {
+        $.ajax({
+            url: '/get-profissionais/' + especialidadeId,
+            type: 'GET',
+            success: function(response) {
+                var options = '<option value="">Selecione um profissional</option>';
+                $.each(response.profissionais, function(index, profissional) {
+                    options += '<option value="' + profissional.id + '">' + profissional.name + '</option>';
+                });
+                profissionalSelect.innerHTML = options; // Preenche o select com os profissionais
+            },
+            error: function(xhr) {
+                console.log('Erro ao buscar profissionais: ', xhr.responseText);
+            }
+        });
+    }
+
+    // Atualiza a disponibilidade do profissional quando a data muda
+    dataInput.addEventListener('change', function() {
+    const selectedDate = this.value;
+
+    if (!selectedDate || !profissionalSelect.value) {
+        alert('Selecione um profissional primeiro.');
+        return;
+    }
+
+    fetch(`/get-disponibilidade/${profissionalSelect.value}`)
+        .then(response => response.json())
+        .then(data => {
+            diasDisponiveis = data.diasDisponiveis;
+            updateHorariosTable(selectedDate); // Atualiza a tabela com os horários da data selecionada
+        })
+        .catch(error => console.error('Error:', error));
+});
+
+
+    function updateHorariosTable(date) {
+    if (!diasDisponiveis[date]) {
+        alert('Data indisponível.');
+        return;
+    }
+
+    horariosTable.innerHTML = ''; // Limpa a tabela de horários
+
+    const horarios = diasDisponiveis[date];
+
+    // Destacar os dias disponíveis em vermelho
+    dataInput.classList.add('text-danger'); // Exemplo de destaque
+    horarios.forEach(horario => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${horario}</td>
+            <td><button class="btn btn-success" type="button" onclick="selectHorario('${horario}')">Selecionar</button></td>
+        `;
+        horariosTable.appendChild(row);
     });
+}
 
-    function highlightAvailableDays() {
-        // Esta função pode destacar visualmente os dias disponíveis no calendário, se necessário
-        // No caso de um input de data, não há dias a destacar visualmente, mas a função é deixada aqui para referência futura
-    }
 
-    function getDiaSemana(data) {
-        const diasSemana = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
-        return diasSemana[data.getDay()];
-    }
-
-    function gerarHorarios(inicio, intervalo, fim) {
-        const listaHorarios = document.getElementById('lista-horarios');
-        listaHorarios.innerHTML = ''; // Limpar horários anteriores
-
-        let horarioAtual = inicio;
-        while (horarioAtual < fim) {
-            const horarioItem = document.createElement('li');
-            horarioItem.textContent = horarioAtual;
-            listaHorarios.appendChild(horarioItem);
-
-            // Incrementar horário pelo intervalo
-            horarioAtual = incrementarHorario(horarioAtual, intervalo);
-        }
-    }
-
-    function incrementarHorario(horario, intervalo) {
-        const [hora, minuto] = horario.split(':').map(Number);
-        const novaHora = new Date(0, 0, 0, hora, minuto + intervalo);
-        return novaHora.toTimeString().slice(0, 5);
+    function selectHorario(horario) {
+        document.getElementById('horario').value = horario;
     }
 });
 
 
+        // Função para selecionar paciente do modal
+        function selectPaciente(id, name, celular) {
+            document.getElementById('paciente_id').value = id;
+            document.getElementById('name').value = name;
+            document.getElementById('celular').value = celular;
+            $('#pacienteModal').modal('hide');
+        }
+
+        function updateCodigo(select) {
+            const codigo = select.options[select.selectedIndex].dataset.codigo;
+            document.querySelector('#agenda-form input[name="codigo[]"]').value = codigo;
+        }
     </script>
 @endsection

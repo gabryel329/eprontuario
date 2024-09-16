@@ -21,4 +21,9 @@ class Especialidade extends Model
     {
         return $this->belongsToMany(Profissional::class, 'especialidade_profissional');
     }
+
+    public function disponibilidade()
+    {
+        return $this->hasOne(Disponibilidade::class, 'especialidade_id');
+    }
 }

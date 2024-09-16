@@ -77,8 +77,15 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::post('/guias-honorarios', [GuiaHonorarioController::class, 'store'])->name('guia_honorario.store');
 
         Route::get('/marcacao', [AgendaController::class, 'index3'])->name('agenda.index3');
-        Route::get('/get-profissionais/{especialidadeId}', [AgendaController::class, 'getProfissionais']);
-        Route::get('/get-disponibilidade/{profissional_id}', [AgendaController::class, 'getDisponibilidade']);
+        Route::get('/gerar-agenda', [AgendaController::class, 'geraAgenda'])->name('agenda.gerar');
+        Route::post('/gerar-agenda', [AgendaController::class, 'GerarAgendaStore'])->name('gerar-agenda.store');
+        Route::get('/get-profissionais/{especialidadeId}', [AgendaController::class, 'getProfissionais'])->name('get.profissionais');
+        Route::get('/especialidades/{profissional}', [AgendaController::class, 'getEspecialidades'])->name('getEspecialidades');
+
+
+
+        // Rota para obter disponibilidade de um profissional
+        Route::get('/get-disponibilidade/{profissionalId}', [AgendaController::class, 'getDisponibilidade'])->name('get.disponibilidade');
 
         Route::post('/save-disponibilidade', [HonorarioController::class, 'saveDisponibilidade']);
     });

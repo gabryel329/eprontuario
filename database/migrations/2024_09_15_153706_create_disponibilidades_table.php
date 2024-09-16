@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('disponibilidades', function (Blueprint $table) {
             $table->id();
             $table->foreignId('profissional_id')->constrained('profissionals')->onDelete('cascade');
-            $table->string('porcentagem');
-            $table->string('valor');
+            $table->foreignId('especialidade_id')->constrained('especialidades')->onDelete('cascade');
+            $table->string('turno')->nullable();
+            $table->string('hora')->nullable();
             $table->string('material')->nullable();
             $table->string('medicamento')->nullable();
             $table->string('manha_dom')->nullable();

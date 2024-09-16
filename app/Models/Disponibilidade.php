@@ -9,12 +9,13 @@ class Disponibilidade extends Model
 {
     protected $fillable = [
         'profissional_id',
+        'especialidade_id',
         'porcentagem',
         'valor',
         'material',
         'medicamento',
-    
-        // Campos de dias e horários para manhã
+        'turno',
+        // Campos de dias e horï¿½rios para manhï¿½
         'manha_dom',
         'manha_seg',
         'manha_ter',
@@ -30,5 +31,10 @@ class Disponibilidade extends Model
     public function profissional()
     {
         return $this->belongsTo(Profissional::class, 'profissional_id');
+    }
+
+    public function especialidade()
+    {
+        return $this->belongsTo(Especialidade::class, 'especialidade_id');
     }
 }
