@@ -15,6 +15,7 @@ class Disponibilidade extends Model
         'material',
         'medicamento',
         'turno',
+        'hora',
         // Campos de dias e hor�rios para manh�
         'manha_dom',
         'manha_seg',

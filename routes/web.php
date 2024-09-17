@@ -81,7 +81,7 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::post('/gerar-agenda', [AgendaController::class, 'GerarAgendaStore'])->name('gerar-agenda.store');
         Route::get('/get-profissionais/{especialidadeId}', [AgendaController::class, 'getProfissionais'])->name('get.profissionais');
         Route::get('/especialidades/{profissional}', [AgendaController::class, 'getEspecialidades'])->name('getEspecialidades');
-
+        Route::get('/verificar-disponibilidade/{profissionalId}/{especialidadeId}/{data}', [AgendaController::class, 'verificarDisponibilidade']);
 
 
         // Rota para obter disponibilidade de um profissional

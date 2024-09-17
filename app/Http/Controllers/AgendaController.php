@@ -72,6 +72,99 @@ class AgendaController extends Controller
         return view('agenda.marcacao', compact('especialidades', 'convenios', 'profissionais', 'agendas', 'pacientes', 'procedimentos', 'feriado'));
     }
 
+    public function verificarDisponibilidade($profissionalId, $especialidadeId, $data)
+    {
+        // Obter o dia da semana com base na data fornecida
+        $diaDaSemana = date('N', strtotime($data));
+    
+        // Obter a disponibilidade do profissional com base no ID e especialidade fornecidos
+        $disponibilidade = Disponibilidade::where('profissional_id', $profissionalId)
+            ->where('especialidade_id', $especialidadeId)
+            ->first();
+    
+        // Verificar se a disponibilidade existe
+        if (!$disponibilidade) {
+            return response()->json(['horarios' => []]); // Retorna uma lista vazia se não houver disponibilidade
+        }
+    
+        // Inicializar um array para os horários disponíveis
+        $horariosDisponiveis = [];
+    
+        // Verificar a disponibilidade com base no dia da semana e na coluna correspondente
+        switch ($diaDaSemana) {
+            case 1: // Segunda-feira
+                if (!is_null($disponibilidade->manha_seg)) {
+                    $horariosDisponiveis = DB::table('disponibilidades')
+                        ->where('profissional_id', $profissionalId)
+                        ->where('especialidade_id', $especialidadeId)
+                        ->whereNotNull('manha_seg')
+                        ->pluck('hora');
+                }
+                break;
+            case 2: // Terça-feira
+                if (!is_null($disponibilidade->manha_ter)) {
+                    $horariosDisponiveis = DB::table('disponibilidades')
+                        ->where('profissional_id', $profissionalId)
+                        ->where('especialidade_id', $especialidadeId)
+                        ->whereNotNull('manha_ter')
+                        ->pluck('hora');
+                }
+                break;
+            case 3: // Quarta-feira
+                if (!is_null($disponibilidade->manha_qua)) {
+                    $horariosDisponiveis = DB::table('disponibilidades')
+                        ->where('profissional_id', $profissionalId)
+                        ->where('especialidade_id', $especialidadeId)
+                        ->whereNotNull('manha_qua')
+                        ->pluck('hora');
+                }
+                break;
+            case 4: // Quinta-feira
+                if (!is_null($disponibilidade->manha_qui)) {
+                    $horariosDisponiveis = DB::table('disponibilidades')
+                        ->where('profissional_id', $profissionalId)
+                        ->where('especialidade_id', $especialidadeId)
+                        ->whereNotNull('manha_qui')
+                        ->pluck('hora');
+                }
+                break;
+            case 5: // Sexta-feira
+                if (!is_null($disponibilidade->manha_sex)) {
+                    $horariosDisponiveis = DB::table('disponibilidades')
+                        ->where('profissional_id', $profissionalId)
+                        ->where('especialidade_id', $especialidadeId)
+                        ->whereNotNull('manha_sex')
+                        ->pluck('hora');
+                }
+                break;
+            case 6: // Sábado
+                if (!is_null($disponibilidade->manha_sab)) {
+                    $horariosDisponiveis = DB::table('disponibilidades')
+                        ->where('profissional_id', $profissionalId)
+                        ->where('especialidade_id', $especialidadeId)
+                        ->whereNotNull('manha_sab')
+                        ->pluck('hora');
+                }
+                break;
+            case 7: // Domingo
+                if (!is_null($disponibilidade->manha_dom)) {
+                    $horariosDisponiveis = DB::table('disponibilidades')
+                        ->where('profissional_id', $profissionalId)
+                        ->where('especialidade_id', $especialidadeId)
+                        ->whereNotNull('manha_dom')
+                        ->pluck('hora');
+                }
+                break;
+        }
+    
+        // Retornar os horários disponíveis em formato JSON
+        return response()->json(['horarios' => $horariosDisponiveis]);
+    }
+    
+
+
+
+
     public function getProfissionais($especialidadeId)
     {
         $profissionais = DB::table('especialidade_profissional as ep')
@@ -88,6 +181,8 @@ class AgendaController extends Controller
 
         return response()->json(['profissionais' => $profissionais]);
     }
+
+
 
 
     public function getEspecialidades($profissionalId)
@@ -107,80 +202,76 @@ class AgendaController extends Controller
     }
 
     public function GerarAgendaStore(Request $request)
-{
-    // Coleta dos dados do request
-    $profissionalId = $request->input('profissional_id');
-    $especialidadeId = $request->input('especialidade_id');
-    $turno = $request->input('turno');
-    $inicio = $request->input('inihonorariomanha'); // Formato: HH:MM
-    $intervalo = $request->input('interhonorariomanha'); // Intervalo em minutos
-    $fim = $request->input('fimhonorariomanha'); // Formato: HH:MM
+    {
+        // Coleta dos dados do request
+        $profissionalId = $request->input('profissional_id');
+        $especialidadeId = $request->input('especialidade_id');
+        $turno = $request->input('turno');
+        $inicio = $request->input('inihonorariomanha'); // Formato: HH:MM
+        $intervalo = $request->input('interhonorariomanha'); // Intervalo em minutos
+        $fim = $request->input('fimhonorariomanha'); // Formato: HH:MM
 
-    // Coleta dos dados de disponibilidade para os dias da semana
-    $manha_dom = $request->input('manha_dom') ? 'S' : null;
-    $manha_seg = $request->input('manha_seg') ? 'S' : null;
-    $manha_ter = $request->input('manha_ter') ? 'S' : null;
-    $manha_qua = $request->input('manha_qua') ? 'S' : null;
-    $manha_qui = $request->input('manha_qui') ? 'S' : null;
-    $manha_sex = $request->input('manha_sex') ? 'S' : null;
-    $manha_sab = $request->input('manha_sab') ? 'S' : null;
+        // Coleta dos dados de disponibilidade para os dias da semana
+        $manha_dom = $request->input('manha_dom') ? 'S' : null;
+        $manha_seg = $request->input('manha_seg') ? 'S' : null;
+        $manha_ter = $request->input('manha_ter') ? 'S' : null;
+        $manha_qua = $request->input('manha_qua') ? 'S' : null;
+        $manha_qui = $request->input('manha_qui') ? 'S' : null;
+        $manha_sex = $request->input('manha_sex') ? 'S' : null;
+        $manha_sab = $request->input('manha_sab') ? 'S' : null;
 
-    // Convertendo os horários para o formato DateTime
-    $inicio = \DateTime::createFromFormat('H:i', $inicio);
-    $fim = \DateTime::createFromFormat('H:i', $fim);
-    $intervalo = (int) $intervalo;
+        // Convertendo os horários para o formato DateTime
+        $inicio = \DateTime::createFromFormat('H:i', $inicio);
+        $fim = \DateTime::createFromFormat('H:i', $fim);
+        $intervalo = (int) $intervalo;
 
-    // Calcula os horários disponíveis
-    $disponibilidades = [];
-    while ($inicio <= $fim) {
-        $disponibilidade = [
-            'profissional_id' => $profissionalId,
-            'especialidade_id' => $especialidadeId,
-            'turno' => $turno,
-            'hora' => $inicio->format('H:i'),
-            'material' => null,
-            'medicamento' => null,
-            'manha_dom' => $manha_dom,
-            'manha_seg' => $manha_seg,
-            'manha_ter' => $manha_ter,
-            'manha_qua' => $manha_qua,
-            'manha_qui' => $manha_qui,
-            'manha_sex' => $manha_sex,
-            'manha_sab' => $manha_sab,
-            'inicio' => $inicio->format('H:i'),
-            'fim' => $fim->format('H:i'),
-            'intervalo' => $intervalo
-        ];
+        // Calcula os horários disponíveis
+        $disponibilidades = [];
+        while ($inicio <= $fim) {
+            $disponibilidade = [
+                'profissional_id' => $profissionalId,
+                'especialidade_id' => $especialidadeId,
+                'turno' => $turno,
+                'hora' => $inicio->format('H:i'),
+                'material' => null,
+                'medicamento' => null,
+                'manha_dom' => $manha_dom,
+                'manha_seg' => $manha_seg,
+                'manha_ter' => $manha_ter,
+                'manha_qua' => $manha_qua,
+                'manha_qui' => $manha_qui,
+                'manha_sex' => $manha_sex,
+                'manha_sab' => $manha_sab,
+                'inicio' => $inicio->format('H:i'),
+                'fim' => $fim->format('H:i'),
+                'intervalo' => $intervalo
+            ];
 
-        $disponibilidades[] = $disponibilidade;
+            $disponibilidades[] = $disponibilidade;
 
-        // Incrementa o horário pelo intervalo
-        $inicio->modify("+{$intervalo} minutes");
+            // Incrementa o horário pelo intervalo
+            $inicio->modify("+{$intervalo} minutes");
+        }
+
+        // Verifica se já existem registros para o profissional_id, especialidade_id e turno
+        $existingDisponibilidades = \DB::table('disponibilidades')
+            ->where('profissional_id', $profissionalId)
+            ->where('especialidade_id', $especialidadeId)
+            ->where('turno', $turno)
+            ->pluck('hora')
+            ->toArray(); // Converte a coleção para um array
+
+        // Filtra as novas disponibilidades para remover aquelas que já existem
+        $newDisponibilidades = array_filter($disponibilidades, function ($disponibilidade) use ($existingDisponibilidades) {
+            return !in_array($disponibilidade['hora'], $existingDisponibilidades);
+        });
+
+        // Insere as novas disponibilidades no banco de dados
+        \DB::table('disponibilidades')->insert($newDisponibilidades);
+
+        // Redireciona com sucesso
+        return redirect()->route('profissional.index1')->with('success', 'Disponibilidade salva com sucesso!');
     }
-
-    // Verifica se já existem registros para o profissional_id, especialidade_id e turno
-    $existingDisponibilidades = \DB::table('disponibilidades')
-        ->where('profissional_id', $profissionalId)
-        ->where('especialidade_id', $especialidadeId)
-        ->where('turno', $turno)
-        ->pluck('hora')
-        ->toArray(); // Converte a coleção para um array
-
-    // Filtra as novas disponibilidades para remover aquelas que já existem
-    $newDisponibilidades = array_filter($disponibilidades, function($disponibilidade) use ($existingDisponibilidades) {
-        return !in_array($disponibilidade['hora'], $existingDisponibilidades);
-    });
-
-    // Insere as novas disponibilidades no banco de dados
-    \DB::table('disponibilidades')->insert($newDisponibilidades);
-
-    // Redireciona com sucesso
-    return redirect()->route('profissional.index1')->with('success', 'Disponibilidade salva com sucesso!');
-}
-
-
-
-
 
     public function getDisponibilidade($profissionalId)
     {
