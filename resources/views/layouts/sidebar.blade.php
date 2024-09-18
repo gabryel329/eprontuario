@@ -25,9 +25,9 @@
                                     class="app-menu__label">Call-Center</span><i
                                     class="treeview-indicator bi bi-chevron-right"></i></a>
                             <ul class="treeview-menu">
-                                <li><a class="treeview-item" href="#"><i
+                                <li><a class="treeview-item" href="\gerar-agenda"><i
                                             class="icon bi bi-calendar2-plus"></i> Gerar Agenda</a></li>
-                                <li><a class="treeview-item" href="{{ route('agenda.index') }}"><i
+                                <li><a class="treeview-item" href="\marcacao"><i
                                             class="icon bi bi-telephone-plus"></i> Marcação de Consultas</a></li>
                             </ul>
                         </li>
