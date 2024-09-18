@@ -12,7 +12,8 @@
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/main.css') }}">
     <!-- Font-icon css-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css') }}">
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css') }}">
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/LOGO_01_VERDE.png') }}">
     <style>
@@ -20,21 +21,25 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%; /* Ajuste a altura conforme necessÃƒÂ¡rio */
+            height: 100%;
+            /* Ajuste a altura conforme necessÃƒÂ¡rio */
         }
-    
+
         .image-container img {
-            max-width: 48%; /* Garante que a imagem nÃƒÂ£o ultrapasse a largura da tela */
-            max-height: 100%; /* Garante que a imagem nÃƒÂ£o ultrapasse a altura da tela */
+            max-width: 48%;
+            /* Garante que a imagem nÃƒÂ£o ultrapasse a largura da tela */
+            max-height: 100%;
+            /* Garante que a imagem nÃƒÂ£o ultrapasse a altura da tela */
         }
     </style>
-    
+
     @stack('css')
 </head>
 <?php
 // Obter a data atual no formato Y-m-d
 $currentDate = date('Y-m-d');
 ?>
+
 <body class="app sidebar-mini">
     @php
         @session_start();
@@ -47,10 +52,10 @@ $currentDate = date('Y-m-d');
 
     <!-- Essential javascripts for application to work-->
     <script src="{{ asset('js/jquery-3.7.0.min.js') }}"></script>
-    <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js')}}"></script>
-    <script src="{{ asset('js/bootstrap.min.js')}}"></script>
-    
-    <script src="{{ asset('js/main.js')}}"></script>
+    <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+
+    <script src="{{ asset('js/main.js') }}"></script>
     <!-- Page specific javascripts-->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
     <!-- JS do Select2 -->
@@ -67,19 +72,17 @@ $currentDate = date('Y-m-d');
                     formatter: '${value}'
                 }
             },
-            series: [
-                {
-                    data: [150, 230, 224, 218, 135, 147, 260],
-                    type: 'line',
-                    smooth: true
-                }
-            ],
+            series: [{
+                data: [150, 230, 224, 218, 135, 147, 260],
+                type: 'line',
+                smooth: true
+            }],
             tooltip: {
                 trigger: 'axis',
                 formatter: "<b>{b0}:</b> ${c0}"
             }
         }
-        
+
         const supportRequests = {
             tooltip: {
                 trigger: 'item'
@@ -88,61 +91,78 @@ $currentDate = date('Y-m-d');
                 orient: 'vertical',
                 left: 'left'
             },
-            series: [
-                {
-                    name: 'Support Requests',
-                    type: 'pie',
-                    radius: '50%',
-                    data: [
-                        { value: 300, name: 'In Progress' },
-                        { value: 50, name: 'Delayed' },
-                        { value: 100, name: 'Complete' }
-                    ],
-                    emphasis: {
-                        itemStyle: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
+            series: [{
+                name: 'Support Requests',
+                type: 'pie',
+                radius: '50%',
+                data: [{
+                        value: 300,
+                        name: 'In Progress'
+                    },
+                    {
+                        value: 50,
+                        name: 'Delayed'
+                    },
+                    {
+                        value: 100,
+                        name: 'Complete'
+                    }
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
                     }
                 }
-            ]
+            }]
         };
-        
+
         const salesChartElement = document.getElementById('salesChart');
-        const salesChart = echarts.init(salesChartElement, null, { renderer: 'svg' });
+        const salesChart = echarts.init(salesChartElement, null, {
+            renderer: 'svg'
+        });
         salesChart.setOption(salesData);
         new ResizeObserver(() => salesChart.resize()).observe(salesChartElement);
-        
+
         const supportChartElement = document.getElementById("supportRequestChart")
-        const supportChart = echarts.init(supportChartElement, null, { renderer: 'svg' });
+        const supportChart = echarts.init(supportChartElement, null, {
+            renderer: 'svg'
+        });
         supportChart.setOption(supportRequests);
         new ResizeObserver(() => supportChart.resize()).observe(supportChartElement);
 
         function confirmDeletion(event) {
-        if (!confirm('Tem certeza que deseja excluir este item?')) {
-            event.preventDefault();
-            return false;
+            if (!confirm('Tem certeza que deseja excluir este item?')) {
+                event.preventDefault();
+                return false;
+            }
+            return true;
         }
-        return true;
-    }
-      </script>
-      <!-- Google analytics script-->
-      <script type="text/javascript">
-        if(document.location.hostname == 'pratikborsadiya.in') {
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    </script>
+    <!-- Google analytics script-->
+    <script type="text/javascript">
+        if (document.location.hostname == 'pratikborsadiya.in') {
+            (function(i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function() {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
             ga('create', 'UA-72504830-1', 'auto');
             ga('send', 'pageview');
         }
-      </script>
+    </script>
     <!-- Page specific javascripts-->
-    <link rel="stylesheet" href="{{ asset('https://cdn.datatables.net/v/bs5/dt-1.13.4/datatables.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('https://cdn.datatables.net/v/bs5/dt-1.13.4/datatables.min.css') }}">
     <!-- Data table plugin-->
-    <script type="text/javascript" src="{{ asset('js/plugins/jquery.dataTables.min.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('js/plugins/dataTables.bootstrap.min.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/dataTables.bootstrap.min.js') }}"></script>
     <script type="text/javascript">
         $('#sampleTable').DataTable();
     </script>
@@ -173,6 +193,46 @@ $currentDate = date('Y-m-d');
                 allowClear: true,
                 closeOnSelect: true
             });
+        });
+
+        // Função de validação de CPF
+        function validarCPF(cpf) {
+            cpf = cpf.replace(/[^\d]+/g, ''); // Remove pontos e traços
+            if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false; // Verifica se todos os dígitos são iguais
+
+            // Validação do primeiro dígito
+            var soma = 0;
+            for (var i = 0; i < 9; i++) {
+                soma += parseInt(cpf.charAt(i)) * (10 - i);
+            }
+            var resto = 11 - (soma % 11);
+            var primeiroDigitoVerificador = resto > 9 ? 0 : resto;
+            if (primeiroDigitoVerificador != parseInt(cpf.charAt(9))) return false;
+
+            // Validação do segundo dígito
+            soma = 0;
+            for (var j = 0; j < 10; j++) {
+                soma += parseInt(cpf.charAt(j)) * (11 - j);
+            }
+            resto = 11 - (soma % 11);
+            var segundoDigitoVerificador = resto > 9 ? 0 : resto;
+            if (segundoDigitoVerificador != parseInt(cpf.charAt(10))) return false;
+
+            return true;
+        }
+
+        // Detecta quando o CPF está completo e valida
+        $('#cpf').on('input', function() {
+            var cpf = $(this).val();
+            if (cpf.length === 14) { // A máscara usa 14 caracteres (11 dígitos + pontos e traço)
+                if (validarCPF(cpf)) {
+                    $('#cpfValidationMessage').hide(); // CPF válido
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                } else {
+                    $('#cpfValidationMessage').show(); // CPF inválido
+                    $(this).removeClass('is-valid').addClass('is-invalid');
+                }
+            }
         });
     </script>
 </body>
