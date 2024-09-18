@@ -26,4 +26,8 @@ class Especialidade extends Model
     {
         return $this->hasOne(Disponibilidade::class, 'especialidade_id');
     }
+    public function agenda()
+    {
+        return $this->hasMany(Agenda::class, 'especialidade_id');
+    }
 }

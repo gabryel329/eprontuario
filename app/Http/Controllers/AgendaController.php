@@ -74,23 +74,22 @@ class AgendaController extends Controller
 
     public function verificarDisponibilidade($profissionalId, $especialidadeId, $data)
     {
-        // Obter o dia da semana com base na data fornecida
+        $convenios = Convenio::all(); // Obter todos os convênios
+        $pacientes = Pacientes::all();
+        $procedimentos = Procedimentos::all();
+
         $diaDaSemana = date('N', strtotime($data));
-    
-        // Obter a disponibilidade do profissional com base no ID e especialidade fornecidos
+
         $disponibilidade = Disponibilidade::where('profissional_id', $profissionalId)
             ->where('especialidade_id', $especialidadeId)
             ->first();
-    
-        // Verificar se a disponibilidade existe
+
         if (!$disponibilidade) {
-            return response()->json(['horarios' => []]); // Retorna uma lista vazia se não houver disponibilidade
+            return response()->json(['horarios' => [], 'convenios' => $convenios]); // Retorna uma lista vazia se não houver disponibilidade
         }
-    
-        // Inicializar um array para os horários disponíveis
+
         $horariosDisponiveis = [];
-    
-        // Verificar a disponibilidade com base no dia da semana e na coluna correspondente
+
         switch ($diaDaSemana) {
             case 1: // Segunda-feira
                 if (!is_null($disponibilidade->manha_seg)) {
@@ -156,11 +155,16 @@ class AgendaController extends Controller
                 }
                 break;
         }
-    
-        // Retornar os horários disponíveis em formato JSON
-        return response()->json(['horarios' => $horariosDisponiveis]);
+
+        return response()->json([
+            'horarios' => $horariosDisponiveis,
+            'convenios' => $convenios,
+            'pacientes' => $pacientes,
+            'procedimentos' => $procedimentos
+        ]);
     }
-    
+
+
 
 
 
@@ -272,6 +276,40 @@ class AgendaController extends Controller
         // Redireciona com sucesso
         return redirect()->route('profissional.index1')->with('success', 'Disponibilidade salva com sucesso!');
     }
+
+    public function agendar(Request $request)
+    {
+        // Processar o agendamento
+        $agendamento = new Agenda();
+        $agendamento->hora = $request->input('horario');
+        $agendamento->data = $request->input('data');
+        $agendamento->procedimento_id = $request->input('procedimento');
+        $agendamento->status = 'MARCADO'; // Definindo o status como MARCADO
+        $agendamento->name = $request->input('paciente'); // Assumindo que paciente é o nome
+        $agendamento->celular = $request->input('celular');
+        $agendamento->profissional_id = $request->input('profissionalId');
+        $agendamento->especialidade_id = $request->input('especialidadeId');
+        $agendamento->save();
+
+        return response()->json(['success' => true, 'message' => 'Agendamento realizado com sucesso!']);
+    }
+
+    public function getSavedData($profissionalId, $especialidadeId, $data)
+    {
+        // Recuperar os dados salvos do banco de dados
+        $agendamentos = Agenda::where('profissional_id', $profissionalId)
+                                   ->where('especialidade_id', $especialidadeId)
+                                   ->whereDate('data', $data)
+                                   ->get();
+
+        // Retornar os dados como JSON
+        return response()->json([
+            'success' => true,
+            'agendamentos' => $agendamentos
+        ]);
+    }
+    
+
 
     public function getDisponibilidade($profissionalId)
     {

@@ -20,12 +20,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%; /* Ajuste a altura conforme necessário */
+            height: 100%; /* Ajuste a altura conforme necessÃ¡rio */
         }
     
         .image-container img {
-            max-width: 48%; /* Garante que a imagem não ultrapasse a largura da tela */
-            max-height: 100%; /* Garante que a imagem não ultrapasse a altura da tela */
+            max-width: 48%; /* Garante que a imagem nÃ£o ultrapasse a largura da tela */
+            max-height: 100%; /* Garante que a imagem nÃ£o ultrapasse a altura da tela */
         }
     </style>
     
@@ -162,12 +162,18 @@ $currentDate = date('Y-m-d');
             });
         });
         $(document).ready(function() {
-        $('.select2').select2({
-            placeholder: "Selecione um procedimento",
-            allowClear: true,
-            closeOnSelect: true
+            $('#procedimento_id').select2({
+                placeholder: "Escolha",
+                allowClear: true
+            });
         });
-    });
+        $(document).ready(function() {
+            $('.select2').select2({
+                placeholder: "Selecione um procedimento",
+                allowClear: true,
+                closeOnSelect: true
+            });
+        });
     </script>
 </body>
 

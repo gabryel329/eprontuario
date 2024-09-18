@@ -173,7 +173,7 @@
                                         <td>{{ $p->nome_social }}</td>
                                         <td>
                                             <button class="btn btn-primary" type="button"
-                                                onclick="selectPaciente('{{ $p->id }}', '{{ $p->name }}')">Selecionar</button>
+                                                onclick="selectPaciente('{{ $p->id }}', '{{ $p->name }}', '{{ $p->celular }}')">Selecionar</button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -359,9 +359,10 @@
             }
         });
 
-        function selectPaciente(id, name) {
+        function selectPaciente(id, name, celular) {
             document.getElementById('name').value = name;
             document.getElementById('paciente_id').value = id;
+            document.getElementById('celular').value = celular;
             var modal = bootstrap.Modal.getInstance(document.getElementById('pacienteModal'));
             modal.hide();
         }
