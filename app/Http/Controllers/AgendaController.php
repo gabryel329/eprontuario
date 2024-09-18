@@ -92,65 +92,65 @@ class AgendaController extends Controller
 
         switch ($diaDaSemana) {
             case 1: // Segunda-feira
-                if (!is_null($disponibilidade->manha_seg)) {
+                if (!is_null($disponibilidade->seg)) {
                     $horariosDisponiveis = DB::table('disponibilidades')
                         ->where('profissional_id', $profissionalId)
                         ->where('especialidade_id', $especialidadeId)
-                        ->whereNotNull('manha_seg')
+                        ->whereNotNull('seg')
                         ->pluck('hora');
                 }
                 break;
             case 2: // Terça-feira
-                if (!is_null($disponibilidade->manha_ter)) {
+                if (!is_null($disponibilidade->ter)) {
                     $horariosDisponiveis = DB::table('disponibilidades')
                         ->where('profissional_id', $profissionalId)
                         ->where('especialidade_id', $especialidadeId)
-                        ->whereNotNull('manha_ter')
+                        ->whereNotNull('ter')
                         ->pluck('hora');
                 }
                 break;
             case 3: // Quarta-feira
-                if (!is_null($disponibilidade->manha_qua)) {
+                if (!is_null($disponibilidade->qua)) {
                     $horariosDisponiveis = DB::table('disponibilidades')
                         ->where('profissional_id', $profissionalId)
                         ->where('especialidade_id', $especialidadeId)
-                        ->whereNotNull('manha_qua')
+                        ->whereNotNull('qua')
                         ->pluck('hora');
                 }
                 break;
             case 4: // Quinta-feira
-                if (!is_null($disponibilidade->manha_qui)) {
+                if (!is_null($disponibilidade->qui)) {
                     $horariosDisponiveis = DB::table('disponibilidades')
                         ->where('profissional_id', $profissionalId)
                         ->where('especialidade_id', $especialidadeId)
-                        ->whereNotNull('manha_qui')
+                        ->whereNotNull('qui')
                         ->pluck('hora');
                 }
                 break;
             case 5: // Sexta-feira
-                if (!is_null($disponibilidade->manha_sex)) {
+                if (!is_null($disponibilidade->sex)) {
                     $horariosDisponiveis = DB::table('disponibilidades')
                         ->where('profissional_id', $profissionalId)
                         ->where('especialidade_id', $especialidadeId)
-                        ->whereNotNull('manha_sex')
+                        ->whereNotNull('sex')
                         ->pluck('hora');
                 }
                 break;
             case 6: // Sábado
-                if (!is_null($disponibilidade->manha_sab)) {
+                if (!is_null($disponibilidade->sab)) {
                     $horariosDisponiveis = DB::table('disponibilidades')
                         ->where('profissional_id', $profissionalId)
                         ->where('especialidade_id', $especialidadeId)
-                        ->whereNotNull('manha_sab')
+                        ->whereNotNull('sab')
                         ->pluck('hora');
                 }
                 break;
             case 7: // Domingo
-                if (!is_null($disponibilidade->manha_dom)) {
+                if (!is_null($disponibilidade->dom)) {
                     $horariosDisponiveis = DB::table('disponibilidades')
                         ->where('profissional_id', $profissionalId)
                         ->where('especialidade_id', $especialidadeId)
-                        ->whereNotNull('manha_dom')
+                        ->whereNotNull('dom')
                         ->pluck('hora');
                 }
                 break;
@@ -207,22 +207,23 @@ class AgendaController extends Controller
 
     public function GerarAgendaStore(Request $request)
     {
+        
         // Coleta dos dados do request
         $profissionalId = $request->input('profissional_id');
         $especialidadeId = $request->input('especialidade_id');
         $turno = $request->input('turno');
-        $inicio = $request->input('inihonorariomanha'); // Formato: HH:MM
-        $intervalo = $request->input('interhonorariomanha'); // Intervalo em minutos
-        $fim = $request->input('fimhonorariomanha'); // Formato: HH:MM
-
+        $inicio = $request->input('inihonorario'); // Formato: HH:MM
+        $intervalo = $request->input('interhonorario'); // Intervalo em minutos
+        $fim = $request->input('fimhonorario'); // Formato: HH:MM
         // Coleta dos dados de disponibilidade para os dias da semana
-        $manha_dom = $request->input('manha_dom') ? 'S' : null;
-        $manha_seg = $request->input('manha_seg') ? 'S' : null;
-        $manha_ter = $request->input('manha_ter') ? 'S' : null;
-        $manha_qua = $request->input('manha_qua') ? 'S' : null;
-        $manha_qui = $request->input('manha_qui') ? 'S' : null;
-        $manha_sex = $request->input('manha_sex') ? 'S' : null;
-        $manha_sab = $request->input('manha_sab') ? 'S' : null;
+        $dom = $request->input('dom') ? 'S' : null;
+        $seg = $request->input('seg') ? 'S' : null;
+        $ter = $request->input('ter') ? 'S' : null;
+        $qua = $request->input('qua') ? 'S' : null;
+        $qui = $request->input('qui') ? 'S' : null;
+        $sex = $request->input('sex') ? 'S' : null;
+        $sab = $request->input('sab') ? 'S' : null;
+        
 
         // Convertendo os horários para o formato DateTime
         $inicio = \DateTime::createFromFormat('H:i', $inicio);
@@ -239,13 +240,13 @@ class AgendaController extends Controller
                 'hora' => $inicio->format('H:i'),
                 'material' => null,
                 'medicamento' => null,
-                'manha_dom' => $manha_dom,
-                'manha_seg' => $manha_seg,
-                'manha_ter' => $manha_ter,
-                'manha_qua' => $manha_qua,
-                'manha_qui' => $manha_qui,
-                'manha_sex' => $manha_sex,
-                'manha_sab' => $manha_sab,
+                'dom' => $dom,
+                'seg' => $seg,
+                'ter' => $ter,
+                'qua' => $qua,
+                'qui' => $qui,
+                'sex' => $sex,
+                'sab' => $sab,
                 'inicio' => $inicio->format('H:i'),
                 'fim' => $fim->format('H:i'),
                 'intervalo' => $intervalo
@@ -258,23 +259,32 @@ class AgendaController extends Controller
         }
 
         // Verifica se já existem registros para o profissional_id, especialidade_id e turno
-        $existingDisponibilidades = \DB::table('disponibilidades')
+        $existingDisponibilidade = \DB::table('disponibilidades')
             ->where('profissional_id', $profissionalId)
             ->where('especialidade_id', $especialidadeId)
             ->where('turno', $turno)
-            ->pluck('hora')
-            ->toArray(); // Converte a coleção para um array
+            ->first();
 
-        // Filtra as novas disponibilidades para remover aquelas que já existem
-        $newDisponibilidades = array_filter($disponibilidades, function ($disponibilidade) use ($existingDisponibilidades) {
-            return !in_array($disponibilidade['hora'], $existingDisponibilidades);
-        });
+        if ($existingDisponibilidade) {
+            // Se existir, faz o update
+            \DB::table('disponibilidades')
+                ->where('profissional_id', $profissionalId)
+                ->where('especialidade_id', $especialidadeId)
+                ->where('turno', $turno)
+                ->delete(); // Remove as antigas disponibilidades para inserir as novas
 
-        // Insere as novas disponibilidades no banco de dados
-        \DB::table('disponibilidades')->insert($newDisponibilidades);
+            // Insere as novas disponibilidades
+            \DB::table('disponibilidades')->insert($disponibilidades);
 
-        // Redireciona com sucesso
-        return redirect()->route('profissional.index1')->with('success', 'Disponibilidade salva com sucesso!');
+            // Redireciona com sucesso para update
+            return redirect()->route('profissional.index')->with('success', 'Disponibilidades atualizadas com sucesso!');
+        } else {
+            // Caso não existam registros, faz o insert
+            \DB::table('disponibilidades')->insert($disponibilidades);
+            
+            // Redireciona com sucesso para store
+            return redirect()->back()->with('success', 'Disponibilidades cadastradas com sucesso!');
+        }
     }
 
     public function agendar(Request $request)
@@ -320,13 +330,13 @@ class AgendaController extends Controller
         }
 
         $diasDisponiveis = [
-            'domingo' => $profissional->manha_dom,
-            'segunda' => $profissional->manha_seg,
-            'terca' => $profissional->manha_ter,
-            'quarta' => $profissional->manha_qua,
-            'quinta' => $profissional->manha_qui,
-            'sexta' => $profissional->manha_sex,
-            'sabado' => $profissional->manha_sab,
+            'domingo' => $profissional->dom,
+            'segunda' => $profissional->seg,
+            'terca' => $profissional->ter,
+            'quarta' => $profissional->qua,
+            'quinta' => $profissional->qui,
+            'sexta' => $profissional->sex,
+            'sabado' => $profissional->sab,
         ];
 
         return response()->json([
