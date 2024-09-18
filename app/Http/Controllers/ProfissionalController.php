@@ -272,7 +272,7 @@ class ProfissionalController extends Controller
             $profissional->especialidades()->attach($especialidade_ids);
         }
 
-        return redirect()->back('profissional.index')->with('success', 'Profissional cadastrado com sucesso!');
+        return redirect()->route('profissional.index')->with('success', 'Profissional cadastrado com sucesso!');
     }
 
     /**
