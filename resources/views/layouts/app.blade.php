@@ -195,12 +195,12 @@ $currentDate = date('Y-m-d');
             });
         });
 
-        // Função de validação de CPF
+        // Funï¿½ï¿½o de validaï¿½ï¿½o de CPF
         function validarCPF(cpf) {
-            cpf = cpf.replace(/[^\d]+/g, ''); // Remove pontos e traços
-            if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false; // Verifica se todos os dígitos são iguais
+            cpf = cpf.replace(/[^\d]+/g, ''); // Remove pontos e traï¿½os
+            if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false; // Verifica se todos os dï¿½gitos sï¿½o iguais
 
-            // Validação do primeiro dígito
+            // Validaï¿½ï¿½o do primeiro dï¿½gito
             var soma = 0;
             for (var i = 0; i < 9; i++) {
                 soma += parseInt(cpf.charAt(i)) * (10 - i);
@@ -209,7 +209,7 @@ $currentDate = date('Y-m-d');
             var primeiroDigitoVerificador = resto > 9 ? 0 : resto;
             if (primeiroDigitoVerificador != parseInt(cpf.charAt(9))) return false;
 
-            // Validação do segundo dígito
+            // Validaï¿½ï¿½o do segundo dï¿½gito
             soma = 0;
             for (var j = 0; j < 10; j++) {
                 soma += parseInt(cpf.charAt(j)) * (11 - j);
@@ -221,15 +221,15 @@ $currentDate = date('Y-m-d');
             return true;
         }
 
-        // Detecta quando o CPF está completo e valida
+        // Detecta quando o CPF estï¿½ completo e valida
         $('#cpf').on('input', function() {
             var cpf = $(this).val();
-            if (cpf.length === 14) { // A máscara usa 14 caracteres (11 dígitos + pontos e traço)
+            if (cpf.length === 14) { // A mï¿½scara usa 14 caracteres (11 dï¿½gitos + pontos e traï¿½o)
                 if (validarCPF(cpf)) {
-                    $('#cpfValidationMessage').hide(); // CPF válido
+                    $('#cpfValidationMessage').hide(); // CPF vï¿½lido
                     $(this).removeClass('is-invalid').addClass('is-valid');
                 } else {
-                    $('#cpfValidationMessage').show(); // CPF inválido
+                    $('#cpfValidationMessage').show(); // CPF invï¿½lido
                     $(this).removeClass('is-valid').addClass('is-invalid');
                 }
             }
