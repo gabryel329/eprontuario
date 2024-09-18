@@ -76,13 +76,13 @@ class HonorarioController extends Controller
     public function saveDisponibilidade(Request $request)
     {
 
-        // Verifique se o profissional já existe e atualize, caso exista
+        // Verifique se o profissional jï¿½ existe e atualize, caso exista
         $profissional = Profissional::find($request->input('profissional_id'));
 
         if ($profissional) {
             // Atualize os dados do profissional
             $profissional->update([
-                // Atualize outros campos conforme necessário
+                // Atualize outros campos conforme necessï¿½rio
             ]);
 
             // Salve ou atualize os dados na tabela 'disponibilidades'
@@ -108,7 +108,7 @@ class HonorarioController extends Controller
 
             return response()->json(['success' => true]);
         } else {
-            return response()->json(['success' => false, 'error' => 'Profissional não encontrado.']);
+            return response()->json(['success' => false, 'error' => 'Profissional nï¿½o encontrado.']);
         }
     }
 
@@ -189,7 +189,7 @@ class HonorarioController extends Controller
                 ->join('procedimentos as proc', 'proc.procedimento', '=', 'ag.procedimento_id')
                 ->join('profissionals as prof', 'prof.id', '=', 'ag.profissional_id')
                 ->join('pacientes as pac', 'pac.id', '=', 'ag.paciente_id')
-                ->leftJoin('convenios as conv', 'conv.id', '=', 'pac.convenio')
+                ->leftJoin('convenios as conv', 'conv.id', '=', 'pac.convenio_id')
                 ->leftJoin('convenio_procedimento as conpro', 'conpro.procedimento_id', '=', 'proc.id')
                 ->leftJoin('honorarios as hon', 'hon.procedimento_id', '=', 'proc.id')
                 ->distinct();
