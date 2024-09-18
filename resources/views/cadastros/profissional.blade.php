@@ -82,6 +82,7 @@
                                                 <label class="form-label">CPF: </label>
                                                 <input class="form-control" id="cpf" name="cpf" type="text"
                                                     required>
+                                                    <small id="cpfValidationMessage" style="color:red; display:none;">CPF inválido</small>
                                             </div>
                                             <div class="mb-3 col-md-3">
                                                 <label class="form-label">Gênero</label>
