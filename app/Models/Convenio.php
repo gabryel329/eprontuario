@@ -33,4 +33,9 @@ class Convenio extends Model
         return $this->hasMany(Pacientes::class, 'convenio_id');
     }
 
+    public function agenda()
+    {
+        return $this->hasMany(Agenda::class, 'convenio_id');
+    }
+
 }

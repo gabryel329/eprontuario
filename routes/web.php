@@ -84,7 +84,10 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::get('/verificar-disponibilidade/{profissionalId}/{especialidadeId}/{data}', [AgendaController::class, 'verificarDisponibilidade']);
         Route::post('/agendar', [AgendaController::class, 'agendar']);
         // Rota para recuperar os dados salvos
-Route::get('/get-saved-data/{profissionalId}/{especialidadeId}/{data}', [AgendaController::class, 'getSavedData'])->name('get.saved.data');
+        
+        Route::get('/get-agenda-data/{profissionalId}/{especialidadeId}/{selectedDate}', [AgendaController::class, 'getAgendaData']);
+
+
 
 
 

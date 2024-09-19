@@ -20,6 +20,8 @@ class Agenda extends Model
         'paciente_id',
         'profissional_id',
         'especialidade_id',
+        'convenio_id',
+        'matricula',
         'procedimento_id',
         'status',
     ];
@@ -33,6 +35,11 @@ class Agenda extends Model
     public function especialidade()
     {
         return $this->belongsTo(Especialidade::class, 'profissional_id');
+    }
+
+    public function convenio()
+    {
+        return $this->belongsTo(Convenio::class, 'convenio_id');
     }
 
     public function paciente()

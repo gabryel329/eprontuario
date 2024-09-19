@@ -164,11 +164,6 @@ class AgendaController extends Controller
         ]);
     }
 
-
-
-
-
-
     public function getProfissionais($especialidadeId)
     {
         $profissionais = DB::table('especialidade_profissional as ep')
@@ -185,9 +180,6 @@ class AgendaController extends Controller
 
         return response()->json(['profissionais' => $profissionais]);
     }
-
-
-
 
     public function getEspecialidades($profissionalId)
     {
@@ -277,7 +269,7 @@ class AgendaController extends Controller
             \DB::table('disponibilidades')->insert($disponibilidades);
 
             // Redireciona com sucesso para update
-            return redirect()->route('profissional.index')->with('success', 'Disponibilidades atualizadas com sucesso!');
+            return redirect()->back()->with('success', 'Disponibilidades atualizadas com sucesso!');
         } else {
             // Caso não existam registros, faz o insert
             \DB::table('disponibilidades')->insert($disponibilidades);
@@ -297,7 +289,9 @@ class AgendaController extends Controller
         $agendamento->status = 'MARCADO'; // Definindo o status como MARCADO
         $agendamento->name = $request->input('paciente'); // Assumindo que paciente é o nome
         $agendamento->celular = $request->input('celular');
+        $agendamento->matricula = $request->input('matricula');
         $agendamento->profissional_id = $request->input('profissionalId');
+        $agendamento->convenio_id = $request->input('convenio');
         $agendamento->especialidade_id = $request->input('especialidadeId');
         $agendamento->save();
 

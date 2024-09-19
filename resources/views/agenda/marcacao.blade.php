@@ -1,5 +1,12 @@
 @extends('layouts.app')
-
+<style>
+    #calendar {
+        width: 100%;
+        height: auto;
+        min-height: 300px;
+        /* Define uma altura mínima */
+    }
+</style>
 <!-- CSS do FullCalendar -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css" rel="stylesheet">
 
@@ -17,6 +24,7 @@
                 <li class="breadcrumb-item"><a href="#">Criar Marcação</a></li>
             </ul>
         </div>
+
         <div class="row">
             <div class="col-md-4">
                 <div class="tile">
@@ -29,7 +37,8 @@
                                     <select id="especialidade" name="especialidade" class="form-control">
                                         <option value="">Selecione uma especialidade</option>
                                         @foreach ($especialidades as $especialidade)
-                                            <option value="{{ $especialidade->id }}">{{ $especialidade->especialidade }}</option>
+                                            <option value="{{ $especialidade->id }}">{{ $especialidade->especialidade }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -43,6 +52,7 @@
                         </div>
                     </form>
                 </div>
+
                 <div class="tile" id="calendario">
                     <h3 class="tile-title">Selecione a data</h3>
                     <div class="tile-body">
@@ -50,13 +60,16 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-md-8">
                 <div class="tile">
                     <h3 class="tile-title">Lista</h3>
-                    <p><strong>Data Selecionada: </strong><span style="color: red" id="displaySelectedData" class="selected-info"></span></p>
+                    <p><strong>Data Selecionada: </strong><span style="color: red" id="displaySelectedData"
+                            class="selected-info"></span></p>
                     <div class="tile-body">
-                        <div id="horariosDisponiveis" class="tile">
-                            <h3 class="tile-title">Horários Disponíveis</h3>
+                        <h3 class="tile-title">Horários Disponíveis</h3>
+                        <div class="table-responsive" id="horariosDisponiveis">
+                            <!-- Aqui será inserida a tabela dinamicamente -->
                         </div>
                     </div>
                 </div>
@@ -71,6 +84,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
+
+            var today = new Date(); // Captura a data atual
+
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'pt-br',
@@ -79,12 +95,48 @@
                     center: 'title',
                     right: ''
                 },
+                validRange: {
+                    start: today // Desabilita datas anteriores ao dia atual
+                },
                 dateClick: function(info) {
                     var selectedDate = info.dateStr;
-                    document.getElementById('displaySelectedData').textContent = selectedDate;
-                    fetchHorariosDisponiveis(selectedDate);
-                },
+
+                    // Converte a data para o formato dd/mm/YYYY sem ajustar fuso horário
+                    var parts = selectedDate.split('-');
+                    var formattedDate = parts[2] + '/' + parts[1] + '/' + parts[0];
+
+                    // Enviar a data para verificação no backend
+                    fetch('/verificar-feriado', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute('content')
+                            },
+                            body: JSON.stringify({
+                                data: selectedDate
+                            }) // 'data' deve ser o nome esperado pelo backend
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.isSunday) {
+                                alert('Essa data é domingo e não pode ser selecionada.');
+                            } else if (data.isHoliday) {
+                                alert('Essa data é feriado e não pode ser selecionada.');
+                            } else {
+                                // Exibir a data no formato dd/mm/YYYY
+                                document.getElementById('displaySelectedData').textContent =
+                                    formattedDate;
+                                fetchHorariosDisponiveis(selectedDate);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro ao verificar feriado ou domingo:', error);
+                        });
+                }
+
             });
+
             calendar.render();
 
             document.getElementById('especialidade').addEventListener('change', function() {
@@ -94,6 +146,9 @@
                 }
             });
         });
+
+
+
 
         function fetchProfissionais(especialidadeId) {
             fetch(`/get-profissionais/${especialidadeId}`)
@@ -122,117 +177,9 @@
                         var horariosContainer = document.getElementById('horariosDisponiveis');
                         horariosContainer.innerHTML = ''; // Limpar horários anteriores
 
-                        if (Array.isArray(data.horarios) && data.horarios.length > 0) {
-                            // Criar tabela
-                            var table = document.createElement('table');
-                            table.className = 'table table-bordered';
-                            var thead = document.createElement('thead');
-                            var tbody = document.createElement('tbody');
-
-                            // Adicionar cabeçalho da tabela
-                            var headerRow = document.createElement('tr');
-                            var headers = ['Hora', 'Paciente', 'Contato', 'Convênio', 'Consulta', 'Código', 'Ação'];
-                            headers.forEach(headerText => {
-                                var th = document.createElement('th');
-                                th.textContent = headerText;
-                                headerRow.appendChild(th);
-                            });
-                            thead.appendChild(headerRow);
-                            table.appendChild(thead);
-
-                            // Adicionar uma linha para cada horário
-                            data.horarios.forEach(horario => {
-                                var row = document.createElement('tr');
-
-                                // Coluna de hora
-                                var horarioCell = document.createElement('td');
-                                horarioCell.textContent = horario;
-                                row.appendChild(horarioCell);
-
-                                // Coluna de paciente (input)
-                                var pacienteCell = document.createElement('td');
-                                var pacienteInput = document.createElement('input');
-                                pacienteInput.type = 'text';
-                                pacienteInput.name = `paciente[${horario}]`;
-                                pacienteInput.className = 'form-control';
-                                pacienteCell.appendChild(pacienteInput);
-                                row.appendChild(pacienteCell);
-
-                                // Coluna de contato (input)
-                                var contatoCell = document.createElement('td');
-                                var contatoInput = document.createElement('input');
-                                contatoInput.type = 'text';
-                                contatoInput.name = `celular[${horario}]`;
-                                contatoInput.className = 'form-control';
-                                contatoCell.appendChild(contatoInput);
-                                row.appendChild(contatoCell);
-
-                                // Coluna de convênio (select)
-                                var convenioCell = document.createElement('td');
-                                var convenioSelect = document.createElement('select');
-                                convenioSelect.name = `convenio[${horario}]`;
-                                convenioSelect.className = 'form-control';
-                                convenioSelect.innerHTML = '<option value="" data-codigo="">Selecione o Convênio</option>';
-
-                                // Adicionar as opções de convênios ao select
-                                data.convenios.forEach(convenio => {
-                                    var option = document.createElement('option');
-                                    option.value = convenio.id;
-                                    option.textContent = convenio.nome;
-                                    convenioSelect.appendChild(option);
-                                });
-
-                                convenioCell.appendChild(convenioSelect);
-                                row.appendChild(convenioCell);
-
-                                // Coluna de consulta (select)
-                                var consultaCell = document.createElement('td');
-                                var consultaSelect = document.createElement('select');
-                                consultaSelect.className = 'select2 form-control';
-                                consultaSelect.name = `procedimento_id[${horario}]`;
-                                consultaSelect.id = `procedimento_id${horario}`;
-                                consultaSelect.style.width = '100%';
-                                consultaSelect.setAttribute('required', 'true');
-                                consultaSelect.setAttribute('onchange', 'updateCodigo(this)');
-                                consultaSelect.innerHTML = '<option value="" data-codigo="">Selecione o Procedimento</option>';
-
-                                data.procedimentos.forEach(procedimento => {
-                                    var option = document.createElement('option');
-                                    option.value = procedimento.procedimento;
-                                    option.setAttribute('data-codigo', procedimento.codigo);
-                                    option.textContent = procedimento.procedimento;
-                                    consultaSelect.appendChild(option);
-                                });
-
-                                consultaCell.appendChild(consultaSelect);
-                                row.appendChild(consultaCell);
-
-                                // Coluna de código (input)
-                                var codigoCell = document.createElement('td');
-                                var codigoInput = document.createElement('input');
-                                codigoInput.type = 'text';
-                                codigoInput.name = `codigo[${horario}]`;
-                                codigoInput.className = 'form-control';
-                                codigoInput.readOnly = true;
-                                codigoCell.appendChild(codigoInput);
-                                row.appendChild(codigoCell);
-
-                                // Adicionar o botão de envio
-                                var buttonCell = document.createElement('td');
-                                var sendButton = document.createElement('button');
-                                sendButton.className = 'btn btn-primary';
-                                sendButton.textContent = 'Enviar';
-                                sendButton.addEventListener('click', function() {
-                                    enviarDados(pacienteInput.value, contatoInput.value, convenioSelect.value, consultaSelect.value, codigoInput.value, horario);
-                                });
-                                buttonCell.appendChild(sendButton);
-                                row.appendChild(buttonCell);
-
-                                tbody.appendChild(row);
-                            });
-
-                            table.appendChild(tbody);
-                            horariosContainer.appendChild(table);
+                        if (data.horarios && data.horarios.length > 0) {
+                            horariosContainer.innerHTML = renderHorariosTable(data.horarios, data.convenios, data
+                                .procedimentos);
                         } else {
                             horariosContainer.innerHTML = 'Nenhum horário disponível para a data selecionada.';
                         }
@@ -243,54 +190,115 @@
             }
         }
 
+        function renderHorariosTable(horarios, convenios, procedimentos) {
+            var table = `
+            <table class="table table-bordered table-responsive">
+                <thead>
+                    <tr>
+                        <th>Hora</th>
+                        <th>Paciente</th>
+                        <th>Contato</th>
+                        <th>Convênio</th>
+                        <th>Matricula</th>
+                        <th>Consulta</th>
+                        <th>Código</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${horarios.map(horario => renderTableRow(horario, convenios, procedimentos)).join('')}
+                </tbody>
+            </table>
+        `;
+            return table;
+        }
+
+        function renderTableRow(horario, convenios, procedimentos) {
+            return `
+            <tr>
+                <td>${horario}</td>
+                <td><input type="text" name="paciente[${horario}]" class="form-control"></td>
+                <td><input type="text" name="celular[${horario}]" class="form-control"></td>
+                <td>${renderConvenioSelect(horario, convenios)}</td>
+                <td><input type="text" name="matricula[${horario}]" class="form-control"></td>
+                <td>${renderProcedimentoSelect(horario, procedimentos)}</td>
+                <td><input type="text" name="codigo[${horario}]" class="form-control" readonly></td>
+                <td><button class="btn btn-primary" onclick="enviarDados('${horario}')">Enviar</button></td>
+            </tr>
+        `;
+        }
+
+        function renderConvenioSelect(horario, convenios) {
+            return `
+            <select name="convenio[${horario}]" class="form-control">
+                <option value="">Selecione o Convênio</option>
+                ${convenios.map(convenio => `<option value="${convenio.id}">${convenio.nome}</option>`).join('')}
+            </select>
+        `;
+        }
+
+        function renderProcedimentoSelect(horario, procedimentos) {
+            return `
+            <select class="select2 form-control" name="procedimento_id[${horario}]" id="procedimento_id${horario}" onchange="updateCodigo(this)">
+                <option value="">Selecione o Procedimento</option>
+                ${procedimentos.map(proc => `<option value="${proc.procedimento}" data-codigo="${proc.codigo}">${proc.procedimento}</option>`).join('')}
+            </select>
+        `;
+        }
+
         function updateCodigo(selectElement) {
             var selectedOption = selectElement.options[selectElement.selectedIndex];
             var codigoInput = selectElement.closest('tr').querySelector('input[name^="codigo"]');
             codigoInput.value = selectedOption.getAttribute('data-codigo');
         }
 
-        function enviarDados(paciente, celular, convenio, procedimento, codigo, horario) {
-    // Captura de valores individuais
-    var selectedDate = document.getElementById('displaySelectedData').textContent;
-    var profissionalId = document.getElementById('profissionais').value;
-    var especialidadeId = document.getElementById('especialidade').value;
+        function enviarDados(horario) {
+            // Captura os valores do formulário para o horário específico
+            var selectedDate = document.getElementById('displaySelectedData').textContent;
+            var profissionalId = document.getElementById('profissionais').value;
+            var especialidadeId = document.getElementById('especialidade').value;
+            var paciente = document.querySelector(`input[name="paciente[${horario}]"]`).value;
+            var celular = document.querySelector(`input[name="celular[${horario}]"]`).value;
+            var matricula = document.querySelector(`input[name="matricula[${horario}]"]`).value;
+            var convenio = document.querySelector(`select[name="convenio[${horario}]"]`).value;
+            var procedimento = document.querySelector(`select[name="procedimento_id[${horario}]"]`).value;
+            var codigo = document.querySelector(`input[name="codigo[${horario}]"]`).value;
 
-    // Dados a serem enviados
-    var requestData = {
-        paciente: paciente,
-        celular: celular,
-        convenio: convenio,
-        procedimento: procedimento,
-        codigo: codigo,
-        horario: horario,
-        data: selectedDate,
-        profissionalId: profissionalId,
-        especialidadeId: especialidadeId
-    };
+            // Dados a serem enviados
+            var requestData = {
+                paciente: paciente,
+                celular: celular,
+                convenio: convenio,
+                matricula: matricula,
+                procedimento: procedimento,
+                codigo: codigo,
+                horario: horario,
+                data: selectedDate,
+                profissionalId: profissionalId,
+                especialidadeId: especialidadeId
+            };
 
-    // Log dos dados que serão enviados
-    console.log('Dados enviados:', requestData);
+            // Log dos dados que serão enviados
+            console.log('Dados enviados:', requestData);
 
-    // Envio dos dados diretamente no corpo da solicitação
-    fetch('/agendar', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify(requestData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Dados enviados com sucesso!');
-        } else {
-            alert('Erro ao enviar dados.');
+            // Envio dos dados diretamente no corpo da solicitação
+            fetch('/agendar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify(requestData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Dados enviados com sucesso!');
+                    } else {
+                        alert('Erro ao enviar dados: ' + (data.message || 'Falha desconhecida'));
+                    }
+                })
+                .catch(error => console.error('Erro ao enviar dados:', error));
         }
-    })
-    .catch(error => console.error('Erro ao enviar dados:', error));
-}
-
-
     </script>
 @endsection
