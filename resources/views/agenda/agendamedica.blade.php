@@ -69,7 +69,7 @@
                         <ul class="nav nav-tabs user-tabs">
                             <li class="nav-item"><a class="nav-link active" href="#agenda-chegou" data-bs-toggle="tab">Chegou</a></li>
                             <li class="nav-item"><a class="nav-link" href="#agenda-marcado" data-bs-toggle="tab">Marcado</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#agenda-evadiu" data-bs-toggle="tab">Evadido</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#agenda-evadio" data-bs-toggle="tab">Evadido</a></li>
                             <li class="nav-item"><a class="nav-link" href="#agenda-cancelado" data-bs-toggle="tab">Cancelado</a></li>
                             <li class="nav-item"><a class="nav-link" href="#agenda-finalizado" data-bs-toggle="tab">Finalizado</a></li>
                         </ul>
@@ -129,7 +129,13 @@
                                         <tr>
                                             <td>{{ $item->id }}</td>
                                             <td>{{ $item->hora }}</td>
-                                            <td>{{ $item->paciente->name }}</td>
+                                            <td>
+                                                @if ($item->paciente)
+                                                    {{ $item->paciente->name }}
+                                                @else
+                                                    {{ $item->name }}
+                                                @endif
+                                            </td>
                                             <td title="{{ $item->procedimento_id }}">{{ $item->procedimento_id }}</td>
                                         </tr>
                                     @endforeach
