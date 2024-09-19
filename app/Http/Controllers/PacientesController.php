@@ -25,7 +25,7 @@ class PacientesController extends Controller
 
     public function index1()
     {
-        $paciente = Pacientes::all();
+        $paciente = Pacientes::orderBy('id', 'asc')->paginate(10);
         $convenios = Convenio::all();
 
         return view('cadastros.listapacientes', compact(['paciente', 'convenios']));

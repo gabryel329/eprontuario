@@ -22,7 +22,7 @@
         <div class="tile">
             <div class="tile-body">
                 <div class="table-responsive">
-                    <table class="table table-hover table-bordered" id="sampleTable">
+                    <table class="table table-hover table-bordered">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -262,11 +262,14 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="d-flex justify-content-center align-items-center">
+                    {{ $paciente->links('pagination::bootstrap-4') }}
+                </div>
             </div>
         </div>
     </div>
 </main>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 function pesquisacep(valor) {
         var cep = valor.replace(/\D/g, '');

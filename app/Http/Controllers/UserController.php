@@ -26,7 +26,7 @@ class UserController extends Controller
 
     public function index1()
     {
-        $users = User::all();
+        $users = User::orderBy('id', 'asc')->paginate(10);
         $profissioanls = Profissional::all();
         $permissoes = Permisoes::all();
 

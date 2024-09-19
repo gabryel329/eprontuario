@@ -27,7 +27,7 @@
             <div class="tile">
                 <div class="tile-body">
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered" id="sampleTable">
+                        <table class="table table-hover table-bordered">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -203,6 +203,7 @@
                             </tbody>
                         </table>
                     </div>
+                    {{ $profissioanls->links('pagination::bootstrap-4') }}
                 </div>
             </div>
         </div>

@@ -27,7 +27,7 @@ class ProfissionalController extends Controller
 
     public function index1()
     {
-        $profissioanls = Profissional::all();
+        $profissioanls = Profissional::orderBy('id', 'asc')->paginate(10);
         $permissoes = Permisoes::all();
         $tipoprof = TipoProf::all();
         $especialidades = Especialidade::all();

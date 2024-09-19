@@ -27,7 +27,7 @@
                 <div class="tile">
                     <div class="tile-body">
                         <div class="table-responsive">
-                            <table class="table table-hover table-bordered" id="sampleTable">
+                            <table class="table table-hover table-bordered">
                                 <thead>
                                     <tr>
                                         <th>Nome</th>
@@ -121,11 +121,13 @@
                                 </tbody>
                             </table>
                         </div>
+                        {{ $users->links('pagination::bootstrap-4') }}
                     </div>
                 </div>
             </div>
         </div>
     </main>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function togglePassword(id, show) {
             var passwordField = document.getElementById('password' + id);
