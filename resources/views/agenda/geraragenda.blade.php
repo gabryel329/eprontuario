@@ -37,9 +37,6 @@
     @endif
     <div class="row">
         <div class="col-md-12">
-            <div class="mb-3 col-md-4 align-self-end">
-                <a class="btn btn-primary" href="{{ route('profissional.index1') }}">Lista de Profissionais</a>
-            </div>
             <div class="timeline-post">
                 <div class="col-md-12">
                     <ul class="nav nav-tabs user-tabs">
