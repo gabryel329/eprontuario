@@ -16,6 +16,13 @@ class Disponibilidade extends Model
         'medicamento',
         'turno',
         'hora',
+        'data',
+        'procedimento_id',
+        'name',
+        'celular',
+        'matricula',
+        'codigo',
+        'convenio_id',
         // Campos de dias e hor�rios para manh�
         'manha_dom',
         'manha_seg',
@@ -37,5 +44,10 @@ class Disponibilidade extends Model
     public function especialidade()
     {
         return $this->belongsTo(Especialidade::class, 'especialidade_id');
+    }
+
+    public function convenio()
+    {
+        return $this->belongsTo(Convenio::class, 'convenio_id');
     }
 }

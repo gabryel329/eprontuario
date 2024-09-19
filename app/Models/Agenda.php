@@ -22,6 +22,7 @@ class Agenda extends Model
         'especialidade_id',
         'convenio_id',
         'matricula',
+        'codigo',
         'procedimento_id',
         'status',
     ];

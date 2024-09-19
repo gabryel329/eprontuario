@@ -176,7 +176,7 @@
                     .then(data => {
                         var horariosContainer = document.getElementById('horariosDisponiveis');
                         horariosContainer.innerHTML = ''; // Limpar horários anteriores
-
+                        console.log(data.horarios);
                         if (data.horarios && data.horarios.length > 0) {
                             horariosContainer.innerHTML = renderHorariosTable(data.horarios, data.convenios, data
                                 .procedimentos);
@@ -216,14 +216,14 @@
         function renderTableRow(horario, convenios, procedimentos) {
             return `
             <tr>
-                <td>${horario}</td>
-                <td><input type="text" name="paciente[${horario}]" class="form-control"></td>
-                <td><input type="text" name="celular[${horario}]" class="form-control"></td>
+                <td><input type="text" readonly name="hora[${horario}]" value="${horario.hora ?? ''}" class="form-control"></td>
+                <td><input type="text" name="paciente[${horario}]" value="${horario.name ?? ''}" class="form-control"></td>
+                <td><input type="text" name="celular[${horario}]" value="${horario.celular ?? ''}" class="form-control"></td>
                 <td>${renderConvenioSelect(horario, convenios)}</td>
-                <td><input type="text" name="matricula[${horario}]" class="form-control"></td>
+                <td><input type="text" name="matricula[${horario}]" value="${horario.matricula ?? ''}" class="form-control"></td>
                 <td>${renderProcedimentoSelect(horario, procedimentos)}</td>
-                <td><input type="text" name="codigo[${horario}]" class="form-control" readonly></td>
-                <td><button class="btn btn-primary" onclick="enviarDados('${horario}')">Enviar</button></td>
+                <td><input type="text" name="codigo[${horario}]" value="${horario.codigo ?? ''}" class="form-control" readonly></td>
+                <td><button class="btn btn-primary" onclick="enviarDados('${horario}')">Salvar</button></td>
             </tr>
         `;
         }
@@ -258,6 +258,7 @@
             var profissionalId = document.getElementById('profissionais').value;
             var especialidadeId = document.getElementById('especialidade').value;
             var paciente = document.querySelector(`input[name="paciente[${horario}]"]`).value;
+            var hora = document.querySelector(`input[name="hora[${horario}]"]`).value;
             var celular = document.querySelector(`input[name="celular[${horario}]"]`).value;
             var matricula = document.querySelector(`input[name="matricula[${horario}]"]`).value;
             var convenio = document.querySelector(`select[name="convenio[${horario}]"]`).value;
@@ -272,7 +273,7 @@
                 matricula: matricula,
                 procedimento: procedimento,
                 codigo: codigo,
-                horario: horario,
+                horario: hora,
                 data: selectedDate,
                 profissionalId: profissionalId,
                 especialidadeId: especialidadeId

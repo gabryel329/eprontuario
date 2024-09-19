@@ -38,4 +38,9 @@ class Convenio extends Model
         return $this->hasMany(Agenda::class, 'convenio_id');
     }
 
+    public function disponibilidade()
+    {
+        return $this->hasMany(Disponibilidade::class, 'convenio_id');
+    }
+
 }

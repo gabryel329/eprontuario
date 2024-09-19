@@ -91,67 +91,144 @@ class AgendaController extends Controller
         $horariosDisponiveis = [];
 
         switch ($diaDaSemana) {
-            case 1: // Segunda-feira
+            case 1:
                 if (!is_null($disponibilidade->seg)) {
                     $horariosDisponiveis = DB::table('disponibilidades')
                         ->where('profissional_id', $profissionalId)
                         ->where('especialidade_id', $especialidadeId)
                         ->whereNotNull('seg')
-                        ->pluck('hora');
+                        ->select(
+                            'hora',
+                            'data',
+                            'procedimento_id',
+                            'name',         // Certifique-se de que estas colunas existem na tabela 'disponibilidades'
+                            'celular',      // Se não, remova ou ajuste os nomes das colunas
+                            'matricula',
+                            'codigo',
+                            'convenio_id'
+                        )
+                        ->orderBy('hora', 'asc')
+                        ->get();
                 }
                 break;
-            case 2: // Terça-feira
+            case 2:
                 if (!is_null($disponibilidade->ter)) {
                     $horariosDisponiveis = DB::table('disponibilidades')
                         ->where('profissional_id', $profissionalId)
                         ->where('especialidade_id', $especialidadeId)
                         ->whereNotNull('ter')
-                        ->pluck('hora');
+                        ->select(
+                            'hora',
+                            'data',
+                            'procedimento_id',
+                            'name',         // Certifique-se de que estas colunas existem na tabela 'disponibilidades'
+                            'celular',      // Se não, remova ou ajuste os nomes das colunas
+                            'matricula',
+                            'codigo',
+                            'convenio_id'
+                        )
+                        ->orderBy('hora', 'asc')
+                        ->get();
                 }
                 break;
-            case 3: // Quarta-feira
+            case 3:
                 if (!is_null($disponibilidade->qua)) {
                     $horariosDisponiveis = DB::table('disponibilidades')
                         ->where('profissional_id', $profissionalId)
                         ->where('especialidade_id', $especialidadeId)
                         ->whereNotNull('qua')
-                        ->pluck('hora');
+                        ->select(
+                            'hora',
+                            'data',
+                            'procedimento_id',
+                            'name',         // Certifique-se de que estas colunas existem na tabela 'disponibilidades'
+                            'celular',      // Se não, remova ou ajuste os nomes das colunas
+                            'matricula',
+                            'codigo',
+                            'convenio_id'
+                        )
+                        ->orderBy('hora', 'asc')
+                        ->get();
                 }
                 break;
-            case 4: // Quinta-feira
+            case 4:
                 if (!is_null($disponibilidade->qui)) {
                     $horariosDisponiveis = DB::table('disponibilidades')
                         ->where('profissional_id', $profissionalId)
                         ->where('especialidade_id', $especialidadeId)
                         ->whereNotNull('qui')
-                        ->pluck('hora');
+                        ->select(
+                            'hora',
+                            'data',
+                            'procedimento_id',
+                            'name',         // Certifique-se de que estas colunas existem na tabela 'disponibilidades'
+                            'celular',      // Se não, remova ou ajuste os nomes das colunas
+                            'matricula',
+                            'codigo',
+                            'convenio_id'
+                        )
+                        ->orderBy('hora', 'asc')
+                        ->get();
                 }
                 break;
-            case 5: // Sexta-feira
+            case 5:
                 if (!is_null($disponibilidade->sex)) {
                     $horariosDisponiveis = DB::table('disponibilidades')
                         ->where('profissional_id', $profissionalId)
                         ->where('especialidade_id', $especialidadeId)
                         ->whereNotNull('sex')
-                        ->pluck('hora');
+                        ->select(
+                            'hora',
+                            'data',
+                            'procedimento_id',
+                            'name',         // Certifique-se de que estas colunas existem na tabela 'disponibilidades'
+                            'celular',      // Se não, remova ou ajuste os nomes das colunas
+                            'matricula',
+                            'codigo',
+                            'convenio_id'
+                        )
+                        ->orderBy('hora', 'asc')
+                        ->get();
                 }
                 break;
-            case 6: // Sábado
+            case 6:
                 if (!is_null($disponibilidade->sab)) {
                     $horariosDisponiveis = DB::table('disponibilidades')
                         ->where('profissional_id', $profissionalId)
                         ->where('especialidade_id', $especialidadeId)
                         ->whereNotNull('sab')
-                        ->pluck('hora');
+                        ->select(
+                            'hora',
+                            'data',
+                            'procedimento_id',
+                            'name',         // Certifique-se de que estas colunas existem na tabela 'disponibilidades'
+                            'celular',      // Se não, remova ou ajuste os nomes das colunas
+                            'matricula',
+                            'codigo',
+                            'convenio_id'
+                        )
+                        ->orderBy('hora', 'asc')
+                        ->get();
                 }
                 break;
-            case 7: // Domingo
+            case 7:
                 if (!is_null($disponibilidade->dom)) {
                     $horariosDisponiveis = DB::table('disponibilidades')
                         ->where('profissional_id', $profissionalId)
                         ->where('especialidade_id', $especialidadeId)
                         ->whereNotNull('dom')
-                        ->pluck('hora');
+                        ->select(
+                            'hora',
+                            'data',
+                            'procedimento_id',
+                            'name',         // Certifique-se de que estas colunas existem na tabela 'disponibilidades'
+                            'celular',      // Se não, remova ou ajuste os nomes das colunas
+                            'matricula',
+                            'codigo',
+                            'convenio_id'
+                        )
+                        ->orderBy('hora', 'asc')
+                        ->get();
                 }
                 break;
         }
@@ -199,7 +276,7 @@ class AgendaController extends Controller
 
     public function GerarAgendaStore(Request $request)
     {
-        
+
         // Coleta dos dados do request
         $profissionalId = $request->input('profissional_id');
         $especialidadeId = $request->input('especialidade_id');
@@ -215,7 +292,7 @@ class AgendaController extends Controller
         $qui = $request->input('qui') ? 'S' : null;
         $sex = $request->input('sex') ? 'S' : null;
         $sab = $request->input('sab') ? 'S' : null;
-        
+
 
         // Convertendo os horários para o formato DateTime
         $inicio = \DateTime::createFromFormat('H:i', $inicio);
@@ -273,7 +350,7 @@ class AgendaController extends Controller
         } else {
             // Caso não existam registros, faz o insert
             \DB::table('disponibilidades')->insert($disponibilidades);
-            
+
             // Redireciona com sucesso para store
             return redirect()->back()->with('success', 'Disponibilidades cadastradas com sucesso!');
         }
@@ -281,30 +358,79 @@ class AgendaController extends Controller
 
     public function agendar(Request $request)
     {
-        // Processar o agendamento
-        $agendamento = new Agenda();
-        $agendamento->hora = $request->input('horario');
-        $agendamento->data = $request->input('data');
-        $agendamento->procedimento_id = $request->input('procedimento');
-        $agendamento->status = 'MARCADO'; // Definindo o status como MARCADO
-        $agendamento->name = $request->input('paciente'); // Assumindo que paciente é o nome
-        $agendamento->celular = $request->input('celular');
-        $agendamento->matricula = $request->input('matricula');
-        $agendamento->profissional_id = $request->input('profissionalId');
-        $agendamento->convenio_id = $request->input('convenio');
-        $agendamento->especialidade_id = $request->input('especialidadeId');
-        $agendamento->save();
+        $data = $request->input('data');
+        $hora = $request->input('horario');
+        $profissionalId = $request->input('profissionalId');
+        $especialidadeId = $request->input('especialidadeId');
 
-        return response()->json(['success' => true, 'message' => 'Agendamento realizado com sucesso!']);
+        // Verifica se já existe uma agenda com a mesma data, hora, profissional e especialidade
+        $existeAgenda = Agenda::where('data', $data)
+            ->where('hora', $hora)
+            ->where('profissional_id', $profissionalId)
+            ->first();
+
+        if ($existeAgenda) {
+            // Se existir, atualiza os dados
+            $existeAgenda->procedimento_id = $request->input('procedimento');
+            $existeAgenda->status = 'MARCADO'; // Atualiza o status
+            $existeAgenda->name = $request->input('paciente');
+            $existeAgenda->celular = $request->input('celular');
+            $existeAgenda->matricula = $request->input('matricula');
+            $existeAgenda->convenio_id = $request->input('convenio');
+            $existeAgenda->codigo = $request->input('codigo');
+            $existeAgenda->especialidade_id = $especialidadeId;
+            $existeAgenda->save();
+        } else {
+            // Se não existir, cria um novo agendamento
+            $agendamento = new Agenda();
+            $agendamento->hora = $hora;
+            $agendamento->data = $data;
+            $agendamento->procedimento_id = $request->input('procedimento');
+            $agendamento->status = 'MARCADO'; // Define o status como MARCADO
+            $agendamento->name = $request->input('paciente');
+            $agendamento->celular = $request->input('celular');
+            $agendamento->matricula = $request->input('matricula');
+            $agendamento->profissional_id = $profissionalId;
+            $agendamento->convenio_id = $request->input('convenio');
+            $agendamento->especialidade_id = $especialidadeId;
+            $agendamento->codigo = $request->input('codigo');
+            $agendamento->save();
+        }
+
+        // Verifica se a disponibilidade já existe
+        $existeDisponibilidade = DB::table('disponibilidades')
+            ->where('hora', $hora)
+            ->where('profissional_id', $profissionalId)
+            ->where('especialidade_id', $especialidadeId)
+            ->first();
+
+        if ($existeDisponibilidade) {
+            // Se existir, faz o update
+            DB::table('disponibilidades')
+                ->where('id', $existeDisponibilidade->id)
+                ->update([
+                    'procedimento_id' => $request->input('procedimento'),
+                    'name' => $request->input('paciente'),
+                    'celular' => $request->input('celular'),
+                    'matricula' => $request->input('matricula'),
+                    'codigo' => $request->input('codigo'),
+                    'convenio_id' => $request->input('convenio'),
+                    'data' => $data
+                ]);
+        } 
+
+        return response()->json(['success' => true, 'message' => 'Agendamento e disponibilidade atualizados com sucesso!']);
     }
+
+
 
     public function getSavedData($profissionalId, $especialidadeId, $data)
     {
         // Recuperar os dados salvos do banco de dados
         $agendamentos = Agenda::where('profissional_id', $profissionalId)
-                                   ->where('especialidade_id', $especialidadeId)
-                                   ->whereDate('data', $data)
-                                   ->get();
+            ->where('especialidade_id', $especialidadeId)
+            ->whereDate('data', $data)
+            ->get();
 
         // Retornar os dados como JSON
         return response()->json([
@@ -312,7 +438,7 @@ class AgendaController extends Controller
             'agendamentos' => $agendamentos
         ]);
     }
-    
+
 
 
     public function getDisponibilidade($profissionalId)
