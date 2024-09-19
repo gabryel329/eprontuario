@@ -229,19 +229,28 @@
         }
 
         function renderConvenioSelect(horario, convenios) {
-            return `
+        return `
             <select name="convenio[${horario}]" class="form-control">
-                <option value="">Selecione o Convênio</option>
-                ${convenios.map(convenio => `<option value="${convenio.id}">${convenio.nome}</option>`).join('')}
+                <option value="">${horario.convenio_id ? '' : 'Selecione um Convênio'}</option>
+                ${convenios.map(convenio => `
+                    <option value="${convenio.id}" ${horario.convenio_id == convenio.id ? 'selected' : ''}>
+                        ${convenio.nome}
+                    </option>
+                `).join('')}
             </select>
         `;
-        }
+    }
+
 
         function renderProcedimentoSelect(horario, procedimentos) {
             return `
             <select class="select2 form-control" name="procedimento_id[${horario}]" id="procedimento_id${horario}" onchange="updateCodigo(this)">
-                <option value="">Selecione o Procedimento</option>
-                ${procedimentos.map(proc => `<option value="${proc.procedimento}" data-codigo="${proc.codigo}">${proc.procedimento}</option>`).join('')}
+                <option value="">${horario.procedimento_id ? '' : 'Selecione o Procedimento'}</option>
+                    ${procedimentos.map(proc => `
+                        <option value="${proc.procedimento}" ${horario.procedimento_id == proc.procedimento ? 'selected' : ''} data-codigo="${proc.codigo}">
+                            ${proc.procedimento}
+                        </option>
+                    `).join('')}
             </select>
         `;
         }

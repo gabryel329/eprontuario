@@ -107,7 +107,6 @@ class AgendaController extends Controller
                             'codigo',
                             'convenio_id'
                         )
-                        ->orderBy('hora', 'asc')
                         ->get();
                 }
                 break;
@@ -598,7 +597,6 @@ class AgendaController extends Controller
         // Atualizar os dados da agenda
         $agenda->profissional_id = $request->profissional_id;
         $agenda->data = $request->data;
-        $agenda->particular = $request->particular;
         $agenda->hora = $request->hora;
         $agenda->paciente_id = $request->paciente_id;
         $agenda->name = $request->name;
