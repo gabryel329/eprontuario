@@ -38,8 +38,8 @@
         </div>
         
         <div class="mb-3 col-md-2">
-            <label class="form-label">Inicio</label>
-            <input class="form-control" id="inihonorario" name="inihonorario" type="time">
+            <label class="form-label">Início</label>
+            <input class="form-control" id="inihonorario_{{ $turno }}" name="inihonorario" type="time">
         </div>
         <div class="mb-3 col-md-2">
             <label class="form-label">Intervalo</label>
@@ -47,7 +47,7 @@
         </div>
         <div class="mb-3 col-md-2">
             <label class="form-label">Fim</label>
-            <input class="form-control" id="fimhonorario" name="fimhonorario" type="time">
+            <input class="form-control" id="fimhonorario_{{ $turno }}" name="fimhonorario" type="time">
         </div>
     </div>
 

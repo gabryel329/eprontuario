@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-BR">
 <head>
     <title>ePRONTUÁRIO</title>
     <meta charset="utf-8">

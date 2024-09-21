@@ -61,7 +61,7 @@ class ProfissionalController extends Controller
         $cor = $request->input('cor');
         $imagem = $request->file('imagem');
         $permisoes_id = $request->input('permisoes_id');
-        $especialidade_ids = $request->input('especialidade_id'); // Este é agora um array de IDs de especialidade
+        $especialidade_ids = $request->input('especialidade_id');
         $tipoprof_id = $request->input('tipoprof_id');
         $conselho = $request->input('conselho');
         $cep = $request->input('cep');
@@ -116,13 +116,13 @@ class ProfissionalController extends Controller
         $existeProfissional = Profissional::where('cpf', $cpf)->first();
 
         if ($existeProfissional) {
-            return redirect()->route('profissional.index')->with('error', 'Profissional já existe!');
+            return redirect()->back()->withInput()->with('error', "CPF já cadastrado: <strong> Código: {$existeProfissional->id} / Nome: {$existeProfissional->name}. </strong> Tente novamente.");
         }
 
         $existeEmail = Profissional::where('email', $email)->first();
 
         if ($existeEmail) {
-            return redirect()->route('profissional.index')->with('error', 'Email já cadastrado!');
+            return redirect()->back()->withInput()->with('error', "Email já cadastrado: <strong> Código: {$existeEmail->id} / Nome: {$existeEmail->name}. </strong> Tente novamente.");
         }
 
         if ($imagem && $imagem->isValid()) {

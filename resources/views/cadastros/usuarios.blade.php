@@ -37,13 +37,13 @@
                         @csrf
                         <div class="row">
                             <div class="mb-3 col-md-8">
-                                <label class="form-label"><strong>Nome Completo:</strong></label>
+                                <label class="form-label"><strong>Usuário:</strong></label>
                                 <input class="form-control" id="id" name="id" type="text" hidden>
-                                <input class="form-control" id="name" name="name" type="text" required>
+                                <input class="form-control" id="name" name="name" type="text" required disabled>
                             </div>
                             <div class="mb-3 col-md-4">
                                 <label class="form-label">Permissão:</label>
-                                <select class="form-control select2" id="permisao_id" multiple name="permisao_id[]">
+                                <select class="form-control select2" id="permisao_id" multiple name="permisao_id[]" disabled>
                                     @foreach ($permissoes as $item)
                                         <option value="{{ $item->id }}">{{ $item->cargo }}</option>
                                     @endforeach
@@ -53,20 +53,20 @@
                         <div class="row">
                             <div class="mb-3 col-md-4">
                                 <label class="form-label"><strong>Email:</strong></label>
-                                <input class="form-control" id="email" name="email" type="email" required>
+                                <input class="form-control" id="email" name="email" type="email" disabled required>
                             </div>
                             <div class="mb-3 col-md-4">
                                 <label class="form-label"><strong>Senha:</strong></label>
-                                <input class="form-control" id="password" name="password" type="password" onmouseover="showPassword()" onmouseout="hidePassword()" required>
+                                <input class="form-control" id="password" name="password" type="password" disabled required>
                             </div>
                             <div class="mb-3 col-md-4">
                                 <label class="form-label">Foto</label>
-                                <input class="form-control" type="file" name="imagem">
+                                <input class="form-control" type="file" name="imagem" disabled>
                             </div>
                         </div>
                         
                         <div class="tile-footer">
-                            <button class="btn btn-primary" type="submit"><i class="bi bi-check-circle-fill me-2"></i>Salvar</button>
+                            <button class="btn btn-primary" type="submit" disabled id="submitBtn"><i class="bi bi-check-circle-fill me-2"></i>Salvar</button>
                         </div>
                     </form>
                 </div>
@@ -141,6 +141,14 @@
         document.getElementById('name').value = name;
         document.getElementById('id').value = id;
         document.getElementById('email').value = email;
+
+        // Habilitar os campos após a seleção do profissional
+        document.getElementById('name').disabled = false;
+        document.getElementById('permisao_id').disabled = false;
+        document.getElementById('email').disabled = false;
+        document.getElementById('password').disabled = false;
+        document.getElementsByName('imagem')[0].disabled = false;
+        document.getElementById('submitBtn').disabled = false;
 
         // Fecha o modal
         var modal = document.getElementById('profissionalModal');

@@ -131,7 +131,7 @@ class UserController extends Controller
          // Recuperar os dados do usuário
          $user = User::find($user->id);
      
-         return redirect()->route('usuario.index')->with('success', 'Usuário criado com sucesso')->with('user', $user);
+         return redirect()->back()->with('success', 'Usuário criado com sucesso')->with('user', $user);
      }
      
 
@@ -228,7 +228,7 @@ class UserController extends Controller
         // Delete the user
         $user->delete();
 
-        return redirect()->route('usuario.index')->with('success', 'Usuário excluído com Sucesso!');
+        return redirect()->back()->with('success', 'Usuário excluído com Sucesso!');
     }
 
 

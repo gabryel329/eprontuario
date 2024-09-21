@@ -97,7 +97,71 @@
         especialidadeSelect.html('<option disabled selected>Escolha</option>');
     }
 });
+document.addEventListener('DOMContentLoaded', function () {
+    // Definindo horários para cada turno
+    const horariosTurnos = {
+        'M': { inicio: '08:00', fim: '12:00' },  // Manhã
+        'T': { inicio: '13:00', fim: '18:00' },  // Tarde
+        'N': { inicio: '19:00', fim: '23:00' }   // Noite
+    };
 
+    // Função para atualizar os horários de início e fim com base no turno
+    function atualizarHorarios(turno) {
+        const iniHonorarioInput = document.getElementById(`inihonorario_${turno}`);
+        const fimHonorarioInput = document.getElementById(`fimhonorario_${turno}`);
 
-    </script>
+        if (horariosTurnos[turno]) {
+            iniHonorarioInput.value = horariosTurnos[turno].inicio;
+            iniHonorarioInput.min = horariosTurnos[turno].inicio;
+            iniHonorarioInput.max = horariosTurnos[turno].fim;
+
+            fimHonorarioInput.value = horariosTurnos[turno].fim;
+            fimHonorarioInput.min = horariosTurnos[turno].inicio;
+            fimHonorarioInput.max = horariosTurnos[turno].fim;
+        }
+    }
+
+    // Detectando quando as abas são mostradas
+    const tabManha = document.getElementById('manha');
+    const tabTarde = document.getElementById('tarde');
+    const tabNoite = document.getElementById('noturno');
+
+    tabManha.addEventListener('shown.bs.tab', function () {
+        atualizarHorarios('M');
+    });
+
+    tabTarde.addEventListener('shown.bs.tab', function () {
+        atualizarHorarios('T');
+    });
+
+    tabNoite.addEventListener('shown.bs.tab', function () {
+        atualizarHorarios('N');
+    });
+
+    // Inicializando a aba ativa (por exemplo, Manhã)
+    if (tabManha.classList.contains('active')) {
+        atualizarHorarios('M');
+    }
+});
+function formatTo24Hour(time) {
+    const [hours, minutes] = time.split(':');
+    return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+}
+
+function atualizarHorarios(turno) {
+    const iniHonorarioInput = document.getElementById(`inihonorario_${turno}`);
+    const fimHonorarioInput = document.getElementById(`fimhonorario_${turno}`);
+
+    if (horariosTurnos[turno]) {
+        iniHonorarioInput.value = formatTo24Hour(horariosTurnos[turno].inicio);
+        iniHonorarioInput.min = formatTo24Hour(horariosTurnos[turno].inicio);
+        iniHonorarioInput.max = formatTo24Hour(horariosTurnos[turno].fim);
+
+        fimHonorarioInput.value = formatTo24Hour(horariosTurnos[turno].fim);
+        fimHonorarioInput.min = formatTo24Hour(horariosTurnos[turno].inicio);
+        fimHonorarioInput.max = formatTo24Hour(horariosTurnos[turno].fim);
+    }
+}
+
+</script>
 @endsection
