@@ -348,7 +348,7 @@
             alert('Erro ao enviar dados: ' + (data.message || 'Falha desconhecida'));
         }
     })
-    .catch(error => console.error('Erro ao enviar dados:', error));
+    
 }
 
 </script>
