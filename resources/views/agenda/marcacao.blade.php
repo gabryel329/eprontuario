@@ -35,10 +35,9 @@
                                 <div class="col-md-6">
                                     <label for="especialidade">Especialidade:</label>
                                     <select id="especialidade" name="especialidade" class="form-control">
-                                        <option value="">Selecione uma especialidade</option>
+                                        <option selected value="">Selecione uma especialidade</option>
                                         @foreach ($especialidades as $especialidade)
-                                            <option value="{{ $especialidade->id }}">{{ $especialidade->especialidade }}
-                                            </option>
+                                            <option value="{{ $especialidade->id }}">{{ $especialidade->especialidade }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -67,7 +66,9 @@
                     <p><strong>Data Selecionada: </strong><span style="color: red" id="displaySelectedData"
                             class="selected-info"></span></p>
                     <div class="tile-body">
-                        <h3 class="tile-title">Horários Disponíveis</h3>
+                        <h3 class="tile-title">Horários Disponíveis</h3> 
+                        <button type="button" class="btn btn-success" onclick="enviarTodosDados()">Salvar</button>
+                        <hr>
                         <div class="table-responsive" id="horariosDisponiveis">
                             <!-- Aqui será inserida a tabela dinamicamente -->
                         </div>
@@ -202,7 +203,6 @@
                         <th>Matricula</th>
                         <th>Consulta</th>
                         <th>Código</th>
-                        <th>Ação</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -223,7 +223,6 @@
                 <td><input type="text" name="matricula[${horario}]" value="${horario.matricula ?? ''}" class="form-control"></td>
                 <td>${renderProcedimentoSelect(horario, procedimentos)}</td>
                 <td><input type="text" name="codigo[${horario}]" value="${horario.codigo ?? ''}" class="form-control" readonly></td>
-                <td><button class="btn btn-primary" onclick="enviarDados('${horario}')">Salvar</button></td>
             </tr>
         `;
         }
@@ -242,40 +241,47 @@
     }
 
 
-        function renderProcedimentoSelect(horario, procedimentos) {
-            return `
-            <select class="select2 form-control" name="procedimento_id[${horario}]" id="procedimento_id${horario}" onchange="updateCodigo(this)">
-                <option value="">${horario.procedimento_id ? '' : 'Selecione o Procedimento'}</option>
-                    ${procedimentos.map(proc => `
-                        <option value="${proc.procedimento}" ${horario.procedimento_id == proc.procedimento ? 'selected' : ''} data-codigo="${proc.codigo}">
-                            ${proc.procedimento}
-                        </option>
-                    `).join('')}
-            </select>
-        `;
-        }
+    function renderProcedimentoSelect(horario, procedimentos) {
+        return `
+        <select class="select2 form-control" name="procedimento_id[${horario}]" id="procedimento_id${horario}" onchange="updateCodigo(this)">
+            <option value="">${horario.procedimento_id ? '' : 'Selecione o Procedimento'}</option>
+                ${procedimentos.map(proc => `
+                    <option value="${proc.procedimento}" ${horario.procedimento_id == proc.procedimento ? 'selected' : ''} data-codigo="${proc.codigo}">
+                        ${proc.procedimento}
+                    </option>
+                `).join('')}
+        </select>
+    `;
+    }
 
-        function updateCodigo(selectElement) {
-            var selectedOption = selectElement.options[selectElement.selectedIndex];
-            var codigoInput = selectElement.closest('tr').querySelector('input[name^="codigo"]');
-            codigoInput.value = selectedOption.getAttribute('data-codigo');
-        }
+    function updateCodigo(selectElement) {
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+        var codigoInput = selectElement.closest('tr').querySelector('input[name^="codigo"]');
+        codigoInput.value = selectedOption.getAttribute('data-codigo');
+    }
 
-        function enviarDados(horario) {
-            // Captura os valores do formulário para o horário específico
-            var selectedDate = document.getElementById('displaySelectedData').textContent;
-            var profissionalId = document.getElementById('profissionais').value;
-            var especialidadeId = document.getElementById('especialidade').value;
-            var paciente = document.querySelector(`input[name="paciente[${horario}]"]`).value;
-            var hora = document.querySelector(`input[name="hora[${horario}]"]`).value;
-            var celular = document.querySelector(`input[name="celular[${horario}]"]`).value;
-            var matricula = document.querySelector(`input[name="matricula[${horario}]"]`).value;
-            var convenio = document.querySelector(`select[name="convenio[${horario}]"]`).value;
-            var procedimento = document.querySelector(`select[name="procedimento_id[${horario}]"]`).value;
-            var codigo = document.querySelector(`input[name="codigo[${horario}]"]`).value;
+    function enviarTodosDados() {
+    var horariosRows = document.querySelectorAll('#horariosDisponiveis tbody tr'); // Seleciona todas as linhas da tabela
+    var todosHorariosDados = []; // Array para armazenar os dados de todas as linhas
 
-            // Dados a serem enviados
-            var requestData = {
+    horariosRows.forEach(row => {
+        // Capturar os valores de todos os inputs da linha
+        var paciente = row.querySelector('input[name^="paciente"]')?.value || '';
+        var hora = row.querySelector('input[name^="hora"]')?.value || '';
+        var celular = row.querySelector('input[name^="celular"]')?.value || '';
+        var matricula = row.querySelector('input[name^="matricula"]')?.value || '';
+        var convenio = row.querySelector('select[name^="convenio"]')?.value || '';
+        var procedimento = row.querySelector('select[name^="procedimento_id"]')?.value || '';
+        var codigo = row.querySelector('input[name^="codigo"]')?.value || '';
+
+        var selectedDate = document.getElementById('displaySelectedData').textContent;
+        var profissionalId = document.getElementById('profissionais').value;
+        var especialidadeId = document.getElementById('especialidade').value;
+
+        // Só adiciona ao array se o campo "procedimento" não estiver vazio
+        if (procedimento !== '') {
+            // Coletar todos os dados em um objeto
+            var dadosHorario = {
                 paciente: paciente,
                 celular: celular,
                 convenio: convenio,
@@ -288,27 +294,33 @@
                 especialidadeId: especialidadeId
             };
 
-            // Log dos dados que serão enviados
-            console.log('Dados enviados:', requestData);
-
-            // Envio dos dados diretamente no corpo da solicitação
-            fetch('/agendar', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify(requestData)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Dados enviados com sucesso!');
-                    } else {
-                        alert('Erro ao enviar dados: ' + (data.message || 'Falha desconhecida'));
-                    }
-                })
-                .catch(error => console.error('Erro ao enviar dados:', error));
+            // Adicionar os dados ao array
+            todosHorariosDados.push(dadosHorario);
         }
-    </script>
+    });
+
+    // Mostrar o array de dados no console
+    console.log('Todos os dados:', todosHorariosDados);
+
+    fetch('/agendar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify(todosHorariosDados)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Dados enviados com sucesso!');
+        } else {
+            alert('Erro ao enviar dados: ' + (data.message || 'Falha desconhecida'));
+        }
+    })
+    .catch(error => console.error('Erro ao enviar dados:', error));
+}
+
+
+</script>
 @endsection
