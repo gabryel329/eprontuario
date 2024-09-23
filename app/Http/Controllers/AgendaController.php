@@ -191,7 +191,7 @@ class AgendaController extends Controller
             if ($existeAgenda) {
                 // Atualiza a agenda existente
                 $existeAgenda->procedimento_id = $procedimentoId;
-                $existeAgenda->status = 'MARCADO';
+                $existeAgenda->status = "MARCADO";
                 $existeAgenda->name = $paciente;
                 $existeAgenda->celular = $celular;
                 $existeAgenda->matricula = $matricula;
@@ -205,7 +205,7 @@ class AgendaController extends Controller
                 $novoAgendamento->hora = $hora;
                 $novoAgendamento->data = $data;
                 $novoAgendamento->procedimento_id = $procedimentoId;
-                $novoAgendamento->status = 'MARCADO';
+                $novoAgendamento->status = "MARCADO";
                 $novoAgendamento->name = $paciente;
                 $novoAgendamento->celular = $celular;
                 $novoAgendamento->matricula = $matricula;
@@ -614,29 +614,25 @@ class AgendaController extends Controller
 
         $agendasMarcado = Agenda::where('profissional_id', $profissionalId)
             ->where('data', $data)
-            ->where('status', 'MARCADO')
-            ->whereNotNull('paciente_id')
+            ->where('status', "MARCADO")
             ->orderBy('hora', 'asc')
             ->get();
 
         $agendasEvadio = Agenda::where('profissional_id', $profissionalId)
             ->where('data', $data)
             ->where('status', 'EVADIO')
-            ->whereNotNull('paciente_id')
             ->orderBy('hora', 'asc')
             ->get();
 
         $agendasCancelado = Agenda::where('profissional_id', $profissionalId)
             ->where('data', $data)
             ->where('status', 'CANCELADO')
-            ->whereNotNull('paciente_id')
             ->orderBy('hora', 'asc')
             ->get();
 
         $agendasFinalizado = Agenda::where('profissional_id', $profissionalId)
             ->where('data', $data)
             ->where('status', 'FINALIZADO')
-            ->whereNotNull('paciente_id')
             ->orderBy('hora', 'asc')
             ->get();
 
