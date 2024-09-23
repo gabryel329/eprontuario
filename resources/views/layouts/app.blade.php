@@ -181,7 +181,7 @@ $currentDate = date('Y-m-d');
             });
         });
         $(document).ready(function() {
-            $('#procedimento_id').select2({
+            $('.procedimento_id').select2({
                 placeholder: "Escolha",
                 allowClear: true
             });

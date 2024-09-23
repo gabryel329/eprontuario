@@ -93,7 +93,13 @@
                                             <tr>
                                                 <td>{{ $item->id }}</td>
                                                 <td>{{ $item->hora }}</td>
-                                                <td>{{ $item->paciente->name }}</td>
+                                                <td>
+                                                    @if ($item->paciente)
+                                                        {{ $item->paciente->name }}
+                                                    @else
+                                                        {{ $item->name }}
+                                                    @endif
+                                                </td>
                                                 <td title="{{ $item->procedimento_id }}">{{ $item->procedimento_id }}</td>
                                                 <td>
                                                     <a type="submit" class="btn btn-warning form-control chamar-btn"
@@ -157,7 +163,13 @@
                                         <tr>
                                             <td>{{ $item->id }}</td>
                                             <td>{{ $item->hora }}</td>
-                                            <td>{{ $item->paciente->name }}</td>
+                                            <td>
+                                                @if ($item->paciente)
+                                                    {{ $item->paciente->name }}
+                                                @else
+                                                    {{ $item->name }}
+                                                @endif
+                                            </td>
                                             <td title="{{ $item->procedimento_id }}">{{ $item->procedimento_id }}</td>
                                         </tr>
                                     @endforeach
@@ -179,7 +191,13 @@
                                         <tr>
                                             <td>{{ $item->id }}</td>
                                             <td>{{ $item->hora }}</td>
-                                            <td>{{ $item->paciente->name }}</td>
+                                            <td>
+                                                @if ($item->paciente)
+                                                    {{ $item->paciente->name }}
+                                                @else
+                                                    {{ $item->name }}
+                                                @endif
+                                            </td>
                                             <td title="{{ $item->procedimento_id }}">{{ $item->procedimento_id }}</td>
                                         </tr>
                                     @endforeach
@@ -201,7 +219,13 @@
                                         <tr>
                                             <td>{{ $item->id }}</td>
                                             <td>{{ $item->hora }}</td>
-                                            <td>{{ $item->paciente->name }}</td>
+                                            <td>
+                                                @if ($item->paciente)
+                                                    {{ $item->paciente->name }}
+                                                @else
+                                                    {{ $item->name }}
+                                                @endif
+                                            </td>
                                             <td title="{{ $item->procedimento_id }}">{{ $item->procedimento_id }}</td>
                                         </tr>
                                     @endforeach

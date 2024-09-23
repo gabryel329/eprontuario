@@ -422,7 +422,7 @@
                                                             <tbody id="exame-table-body">
                                                                 <tr class="exame-row">
                                                                     <td>
-                                                                        <select class="form-control procedimento_id"
+                                                                        <select class="form-control"
                                                                             name="procedimento_id[]" id="procedimento_id">
                                                                             <option value="">Selecione o Procedimento
                                                                             </option>

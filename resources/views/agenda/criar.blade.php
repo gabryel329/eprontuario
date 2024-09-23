@@ -156,7 +156,7 @@
                             placeholder="Pesquisar por nome ou CPF...">
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-hover text-center">
+                        <table class="table table-hover text-center" id="pacienteTable">
                             <thead>
                                 <tr>
                                     <th>Nome</th>
@@ -344,20 +344,22 @@
         }
 
         document.getElementById('pacienteSearch').addEventListener('keyup', function() {
-            var input = this.value.toLowerCase();
-            var rows = document.getElementById('pacienteTable').getElementsByTagName('tbody')[0]
-                .getElementsByTagName('tr');
+    var input = this.value.toLowerCase();
+    var rows = document.getElementById('pacienteTable').getElementsByTagName('tbody')[0]
+        .getElementsByTagName('tr');
 
-            for (var i = 0; i < rows.length; i++) {
-                var name = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
-                var cpf = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
-                if (name.indexOf(input) > -1 || cpf.indexOf(input) > -1) {
-                    rows[i].style.display = "";
-                } else {
-                    rows[i].style.display = "none";
-                }
-            }
-        });
+    for (var i = 0; i < rows.length; i++) {
+        var name = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
+        var cpf = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+        
+        // Verifica se o nome ou CPF contém o valor digitado no input
+        if (name.includes(input) || cpf.includes(input)) {
+            rows[i].style.display = "";
+        } else {
+            rows[i].style.display = "none";
+        }
+    }
+});
 
         function selectPaciente(id, name, celular) {
             document.getElementById('name').value = name;

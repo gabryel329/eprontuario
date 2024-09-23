@@ -434,7 +434,8 @@ class AtendimentosController extends Controller
             ->leftJoin('exames as ex', 'ex.agenda_id', '=', 'ag.id')
             ->leftJoin('remedios as re', 're.agenda_id', '=', 'ag.id')
             ->leftJoin('procedimentos as proc2', 'ex.procedimento_id', '=', 'proc2.id')
-            ->leftJoin('medicamentos as med', 're.medicamento_id', '=', 'med.id');
+            ->leftJoin('medicamentos as med', 're.medicamento_id', '=', 'med.id')
+            ->where('ag.status', 'FINALIZADO');
 
         // Aplica os filtros apenas se os parâmetros não estiverem vazios
         if (!empty($data)) {

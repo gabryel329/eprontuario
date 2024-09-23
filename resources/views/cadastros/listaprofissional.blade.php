@@ -24,6 +24,52 @@
     @endif
     <div class="row">
         <div class="col-md-12">
+            <div class="mb-3 col-md-2">
+                <button type="button" class="btn btn-primary form-control" data-bs-toggle="modal"
+                    data-bs-target="#pacienteModal">Buscar <i class="bi bi-search"></i>
+                </button>
+            </div>
+            <div class="modal fade" id="pacienteModal" tabindex="-1" aria-labelledby="pacienteModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="pacienteModalLabel">Selecione o Profissional</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <input class="form-control" id="pacienteSearch" type="text"
+                                    placeholder="Pesquisar por nome ou CPF...">
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover text-center" id="pacienteTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>CPF</th>
+                                            <th>Ação</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($profissioanls as $p)
+                                            <tr>
+                                                <td>{{ $p->name }}</td>
+                                                <td>{{ $p->cpf }}</td>
+                                                <td>
+                                                    <a href="{{ route('profissional.edit', $p->id) }}" class="btn btn-success">
+                                                        Selecionar
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="tile">
                 <div class="tile-body">
                     <div class="table-responsive">
@@ -213,7 +259,24 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
-<script>
+<script>1
+document.getElementById('pacienteSearch').addEventListener('keyup', function() {
+    var input = this.value.toLowerCase();
+    var rows = document.getElementById('pacienteTable').getElementsByTagName('tbody')[0]
+        .getElementsByTagName('tr');
+
+    for (var i = 0; i < rows.length; i++) {
+        var name = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
+        var cpf = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+        
+        // Verifica se o nome ou CPF contém o valor digitado no input
+        if (name.includes(input) || cpf.includes(input)) {
+            rows[i].style.display = "";
+        } else {
+            rows[i].style.display = "none";
+        }
+    }
+});
 $(document).ready(function(){
     $('#cpf').mask('000.000.000-00');
     $('#telefone').mask('(00) 0000-0000');

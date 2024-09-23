@@ -23,6 +23,50 @@
             </div>
         @endif
         <div class="row">
+            <div class="mb-3 col-md-2">
+                <button type="button" class="btn btn-primary form-control" data-bs-toggle="modal"
+                    data-bs-target="#pacienteModal">Buscar <i class="bi bi-search"></i>
+                </button>
+            </div>
+            <div class="modal fade" id="pacienteModal" tabindex="-1" aria-labelledby="pacienteModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="pacienteModalLabel">Selecione o Profissional</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <input class="form-control" id="pacienteSearch" type="text"
+                                    placeholder="Pesquisar por Nome ou E-mail...">
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover text-center" id="pacienteTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>E-mail</th>
+                                            <th>Ação</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($users as $p)
+                                            <tr>
+                                                <td>{{ $p->name }}</td>
+                                                <td>{{ $p->email }}</td>
+                                                <td>
+                                                    <button class="btn btn-primary" type="button" onclick="editModal('{{ $p->id }}')">Selecionar</button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-12">
                 <div class="tile">
                     <div class="tile-body">
@@ -128,7 +172,32 @@
         </div>
     </main>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <script>
+        function editModal(pacienteId) {
+            // Abrir o modal correspondente ao ID do paciente selecionado
+            var modal = new bootstrap.Modal(document.getElementById('editModal' + pacienteId));
+            modal.show();
+        }
+
+        document.getElementById('pacienteSearch').addEventListener('keyup', function() {
+    var input = this.value.toLowerCase();
+    var rows = document.getElementById('pacienteTable').getElementsByTagName('tbody')[0]
+        .getElementsByTagName('tr');
+
+    for (var i = 0; i < rows.length; i++) {
+        var name = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
+        var email = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+        
+        // Verifica se o nome ou CPF contém o valor digitado no input
+        if (name.includes(input) || email.includes(input)) {
+            rows[i].style.display = "";
+        } else {
+            rows[i].style.display = "none";
+        }
+    }
+});
+
         function togglePassword(id, show) {
             var passwordField = document.getElementById('password' + id);
             passwordField.type = show ? 'text' : 'password';
