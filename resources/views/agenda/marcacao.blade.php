@@ -261,95 +261,95 @@
     }
 
     function enviarTodosDados() {
-    var horariosRows = document.querySelectorAll('#horariosDisponiveis tbody tr'); // Seleciona todas as linhas da tabela
-    var todosHorariosDados = []; // Array para armazenar os dados de todas as linhas
-    var horarioInvalido = false; // Variável para verificar se existe algum horário inválido (passado)
+        var horariosRows = document.querySelectorAll('#horariosDisponiveis tbody tr'); // Seleciona todas as linhas da tabela
+        var todosHorariosDados = []; // Array para armazenar os dados de todas as linhas
+        var horarioInvalido = false; // Variável para verificar se existe algum horário inválido (passado)
 
-    // Obter a data e hora atuais
-    var dataAtual = new Date();
-    var anoAtual = dataAtual.getFullYear();
-    var mesAtual = String(dataAtual.getMonth() + 1).padStart(2, '0'); // Mês começa em 0, por isso é necessário adicionar 1
-    var diaAtual = String(dataAtual.getDate()).padStart(2, '0');
-    var horaAtual = dataAtual.getHours();
-    var minutosAtuais = dataAtual.getMinutes();
+        // Obter a data e hora atuais
+        var dataAtual = new Date();
+        var anoAtual = dataAtual.getFullYear();
+        var mesAtual = String(dataAtual.getMonth() + 1).padStart(2, '0'); // Mês começa em 0, por isso é necessário adicionar 1
+        var diaAtual = String(dataAtual.getDate()).padStart(2, '0');
+        var horaAtual = dataAtual.getHours();
+        var minutosAtuais = dataAtual.getMinutes();
 
-    // Formatar a data atual no formato "DD/MM/YYYY"
-    var dataFormatadaAtual = diaAtual + '/' + mesAtual + '/' + anoAtual;
+        // Formatar a data atual no formato "DD/MM/YYYY"
+        var dataFormatadaAtual = diaAtual + '/' + mesAtual + '/' + anoAtual;
 
-    horariosRows.forEach(row => {
-        // Capturar os valores de todos os inputs da linha
-        var paciente = row.querySelector('input[name^="paciente"]')?.value || '';
-        var hora = row.querySelector('input[name^="hora"]')?.value || '';
-        var celular = row.querySelector('input[name^="celular"]')?.value || '';
-        var matricula = row.querySelector('input[name^="matricula"]')?.value || '';
-        var convenio = row.querySelector('select[name^="convenio"]')?.value || '';
-        var procedimento = row.querySelector('select[name^="procedimento_id"]')?.value || '';
-        var codigo = row.querySelector('input[name^="codigo"]')?.value || '';
+        horariosRows.forEach(row => {
+            // Capturar os valores de todos os inputs da linha
+            var paciente = row.querySelector('input[name^="paciente"]')?.value || '';
+            var hora = row.querySelector('input[name^="hora"]')?.value || '';
+            var celular = row.querySelector('input[name^="celular"]')?.value || '';
+            var matricula = row.querySelector('input[name^="matricula"]')?.value || '';
+            var convenio = row.querySelector('select[name^="convenio"]')?.value || '';
+            var procedimento = row.querySelector('select[name^="procedimento_id"]')?.value || '';
+            var codigo = row.querySelector('input[name^="codigo"]')?.value || '';
 
-        var selectedDate = document.getElementById('displaySelectedData').textContent;
-        var profissionalId = document.getElementById('profissionais').value;
-        var especialidadeId = document.getElementById('especialidade').value;
+            var selectedDate = document.getElementById('displaySelectedData').textContent;
+            var profissionalId = document.getElementById('profissionais').value;
+            var especialidadeId = document.getElementById('especialidade').value;
 
-        // Verifica se a data selecionada é igual à data atual
-        if (selectedDate === dataFormatadaAtual) {
-            // Se a data for igual, verificar se o horário é maior que o horário atual
-            var [horaAgendada, minutosAgendados] = hora.split(':').map(Number); // Quebrar a hora agendada em horas e minutos
+            // Verifica se a data selecionada é igual à data atual
+            if (selectedDate === dataFormatadaAtual) {
+                // Se a data for igual, verificar se o horário é maior que o horário atual
+                var [horaAgendada, minutosAgendados] = hora.split(':').map(Number); // Quebrar a hora agendada em horas e minutos
 
-            // Verificar se o horário agendado é menor que o horário atual
-            if (horaAgendada < horaAtual || (horaAgendada === horaAtual && minutosAgendados <= minutosAtuais)) {
-                horarioInvalido = true; // Marcar como horário inválido
+                // Verificar se o horário agendado é menor que o horário atual
+                if (horaAgendada < horaAtual || (horaAgendada === horaAtual && minutosAgendados <= minutosAtuais)) {
+                    horarioInvalido = true; // Marcar como horário inválido
+                }
             }
+
+            // Só adiciona ao array se o campo "procedimento" não estiver vazio
+            if (procedimento !== '') {
+                // Coletar todos os dados em um objeto
+                var dadosHorario = {
+                    paciente: paciente,
+                    celular: celular,
+                    convenio: convenio,
+                    matricula: matricula,
+                    procedimento: procedimento,
+                    codigo: codigo,
+                    horario: hora,
+                    data: selectedDate,
+                    profissionalId: profissionalId,
+                    especialidadeId: especialidadeId
+                };
+
+                // Adicionar os dados ao array
+                todosHorariosDados.push(dadosHorario);
+            }
+        });
+
+        // Se algum horário for inválido, exibir alerta e não enviar os dados
+        if (horarioInvalido) {
+            alert('Não é possível marcar porque o horário já passou ou é igual ao horário atual.');
+            return; // Cancela o envio dos dados
         }
 
-        // Só adiciona ao array se o campo "procedimento" não estiver vazio
-        if (procedimento !== '') {
-            // Coletar todos os dados em um objeto
-            var dadosHorario = {
-                paciente: paciente,
-                celular: celular,
-                convenio: convenio,
-                matricula: matricula,
-                procedimento: procedimento,
-                codigo: codigo,
-                horario: hora,
-                data: selectedDate,
-                profissionalId: profissionalId,
-                especialidadeId: especialidadeId
-            };
+        // Mostrar o array de dados no console
+        console.log('Todos os dados:', todosHorariosDados);
 
-            // Adicionar os dados ao array
-            todosHorariosDados.push(dadosHorario);
-        }
-    });
-
-    // Se algum horário for inválido, exibir alerta e não enviar os dados
-    if (horarioInvalido) {
-        alert('Não é possível marcar porque o horário já passou ou é igual ao horário atual.');
-        return; // Cancela o envio dos dados
+        // Enviar os dados se nenhum horário estiver inválido
+        fetch('/agendar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify(todosHorariosDados)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Dados enviados com sucesso!');
+            } else {
+                alert('Erro ao enviar dados: ' + (data.message || 'Falha desconhecida'));
+            }
+        })
+        
     }
-
-    // Mostrar o array de dados no console
-    console.log('Todos os dados:', todosHorariosDados);
-
-    // Enviar os dados se nenhum horário estiver inválido
-    fetch('/agendar', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify(todosHorariosDados)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Dados enviados com sucesso!');
-        } else {
-            alert('Erro ao enviar dados: ' + (data.message || 'Falha desconhecida'));
-        }
-    })
-    .catch(error => console.error('Erro ao enviar dados:', error));
-}
 
 </script>
 @endsection
