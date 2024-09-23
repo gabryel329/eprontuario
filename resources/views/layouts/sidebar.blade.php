@@ -126,15 +126,15 @@
                         <ul>
                             <li>
                                 <a class="treeview-item" href="{{ route('guia_honorario.index') }}"><i
-                                class="icon bi bi-cash"></i> Guia de Honorários</a>
+                                class="icon bi bi-file-earmark-post"></i> Guia de Honorários</a>
                             </li>
                             <li>
                                 <a class="treeview-item" href="{{ route('relatorioFinanceiro.index') }}"><i
-                                class="icon bi bi-cash"></i> Guia SP/SADT</a>
+                                class="icon bi bi-file-earmark-break"></i> Guia SP/SADT</a>
                             </li>
                             <li>
                                 <a class="treeview-item" href="{{ route('relatorioFinanceiro.index') }}"><i
-                                class="icon bi bi-cash"></i> Guia de Consulta</a>
+                                class="icon bi bi-file-earmark-medical"></i> Guia de Consulta</a>
                             </li>
                             <li><a class="treeview-item" href="{{ route('guiatiss.index') }}"><i
                             class="icon bi bi-file-earmark-arrow-up"></i> Guia TISS</a></li>
