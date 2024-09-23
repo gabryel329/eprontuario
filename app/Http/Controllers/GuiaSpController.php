@@ -2,24 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\GuiaHonorario;
 use App\Models\Convenio;
+use App\Models\GuiaSp;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class GuiaHonorarioController extends Controller
+class GuiaSpController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        // Buscar todos os registros
-        $guias = GuiaHonorario::all();
+        $guiasp = GuiaSp::all();
         $convenios = Convenio::all();
-        // Retornar a view com os dados
-        return view('guias.guia_honorario', compact('guias', 'convenios'));
+        return view('guias.guiasp', compact('guiasp', 'convenios'));
     }
 
+    public function listarGuiasSp(Request $request)
+    {
+        $convenio_id = $request->get('convenio_id');
+
+        if (!$convenio_id) {
+            return response()->json(['error' => 'Convênio não encontrado.'], 404);
+        }
+
+        $guiasp = GuiaSp::where('convenio_id', $convenio_id)->get();
+
+        return response()->json(['guias' => $guiasp]);
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -56,7 +67,7 @@ class GuiaHonorarioController extends Controller
         $hash = $request->input('hash');
 
 
-        $guiaHonorario = GuiaHonorario::create([
+        $guiasp = GuiaSp::create([
             'user_id' => $user_id,
             'convenio_id' => $convenio_id,
             'registro_ans' => $registro_ans,
@@ -79,25 +90,12 @@ class GuiaHonorarioController extends Controller
             'hash' => $hash,
         ]);
 
-        return redirect()->back()->with('success', 'Guia TISS criada com sucesso');
+        return redirect()->back()->with('success', 'Guia SP/SADT criada com sucesso');
     }
 
-    public function listarGuiasHonorario(Request $request)
+    public function visualizarSp($id)
     {
-        $convenio_id = $request->get('convenio_id');
-
-        if (!$convenio_id) {
-            return response()->json(['error' => 'Convênio não encontrado.'], 404);
-        }
-
-        $guiaHonorario = GuiaHonorario::where('convenio_id', $convenio_id)->get();
-
-        return response()->json(['guias' => $guiaHonorario]);
-    }
-
-    public function visualizarHonorario($id)
-    {
-        $guia = GuiaHonorario::find($id);
+        $guia = GuiaSp::find($id);
         if ($guia) {
             return response()->json($guia);
         } else {
@@ -105,11 +103,10 @@ class GuiaHonorarioController extends Controller
         }
     }
 
-
     /**
      * Display the specified resource.
      */
-    public function show(GuiaHonorario $guiaHonorario)
+    public function show(GuiaSp $guiasp)
     {
         //
     }
@@ -117,7 +114,7 @@ class GuiaHonorarioController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(GuiaHonorario $guiaHonorario)
+    public function edit(GuiaSp $guiasp)
     {
         //
     }
@@ -125,7 +122,7 @@ class GuiaHonorarioController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, GuiaHonorario $guiaHonorario)
+    public function update(Request $request, GuiaSp $guiasp)
     {
         // Validação dos dados
         $validatedData = $request->validate([
@@ -151,7 +148,7 @@ class GuiaHonorarioController extends Controller
         ]);
 
         // Atualizar a guia TISS
-        $guiaHonorario->update($validatedData);
+        $guiasp->update($validatedData);
 
         return redirect()->back()->with('success', 'Guia TISS atualizada com sucesso');
     }
@@ -159,7 +156,7 @@ class GuiaHonorarioController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(GuiaHonorario $guiaHonorario)
+    public function destroy(GuiaSp $guiasp)
     {
         //
     }

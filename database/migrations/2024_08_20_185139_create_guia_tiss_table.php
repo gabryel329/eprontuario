@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('numero_carteira')->nullable(); // Número da carteira do beneficiário
             $table->string('nome_beneficiario')->nullable(); // Nome do beneficiário
             $table->date('data_atendimento')->nullable(); // Data do atendimento
-            $table->time('hora_inicio_atendimento')->nullable(); // Hora de início do atendimento
+            $table->string('hora_inicio_atendimento')->nullable(); // Hora de início do atendimento
             $table->string('tipo_consulta')->nullable(); // Tipo de consulta
             $table->string('indicacao_acidente')->nullable(); // Indicação de acidente
             $table->string('codigo_tabela')->nullable(); // Código da tabela usada para procedimentos

@@ -1,62 +1,60 @@
 @extends('layouts.app')
 @section('content')
-<main class="app-content">
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-    @if (session('error'))
-        <div class="alert alert-warning">
-            {!! session('error') !!}
-        </div>
-    @endif
-    <div class="row">
-        <div class="col-md-12">
-            <div class="tile">
-                <div class="tile-title">
-                    <label class="form-label">Selecione o Convênio</label>
-                    <select name="convenio_id" id="convenio_id" class="form-select" required>
-                        <option value="">Escolha o Convênio</option>
-                        @foreach ($convenios as $convenio)
-                            <option value="{{ $convenio->id }}">
-                                {{ $convenio->nome }}</option>
-                        @endforeach
-                    </select>
+    <main class="app-content">
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-warning">
+                {!! session('error') !!}
+            </div>
+        @endif
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tile">
+                    <div class="tile-title">
+                        <label class="form-label">Selecione o Convênio</label>
+                        <select name="convenio_id" id="convenio_id" class="form-select" required>
+                            <option value="">Escolha o Convênio</option>
+                            @foreach ($convenios as $convenio)
+                                <option value="{{ $convenio->id }}">
+                                    {{ $convenio->nome }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-md-12">
-            <div class="tile">
-                <div class="tile-title d-flex justify-content-between align-items-center">
-                    <label class="form-label">Lista de Guias</label>
-                    <button type="button" class="btn btn-primary" id="btnNovoGuia" data-bs-toggle="modal" data-bs-target="#novoGuiaModal" disabled>
-                        <i class="bi bi-plus-circle"></i> Novo
-                    </button>
-                </div>
-                <div class="table-responsive">
-                <table class="table table-hover table-bordered text-center">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Registro ANS</th>
-                            <th>Data</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="listaGuias">
-                        <!-- Guias serão listadas aqui via AJAX -->
-                    </tbody>
-                </table>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="tile">
+                    <div class="tile-title d-flex justify-content-between align-items-center">
+                        <label class="form-label">Lista de Guias</label>
+                        <button type="button" class="btn btn-primary" id="btnNovoGuia" data-bs-toggle="modal" data-bs-target="#novoGuiaModal" disabled>
+                            <i class="bi bi-plus-circle"></i> Novo
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                    <table class="table table-hover table-bordered text-center">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Registro ANS</th>
+                                <th>Data</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listaGuias">
+                            <!-- Guias serão listadas aqui via AJAX -->
+                        </tbody>
+                    </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
-
-<!-- Modal para visualização de guias -->
+    </main>
 <div class="modal fade" id="visualizarGuiaModal" tabindex="-1" aria-labelledby="visualizarGuiaModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -149,8 +147,6 @@
 </div>
 </div>
 
-
-
 <!-- Modal para criar nova guia -->
 <div class="modal fade" id="novoGuiaModal" tabindex="-1" aria-labelledby="novoGuiaModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
@@ -160,7 +156,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{route('guiahonorario.store')}}" method="POST" enctype="multipart/form-data" id="formNovaGuia">
+                <form action="{{route('guiasp.store')}}" method="POST" enctype="multipart/form-data" id="formNovaGuia">
                     @csrf
                     <input type="hidden" id="convenio_id_hidden" name="convenio_id">
                     <div class="row">
@@ -263,7 +259,7 @@ $(document).ready(function() {
         var convenio_id = $(this).val();
         if (convenio_id) {
             $.ajax({
-                url: '/guia-honorario/listar',
+                url: '/guia-sp/listar',
                 type: 'GET',
                 data: { convenio_id: convenio_id },
                 success: function(response) {
@@ -311,7 +307,7 @@ $(document).ready(function() {
     
     // Fazer a requisição AJAX para buscar os detalhes da guia
     $.ajax({
-        url: '/guia-honorario/detalhes/' + guiaId,  // Atualize para a rota correta
+        url: '/guia-sp/detalhes/' + guiaId,  // Atualize para a rota correta
         type: 'GET',
         success: function(response) {
             // Preencher os campos do formulário com os dados da guia

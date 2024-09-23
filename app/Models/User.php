@@ -66,4 +66,12 @@ class User extends Authenticatable
     {
         return $this->belongsTo(GuiaTiss::class, 'user_id');
     }
+    public function guiasp()
+    {
+        return $this->belongsTo(GuiaSp::class, 'user_id');
+    }
+    public function guiahonorario()
+    {
+        return $this->belongsTo(GuiaHonorario::class, 'user_id');
+    }
 }

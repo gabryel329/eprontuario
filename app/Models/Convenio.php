@@ -28,6 +28,14 @@ class Convenio extends Model
     {
         return $this->hasMany(GuiaTiss::class, 'convenio_id');
     }
+    public function guiahonorario()
+    {
+        return $this->hasMany(GuiaHonorario::class, 'convenio_id');
+    }
+    public function guiasp()
+    {
+        return $this->hasMany(GuiaSp::class, 'convenio_id');
+    }
     public function pacientes()
     {
         return $this->hasMany(Pacientes::class, 'convenio_id');

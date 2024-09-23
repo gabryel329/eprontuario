@@ -19,7 +19,7 @@ class GuiaTissController extends Controller
         return view('guias.guiatiss', compact('guiatiss', 'convenios'));
     }
 
-    public function listarGuiasPorConvenio(Request $request)
+    public function listarGuiasTiss(Request $request)
     {
         $convenio_id = $request->get('convenio_id');
 
@@ -93,6 +93,16 @@ class GuiaTissController extends Controller
         return redirect()->back()->with('success', 'Guia TISS criada com sucesso')->with('guiaTiss', $guiaTiss);
     }
 
+    public function visualizarTiss($id)
+    {
+        $guia = GuiaTiss::find($id);
+        if ($guia) {
+            return response()->json($guia);
+        } else {
+            return response()->json(['error' => 'Guia não encontrada.'], 404);
+        }
+    }
+
     /**
      * Display the specified resource.
      */
@@ -140,7 +150,7 @@ class GuiaTissController extends Controller
         // Atualizar a guia TISS
         $guiaTiss->update($validatedData);
 
-        return redirect()->route('guiaTiss.index')->with('success', 'Guia TISS atualizada com sucesso');
+        return redirect()->back()->with('success', 'Guia TISS atualizada com sucesso');
     }
 
     /**

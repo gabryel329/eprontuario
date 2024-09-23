@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('guia_honorarios', function (Blueprint $table) {
+        Schema::create('guia_sps', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
@@ -38,7 +38,6 @@ return new class extends Migration
             $table->timestamps(); // Timestamps para created_at e updated_at
             $table->softDeletes();
         });
-        
     }
 
     /**
@@ -46,6 +45,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('guia_honorarios');
+        Schema::dropIfExists('guia_sps');
     }
 };
