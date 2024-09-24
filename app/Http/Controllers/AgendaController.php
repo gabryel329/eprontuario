@@ -275,7 +275,14 @@ class AgendaController extends Controller
             }
         }
 
-        return response()->json(['success' => true]);
+        try {
+            // Seu código aqui
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            // Retorna a mensagem de erro para o front-end
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+        
 
     }
 
