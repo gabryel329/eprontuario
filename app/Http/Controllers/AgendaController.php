@@ -169,9 +169,10 @@ class AgendaController extends Controller
     {
         // Recebe o array de agendamentos
         $agendamentos = $request->all();
-
+        
         foreach ($agendamentos as $agendamentoData) {
-            $data = $agendamentoData['data'];
+            // Converte a data de d/m/Y para Y-m-d se necessário
+            $data = DateTime::createFromFormat('d/m/Y', $agendamentoData['data'])->format('Y-m-d');
             $hora = $agendamentoData['horario'];
             $profissionalId = $agendamentoData['profissionalId'];
             $especialidadeId = $agendamentoData['especialidadeId'];
@@ -181,13 +182,13 @@ class AgendaController extends Controller
             $matricula = $agendamentoData['matricula'];
             $codigo = $agendamentoData['codigo'];
             $convenioId = $agendamentoData['convenio'];
-
+    
             // Verifica se já existe uma agenda com a mesma data, hora, profissional e especialidade
             $existeAgenda = Agenda::where('data', $data)
                 ->where('hora', $hora)
                 ->where('profissional_id', $profissionalId)
                 ->first();
-
+    
             if ($existeAgenda) {
                 // Atualiza a agenda existente
                 $existeAgenda->procedimento_id = $procedimentoId;
@@ -215,14 +216,10 @@ class AgendaController extends Controller
                 $novoAgendamento->codigo = $codigo;
                 $novoAgendamento->save();
             }
-
-
-            // Converte a data de d/m/Y para Y-m-d se necessário
-            $dataConvertida = DateTime::createFromFormat('d/m/Y', $data)->format('Y-m-d');
-
+    
             // Agora calcula o dia da semana (1 = seg, 2 = ter, ..., 7 = dom)
-            $diaDaSemana = date('N', strtotime($dataConvertida));
-
+            $diaDaSemana = date('N', strtotime($data));
+    
             // Determina a coluna de disponibilidade com base no dia da semana
             $colunaDia = '';
             switch ($diaDaSemana) {
@@ -248,7 +245,7 @@ class AgendaController extends Controller
                     $colunaDia = 'dom';  // Domingo
                     break;
             }
-
+    
             // Verifica se a disponibilidade já existe para o dia da semana correspondente
             $existeDisponibilidade = DB::table('disponibilidades')
                 ->where('hora', $hora)
@@ -256,7 +253,7 @@ class AgendaController extends Controller
                 ->where('especialidade_id', $especialidadeId)
                 ->whereNotNull($colunaDia)  // Verifica se há disponibilidade no dia correto
                 ->first();
-
+    
             // Se houver disponibilidade, atualiza os dados
             if ($existeDisponibilidade) {
                 DB::table('disponibilidades')
@@ -268,24 +265,20 @@ class AgendaController extends Controller
                         'matricula' => $matricula,
                         'codigo' => $codigo,
                         'convenio_id' => $convenioId,
-                        'data' => $data
+                        'data' => $data // Certifique-se de usar o formato correto aqui
                     ]);
             } else {
                 return response()->json(['success' => false, 'message' => 'Disponibilidade não encontrada para o dia da semana.']);
             }
         }
-
+    
         try {
-            // Seu código aqui
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
-            // Retorna a mensagem de erro para o front-end
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
-        
-
     }
-
+    
 
     public function getProfissionais($especialidadeId)
     {

@@ -345,32 +345,21 @@
 
             // Enviar os dados se nenhum horário estiver inválido
             fetch('/agendar', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-    },
-    body: JSON.stringify(todosHorariosDados)
-})
-.then(response => {
-    // Verifica se a resposta é JSON antes de tentar fazer o parse
-    if (!response.ok) {
-        return response.text().then(text => { throw new Error(text) });
-    }
-    return response.json();
-})
-.then(data => {
-    if (data.success) {
-        alert('Dados atualizados com sucesso!');
-    } else {
-        alert('Erro ao enviar dados: ' + (data.message || 'Falha desconhecida'));
-    }
-})
-.catch(error => {
-    console.error('Erro ao processar resposta:', error);
-    alert('Erro na requisição: ' + error.message);
-});
-
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify(todosHorariosDados)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Dados atulizados com sucesso!');
+                    } else {
+                        alert('Erro ao enviar dados: ' + (data.message || 'Falha desconhecida'));
+                    }
+                })
 
         }
     </script>
