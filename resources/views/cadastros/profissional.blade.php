@@ -39,9 +39,55 @@
         @endif
         <div class="row">
             <div class="col-md-12">
-                <div class="mb-3 col-md-4 align-self-end">
-                    <a class="btn btn-primary" href="{{ route('profissional.index1') }}">Lista de
-                        Profissionais</a>
+                <div class="mb-3 col-md-4 d-flex justify-content-start align-items-end">
+                    <a class="btn btn-primary me-2" href="{{ route('profissional.index1') }}">Lista de Profissionais</a>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pacienteModal">
+                        Buscar <i class="bi bi-search"></i>
+                    </button>
+                </div>
+                
+                <div class="modal fade" id="pacienteModal" tabindex="-1" aria-labelledby="pacienteModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="pacienteModalLabel">Selecione o Profissional</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <input class="form-control" id="pacienteSearch" type="text"
+                                        placeholder="Pesquisar por nome ou CPF...">
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover text-center" id="pacienteTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Nome</th>
+                                                <th>CPF</th>
+                                                <th>Ação</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($profissioanls as $p)
+                                                <tr>
+                                                    <td>{{ $p->name }}</td>
+                                                    <td>{{ $p->cpf }}</td>
+                                                    <td>
+                                                        <a href="{{ route('profissional.edit', $p->id) }}"
+                                                            class="btn btn-success">
+                                                            Selecionar
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="timeline-post">
                     <div class="col-md-12">
@@ -82,7 +128,8 @@
                                                 <label class="form-label">CPF: </label>
                                                 <input class="form-control" id="cpf" name="cpf" type="text"
                                                     required>
-                                                    <small id="cpfValidationMessage" style="color:red; display:none;">CPF inválido</small>
+                                                <small id="cpfValidationMessage" style="color:red; display:none;">CPF
+                                                    inválido</small>
                                             </div>
                                             <div class="mb-3 col-md-3">
                                                 <label class="form-label">Gênero</label>
@@ -235,53 +282,39 @@
                                                         <label class="form-label">Dias</label>
                                                         <div class="d-flex align-items-center">
                                                             <div class="form-check me-3">
-                                                                <label class="form-check-label"
-                                                                    for="manha_dom">D</label>
+                                                                <label class="form-check-label" for="manha_dom">D</label>
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    id="manha_dom" name="manha_dom"
-                                                                    value="S">
+                                                                    id="manha_dom" name="manha_dom" value="S">
                                                             </div>
                                                             <div class="form-check me-3">
-                                                                <label class="form-check-label"
-                                                                    for="manha_seg">S</label>
+                                                                <label class="form-check-label" for="manha_seg">S</label>
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    id="manha_seg" name="manha_seg"
-                                                                    value="S">
+                                                                    id="manha_seg" name="manha_seg" value="S">
                                                             </div>
                                                             <div class="form-check me-3">
-                                                                <label class="form-check-label"
-                                                                    for="manha_ter">T</label>
+                                                                <label class="form-check-label" for="manha_ter">T</label>
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    id="manha_ter" name="manha_ter"
-                                                                    value="S">
+                                                                    id="manha_ter" name="manha_ter" value="S">
                                                             </div>
                                                             <div class="form-check me-3">
-                                                                <label class="form-check-label"
-                                                                    for="manha_qua">Q</label>
+                                                                <label class="form-check-label" for="manha_qua">Q</label>
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    id="manha_qua" name="manha_qua"
-                                                                    value="S">
+                                                                    id="manha_qua" name="manha_qua" value="S">
                                                             </div>
                                                             <div class="form-check me-3">
-                                                                <label class="form-check-label"
-                                                                    for="manha_qui">Q</label>
+                                                                <label class="form-check-label" for="manha_qui">Q</label>
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    id="manha_qui" name="manha_qui"
-                                                                    value="S">
+                                                                    id="manha_qui" name="manha_qui" value="S">
                                                             </div>
                                                             <div class="form-check me-3">
-                                                                <label class="form-check-label"
-                                                                    for="manha_sex">S</label>
+                                                                <label class="form-check-label" for="manha_sex">S</label>
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    id="manha_sex" name="manha_sex"
-                                                                    value="S">
+                                                                    id="manha_sex" name="manha_sex" value="S">
                                                             </div>
                                                             <div class="form-check">
-                                                                <label class="form-check-label"
-                                                                    for="manha_sab">S</label>
+                                                                <label class="form-check-label" for="manha_sab">S</label>
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    id="manha_sab" name="manha_sab"
-                                                                    value="S">
+                                                                    id="manha_sab" name="manha_sab" value="S">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -323,6 +356,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
     <script>
+        document.getElementById('pacienteSearch').addEventListener('keyup', function() {
+            var input = this.value.toLowerCase();
+            var rows = document.getElementById('pacienteTable').getElementsByTagName('tbody')[0]
+                .getElementsByTagName('tr');
+
+            for (var i = 0; i < rows.length; i++) {
+                var name = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
+                var cpf = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+
+                // Verifica se o nome ou CPF contém o valor digitado no input
+                if (name.includes(input) || cpf.includes(input)) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        });
+
         $(document).ready(function() {
             $('#cpf').mask('000.000.000-00');
             $('#telefone').mask('(00) 0000-0000');
