@@ -275,7 +275,8 @@ class AgendaController extends Controller
             }
         }
 
-        return response()->json(['success' => true, 'message' => 'Agendamentos e disponibilidades processados com sucesso!']);
+        return response()->json(['success' => true]);
+
     }
 
 
