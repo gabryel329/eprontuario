@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Convenio;
+use App\Models\Empresas;
 use App\Models\GuiaTiss;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,7 @@ class GuiaTissController extends Controller
     {
         $guiatiss = GuiaTiss::all();
         $convenios = Convenio::all();
-        return view('guias.guiatiss', compact('guiatiss', 'convenios'));
+        return view('guias.guia_tiss', compact('guiatiss', 'convenios'));
     }
 
     public function listarGuiasTiss(Request $request)
@@ -91,6 +92,21 @@ class GuiaTissController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Guia TISS criada com sucesso')->with('guiaTiss', $guiaTiss);
+    }
+
+    public function impressaoGuia($id)
+    {
+        
+        $guia = GuiaTiss::find($id);
+        $empresa = Empresas::first(); 
+        $convenio = Convenio::find($guia->convenio_id);
+        
+        if (!$guia) {
+            return redirect()->back()->with('error', 'Guia não encontrada.');
+        }
+        
+
+        return view('formulario.guiatiss', compact('guia', 'empresa', 'convenio'));
     }
 
     public function visualizarTiss($id)

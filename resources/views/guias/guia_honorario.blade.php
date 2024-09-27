@@ -58,7 +58,7 @@
 
 <!-- Modal para visualização de guias -->
 <div class="modal fade" id="visualizarGuiaModal" tabindex="-1" aria-labelledby="visualizarGuiaModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-lg">
+<div class="modal-dialog modal-xl">
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title" id="visualizarGuiaModalLabel">Detalhes da Guia</h5>
@@ -68,79 +68,77 @@
         <form id="formVisualizarGuia">
             @csrf
             <input type="hidden" id="user_id" name="user_id">
-            <input type="hidden" id="convenio_id_hidden" name="convenio_id">
+            <input type="hidden" id="convenio_id" name="convenio_id" hidden>
             <div class="row">
-                <div class="mb-3 col-md-2">
-                    <label class="form-label"><strong>1- Registro ANS</strong></label>
+                <div class="mb-3 col-md-3">
+                    <label for="registro_ans" class="form-label"><strong>Registro ANS</strong></label>
                     <input class="form-control" id="registro_ans" name="registro_ans" type="text" readonly>
                 </div>
-                <div class="mb-3 col-md-2">
-                    <label class="form-label">2- Nº da guia no prestador</label>
-                    <input class="form-control" id="numero_guia_prestador" name="numero_guia_prestador" type="text" readonly>
+                <div class="mb-3 col-md-3">
+                    <label for="numero_guia_solicitacao" class="form-label"><strong>Nº Guia de Solicitação de Internação</strong></label>
+                    <input class="form-control" id="numero_guia_solicitacao" name="numero_guia_solicitacao" type="text" readonly>
                 </div>
-                <div class="mb-3 col-md-4">
-                    <label class="form-label">4- Nº da carteira do beneficiário</label>
+                <div class="mb-3 col-md-3">
+                    <label for="senha" class="form-label"><strong>Senha</strong></label>
+                    <input class="form-control" id="senha" name="senha" type="text" readonly>
+                </div>
+                <div class="mb-3 col-md-3">
+                    <label for="numero_guia_operadora" class="form-label"><strong>Nº Guia Atribuído pela Operadora</strong></label>
+                    <input class="form-control" id="numero_guia_operadora" name="numero_guia_operadora" type="text" readonly>
+                </div>
+            </div>
+            <!-- Dados do Beneficiário -->
+            <h5><strong>Dados do Beneficiário</strong></h5>
+            <div class="row">
+                <div class="mb-3 col-md-3">
+                    <label for="numero_carteira" class="form-label"><strong>Número da Carteira</strong></label>
                     <input class="form-control" id="numero_carteira" name="numero_carteira" type="text" readonly>
                 </div>
-                <div class="mb-3 col-md-8">
-                    <label class="form-label">7- Nome do beneficiário</label>
-                    <input class="form-control" id="nome_beneficiario" name="nome_beneficiario" type="text" readonly>
+                <div class="mb-3 col-md-3">
+                    <label for="nome_social" class="form-label"><strong>Nome Social</strong></label>
+                    <input class="form-control" id="nome_social" name="nome_social" type="text" readonly>
                 </div>
-                <div class="mb-3 col-md-4">
-                    <label class="form-label">18- Data da realização</label>
-                    <input class="form-control" id="data_atendimento" name="data_atendimento" type="date" readonly>
+                <div class="mb-3 col-md-3">
+                    <label for="atendimento_rn" class="form-label"><strong>Atendimento RN</strong></label>
+                    <input class="form-control" id="nome_social" name="nome_social" type="text" readonly>
                 </div>
-                <div class="mb-3 col-md-4">
-                    <label class="form-label">Hora Início do Atendimento</label>
-                    <input class="form-control" id="hora_inicio_atendimento" name="hora_inicio_atendimento" type="text" readonly>
+                <div class="mb-3 col-md-3">
+                    <label for="name" class="form-label"><strong>Nome</strong></label>
+                    <input class="form-control" id="name" name="name" type="text" readonly>
                 </div>
-                <div class="mb-3 col-md-4">
-                    <label class="form-label">19- Tipo de consulta</label>
-                    <input class="form-control" id="tipo_consulta" name="tipo_consulta" type="text" readonly>
+            </div>
+
+            <!-- Dados do Contratado (onde foi executado o procedimento) -->
+            <h5><strong>Dados do Contratado (onde foi executado o procedimento)</strong></h5>
+            <div class="row">
+                <div class="mb-3 col-md-3">
+                    <label for="codigo_operadora_contratado" class="form-label"><strong>Código na Operadora (Contratado)</strong></label>
+                    <input class="form-control" id="codigo_operadora_contratado" name="codigo_operadora_contratado" type="text" readonly>
                 </div>
-                <div class="mb-3 col-md-4">
-                    <label class="form-label">17- Indicação de acidente</label>
-                    <input class="form-control" id="indicacao_acidente" name="indicacao_acidente" type="text" readonly>
+                <div class="mb-3 col-md-3">
+                    <label for="nome_hospital_local" class="form-label"><strong>Nome do Hospital/Local</strong></label>
+                    <input class="form-control" id="nome_hospital_local" name="nome_hospital_local" type="text" readonly>
                 </div>
-                <div class="mb-3 col-md-4">
-                    <label class="form-label">20- Código da Tabela</label>
-                    <input class="form-control" id="codigo_tabela" name="codigo_tabela" type="text" readonly>
+                <div class="mb-3 col-md-3">
+                    <label for="codigo_cnes_contratado" class="form-label"><strong>Código CNES do Contratado</strong></label>
+                    <input class="form-control" id="codigo_cnes_contratado" name="codigo_cnes_contratado" type="text" readonly>
                 </div>
-                <div class="mb-3 col-md-4">
-                    <label class="form-label">21- Código do procedimento</label>
-                    <input class="form-control" id="codigo_procedimento" name="codigo_procedimento" type="text" readonly>
+            </div>
+
+            <!-- Dados da Contratada Executante -->
+            <h5><strong>Dados da Contratada Executante</strong></h5>
+            <div class="row">
+                <div class="mb-3 col-md-3">
+                    <label for="codigo_operadora_executante" class="form-label"><strong>Código na Operadora (Executante)</strong></label>
+                    <input class="form-control" id="codigo_operadora_executante" name="codigo_operadora_executante" type="text" readonly>
                 </div>
-                <div class="mb-3 col-md-4">
-                    <label class="form-label">22- Valor do procedimento</label>
-                    <input class="form-control" id="valor_procedimento" name="valor_procedimento" type="text" readonly>
+                <div class="mb-3 col-md-3">
+                    <label for="codigo_cnes_executante" class="form-label"><strong>Código CNES do Executante</strong></label>
+                    <input class="form-control" id="codigo_cnes_executante" name="codigo_cnes_executante" type="text" readonly>
                 </div>
-                <div class="mb-3 col-md-4">
-                    <label class="form-label">12- Nome do profissional</label>
-                    <input class="form-control" id="nome_profissional" name="nome_profissional" type="text" readonly>
-                </div>
-                <div class="mb-3 col-md-2">
-                    <label class="form-label">13- Sigla do conselho</label>
-                    <input class="form-control" id="sigla_conselho" name="sigla_conselho" type="text" readonly>
-                </div>
-                <div class="mb-3 col-md-2">
-                    <label class="form-label">14- Nº do conselho</label>
-                    <input class="form-control" id="numero_conselho" name="numero_conselho" type="text" readonly>
-                </div>
-                <div class="mb-3 col-md-2">
-                    <label class="form-label">15- UF do conselho</label>
-                    <input class="form-control" id="uf_conselho" name="uf_conselho" type="text" readonly>
-                </div>
-                <div class="mb-3 col-md-2">
-                    <label class="form-label">16- CBO</label>
-                    <input class="form-control" id="cbo" name="cbo" type="text" readonly>
-                </div>
-                <div class="mb-3 col-md-12">
-                    <label class="form-label">23- Observação / Justificativa</label>
-                    <input class="form-control" id="observacao" name="observacao" type="text" readonly>
-                </div>
-                <div class="mb-3 col-md-4">
-                    <label class="form-label">Hash</label>
-                    <input class="form-control" id="hash" name="hash" type="text" readonly>
+                <div class="mb-3 col-md-3">
+                    <label for="nome_contratado" class="form-label"><strong>Nome do Contratado</strong></label>
+                    <input class="form-control" id="nome_contratado" name="nome_contratado" type="text" readonly>
                 </div>
             </div>
         </form>
@@ -150,107 +148,108 @@
 </div>
 
 
-
 <!-- Modal para criar nova guia -->
 <div class="modal fade" id="novoGuiaModal" tabindex="-1" aria-labelledby="novoGuiaModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="novoGuiaModalLabel">Guia de Consulta</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form action="{{route('guiahonorario.store')}}" method="POST" enctype="multipart/form-data" id="formNovaGuia">
                     @csrf
                     <input type="hidden" id="convenio_id_hidden" name="convenio_id">
+                    <h5><strong>Guia de Consulta</strong></h5>
                     <div class="row">
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label"><strong>1- Registro ANS</strong></label>
-                        <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">2- Nº da guia no prestador</label>
-                        <input class="form-control" id="numero_guia_prestador" name="numero_guia_prestador" type="text" value="{{ old('numero_guia_prestador') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">4- Nº da carteira do beneficiário</label>
-                        <input class="form-control" id="numero_carteira" name="numero_carteira" type="text" value="{{ old('numero_carteira') }}">
-                    </div>
-                    <div class="mb-3 col-md-8">
-                        <label class="form-label">7- Nome do beneficiário</label>
-                        <input class="form-control" id="nome_beneficiario" name="nome_beneficiario" type="text" value="{{ old('nome_beneficiario') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">18- Data da realização</label>
-                        <input class="form-control" id="data_atendimento" name="data_atendimento" type="date" value="{{ old('data_atendimento') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">Hora Início do Atendimento</label>
-                        <input class="form-control" id="hora_inicio_atendimento" name="hora_inicio_atendimento" type="text" value="{{ old('hora_inicio_atendimento') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">19- Tipo de consulta</label>
-                        <input class="form-control" id="tipo_consulta" name="tipo_consulta" type="text" value="{{ old('tipo_consulta') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">17- Indicação de acidente</label>
-                        <input class="form-control" id="indicacao_acidente" name="indicacao_acidente" type="text" value="{{ old('indicacao_acidente') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">20- Tabela</label>
-                        <input class="form-control" id="codigo_tabela" name="codigo_tabela" type="text" value="{{ old('codigo_tabela') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">21- Cód. do procedimento</label>
-                        <input class="form-control" id="codigo_procedimento" name="codigo_procedimento" type="text" value="{{ old('codigo_procedimento') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">22- Valor do procedimento</label>
-                        <input class="form-control" id="valor_procedimento" name="valor_procedimento" type="text" value="{{ old('valor_procedimento') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">12- Nome do profissional</label>
-                        <input class="form-control" id="nome_profissional" name="nome_profissional" type="text" value="{{ old('nome_profissional') }}">
-                    </div>
-                    <div class="mb-3 col-md-2">
-                        <label class="form-label">13- Conselho</label>
-                        <input class="form-control" id="sigla_conselho" name="sigla_conselho" type="text" value="{{ old('sigla_conselho') }}">
-                    </div>
-                    <div class="mb-3 col-md-2">
-                        <label class="form-label">14- Nº profissional</label>
-                        <input class="form-control" id="numero_conselho" name="numero_conselho" type="text" value="{{ old('numero_conselho') }}">
-                    </div>
-                    <div class="mb-3 col-md-2">
-                        <label class="form-label">15- UF</label>
-                        <input class="form-control" id="uf_conselho" name="uf_conselho" type="text" value="{{ old('uf_conselho') }}">
-                    </div>
-                    <div class="mb-3 col-md-2">
-                        <label class="form-label">16- CBO</label>
-                        <input class="form-control" id="cbo" name="cbo" type="text" value="{{ old('cbo') }}">
-                    </div>
-                    <div class="mb-3 col-md-12">
-                        <label class="form-label">23- Observação / Justificativa</label>
-                        <input class="form-control" id="observacao" name="observacao" type="text" value="{{ old('observacao') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">Hash</label>
-                        <input class="form-control" id="hash" name="hash" type="text" value="{{ old('hash') }}">
-                    </div>
-                </div>
-                    </div>
-                    <div class="row">
-                        <div class="mb-3 col-md-4 align-self-end">
-                            <button class="btn btn-primary" type="submit">
-                                <i class="bi bi-check-circle-fill me-2"></i>Salvar
-                            </button>
+                        <div class="mb-3 col-md-3">
+                            <label for="registro_ans" class="form-label"><strong>Registro ANS</strong></label>
+                            <input class="form-control" id="registro_ans" name="registro_ans" type="text">
                         </div>
+                        <div class="mb-3 col-md-3">
+                            <label for="numero_guia_prestador" class="form-label"><strong>Nº Guia do prestador</strong></label>
+                            <input class="form-control" id="numero_guia_prestador" name="numero_guia_prestador" type="text">
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label for="numero_guia_solicitacao" class="form-label"><strong>Nº Guia de Solicitação de Internação</strong></label>
+                            <input class="form-control" id="numero_guia_solicitacao" name="numero_guia_solicitacao" type="text">
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label for="senha" class="form-label"><strong>Senha</strong></label>
+                            <input class="form-control" id="senha" name="senha" type="text">
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label for="numero_guia_operadora" class="form-label"><strong>Nº Guia Atribuído pela Operadora</strong></label>
+                            <input class="form-control" id="numero_guia_operadora" name="numero_guia_operadora" type="text">
+                        </div>
+                    </div>
+                    <!-- Dados do Beneficiário -->
+                    <h5><strong>Dados do Beneficiário</strong></h5>
+                    <div class="row">
+                        <div class="mb-3 col-md-3">
+                            <label for="numero_carteira" class="form-label"><strong>Número da Carteira</strong></label>
+                            <input class="form-control" id="numero_carteira" name="numero_carteira" type="text">
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label for="nome_social" class="form-label"><strong>Nome Social</strong></label>
+                            <input class="form-control" id="nome_social" name="nome_social" type="text">
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label for="atendimento_rn" class="form-label"><strong>Atendimento RN</strong></label>
+                            <input class="form-control" id="atendimento_rn" name="atendimento_rn" type="text">
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label for="nome_beneficiario" class="form-label"><strong>Nome Beneficiário</strong></label>
+                            <input class="form-control" id="nome_beneficiario" name="nome_beneficiario" type="text">
+                        </div>
+                    </div>
+
+                    <!-- Dados do Contratado (onde foi executado o procedimento) -->
+                    <h5><strong>Dados do Contratado (onde foi executado o procedimento)</strong></h5>
+                    <div class="row">
+                        <div class="mb-3 col-md-3">
+                            <label for="codigo_operadora_contratado" class="form-label"><strong>Código na Operadora (Contratado)</strong></label>
+                            <input class="form-control" id="codigo_operadora_contratado" name="codigo_operadora_contratado" type="text">
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label for="nome_hospital_local" class="form-label"><strong>Nome do Hospital/Local</strong></label>
+                            <input class="form-control" id="nome_hospital_local" name="nome_hospital_local" type="text">
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label for="codigo_cnes_contratado" class="form-label"><strong>Código CNES do Contratado</strong></label>
+                            <input class="form-control" id="codigo_cnes_contratado" name="codigo_cnes_contratado" type="text">
+                        </div>
+                    </div>
+
+                    <!-- Dados da Contratada Executante -->
+                    <h5><strong>Dados da Contratada Executante</strong></h5>
+                    <div class="row">
+                        <div class="mb-3 col-md-3">
+                            <label for="codigo_operadora_executante" class="form-label"><strong>Código na Operadora (Executante)</strong></label>
+                            <input class="form-control" id="codigo_operadora_executante" name="codigo_operadora_executante" type="text">
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label for="codigo_cnes_executante" class="form-label"><strong>Código CNES do Executante</strong></label>
+                            <input class="form-control" id="codigo_cnes_executante" name="codigo_cnes_executante" type="text">
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label for="nome_contratado" class="form-label"><strong>Nome do Contratado</strong></label>
+                            <input class="form-control" id="nome_contratado" name="nome_contratado" type="text">
+                        </div>
+                    </div>
+                    <h5><strong>Observações</strong></h5>
+                    <div class="mb-3 col-md-12">
+                        <textarea class="form-control" id="observacoes" name="observacoes" type="text"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi bi-check-circle-fill me-2"></i>Salvar
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 <script>
@@ -282,9 +281,10 @@ $(document).ready(function() {
                             html += '<td>' + guia.registro_ans + '</td>';
                             html += '<td>' + dataFormatada + '</td>';
                             html += '<td>';
-                            html += '<button type="button" class="btn btn-info btnVisualizarGuia" data-id="' + guia.id + '">';
-                            html += 'Visualizar';
-                            html += '</button>';
+                            html += '<button type="button" class="btn btn-info btnVisualizarGuia" data-id="' + guia.id + '">Visualizar</button> ';
+                            html += '<a href="/guia/honorario/' + guia.id + '" class="btn btn-primary" target="_blank">';
+                            html += '<i class="bi bi-printer"></i> Imprimir';
+                            html += '</a>';
                             html += '</td>';
                             html += '</tr>';
                         });
@@ -307,43 +307,43 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '.btnVisualizarGuia', function() {
-    var guiaId = $(this).data('id');
-    
-    // Fazer a requisição AJAX para buscar os detalhes da guia
-    $.ajax({
-        url: '/guia-honorario/detalhes/' + guiaId,  // Atualize para a rota correta
-        type: 'GET',
-        success: function(response) {
-            // Preencher os campos do formulário com os dados da guia
-            $('#user_id').val(response.user_id);
-            $('#convenio_id_hidden').val(response.convenio_id);
-            $('#registro_ans').val(response.registro_ans);
-            $('#numero_guia_prestador').val(response.numero_guia_prestador);
-            $('#numero_carteira').val(response.numero_carteira);
-            $('#nome_beneficiario').val(response.nome_beneficiario);
-            $('#data_atendimento').val(response.data_atendimento);
-            $('#hora_inicio_atendimento').val(response.hora_inicio_atendimento);
-            $('#tipo_consulta').val(response.tipo_consulta);
-            $('#indicacao_acidente').val(response.indicacao_acidente);
-            $('#codigo_tabela').val(response.codigo_tabela);
-            $('#codigo_procedimento').val(response.codigo_procedimento);
-            $('#valor_procedimento').val(response.valor_procedimento);
-            $('#nome_profissional').val(response.nome_profissional);
-            $('#sigla_conselho').val(response.sigla_conselho);
-            $('#numero_conselho').val(response.numero_conselho);
-            $('#uf_conselho').val(response.uf_conselho);
-            $('#cbo').val(response.cbo);
-            $('#observacao').val(response.observacao);
-            $('#hash').val(response.hash);
-            
-            // Abrir o modal
-            $('#visualizarGuiaModal').modal('show');
-        },
-        error: function() {
-            alert('Erro ao buscar os detalhes da guia.');
-        }
+        var guiaId = $(this).data('id');
+        
+        // Fazer a requisição AJAX para buscar os detalhes da guia
+        $.ajax({
+            url: '/guia-honorario/detalhes/' + guiaId,  // Atualize para a rota correta
+            type: 'GET',
+            success: function(response) {
+                // Preencher os campos do formulário com os dados da guia
+                $('#user_id').val(response.user_id);
+                $('#convenio_id_hidden').val(response.convenio_id);
+                $('#registro_ans').val(response.registro_ans);
+                $('#numero_guia_solicitacao').val(response.numero_guia_solicitacao);  // Corrigido
+                $('#senha').val(response.senha);  // Corrigido
+                $('#numero_guia_operadora').val(response.numero_guia_operadora);  // Corrigido
+                $('#numero_carteira').val(response.numero_carteira);
+                $('#nome_social').val(response.nome_social);
+                $('#atendimento_rn').val(response.atendimento_rn);  // Corrigido
+                $('#name').val(response.name);  // Corrigido
+                
+                // Preencher os campos de contratado
+                $('#codigo_operadora_contratado').val(response.codigo_operadora_contratado);
+                $('#nome_hospital_local').val(response.nome_hospital_local);
+                $('#codigo_cnes_contratado').val(response.codigo_cnes_contratado);
+
+                // Preencher os campos de executante
+                $('#codigo_operadora_executante').val(response.codigo_operadora_executante);
+                $('#codigo_cnes_executante').val(response.codigo_cnes_executante);
+                $('#nome_contratado').val(response.nome_contratado);
+                
+                // Abrir o modal
+                $('#visualizarGuiaModal').modal('show');
+            },
+            error: function() {
+                alert('Erro ao buscar os detalhes da guia.');
+            }
+        });
     });
-});
 });
 </script>
 @endsection

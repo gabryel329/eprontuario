@@ -66,7 +66,7 @@
         <form id="formVisualizarGuia">
             @csrf
             <input type="hidden" id="user_id" name="user_id">
-            <input type="hidden" id="convenio_id_hidden" name="convenio_id">
+            <input type="hidden" id="convenio_id" name="convenio_id">
             <div class="row">
                 <div class="mb-3 col-md-2">
                     <label class="form-label"><strong>1- Registro ANS</strong></label>
@@ -156,84 +156,141 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{route('guiasp.store')}}" method="POST" enctype="multipart/form-data" id="formNovaGuia">
+                <form action="{{ route('guiasp.store') }}" method="POST" enctype="multipart/form-data" id="formNovaGuia">
                     @csrf
                     <input type="hidden" id="convenio_id_hidden" name="convenio_id">
+
                     <div class="row">
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label"><strong>1- Registro ANS</strong></label>
-                        <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                        <!-- Registro ANS -->
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label"><strong>1- Registro ANS</strong></label>
+                            <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
+                        </div>
+
+                        <!-- Número da Guia do Prestador -->
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label">3- Nº da Guia do Prestador</label>
+                            <input class="form-control" id="numero_guia_prestador" name="numero_guia_prestador" type="text" value="{{ old('numero_guia_prestador') }}">
+                        </div>
+
+                        <!-- Data da Autorização -->
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label">4- Data da autorização</label>
+                            <input class="form-control" id="data_autorizacao" name="data_autorizacao" type="date" value="{{ old('data_autorizacao') }}">
+                        </div>
+
+                        <!-- Senha -->
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label">5- Senha</label>
+                            <input class="form-control" id="senha" name="senha" type="text" value="{{ old('senha') }}">
+                        </div>
+
+                        <!-- Data de Validade da Senha -->
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label">6- Data de Validade da Senha</label>
+                            <input class="form-control" id="validade_senha" name="validade_senha" type="date" value="{{ old('validade_senha') }}">
+                        </div>
+
+                        <!-- Número da Guia Atribuído pela Operadora -->
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label">7- Nº da Guia Atribuído pela Operadora</label>
+                            <input class="form-control" id="numero_guia_op" name="numero_guia_op" type="text" value="{{ old('numero_guia_op') }}">
+                        </div>
+
+                        <!-- Número da Carteira -->
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label">8- Nº da Carteira</label>
+                            <input class="form-control" id="numero_carteira" name="numero_carteira" type="text" value="{{ old('numero_carteira') }}">
+                        </div>
+
+                        <!-- Validade da Carteira -->
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label">9- Validade da Carteira</label>
+                            <input class="form-control" id="validade_carteira" name="validade_carteira" type="date" value="{{ old('validade_carteira') }}">
+                        </div>
+
+                        <!-- Nome Beneficiário -->
+                        <div class="mb-3 col-md-8">
+                            <label class="form-label">10- Nome Beneficiário</label>
+                            <input class="form-control" id="nome_beneficiario" name="nome_beneficiario" type="text" value="{{ old('nome_beneficiario') }}">
+                        </div>
+
+                        <!-- Atendimento a RN -->
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label">12- Atendimento a RN</label>
+                            <select class="form-control" id="atendimento_rn" name="atendimento_rn">
+                                <option value="0" {{ old('atendimento_rn') == '0' ? 'selected' : '' }}>Não</option>
+                                <option value="1" {{ old('atendimento_rn') == '1' ? 'selected' : '' }}>Sim</option>
+                            </select>
+                        </div>
+
+                        <!-- Nome do Profissional Solicitante -->
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label">15- Nome do Profissional Solicitante</label>
+                            <input class="form-control" id="nome_profissional_solicitante" name="nome_profissional_solicitante" type="text" value="{{ old('nome_profissional_solicitante') }}">
+                        </div>
+
+                        <!-- Conselho Profissional -->
+                        <div class="mb-3 col-md-2">
+                            <label class="form-label">16- Conselho Profissional</label>
+                            <input class="form-control" id="conselho_profissional" name="conselho_profissional" type="text" value="{{ old('conselho_profissional') }}">
+                        </div>
+
+                        <!-- Número do Conselho -->
+                        <div class="mb-3 col-md-2">
+                            <label class="form-label">17- Nº do Conselho</label>
+                            <input class="form-control" id="numero_conselho" name="numero_conselho" type="text" value="{{ old('numero_conselho') }}">
+                        </div>
+
+                        <!-- UF do Conselho -->
+                        <div class="mb-3 col-md-2">
+                            <label class="form-label">18- UF</label>
+                            <input class="form-control" id="uf_conselho" name="uf_conselho" type="text" value="{{ old('uf_conselho') }}">
+                        </div>
+
+                        <!-- Código CBO -->
+                        <div class="mb-3 col-md-2">
+                            <label class="form-label">19- Código CBO</label>
+                            <input class="form-control" id="codigo_cbo" name="codigo_cbo" type="text" value="{{ old('codigo_cbo') }}">
+                        </div>
+
+                        <!-- Código do Procedimento Solicitado -->
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label">25- Código do Procedimento Solicitado</label>
+                            <input class="form-control" id="codigo_procedimento_solicitado" name="codigo_procedimento_solicitado" type="text" value="{{ old('codigo_procedimento_solicitado') }}">
+                        </div>
+
+                        <!-- Descrição do Procedimento -->
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label">26- Descrição do Procedimento</label>
+                            <input class="form-control" id="descricao_procedimento" name="descricao_procedimento" type="text" value="{{ old('descricao_procedimento') }}">
+                        </div>
+
+                        <!-- Código da Operadora Executante -->
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label">29- Código da Operadora Executante</label>
+                            <input class="form-control" id="codigo_operadora_executante" name="codigo_operadora_executante" type="text" value="{{ old('codigo_operadora_executante') }}">
+                        </div>
+
+                        <!-- Nome do Contratado Executante -->
+                        <div class="mb-3 col-md-8">
+                            <label class="form-label">30- Nome do Contratado Executante</label>
+                            <input class="form-control" id="nome_contratado_executante" name="nome_contratado_executante" type="text" value="{{ old('nome_contratado_executante') }}">
+                        </div>
+
+                        <!-- Código CNES -->
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label">31- Código CNES</label>
+                            <input class="form-control" id="codigo_cnes" name="codigo_cnes" type="text" value="{{ old('codigo_cnes') }}">
+                        </div>
+
+                        <!-- Observação -->
+                        <div class="mb-3 col-md-12">
+                            <label class="form-label">58- Observação / Justificativa</label>
+                            <textarea class="form-control" id="observacao" name="observacao">{{ old('observacao') }}</textarea>
+                        </div>
                     </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">2- Nº da guia no prestador</label>
-                        <input class="form-control" id="numero_guia_prestador" name="numero_guia_prestador" type="text" value="{{ old('numero_guia_prestador') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">4- Nº da carteira do beneficiário</label>
-                        <input class="form-control" id="numero_carteira" name="numero_carteira" type="text" value="{{ old('numero_carteira') }}">
-                    </div>
-                    <div class="mb-3 col-md-8">
-                        <label class="form-label">7- Nome do beneficiário</label>
-                        <input class="form-control" id="nome_beneficiario" name="nome_beneficiario" type="text" value="{{ old('nome_beneficiario') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">18- Data da realização</label>
-                        <input class="form-control" id="data_atendimento" name="data_atendimento" type="date" value="{{ old('data_atendimento') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">Hora Início do Atendimento</label>
-                        <input class="form-control" id="hora_inicio_atendimento" name="hora_inicio_atendimento" type="text" value="{{ old('hora_inicio_atendimento') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">19- Tipo de consulta</label>
-                        <input class="form-control" id="tipo_consulta" name="tipo_consulta" type="text" value="{{ old('tipo_consulta') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">17- Indicação de acidente</label>
-                        <input class="form-control" id="indicacao_acidente" name="indicacao_acidente" type="text" value="{{ old('indicacao_acidente') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">20- Tabela</label>
-                        <input class="form-control" id="codigo_tabela" name="codigo_tabela" type="text" value="{{ old('codigo_tabela') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">21- Cód. do procedimento</label>
-                        <input class="form-control" id="codigo_procedimento" name="codigo_procedimento" type="text" value="{{ old('codigo_procedimento') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">22- Valor do procedimento</label>
-                        <input class="form-control" id="valor_procedimento" name="valor_procedimento" type="text" value="{{ old('valor_procedimento') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">12- Nome do profissional</label>
-                        <input class="form-control" id="nome_profissional" name="nome_profissional" type="text" value="{{ old('nome_profissional') }}">
-                    </div>
-                    <div class="mb-3 col-md-2">
-                        <label class="form-label">13- Conselho</label>
-                        <input class="form-control" id="sigla_conselho" name="sigla_conselho" type="text" value="{{ old('sigla_conselho') }}">
-                    </div>
-                    <div class="mb-3 col-md-2">
-                        <label class="form-label">14- Nº profissional</label>
-                        <input class="form-control" id="numero_conselho" name="numero_conselho" type="text" value="{{ old('numero_conselho') }}">
-                    </div>
-                    <div class="mb-3 col-md-2">
-                        <label class="form-label">15- UF</label>
-                        <input class="form-control" id="uf_conselho" name="uf_conselho" type="text" value="{{ old('uf_conselho') }}">
-                    </div>
-                    <div class="mb-3 col-md-2">
-                        <label class="form-label">16- CBO</label>
-                        <input class="form-control" id="cbo" name="cbo" type="text" value="{{ old('cbo') }}">
-                    </div>
-                    <div class="mb-3 col-md-12">
-                        <label class="form-label">23- Observação / Justificativa</label>
-                        <input class="form-control" id="observacao" name="observacao" type="text" value="{{ old('observacao') }}">
-                    </div>
-                    <div class="mb-3 col-md-4">
-                        <label class="form-label">Hash</label>
-                        <input class="form-control" id="hash" name="hash" type="text" value="{{ old('hash') }}">
-                    </div>
-                </div>
-                    </div>
+
                     <div class="row">
                         <div class="mb-3 col-md-4 align-self-end">
                             <button class="btn btn-primary" type="submit">
@@ -246,6 +303,7 @@
         </div>
     </div>
 </div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
@@ -278,9 +336,10 @@ $(document).ready(function() {
                             html += '<td>' + guia.registro_ans + '</td>';
                             html += '<td>' + dataFormatada + '</td>';
                             html += '<td>';
-                            html += '<button type="button" class="btn btn-info btnVisualizarGuia" data-id="' + guia.id + '">';
-                            html += 'Visualizar';
-                            html += '</button>';
+                            html += '<button type="button" class="btn btn-info btnVisualizarGuia" data-id="' + guia.id + '">Visualizar</button> ';
+                            html += '<a href="/guia/sp/' + guia.id + '" class="btn btn-primary" target="_blank">';
+                            html += '<i class="bi bi-printer"></i> Imprimir';
+                            html += '</a>';
                             html += '</td>';
                             html += '</tr>';
                         });

@@ -203,6 +203,9 @@ Route::middleware(['check.session.expired'])->group(function () {
 
     // web.php
     Route::get('/paciente/ficha/{id}', [PacientesController::class, 'fichaPaciente'])->name('paciente.ficha');
+    Route::get('/guia/honorario/{id}', [GuiaHonorarioController::class, 'impressaoGuia'])->name('guia.honorario');
+    Route::get('/guia/sp/{id}', [GuiaSpController::class, 'impressaoGuia'])->name('guia.sp');
+    Route::get('/guia/tiss/{id}', [GuiaTissController::class, 'impressaoGuia'])->name('guia.tiss');
 
     
     Route::post('/ficha_atendimento', [AtendimentosController::class, 'processarFormulario'])->name('processarFormulario');

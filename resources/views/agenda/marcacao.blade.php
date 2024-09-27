@@ -47,7 +47,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="especialidade">Especialidade:</label>
-                                    <select id="especialidade" name="especialidade" class="form-control">
+                                    <select id="especialidade" name="especialidade" class="form-control" required>
                                         <option selected value="">Selecione uma especialidade</option>
                                         @foreach ($especialidades as $especialidade)
                                             <option value="{{ $especialidade->id }}">{{ $especialidade->especialidade }}
@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="profissionais">Profissionais:</label>
-                                    <select id="profissionais" name="profissionais" class="form-control">
+                                    <select id="profissionais" name="profissionais" class="form-control" required>
                                         <option value="">Selecione um profissional</option>
                                     </select>
                                 </div>
