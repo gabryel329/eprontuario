@@ -29,7 +29,7 @@
                                 class="icon bi bi-plus-square"></i> Marcação de Consultas</a></li>
                                 <li><a class="treeview-item" href="\gerar-agenda"><i
                                             class="icon bi bi-calendar2-plus"></i> Gerar Agenda</a></li>
-                                <li><a class="treeview-item" href="\gerar-agenda"><i
+                                <li><a class="treeview-item" href="{{route('agenda.consulta')}}"><i
                                 class="icon bi bi-person-lines-fill"></i> Consultar Agenda</a></li>
                             </ul>
                         </li>

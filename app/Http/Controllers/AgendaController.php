@@ -75,6 +75,26 @@ class AgendaController extends Controller
 
     public function verificarDisponibilidade($profissionalId, $especialidadeId, $data)
     {
+        // Inicializando a variável de disponibilidades como null
+        $diasdisponivel = null;
+
+        // Somente buscar disponibilidades se profissional e especialidade forem informados
+        if ($profissionalId && $especialidadeId) {
+            $diasdisponivel = DB::table('disponibilidades')
+                ->selectRaw("
+                    CASE WHEN COUNT(dom) > 0 THEN 'Domingo' END AS dom,
+                    CASE WHEN COUNT(seg) > 0 THEN 'Segunda-feira' END AS seg,
+                    CASE WHEN COUNT(ter) > 0 THEN 'Terça-feira' END AS ter,
+                    CASE WHEN COUNT(qua) > 0 THEN 'Quarta-feira' END AS qua,
+                    CASE WHEN COUNT(qui) > 0 THEN 'Quinta-feira' END AS qui,
+                    CASE WHEN COUNT(sex) > 0 THEN 'Sexta-feira' END AS sex,
+                    CASE WHEN COUNT(sab) > 0 THEN 'Sábado' END AS sab
+                ")
+                ->where('profissional_id', $profissionalId)
+                ->where('especialidade_id', $especialidadeId)
+                ->first();
+        }
+
         // Obter todos os convênios, pacientes e procedimentos
         $convenios = Convenio::all();
         $pacientes = Pacientes::all();
@@ -159,7 +179,8 @@ class AgendaController extends Controller
             'horarios' => $horariosDisponiveis,
             'convenios' => $convenios,
             'pacientes' => $pacientes,
-            'procedimentos' => $procedimentos
+            'procedimentos' => $procedimentos,
+            'diasdisponivel' => $diasdisponivel
         ]);
     }
 
@@ -169,7 +190,7 @@ class AgendaController extends Controller
     {
         // Recebe o array de agendamentos
         $agendamentos = $request->all();
-        
+
         foreach ($agendamentos as $agendamentoData) {
             // Converte a data de d/m/Y para Y-m-d se necessário
             $data = DateTime::createFromFormat('d/m/Y', $agendamentoData['data'])->format('Y-m-d');
@@ -182,13 +203,13 @@ class AgendaController extends Controller
             $matricula = $agendamentoData['matricula'];
             $codigo = $agendamentoData['codigo'];
             $convenioId = $agendamentoData['convenio'];
-    
+
             // Verifica se já existe uma agenda com a mesma data, hora, profissional e especialidade
             $existeAgenda = Agenda::where('data', $data)
                 ->where('hora', $hora)
                 ->where('profissional_id', $profissionalId)
                 ->first();
-    
+
             if ($existeAgenda) {
                 // Atualiza a agenda existente
                 $existeAgenda->procedimento_id = $procedimentoId;
@@ -216,10 +237,10 @@ class AgendaController extends Controller
                 $novoAgendamento->codigo = $codigo;
                 $novoAgendamento->save();
             }
-    
+
             // Agora calcula o dia da semana (1 = seg, 2 = ter, ..., 7 = dom)
             $diaDaSemana = date('N', strtotime($data));
-    
+
             // Determina a coluna de disponibilidade com base no dia da semana
             $colunaDia = '';
             switch ($diaDaSemana) {
@@ -245,7 +266,7 @@ class AgendaController extends Controller
                     $colunaDia = 'dom';  // Domingo
                     break;
             }
-    
+
             // Verifica se a disponibilidade já existe para o dia da semana correspondente
             $existeDisponibilidade = DB::table('disponibilidades')
                 ->where('hora', $hora)
@@ -253,7 +274,7 @@ class AgendaController extends Controller
                 ->where('especialidade_id', $especialidadeId)
                 ->whereNotNull($colunaDia)  // Verifica se há disponibilidade no dia correto
                 ->first();
-    
+
             // Se houver disponibilidade, atualiza os dados
             if ($existeDisponibilidade) {
                 DB::table('disponibilidades')
@@ -271,14 +292,14 @@ class AgendaController extends Controller
                 return response()->json(['success' => false, 'message' => 'Disponibilidade não encontrada para o dia da semana.']);
             }
         }
-    
+
         try {
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
-    
+
 
     public function getProfissionais($especialidadeId)
     {
@@ -409,7 +430,7 @@ class AgendaController extends Controller
         $profissional = Profissional::find($profissionalId);
 
         if (!$profissional) {
-            return response()->json(['error' => 'Profissional nÃ£o encontrado.'], 404);
+            return response()->json(['error' => 'Profissional não encontrado.'], 404);
         }
 
         $diasDisponiveis = [
@@ -521,10 +542,75 @@ class AgendaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Agenda $agenda)
+    public function consultaAgenda()
     {
-        //
+        $especialidades = Especialidade::all();
+        $profissionais = Profissional::all();
+
+        return view('agenda.rel_agenda', compact(['especialidades', 'profissionais']));
     }
+
+    public function filtrarAgenda(Request $request)
+    {
+        // Verificação para garantir que pelo menos um filtro esteja preenchido (data, profissional ou especialidade)
+        if (!$request->filled('data_inicio') && !$request->filled('data_fim') && !$request->filled('profissional_id') && !$request->filled('especialidade_id')) {
+            return response()->json(['error' => 'Por favor, selecione pelo menos um filtro.'], 400);
+        }
+
+        // Inicializando a variável de disponibilidades como null
+        $disponibilidades = null;
+
+        // Somente buscar disponibilidades se profissional e especialidade forem informados
+        if ($request->filled('profissional_id') && $request->filled('especialidade_id')) {
+            $disponibilidades = DB::table('disponibilidades')
+                ->selectRaw("
+                CASE WHEN COUNT(dom) > 0 THEN 'Domingo' END AS dom,
+                CASE WHEN COUNT(seg) > 0 THEN 'Segunda-feira' END AS seg,
+                CASE WHEN COUNT(ter) > 0 THEN 'Terça-feira' END AS ter,
+                CASE WHEN COUNT(qua) > 0 THEN 'Quarta-feira' END AS qua,
+                CASE WHEN COUNT(qui) > 0 THEN 'Quinta-feira' END AS qui,
+                CASE WHEN COUNT(sex) > 0 THEN 'Sexta-feira' END AS sex,
+                CASE WHEN COUNT(sab) > 0 THEN 'Sábado' END AS sab
+            ")
+                ->where('profissional_id', $request->profissional_id)
+                ->where('especialidade_id', $request->especialidade_id)
+                ->first();
+        }
+
+        // Consultar as agendas apenas se houver algum filtro aplicável
+        $query = Agenda::query();
+
+        // Adicionar filtro por profissional, se presente
+        if ($request->filled('profissional_id')) {
+            $query->where('profissional_id', $request->profissional_id);
+        }
+
+        // Adicionar filtro por especialidade, se presente
+        if ($request->filled('especialidade_id')) {
+            $query->where('especialidade_id', $request->especialidade_id);
+        }
+
+        // Adicionar filtro por intervalo de datas, se presente
+        if ($request->filled('data_inicio') && $request->filled('data_fim')) {
+            $query->whereBetween('data', [$request->data_inicio, $request->data_fim]);
+        }
+
+        // Se não houver filtros de profissional nem especialidade, não retornar resultados
+        if (!$request->filled('profissional_id') && !$request->filled('especialidade_id')) {
+            return response()->json(['error' => 'Por favor, selecione pelo menos um profissional ou uma especialidade.'], 400);
+        }
+
+        // Buscar as agendas ordenadas por hora
+        $agendas = $query->orderBy('data', 'asc')->orderBy('hora', 'asc')->get();
+
+        // Retornar os resultados
+        return response()->json([
+            'disponibilidades' => $disponibilidades,
+            'agendas' => $agendas
+        ]);
+    }
+
+
 
     /**
      * Update the specified resource in storage.

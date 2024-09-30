@@ -94,6 +94,9 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::get('/especialidades/{profissional}', [AgendaController::class, 'getEspecialidades'])->name('getEspecialidades');
         Route::get('/verificar-disponibilidade/{profissionalId}/{especialidadeId}/{data}', [AgendaController::class, 'verificarDisponibilidade']);
         Route::post('/agendar', [AgendaController::class, 'agendar']);
+        Route::get('/rel-agenda', [AgendaController::class, 'consultaAgenda'])->name('agenda.consulta');
+        Route::post('/filtrar-agenda', [AgendaController::class, 'filtrarAgenda'])->name('agenda.filtrar');
+
         // Rota para recuperar os dados salvos
         
         Route::get('/get-agenda-data/{profissionalId}/{especialidadeId}/{selectedDate}', [AgendaController::class, 'getAgendaData']);

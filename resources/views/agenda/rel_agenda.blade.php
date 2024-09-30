@@ -1,0 +1,156 @@
+@extends('layouts.app')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<style>
+    .form-label {
+        display: block;
+        margin-bottom: 0.5em;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.5em;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+@section('content')
+<main class="app-content">
+    <div class="app-title">
+        <div>
+            <h1><i class="bi bi-ui-checks"></i> Consultar Agenda</h1>
+        </div>
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="bi bi-house-door fs-6"></i></li>
+            <li class="breadcrumb-item"><a href="#">Consultar Agenda</a></li>
+        </ul>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="timeline-post">
+                <div class="tab-content">
+                    <div class="col-md-12">
+                        <div class="tile">
+                            <div class="tile-body">
+                                <form id="filtro-agenda" method="POST">
+                                    @csrf
+                                    <div class="row">
+                                        <div class="mb-3 col-md-3">
+                                            <label for="data_inicio">Data Início:</label>
+                                            <input type="date" name="data_inicio" id="data_inicio" class="form-control">
+                                        </div>
+                                        <div class="mb-3 col-md-3">
+                                            <label for="data_fim">Data Fim:</label>
+                                            <input type="date" name="data_fim" id="data_fim" class="form-control">
+                                        </div>
+                                        <div class="mb-3 col-md-3">
+                                            <label for="profissional_id">Profissional:</label>
+                                            <select name="profissional_id" id="profissional_id" class="form-control">
+                                                <option value="">Selecione um Profissional</option>
+                                                @foreach ($profissionais as $profissional)
+                                                    <option value="{{ $profissional->id }}"> {{ $profissional->name }} </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="mb-3 col-md-3">
+                                            <label for="especialidade_id">Especialidade:</label>
+                                            <select name="especialidade_id" id="especialidade_id" class="select2 form-control">
+                                                <option value="">Selecione uma Especialidade</option>
+                                                @foreach ($especialidades as $especialidade)
+                                                    <option value="{{ $especialidade->id }}"> {{ $especialidade->especialidade }} </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-primary" id="filtrar-btn">Filtrar</button>
+                                </form>
+
+                                <!-- Exibição das Disponibilidades -->
+                                <div id="disponibilidades-agenda">
+                                    <!-- Dias da Semana que o profissional atende aparecerão aqui -->
+                                </div>
+
+                                <!-- Exibição dos Resultados da Agenda -->
+                                <div id="resultados-agenda">
+                                    <!-- Resultados da Agenda vão aparecer aqui -->
+                                </div>
+
+                                <!-- Exibição de mensagens de erro -->
+                                <div id="mensagem-erro" class="alert alert-danger hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#filtrar-btn').on('click', function() {
+            const dataInicio = $('#data_inicio').val();
+            const dataFim = $('#data_fim').val();
+            const profissionalId = $('#profissional_id').val();
+            const especialidadeId = $('#especialidade_id').val();
+
+            $.ajax({
+                url: '{{ route("agenda.filtrar") }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    data_inicio: dataInicio,
+                    data_fim: dataFim,
+                    profissional_id: profissionalId,
+                    especialidade_id: especialidadeId
+                },
+                success: function(response) {
+                    // Limpa mensagem de erro
+                    $('#mensagem-erro').addClass('hidden').html('');
+
+                    // Mostrar os dias de disponibilidade
+                    let disponibilidadeHtml = '';
+                    if (response.disponibilidades) {
+                        disponibilidadeHtml += '<h4>Dias de Atendimento:</h4>';
+                        disponibilidadeHtml += '<table class="table table-bordered"><thead><tr>';
+                        if (response.disponibilidades.dom) disponibilidadeHtml += '<th>Domingo</th>';
+                        if (response.disponibilidades.seg) disponibilidadeHtml += '<th>Segunda-feira</th>';
+                        if (response.disponibilidades.ter) disponibilidadeHtml += '<th>Terça-feira</th>';
+                        if (response.disponibilidades.qua) disponibilidadeHtml += '<th>Quarta-feira</th>';
+                        if (response.disponibilidades.qui) disponibilidadeHtml += '<th>Quinta-feira</th>';
+                        if (response.disponibilidades.sex) disponibilidadeHtml += '<th>Sexta-feira</th>';
+                        if (response.disponibilidades.sab) disponibilidadeHtml += '<th>Sábado</th>';
+                        disponibilidadeHtml += '</tr></thead></table>';
+                    } else {
+                        disponibilidadeHtml = '<p>Sem disponibilidade para os dias selecionados.</p>';
+                    }
+                    $('#disponibilidades-agenda').html(disponibilidadeHtml);
+
+                    // Mostrar as agendas filtradas em tabela
+                    let agendaHtml = '<h4>Resultados da Agenda:</h4>';
+                    agendaHtml += '<table class="table table-bordered"><thead><tr><th>Data</th><th>Hora</th><th>Profissional</th></tr></thead><tbody>';
+                    if (response.agendas.length > 0) {
+                        response.agendas.forEach(function(agenda) {
+                            agendaHtml += '<tr><td>' + agenda.data + '</td><td>' + agenda.hora + '</td><td>' + agenda.profissional_id + '</td></tr>';
+                        });
+                    } else {
+                        agendaHtml += '<tr><td colspan="3">Nenhuma agenda encontrada.</td></tr>';
+                    }
+                    agendaHtml += '</tbody></table>';
+                    $('#resultados-agenda').html(agendaHtml);
+                },
+                error: function(xhr) {
+                    // Exibir mensagem de erro
+                    let errorResponse = JSON.parse(xhr.responseText);
+                    $('#mensagem-erro').removeClass('hidden').html('<p>' + errorResponse.error + '</p>');
+                }
+            });
+        });
+    });
+</script>
+@endsection

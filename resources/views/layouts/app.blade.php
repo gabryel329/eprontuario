@@ -168,27 +168,27 @@ $currentDate = date('Y-m-d');
     <!-- Jquery Others Plugins -->
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.3/localization/messages_pt_BR.js"></script>
     <script>
-        $(document).ready(function() {
-            $('#especialidade_id').select2({
-                placeholder: "Escolha",
-                allowClear: true
-            });
-        });
-        $(document).ready(function() {
-            $('#permisao_id').select2({
-                placeholder: "Escolha",
-                allowClear: true
-            });
-        });
-        $(document).ready(function() {
-            $('.procedimento_id').select2({
-                placeholder: "Escolha",
-                allowClear: true
-            });
-        });
+        // $(document).ready(function() {
+        //     $('#especialidade_id').select2({
+        //         placeholder: "Escolha",
+        //         allowClear: true
+        //     });
+        // });
+        // $(document).ready(function() {
+        //     $('#permisao_id').select2({
+        //         placeholder: "Escolha",
+        //         allowClear: true
+        //     });
+        // });
+        // $(document).ready(function() {
+        //     $('.procedimento_id').select2({
+        //         placeholder: "Escolha",
+        //         allowClear: true
+        //     });
+        // });
         $(document).ready(function() {
             $('.select2').select2({
-                placeholder: "Selecione um procedimento",
+                placeholder: "Selecione",
                 allowClear: true,
                 closeOnSelect: true
             });

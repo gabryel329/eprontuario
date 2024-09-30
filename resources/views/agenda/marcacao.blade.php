@@ -76,11 +76,13 @@
 
             <div class="col-md-8">
                 <div class="tile">
+                    <p><span id="displayDiasDisponiveis" class="selected-info"></span></p>
                     <h4>
                         <strong>Data Selecionada: </strong>
-                        <span style="color: red" id="displaySelectedData" class="selected-info"></span> 
+                        <span style="color: red" id="displaySelectedData" class="selected-info"></span>
                         <button type="button" class="btn btn-success" onclick="enviarTodosDados()">Salvar</button>
                     </h4>
+                    
                     <div class="tile-body">
                         <div class="table-responsive" id="horariosDisponiveis">
                             <!-- Aqui será inserida a tabela dinamicamente -->
@@ -191,6 +193,30 @@
                         var horariosContainer = document.getElementById('horariosDisponiveis');
                         horariosContainer.innerHTML = ''; // Limpar horários anteriores
                         console.log(data.horarios);
+                        // Exibir os dias disponíveis
+                        var diasDisponiveis = [];
+                        if (data.diasdisponivel) {
+                            if (data.diasdisponivel.dom) diasDisponiveis.push('Dom');
+                            if (data.diasdisponivel.seg) diasDisponiveis.push('Seg');
+                            if (data.diasdisponivel.ter) diasDisponiveis.push('Ter');
+                            if (data.diasdisponivel.qua) diasDisponiveis.push('Qua');
+                            if (data.diasdisponivel.qui) diasDisponiveis.push('Qui');
+                            if (data.diasdisponivel.sex) diasDisponiveis.push('Sex');
+                            if (data.diasdisponivel.sab) diasDisponiveis.push('Sab');
+                        }
+
+                        // Criar a tabela para exibir os dias disponíveis
+                        var tabelaDiasDisponiveis = `
+                            <table style="border-collapse: collapse; width: 100%; text-align: center;">
+                                <tr>
+                                    ${diasDisponiveis.map(dia => `<td style="border: 1px solid black; padding: 10px;">${dia}</td>`).join('')}
+                                </tr>
+                            </table>
+                        `;
+
+                        // Inserir a tabela na div 'displayDiasDisponiveis'
+                        document.getElementById('displayDiasDisponiveis').innerHTML = tabelaDiasDisponiveis;
+
 
                         var today = new Date();
                         var isToday = selectedDate === today.toISOString().split('T')[
@@ -264,13 +290,13 @@
 
         function renderConvenioSelect(horario, convenios, isDisabled) {
             return `
-        <select name="convenio[${horario}]" class="form-control" ${isDisabled}>
+        <select name="convenio[${horario}]" class="select2 form-control" ${isDisabled}>
             <option value="">${horario.convenio_id ? '' : 'Selecione um Convênio'}</option>
             ${convenios.map(convenio => `
-                                <option value="${convenio.id}" ${horario.convenio_id == convenio.id ? 'selected' : ''}>
-                                    ${convenio.nome}
-                                </option>
-                            `).join('')}
+                                    <option value="${convenio.id}" ${horario.convenio_id == convenio.id ? 'selected' : ''}>
+                                        ${convenio.nome}
+                                    </option>
+                                `).join('')}
         </select>
     `;
         }
@@ -280,10 +306,10 @@
         <select class="select2 form-control" name="procedimento_id[${horario}]" id="procedimento_id${horario}" onchange="updateCodigo(this)" ${isDisabled}>
             <option value="">${horario.procedimento_id ? '' : 'Selecione o Procedimento'}</option>
             ${procedimentos.map(proc => `
-                                <option value="${proc.procedimento}" ${horario.procedimento_id == proc.procedimento ? 'selected' : ''} data-codigo="${proc.codigo}">
-                                    ${proc.procedimento}
-                                </option>
-                            `).join('')}
+                                    <option value="${proc.procedimento}" ${horario.procedimento_id == proc.procedimento ? 'selected' : ''} data-codigo="${proc.codigo}">
+                                        ${proc.procedimento}
+                                    </option>
+                                `).join('')}
         </select>
     `;
         }
