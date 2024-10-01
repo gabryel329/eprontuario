@@ -620,13 +620,13 @@ class AgendaController extends Controller
         $agenda = Agenda::find($request->id);
         if ($agenda) {
             if ($request->status == 'CHEGOU' && is_null($agenda->paciente_id)) {
-                return response()->json(['error' => 'Paciente nÃÂ£o vinculado.'], 400);
+                return response()->json(['error' => 'Paciente não vinculado.'], 400);
             }
             $agenda->status = $request->status;
             $agenda->save();
             return response()->json(['success' => 'Status atualizado com sucesso.']);
         } else {
-            return response()->json(['error' => 'Agenda nÃÂ£o encontrada.'], 404);
+            return response()->json(['error' => 'Agenda não encontrada.'], 404);
         }
     }
 
