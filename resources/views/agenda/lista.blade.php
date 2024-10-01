@@ -93,6 +93,7 @@
                             @else
                                 N/A
                             @endif
+                            <input type="hidden" id="dataSessao" name="dataSessao" value="{{ $data ? \Carbon\Carbon::parse($data)->format('Y-m-d') : '' }}">
                         @else
                             Nenhum filtro aplicado.
                         @endif
@@ -203,6 +204,8 @@
                                     <label class="form-label"><strong>Nome Completo:</strong></label>
                                     <input type="hidden" id="paciente_id{{ $item->id }}" name="paciente_id"
                                         value="{{ $item->paciente_id }}">
+                                    <input type="hidden" id="convenio_id{{ $item->id }}" name="convenio_id" value="{{ $item->convenio_id }}">
+                                    <input type="hidden" id="matricula{{ $item->id }}" name="matricula" value="{{ $item->matricula }}">
                                     <input class="form-control" id="edit-name-{{ $item->id }}" name="name"
                                         type="text" value="{{ $item->name }}">
                                 </div>
@@ -285,7 +288,7 @@
                                         <td>{{ $p->nome_social }}</td>
                                         <td>
                                             <button class="btn btn-primary" type="button"
-                                                onclick="selectPaciente('{{ $item->id }}', '{{ $p->id }}', '{{ $p->name }}')">Selecionar</button>
+                                                onclick="selectPaciente('{{ $item->id }}', '{{ $p->id }}', '{{ $p->name }}', '{{ $p->convenio_id }}', '{{ $p->matricula }}')">Selecionar</button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -343,9 +346,10 @@
 
 
         $(document).ready(function() {
+            var dataSessao = $('#dataSessao').val();
             $('.status-select').change(function() {
                 var status = $(this).val();
-                var dataAgenda = $(this).data('data'); // Data da agenda vinda do atributo data
+                var dataAgenda = dataSessao; // Data da agenda vinda do atributo data
                 var id = $(this).data('id');
                 var pacienteId = $(this).data('paciente-id');
 
@@ -403,9 +407,11 @@
             $('#editModal' + id).modal('show');
         }
 
-        function selectPaciente(itemId, id, name) {
+        function selectPaciente(itemId, id, name, convenio_id, matricula) {
             $('#paciente_id' + itemId).val(id);
             $('#edit-name-' + itemId).val(name);
+            $('#convenio_id' + itemId).val(convenio_id);
+            $('#matricula' + itemId).val(matricula);
             var pacienteModal = bootstrap.Modal.getInstance(document.getElementById('pacienteModal-' + itemId));
             pacienteModal.hide();
         }
