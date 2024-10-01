@@ -46,6 +46,7 @@ class Pacientes extends Model
         'matricula',
         'plano',
         'titular',
+        'validade',
         'produto',
         'certidao',
         'rg',

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Agenda;
 use App\Models\Convenio;
 use App\Models\Empresas;
 use App\Models\GuiaTiss;
+use App\Models\Pacientes;
+use App\Models\Profissional;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -35,9 +38,32 @@ class GuiaTissController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function gerarGuiaConsulta($id)
     {
-        //
+        // Buscar a agenda pelo ID
+        $agenda = Agenda::findOrFail($id);
+
+        // Buscar o paciente relacionado � consulta
+        $paciente = Pacientes::find($agenda->paciente_id);
+
+        // Buscar o profissional relacionado � consulta
+        $profissional = Profissional::join('tipo_profs', 'profissionals.tipoprof_id', '=', 'tipo_profs.id')
+        ->select('profissionals.*', 'tipo_profs.conselho as conselho_profissional')
+        ->where('profissionals.id', $agenda->profissional_id)
+        ->first();
+
+        // Buscar o conv�nio relacionado � consulta
+        $convenio = Convenio::find($agenda->convenio_id);
+        // Outras buscas e c�lculos necess�rios (ex: procedimentos, valores, etc.)
+
+        // Retornar a view da guia de consulta com os dados necess�rios
+        return view('formulario.guiatiss', [
+            'agenda' => $agenda,
+            'paciente' => $paciente,
+            'profissional' => $profissional,
+            'convenio' => $convenio,
+            // Adicione outros dados relevantes aqui
+        ]);
     }
 
     /**

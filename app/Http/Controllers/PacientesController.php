@@ -92,6 +92,7 @@ class PacientesController extends Controller
         $matricula = $request->input('matricula');
         $plano = $request->input('plano');
         $titular = $request->input('titular');
+        $validade = $request->input('validade');
         $produto = $request->input('produto');
         $cor = $request->input('cor');
         $imagem = $request->file('imagem');
@@ -149,6 +150,7 @@ class PacientesController extends Controller
             'matricula' => $matricula,
             'plano' => $plano,
             'titular' => $titular,
+            'validade' => $validade,
             'produto' => $produto,
             'cor' => $cor,
             'imagem' => $imageName,
@@ -203,6 +205,7 @@ class PacientesController extends Controller
         $matricula = $request->input('matricula');
         $plano = $request->input('plano');
         $titular = $request->input('titular');
+        $validade = $request->input('validade');
         $produto = $request->input('produto');
         $cor = $request->input('cor');
         $imagem = $request->file('imagem');
@@ -254,6 +257,7 @@ class PacientesController extends Controller
         $paciente->matricula = $matricula;
         $paciente->plano = $plano;
         $paciente->titular = $titular;
+        $paciente->validade = $validade;
         $paciente->produto = $produto;
         $paciente->cor = $cor;
 

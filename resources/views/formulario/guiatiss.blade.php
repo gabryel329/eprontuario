@@ -64,77 +64,77 @@
         <div class="header">
             <h2>SB SAÚDE</h2>
             <h3>GUIA DE CONSULTA</h3>
-            <h3 style="text-align: right;">2 - Nº Guia no Prestador: {{ $guia->numero_guia_prestador }}</h3>
+            <h3 style="text-align: right;">2 - Nº Guia no Prestador: - </h3>
         </div>
 
         <!-- Primeira parte da tabela -->
         <table>
             <tr>
-                <td>1 - Registro ANS: {{ $guia->registro_ans }}</td>
-                <td>3 - Número da Guia Atribuída pela Operadora: {{ $guia->numero_guia_operadora }}</td>
+                <td>1 - Registro ANS: {{ $convenio->ans }}</td>
+                <td>3 - Número da Guia Atribuída pela Operadora: - </td>
             </tr>
         </table>
 
         <!-- Dados do Beneficiário -->
         <table>
             <tr>
-                <td>4 - Número da Carteira: {{ $guia->numero_carteira }}</td>
-                <td>5 - Validade da Carteira: {{ $guia->validade_carteira }}</td>
-                <td>6 - Atendimento a RN (Sim ou Não): {{ $guia->atendimento_rn }}</td>
+                <td>4 - Número da Carteira: {{ $paciente->matricula }}</td>
+                <td>5 - Validade da Carteira: {{ $paciente->validade }}</td>
+                <td>6 - Atendimento a RN (Sim ou Não): - </td>
             </tr>
             <tr>
-                <td>26 - Nome Social: {{ $guia->nome_social }}</td>
-                <td colspan="2">7 - Nome: {{ $guia->nome_beneficiario }}</td>
+                <td>26 - Nome Social: {{ $paciente->nome_social }}</td>
+                <td colspan="2">7 - Nome: {{ $paciente->name }}</td>
             </tr>
         </table>
 
         <!-- Dados do Contratado -->
         <table>
             <tr>
-                <td>9 - Código na Operadora: {{ $guia->codigo_operadora_contratado }}</td>
-                <td colspan="2">10 - Nome do Contratado: {{ $guia->nome_contratado }}</td>
+                <td>9 - Código na Operadora: {{ $convenio->ans }} </td>
+                <td colspan="2">10 - Nome do Contratado: {{ $convenio->nome }} </td>
             </tr>
             <tr>
-                <td>11 - Código CNES: {{ $guia->codigo_cnes }}</td>
-                <td>12 - Nome do Profissional Executante: {{ $guia->nome_profissional_executante }}</td>
+                <td>11 - Código CNES: - </td>
+                <td>12 - Nome do Profissional Executante: {{ $profissional->name }}</td>
             </tr>
             <tr>
-                <td>13 - Conselho Profissional: {{ $guia->conselho_profissional }}</td>
-                <td>14 - Número no Conselho: {{ $guia->numero_conselho }}</td>
-                <td>15 - UF: {{ $guia->uf }}</td>
-                <td>16 - Código CBO: {{ $guia->codigo_cbo }}</td>
+                <td>13 - Conselho Profissional: {{ $profissional->conselho_profissional }}</td>
+                <td>14 - Número no Conselho: {{ $profissional->conselho }}</td>
+                <td>15 - UF: {{ $profissional->uf }}</td>
+                <td>16 - Código CBO: - </td>
             </tr>
         </table>
 
         <!-- Dados do Atendimento / Procedimento Realizado -->
         <table>
             <tr>
-                <td>17 - Indicação de Acidente (acidente ou doença relacionada): {{ $guia->indicacao_acidente }}</td>
-                <td>27 - Indicação de Cobertura Especial: {{ $guia->indicacao_cobertura_especial }}</td>
-                <td>28 - Regime de Atendimento: {{ $guia->regime_atendimento }}</td>
-                <td>29 - Saúde Ocupacional: {{ $guia->saude_ocupacional }}</td>
+                <td>17 - Indicação de Acidente (acidente ou doença relacionada): - </td>
+                <td>27 - Indicação de Cobertura Especial: - </td>
+                <td>28 - Regime de Atendimento: - </td>
+                <td>29 - Saúde Ocupacional: - </td>
             </tr>
             <tr>
-                <td>18 - Data do Atendimento: {{ $guia->data_atendimento }}</td>
-                <td>19 - Tipo de Consulta: {{ $guia->tipo_consulta }}</td>
-                <td>20 - Tabela: {{ $guia->tabela }}</td>
-                <td>21 - Código do Procedimento: {{ $guia->codigo_procedimento }}</td>
-                <td>22 - Valor do Procedimento: {{ $guia->valor_procedimento }}</td>
+                <td>18 - Data do Atendimento: {{ $agenda->data }}</td>
+                <td>19 - Tipo de Consulta: - </td>
+                <td>20 - Tabela: - </td>
+                <td>21 - Código do Procedimento: {{ $agenda->codigo }}</td>
+                <td>22 - Valor do Procedimento: - </td>
             </tr>
         </table>
 
         <!-- Observação / Justificativa -->
         <table>
             <tr>
-                <td>23 - Observação/Justificativa: {{ $guia->observacoes }}</td>
+                <td>23 - Observação/Justificativa: - </td>
             </tr>
         </table>
 
         <!-- Assinaturas -->
         <table>
             <tr>
-                <td>24 - Assinatura do Profissional Executante: {{ $guia->assinatura_profissional_executante }}</td>
-                <td>25 - Assinatura do Beneficiário ou Responsável: {{ $guia->assinatura_beneficiario }}</td>
+                <td>24 - Assinatura do Profissional Executante: </td>
+                <td>25 - Assinatura do Beneficiário ou Responsável: </td>
             </tr>
         </table>
     </div>

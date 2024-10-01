@@ -118,17 +118,22 @@
                                     <input class="form-control" id="matricula" name="matricula" type="text"
                                         value="{{ old('matricula') }}">
                                 </div>
+                                <div class="mb-3 col-md-2" id="convenio-container3" style="display:none;">
+                                    <label class="form-label">Validade</label>
+                                    <input class="form-control" id="validade" name="validade" type="date"
+                                        value="{{ old('validade') }}">
+                                </div>
                                 <div class="mb-3 col-md-2" id="convenio-container4" style="display:none;">
                                     <label class="form-label">Plano</label>
                                     <input class="form-control" id="plano" name="plano" type="text"
                                         value="{{ old('plano') }}">
                                 </div>
-                                <div class="mb-3 col-md-2" id="convenio-container5" style="display:none;">
+                                <div class="mb-3 col-md-1" id="convenio-container5" style="display:none;">
                                     <label class="form-label">Produto</label>
                                     <input class="form-control" id="produto" name="produto" type="text"
                                         value="{{ old('produto') }}">
                                 </div>
-                                <div class="mb-3 col-md-2" id="convenio-container6" style="display:none;">
+                                <div class="mb-3 col-md-1" id="convenio-container6" style="display:none;">
                                     <label class="form-label">Titular</label>
                                     <input class="form-control" id="titular" name="titular" type="text"
                                         value="{{ old('titular') }}">
@@ -386,25 +391,29 @@
             if ($('#convenio-sim').is(':checked')) {
                 $('#convenio-select-container').show();
                 $('#convenio-container2').show();
+                $('#convenio-container3').show();
                 $('#convenio-container4').show();
                 $('#convenio-container5').show();
                 $('#convenio-container6').show();
                 $('#convenio-container').removeClass('col-md-6').addClass('col-md-2');
                 $('#convenio-container2').removeClass('col-md-2').addClass('col-md-2');
+                $('#convenio-container3').removeClass('col-md-2').addClass('col-md-2');
                 $('#convenio-container4').removeClass('col-md-2').addClass('col-md-2');
-                $('#convenio-container5').removeClass('col-md-2').addClass('col-md-2');
-                $('#convenio-container6').removeClass('col-md-2').addClass('col-md-2');
+                $('#convenio-container5').removeClass('col-md-1').addClass('col-md-1');
+                $('#convenio-container6').removeClass('col-md-1').addClass('col-md-1');
             } else {
                 $('#convenio-select-container').hide();
                 $('#convenio-container2').hide();
+                $('#convenio-container3').hide();
                 $('#convenio-container4').hide();
                 $('#convenio-container5').hide();
                 $('#convenio-container6').hide();
                 $('#convenio-container').removeClass('col-md-2').addClass('col-md-6');
                 $('#convenio-container2').removeClass('col-md-2').addClass('col-md-2');
+                $('#convenio-container3').removeClass('col-md-2').addClass('col-md-2');
                 $('#convenio-container4').removeClass('col-md-2').addClass('col-md-2');
-                $('#convenio-container5').removeClass('col-md-2').addClass('col-md-2');
-                $('#convenio-container6').removeClass('col-md-2').addClass('col-md-2');
+                $('#convenio-container5').removeClass('col-md-1').addClass('col-md-1');
+                $('#convenio-container6').removeClass('col-md-1').addClass('col-md-1');
             }
         }
 

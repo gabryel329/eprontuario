@@ -212,11 +212,17 @@
                                                                         @endforeach
                                                                     </select>
                                                                 </div>
-                                                                <div class="mb-3 col-md-4">
+                                                                <div class="mb-3 col-md-2">
                                                                     <label class="form-label">Matrícula</label>
                                                                     <input class="form-control" name="matricula"
                                                                         type="text"
                                                                         value="{{ old('matricula', $item->matricula) }}">
+                                                                </div>
+                                                                <div class="mb-3 col-md-2">
+                                                                    <label class="form-label">Validade</label>
+                                                                    <input class="form-control" name="validade"
+                                                                        type="date"
+                                                                        value="{{ old('validade', $item->validade) }}">
                                                                 </div>
                                                                 <div class="mb-3 col-md-2">
                                                                     <label class="form-label">Plano</label>
@@ -239,10 +245,15 @@
                                                             </div>
                                                             <div class="row">
                                                                 <div class="mb-3 col-md-3">
-                                                                    <label class="form-label">Cor</label>
-                                                                    <input class="form-control" name="cor"
-                                                                        type="text"
-                                                                        value="{{ old('cor', $item->cor) }}">
+                                                                    <label class="form-label">Étnia</label>
+                                                                    <select class="form-control" id="cor" name="cor">
+                                                                        <option disabled selected value=""
+                                                                            style="font-size:18px;color: black;">{{ old('cor', $item->cor) }}</option>
+                                                                        <option value="Branco">Branco</option>
+                                                                        <option value="Preto">Preto</option>
+                                                                        <option value="Amarelo">Amarelo</option>
+                                                                        <option value="Pardo">Pardo</option>
+                                                                    </select>
                                                                 </div>
                                                                 <div class="mb-3 col-md-3">
                                                                     <label class="form-label">Nome do Pai</label>
@@ -295,6 +306,20 @@
                                                                     <label class="form-label">Imagem</label>
                                                                     <input class="form-control" name="imagem"
                                                                         type="file">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="mb-3 col-md-6">
+                                                                    <label class="form-label">Telefone</label>
+                                                                    <input class="form-control" name="telefone"
+                                                                        type="text"
+                                                                        value="{{ old('telefone', $item->telefone) }}">
+                                                                </div>
+                                                                <div class="mb-3 col-md-6">
+                                                                    <label class="form-label">Celular</label>
+                                                                    <input class="form-control" name="celular"
+                                                                        type="text"
+                                                                        value="{{ old('celular', $item->celular) }}">
                                                                 </div>
                                                             </div>
                                                             <div class="row">
