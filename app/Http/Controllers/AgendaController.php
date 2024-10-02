@@ -500,6 +500,7 @@ class AgendaController extends Controller
         $procedimento_id = $request->input('procedimento_id');
         $profissional_id = $request->input('profissional_id');
         $paciente_id = $request->input('paciente_id');
+        $convenio_id = $request->input('convenio_id');
 
         // Check if the agenda already exists
         $existeAgenda = Agenda::where('data', $data)
@@ -508,10 +509,10 @@ class AgendaController extends Controller
 
         if ($existeAgenda) {
             if ($request->ajax()) {
-                return response()->json(['error' => 'JÃÂ¡ existe Consulta para este horÃÂ¡rio.'], 400);
+                return response()->json(['error' => 'Já existe Consulta para este horário.'], 400);
             }
 
-            return redirect()->back()->with('error', 'JÃÂ¡ existe Consulta para este horÃÂ¡rio.');
+            return redirect()->back()->with('error', 'Já existe Consulta para este horário.');
         }
 
         // Criar um novo item na agenda
@@ -528,6 +529,10 @@ class AgendaController extends Controller
 
         if ($paciente_id) {
             $agendaData['paciente_id'] = $paciente_id;
+        }
+
+        if ($convenio_id) {
+            $agendaData['convenio_id'] = $convenio_id;
         }
 
         $agenda = Agenda::create($agendaData);
@@ -638,7 +643,9 @@ class AgendaController extends Controller
             'data' => 'required|date',
             'hora' => 'required|date_format:H:i',
             'paciente_id' => 'required|integer',
+            'convenio_id' => 'required|integer',
             'name' => 'required|string|max:255',
+            'matricula' => 'required|string|max:255',
         ]);
 
         // Encontrar a agenda pelo ID
@@ -649,6 +656,8 @@ class AgendaController extends Controller
         $agenda->data = $request->data;
         $agenda->hora = $request->hora;
         $agenda->paciente_id = $request->paciente_id;
+        $agenda->convenio_id = $request->convenio_id;
+        $agenda->matricula = $request->matricula;
         $agenda->name = $request->name;
         $agenda->celular = $request->celular;
         $agenda->procedimento_id = $request->procedimento_id;

@@ -220,10 +220,10 @@
                                                                 </div>
                                                                 <div class="mb-3 col-md-2">
                                                                     <label class="form-label">Validade</label>
-                                                                    <input class="form-control" name="validade"
-                                                                        type="date"
-                                                                        value="{{ old('validade', $item->validade) }}">
+                                                                    <input class="form-control" name="validade" type="month"
+                                                                        value="{{ old('validade', \Carbon\Carbon::parse($item->validade)->format('Y-m')) }}">
                                                                 </div>
+                                                                
                                                                 <div class="mb-3 col-md-2">
                                                                     <label class="form-label">Plano</label>
                                                                     <input class="form-control" name="plano"

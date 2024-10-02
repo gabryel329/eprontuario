@@ -74,6 +74,8 @@
                                         <label class="form-label"><strong>Nome:</strong></label>
                                         <input class="form-control" id="paciente_id" name="paciente_id" type="text"
                                             hidden>
+                                        <input class="form-control" id="convenio_id" name="convenio_id" type="text"
+                                            hidden>
                                         <input class="form-control" id="name" name="name" type="text"
                                             placeholder="Nome do Paciente">
                                     </div>
@@ -173,7 +175,7 @@
                                         <td>{{ $p->nome_social }}</td>
                                         <td>
                                             <button class="btn btn-primary" type="button"
-                                                onclick="selectPaciente('{{ $p->id }}', '{{ $p->name }}', '{{ $p->celular }}')">Selecionar</button>
+                                                onclick="selectPaciente('{{ $p->id }}', '{{ $p->name }}', '{{ $p->celular }}', '{{ $p->convenio_id }}')">Selecionar</button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -361,10 +363,11 @@
     }
 });
 
-        function selectPaciente(id, name, celular) {
+        function selectPaciente(id, name, celular, convenio_id) {
             document.getElementById('name').value = name;
             document.getElementById('paciente_id').value = id;
             document.getElementById('celular').value = celular;
+            document.getElementById('convenio_id').value = convenio_id;
             var modal = bootstrap.Modal.getInstance(document.getElementById('pacienteModal'));
             modal.hide();
         }

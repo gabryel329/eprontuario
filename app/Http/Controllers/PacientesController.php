@@ -92,7 +92,10 @@ class PacientesController extends Controller
         $matricula = $request->input('matricula');
         $plano = $request->input('plano');
         $titular = $request->input('titular');
-        $validade = $request->input('validade');
+        $validade = $request->input('validade'); // Recebe o valor do input 'validade' (formato YYYY-MM)
+        if ($validade) {
+            $validade = $validade . '-01'; // Adiciona o dia "01" para completar a data
+        }
         $produto = $request->input('produto');
         $cor = $request->input('cor');
         $imagem = $request->file('imagem');
@@ -205,7 +208,10 @@ class PacientesController extends Controller
         $matricula = $request->input('matricula');
         $plano = $request->input('plano');
         $titular = $request->input('titular');
-        $validade = $request->input('validade');
+        $validade = $request->input('validade'); // Recebe o valor do input 'validade' (formato YYYY-MM)
+        if ($validade) {
+            $validade = $validade . '-01'; // Adiciona o dia "01" para completar a data
+        }
         $produto = $request->input('produto');
         $cor = $request->input('cor');
         $imagem = $request->file('imagem');

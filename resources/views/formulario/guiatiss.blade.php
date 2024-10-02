@@ -174,7 +174,9 @@
         <div class="section-title">Dados do Beneficiário</div>
         <div class="block">
             <div>4 - Número da Carteira: <strong>{{ $paciente->matricula }}</strong></div>
-            <div>5 - Validade da Carteira: <strong>{{ $paciente->validade }}</strong></div>
+            <div>5 - Validade da Carteira: 
+                <strong>{{ \Carbon\Carbon::parse($paciente->validade)->format('m/Y') }}</strong>
+            </div>
             <div>6 - Atendimento a RN (Sim ou Não):  
                 <strong>
                     @if (\Carbon\Carbon::parse($paciente->nasc)->year == \Carbon\Carbon::now()->year)
@@ -198,12 +200,12 @@
         </div>
         <div class="block">
             <div>11 - Código CNES: ___________________</div>
-            <div>12 - Nome do Profissional Executante:  <strong>{{$profissional->name}}</strong> </div>
+            <div>12 - Nome do Profissional Executante: <strong>{{$profissional->name}}</strong> </div>
         </div>
         <div class="block">
-            <div>13 - Conselho Profissional: ___________________</div>
-            <div>14 - Número no Conselho: ___________________</div>
-            <div>15 - UF: ______</div>
+            <div>13 - Conselho Profissional: <strong>{{$profissional->conselho_profissional}}</strong> </div>
+            <div>14 - Número no Conselho: <strong>{{$profissional->conselho}}</strong> </div>
+            <div>15 - UF: <strong>{{$profissional->uf}}</strong> </div>
             <div>16 - Código CBO: ___________________</div>
         </div>
 
@@ -216,10 +218,10 @@
             <div>29 - Saúde Ocupacional: ______</div>
         </div>
         <div class="block">
-            <div>18 - Data do Atendimento: ___/___/___</div>
+            <div>18 - Data do Atendimento:<strong>{{ \Carbon\Carbon::parse($agenda->data)->format('d/m/Y') }}</strong></div>
             <div>19 - Tipo de Consulta: ___________________</div>
             <div>20 - Tabela: ___________________</div>
-            <div>21 - Código do Procedimento: ___________________</div>
+            <div>21 - Código do Procedimento: <strong>{{$agenda->codigo}}</strong> </div>
             <div>22 - Valor do Procedimento: ___________________</div>
         </div>
 
