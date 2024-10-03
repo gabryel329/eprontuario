@@ -15,6 +15,9 @@ class GuiaConsulta extends Model
     protected $fillable = [
         'user_id',
         'convenio_id',
+        'paciente_id',
+        'profissional_id',
+        'agenda_id',
         'registro_ans', // 1 - Registro ANS
         'numero_guia_operadora', // 3 - Número da Guia Atribuído pela Operadora
         'numero_carteira', // 4 - Número da Carteira
@@ -54,5 +57,20 @@ class GuiaConsulta extends Model
     public function convenio()
     {
         return $this->belongsTo(Convenio::class, 'convenio_id');
+    }
+
+    public function agenda()
+    {
+        return $this->belongsTo(Agenda::class, 'agenda_id');
+    }
+
+    public function profissional()
+    {
+        return $this->belongsTo(Profissional::class, 'profissional_id');
+    }
+
+    public function paciente()
+    {
+        return $this->belongsTo(Pacientes::class, 'paciente_id');
     }
 }

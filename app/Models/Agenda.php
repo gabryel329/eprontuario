@@ -69,4 +69,8 @@ class Agenda extends Model
     {
         return $this->belongsTo(Painel::class, 'agenda_id');
     }
+    public function guia()
+    {
+        return $this->hasMany(GuiaConsulta::class, 'agenda_id');
+    }
 }

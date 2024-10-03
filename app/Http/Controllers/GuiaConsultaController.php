@@ -10,6 +10,7 @@ use App\Models\GuiaTiss;
 use App\Models\Pacientes;
 use App\Models\Profissional;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GuiaConsultaController extends Controller
 {
@@ -46,15 +47,15 @@ class GuiaConsultaController extends Controller
         $paciente = Pacientes::find($agenda->paciente_id);
 
         $profissional = Profissional::join('tipo_profs', 'profissionals.tipoprof_id', '=', 'tipo_profs.id')
-        ->select('profissionals.*', 'tipo_profs.conselho as conselho_profissional')
-        ->where('profissionals.id', $agenda->profissional_id)
-        ->first();
+            ->select('profissionals.*', 'tipo_profs.conselho as conselho_profissional')
+            ->where('profissionals.id', $agenda->profissional_id)
+            ->first();
 
         $convenio = Convenio::find($agenda->convenio_id);
-        
+
         $empresa = Empresas::first();
 
-        return view('formulario.guiaconsulta', [
+        return view('formulario.guiatiss', [
             'agenda' => $agenda,
             'paciente' => $paciente,
             'profissional' => $profissional,
@@ -63,6 +64,79 @@ class GuiaConsultaController extends Controller
         ]);
 
     }
+
+    public function gerarGuiaConsultaMODAL($id)
+    {
+        // Buscar a agenda pelo ID
+        $agenda = Agenda::findOrFail($id);
+
+        $paciente = Pacientes::find($agenda->paciente_id);
+
+        $profissional = Profissional::join('tipo_profs', 'profissionals.tipoprof_id', '=', 'tipo_profs.id')
+            ->select('profissionals.*', 'tipo_profs.conselho as conselho_profissional')
+            ->where('profissionals.id', $agenda->profissional_id)
+            ->first();
+        
+        $guia = GuiaConsulta::where('agenda_id', $agenda->id)->first();
+
+        $convenio = Convenio::find($agenda->convenio_id);
+
+        $empresa = Empresas::first();
+
+        // Retornar os dados em formato JSON para o AJAX preencher o modal
+        return response()->json([
+            'agenda' => $agenda,
+            'paciente' => $paciente,
+            'profissional' => $profissional,
+            'convenio' => $convenio,
+            'empresa' => $empresa,
+            'guia' => $guia
+        ]);
+    }
+
+    public function salvarGuiaConsulta(Request $request)
+    {
+        // Exemplo de como salvar os dados no banco de dados
+        $guia = new GuiaConsulta();
+        $guia->user_id = auth()->user()->id;
+        $guia->convenio_id = $request->input('convenio_id');
+        $guia->paciente_id = $request->input('paciente_id');
+        $guia->profissional_id = $request->input('profissional_id');
+        $guia->agenda_id = $request->input('agenda_id');
+        $guia->numero_guia_operadora = $request->input('numero_guia_operadora');
+        $guia->registro_ans = $request->input('registro_ans');
+        $guia->numero_carteira = $request->input('numero_carteira');
+        $guia->validade_carteira = $request->input('validade_carteira');
+        $guia->atendimento_rn = $request->input('atendimento_rn') === 'S' ? true : false;
+        $guia->nome_social = $request->input('nome_social');
+        $guia->nome_beneficiario = $request->input('nome_beneficiario');
+        $guia->codigo_operadora = $request->input('codigo_operadora');
+        $guia->nome_contratado = $request->input('nome_contratado');
+        $guia->codigo_cnes = $request->input('codigo_cnes');
+        $guia->nome_profissional_executante = $request->input('nome_profissional_executante');
+        $guia->conselho_profissional = $request->input('conselho_profissional');
+        $guia->numero_conselho = $request->input('numero_conselho');
+        $guia->uf_conselho = $request->input('uf_conselho');
+        $guia->codigo_cbo = $request->input('codigo_cbo');
+        $guia->indicacao_acidente = $request->input('indicacao_acidente') === 'S' ? true : false;
+        $guia->indicacao_cobertura_especial = $request->input('indicacao_cobertura_especial') === 'S' ? true : false;
+        $guia->regime_atendimento = $request->input('regime_atendimento');
+        $guia->saude_ocupacional = $request->input('saude_ocupacional') === 'S' ? true : false;
+        $guia->data_atendimento = $request->input('data_atendimento');
+        $guia->tipo_consulta = $request->input('tipo_consulta');
+        $guia->codigo_tabela = $request->input('codigo_tabela');
+        $guia->codigo_procedimento = $request->input('codigo_procedimento');
+        $guia->valor_procedimento = $request->input('valor_procedimento');
+        $guia->observacao = $request->input('observacao');
+
+        // Continue atribuindo os outros campos...
+        $guia->save();
+
+        // Retornar uma resposta de sucesso
+        return response()->json(['success' => true]);
+    }
+
+
     /**
      * Store a newly created resource in storage.
      */
@@ -122,17 +196,16 @@ class GuiaConsultaController extends Controller
      */
     public function impressaoGuia($id)
     {
-        
-        $guia = GuiaConsulta::find($id);
+        $guia = GuiaConsulta::findOrFail($id);
+
         $empresa = Empresas::first(); 
-        $convenio = Convenio::find($guia->convenio_id);
         
         if (!$guia) {
             return redirect()->back()->with('error', 'Guia não encontrada.');
         }
         
 
-        return view('formulario.guiaconsulta', compact('guia', 'empresa', 'convenio'));
+        return view('formulario.guiaconsulta', compact('guia', 'empresa'));
     }
 
     public function visualizarConsulta($id)

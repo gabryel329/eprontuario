@@ -328,7 +328,7 @@ $(document).ready(function(){
 
                             html += '<tr>';
                             html += '<td>' + guia.id + '</td>';
-                            html += '<td>' + guia.registro_ans + '</td>';
+                            html += '<td>' + guia.nome_beneficiario + '</td>';
                             html += '<td>' + dataFormatada + '</td>';
                             html += '<td>';
                             html += '<button type="button" class="btn btn-info btnVisualizarGuia" data-id="' + guia.id + '">Visualizar</button> ';
