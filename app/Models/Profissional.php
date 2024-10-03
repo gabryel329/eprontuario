@@ -40,6 +40,9 @@ class Profissional extends Model
         'material',
         'medicamento',
         'conselho',
+        'uf_conselho',
+        'conselho1',
+        'uf_conselho1',
     
         // Campos de dias e horários para manhã
         'manha_dom',
@@ -133,5 +136,8 @@ class Profissional extends Model
     {
         return $this->hasOne(Disponibilidade::class, 'profissional_id');
     }
-
+    public function guia()
+    {
+        return $this->hasMany(GuiaConsulta::class, 'profissional_id');
+    }
 }

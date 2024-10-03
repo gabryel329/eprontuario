@@ -29,7 +29,6 @@ class TipoProfController extends Controller
     {
         // Capitalize the input
         $nome = ucfirst(trim($request->input('nome')));
-        $conselho = strtoupper(trim($request->input('conselho')));
     
         // Check if the permission already exists
         $existeTipoProf = TipoProf::where('nome', $nome)->first();
@@ -41,7 +40,6 @@ class TipoProfController extends Controller
         // Create a new permission
         TipoProf::create([
             'nome' => $nome,
-            'conselho' => $conselho,
         ]);
     
         return redirect()->route('tipoprof.index')->with('success', 'Tipo Profissional cadastrada!');
@@ -60,7 +58,6 @@ class TipoProfController extends Controller
         }
 
         $tipoprof->nome = ucfirst(trim($request->input('nome')));
-        $tipoprof->conselho = strtoupper(trim($request->input('conselho')));
 
         $tipoprof->save();
 

@@ -10,7 +10,7 @@ class TipoProf extends Model
 {
     use HasFactory, SoftDeletes;
     protected $table='tipo_profs';
-    protected $fillable=['nome', 'conselho'];
+    protected $fillable=['nome'];
     protected $dates=['deleted_at'];
 
     public function profissional()

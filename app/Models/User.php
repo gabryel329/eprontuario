@@ -74,4 +74,8 @@ class User extends Authenticatable
     {
         return $this->belongsTo(GuiaHonorario::class, 'user_id');
     }
+    public function guiaconsulta()
+    {
+        return $this->belongsTo(GuiaConsulta::class, 'user_id');
+    }
 }

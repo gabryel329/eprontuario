@@ -45,10 +45,6 @@
                       <label class="form-label">Tipo Profissional</label>
                       <input name="nome" id="nome" class="form-control" type="text" placeholder="" required>
                     </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Conselho</label>
-                      <input name="conselho" id="conselho" class="form-control" type="text" placeholder="">
-                    </div>
                   </div>
                   <div class="tile-footer">
                     <div class="row">
@@ -69,7 +65,6 @@
                   <tr>
                     <th>#</th>
                     <th>Nome</th>
-                    <th>Conselho</th>
                     <th>Editar</th>
                     <th>Excluir</th>
                   </tr>
@@ -79,7 +74,6 @@
                         <tr>
                             <td>{{ $item->id }}</td>
                             <td>{{ $item->nome }}</td>
-                            <td>{{ $item->conselho }}</td>
                             <td>
                                 <div>
                                     <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}">
@@ -112,10 +106,6 @@
                                               <div class="col-md-6">
                                                   <label for="nome{{ $item->id }}" class="form-label">Nome</label>
                                                   <input type="text" class="form-control" id="nome{{ $item->id }}" name="nome" value="{{ $item->nome }}">
-                                              </div>
-                                              <div class="col-md-6">
-                                                  <label for="conselho{{ $item->id }}" class="form-label">Conselho</label>
-                                                  <input type="text" class="form-control" id="conselho{{ $item->id }}" name="conselho" value="{{ $item->conselho }}">
                                               </div>
                                             </div>
                                             <div class="modal-footer">

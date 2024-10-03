@@ -40,10 +40,15 @@
                     <div class="tile-body">
                         <form method="POST" action="{{ route('especialidade.store') }}" class="form-horizontal">
                             @csrf
-                            <div class="mb-3 row">
-                                <label class="form-label col-md-3">Nome da Especialidade</label>
-                                <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label col-md-6">Especialidade</label>
                                     <input name="especialidade" id="especialidade" class="form-control" type="text"
+                                        placeholder="" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label col-md-6">Conselho</label>
+                                    <input name="conselho" id="conselho" class="form-control" type="text"
                                         placeholder="" required>
                                 </div>
                             </div>
@@ -67,6 +72,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Especialidades</th>
+                                <th>Conselho</th>
                                 <th>Editar</th>
                                 <th>Excluir</th>
                             </tr>
@@ -76,6 +82,7 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->especialidade }}</td>
+                                    <td>{{ $item->conselho }}</td>
                                     <td>
                                         <div>
                                             <button type="button" class="btn btn-info" data-bs-toggle="modal"

@@ -29,13 +29,13 @@ class DatabaseSeeder extends Seeder
             ['cargo' => 'Admin'],
         ]);
         DB::table('tipo_profs')->insert([
-            ['nome' => 'Medico', 'conselho' => 'CRM'],
-            ['nome' => 'Recepção', 'conselho' => null],
+            ['nome' => 'Medico'],
+            ['nome' => 'Recepção'],
         ]);
 
         DB::table('especialidades')->insert([
-            ['especialidade' => 'Clinico Geral'],
-            ['especialidade' => 'Ortopedista'],
+            ['especialidade' => 'Clinico Geral','conselho' => 'CRM'],
+            ['especialidade' => 'Fisioterapia', 'conselho' => 'CTO'],
         ]);
 
         DB::table('profissionals')->insert([

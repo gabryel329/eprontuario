@@ -63,7 +63,10 @@ class ProfissionalController extends Controller
         $permisoes_id = $request->input('permisoes_id');
         $especialidade_ids = $request->input('especialidade_id');
         $tipoprof_id = $request->input('tipoprof_id');
+        $ufconselho = $request->input('uf_conselho');
         $conselho = $request->input('conselho');
+        $ufconselho1 = $request->input('uf_conselho1');
+        $conselho1 = $request->input('conselho1');
         $cep = $request->input('cep');
         $rua = $request->input('rua');
         $bairro = $request->input('bairro');
@@ -150,6 +153,9 @@ class ProfissionalController extends Controller
                 'imagem' => $imageName,
                 'permisoes_id' => $permisoes_id,
                 'conselho' => $conselho,
+                'uf_conselho' => $ufconselho,
+                'conselho1' => $conselho1,
+                'uf_conselho1' => $ufconselho1,
                 'tipoprof_id' => $tipoprof_id,
                 'cep' => $cep,
                 'rua' => $rua,
@@ -216,7 +222,10 @@ class ProfissionalController extends Controller
                 'rg' => $rg,
                 'cor' => $cor,
                 'permisoes_id' => $permisoes_id,
+                'uf_conselho' => $ufconselho,
                 'conselho' => $conselho,
+                'conselho1' => $conselho1,
+                'uf_conselho1' => $ufconselho1,
                 'tipoprof_id' => $tipoprof_id,
                 'cep' => $cep,
                 'rua' => $rua,
@@ -324,7 +333,10 @@ class ProfissionalController extends Controller
         $permisoes_id = $request->input('permisoes_id');
         $especialidade_ids = $request->input('especialidade_id'); // Este é um array de IDs de especialidade
         $tipoprof_id = $request->input('tipoprof_id');
+        $ufconselho = $request->input('uf_conselho');
         $conselho = $request->input('conselho');
+        $ufconselho1 = $request->input('uf_conselho1');
+        $conselho1 = $request->input('conselho1');
         $cep = $request->input('cep');
         $rua = $request->input('rua');
         $bairro = $request->input('bairro');
@@ -410,8 +422,11 @@ class ProfissionalController extends Controller
                 'cor' => $cor,
                 'imagem' => $imageName,
                 'permisoes_id' => $permisoes_id,
+                'uf_conselho' => $ufconselho,
                 'conselho' => $conselho,
                 'tipoprof_id' => $tipoprof_id,
+                'conselho1' => $conselho1,
+                'uf_conselho1' => $ufconselho1,
                 'cep' => $cep,
                 'rua' => $rua,
                 'bairro' => $bairro,
@@ -474,7 +489,10 @@ class ProfissionalController extends Controller
                 'rg' => $rg,
                 'cor' => $cor,
                 'permisoes_id' => $permisoes_id,
+                'uf_conselho' => $ufconselho,
                 'conselho' => $conselho,
+                'conselho1' => $conselho1,
+                'uf_conselho1' => $ufconselho1,
                 'tipoprof_id' => $tipoprof_id,
                 'cep' => $cep,
                 'rua' => $rua,

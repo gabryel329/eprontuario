@@ -153,7 +153,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="mb-3 col-md-4">
+                                            <div class="mb-3 col-md-2">
                                                 <label class="form-label">Tipo de Profissional</label>
                                                 <select class="form-control" id="tipo_profissional" name="tipoprof_id"
                                                     onchange="mostrarCamposEspecificos()" required>
@@ -168,22 +168,44 @@
                                                 <div class="invalid-feedback">Por favor, selecione um tipo de profissional.
                                                 </div>
                                             </div>
+                                            <div class="mb-3 col-md-4 hidden" id="campo_especialidade">
+                                                <label class="form-label">Especialidades</label>
+                                                <select class="form-control select2" id="especialidade_id"
+                                                    name="especialidade_id[]" multiple style="width: 100%;">
+                                                    @foreach ($especialidades as $especialidade)
+                                                        <option value="{{ $especialidade->id }}"
+                                                            data-conselho="{{ $especialidade->conselho }}">{{ $especialidade->especialidade }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="invalid-feedback">Por favor, selecione uma especialidade.</div>
+                                            </div>
                                             <div class="mb-3 col-md-4 hidden" id="campo_conselho">
                                                 <label id="label_conselho" class="form-label"></label>
                                                 <input type="text" name="conselho" class="form-control"
                                                     id="input_conselho" placeholder="">
                                                 <div class="invalid-feedback">Por favor, preencha o campo Conselho.</div>
                                             </div>
-                                            <div class="mb-3 col-md-4 hidden" id="campo_especialidade">
-                                                <label class="form-label">Especialidades</label>
-                                                <select class="form-control select2" id="especialidade_id"
-                                                    name="especialidade_id[]" multiple style="width: 100%;">
-                                                    @foreach ($especialidades as $especialidade)
-                                                        <option value="{{ $especialidade->id }}">
-                                                            {{ $especialidade->especialidade }}</option>
-                                                    @endforeach
-                                                </select>
-                                                <div class="invalid-feedback">Por favor, selecione uma especialidade.</div>
+                                            <div class="mb-3 col-md-2 hidden" id="campo_uf_conselho">
+                                                <label class="form-label">UF do Conselho</label>
+                                                <input type="text" name="uf_conselho" class="form-control"
+                                                    id="uf_conselho" placeholder="">
+                                                <div class="invalid-feedback">Por favor, selecione a UF do Conselho.</div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="mb-3 col-md-4"></div>
+                                            <div class="mb-3 col-md-2"></div>
+                                            <div class="mb-3 col-md-4 hidden" id="campo_conselho1">
+                                                <label id="label_conselho1" class="form-label"></label>
+                                                <input type="text" name="conselho1" class="form-control"
+                                                    id="input_conselho1" placeholder="">
+                                                <div class="invalid-feedback">Por favor, preencha o campo Conselho.</div>
+                                            </div>
+                                            <div class="mb-3 col-md-2 hidden" id="campo_uf_conselho1">
+                                                <label class="form-label">UF do Conselho</label>
+                                                <input type="text" name="uf_conselho1" class="form-control"
+                                                    id="uf_conselho1" placeholder="">
+                                                <div class="invalid-feedback">Por favor, selecione a UF do Conselho.</div>
                                             </div>
                                         </div>
                                         <div class="row" id="campos_comuns">
@@ -354,194 +376,77 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
 
     <script>
-        document.getElementById('pacienteSearch').addEventListener('keyup', function() {
-            var input = this.value.toLowerCase();
-            var rows = document.getElementById('pacienteTable').getElementsByTagName('tbody')[0]
-                .getElementsByTagName('tr');
-
-            for (var i = 0; i < rows.length; i++) {
-                var name = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
-                var cpf = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
-
-                // Verifica se o nome ou CPF contém o valor digitado no input
-                if (name.includes(input) || cpf.includes(input)) {
-                    rows[i].style.display = "";
-                } else {
-                    rows[i].style.display = "none";
-                }
-            }
-        });
-
         $(document).ready(function() {
-            $('#cpf').mask('000.000.000-00');
-            $('#telefone').mask('(00) 0000-0000');
-            $('#celular').mask('(00) 00000-0000');
-            $('#corem').mask('0000000-AA', {
-                translation: {
-                    'A': {
-                        pattern: /[A-Za-z]/
-                    },
-                    '0': {
-                        pattern: /\d/,
-                        optional: true
-                    }
-                },
-                onKeyPress: function(cep, event, currentField, options) {
-                    var masks = ['000000-AA', '0000000-AA'];
-                    var mask = (cep.length > 5) ? masks[1] : masks[0];
-                    $('#corem').mask(mask, options);
-                }
+            $('#especialidade_id').select2({
+                maximumSelectionLength: 2 // Limitar a seleção a 2 especialidades
             });
-            $('#crm').mask('000000-AA', {
-                translation: {
-                    'A': {
-                        pattern: /[A-Za-z]/
-                    }
-                }
-            });
-        });
 
-        document.querySelector('form').addEventListener('submit', function(event) {
-            var generoMasculino = document.getElementById('genero_m').checked;
-            var generoFeminino = document.getElementById('genero_f').checked;
+            // Evento de mudança no Select2
+            $('#especialidade_id').on('change', function() {
+                var especialidadeSelect = document.getElementById('especialidade_id');
+                var campoConselho = document.getElementById('campo_conselho');
+                var campoUfConselho = document.getElementById('campo_uf_conselho');
+                var inputConselho = document.getElementById('input_conselho');
+                var ufConselho = document.getElementById('uf_conselho');
+                var labelConselho = document.getElementById('label_conselho');
 
-            if (!generoMasculino && !generoFeminino) {
-                event.preventDefault();
-                alert('Por favor, selecione um gênero.');
-            }
-        });
+                var campoConselho1 = document.getElementById('campo_conselho1');
+                var campoUfConselho1 = document.getElementById('campo_uf_conselho1');
+                var inputConselho1 = document.getElementById('input_conselho1');
+                var ufConselho1 = document.getElementById('uf_conselho1');
+                var labelConselho1 = document.getElementById('label_conselho1');
 
+                var selectedOptions = especialidadeSelect.selectedOptions;
 
-        function limpa_formulário_cep() {
-            //Limpa valores do formulário de cep.
-            document.getElementById('rua').value = ("");
-            document.getElementById('bairro').value = ("");
-            document.getElementById('cidade').value = ("");
-            document.getElementById('uf').value = ("");
-        }
-
-        function meu_callback(conteudo) {
-            if (!("erro" in conteudo)) {
-                //Atualiza os campos com os valores.
-                document.getElementById('rua').value = (conteudo.logradouro);
-                document.getElementById('bairro').value = (conteudo.bairro);
-                document.getElementById('cidade').value = (conteudo.localidade);
-                document.getElementById('uf').value = (conteudo.uf);
-            } else {
-                //CEP não Encontrado.
-                limpa_formulário_cep();
-                alert("CEP não encontrado.");
-            }
-        }
-
-        function pesquisacep(valor) {
-            //Nova variável "cep" somente com dígitos.
-            var cep = valor.replace(/\D/g, '');
-
-            //Verifica se campo cep possui valor informado.
-            if (cep != "") {
-                //Expressão regular para validar o CEP.
-                var validacep = /^[0-9]{8}$/;
-
-                //Valida o formato do CEP.
-                if (validacep.test(cep)) {
-                    //Preenche os campos com "..." enquanto consulta webservice.
-                    document.getElementById('rua').value = "...";
-                    document.getElementById('bairro').value = "...";
-                    document.getElementById('cidade').value = "...";
-                    document.getElementById('uf').value = "...";
-
-                    //Cria um elemento javascript.
-                    var script = document.createElement('script');
-
-                    //Sincroniza com o callback.
-                    script.src = 'https://viacep.com.br/ws/' + cep + '/json/?callback=meu_callback';
-
-                    //Insere script no documento e carrega o conteúdo.
-                    document.body.appendChild(script);
+                // Mostrar ou esconder campos baseados no número de especialidades selecionadas
+                if (selectedOptions.length >= 1) {
+                    var conselho = selectedOptions[0].getAttribute('data-conselho');
+                    labelConselho.textContent = conselho;
+                    campoConselho.classList.remove('hidden');
+                    campoUfConselho.classList.remove('hidden');
+                    inputConselho.setAttribute('required', true);
+                    ufConselho.setAttribute('required', true);
                 } else {
-                    //cep é inválido.
-                    limpa_formulário_cep();
-                    alert("Formato de CEP inválido.");
+                    campoConselho.classList.add('hidden');
+                    campoUfConselho.classList.add('hidden');
+                    inputConselho.removeAttribute('required');
+                    ufConselho.removeAttribute('required');
                 }
-            } else {
-                //cep sem valor, limpa formulário.
-                limpa_formulário_cep();
-            }
-        }
+
+                if (selectedOptions.length === 2) {
+                    var conselho1 = selectedOptions[1].getAttribute('data-conselho');
+                    labelConselho1.textContent = conselho1;
+                    campoConselho1.classList.remove('hidden');
+                    campoUfConselho1.classList.remove('hidden');
+                    inputConselho1.setAttribute('required', true);
+                    ufConselho1.setAttribute('required', true);
+                } else {
+                    campoConselho1.classList.add('hidden');
+                    campoUfConselho1.classList.add('hidden');
+                    inputConselho1.removeAttribute('required');
+                    ufConselho1.removeAttribute('required');
+                }
+            });
+        });
 
         function mostrarCamposEspecificos() {
-            var selectElement = document.getElementById('tipo_profissional');
-            var selectedOption = selectElement.options[selectElement.selectedIndex];
-            var conselho = selectedOption.getAttribute('data-conselho');
+            var selectTipoProfissional = document.getElementById('tipo_profissional');
+            var selectedTipoProfissional = selectTipoProfissional.value;
 
-            var campoConselho = document.getElementById('campo_conselho');
-            var labelConselho = document.getElementById('label_conselho');
-            var inputConselho = document.getElementById('input_conselho');
             var campoEspecialidade = document.getElementById('campo_especialidade');
             var especialidadeSelect = document.getElementById('especialidade_id');
 
-            if (conselho && conselho !== '') {
-                labelConselho.textContent = conselho;
-                inputConselho.placeholder = '123456-BA';
-                inputConselho.setAttribute('required', true);
-                especialidadeSelect.setAttribute('required', true);
-                campoConselho.classList.remove('hidden');
+            // Mostrar campo de especialidades ao escolher tipo de profissional
+            if (selectedTipoProfissional) {
                 campoEspecialidade.classList.remove('hidden');
+                especialidadeSelect.setAttribute('required', true);
             } else {
-                inputConselho.removeAttribute('required');
-                especialidadeSelect.removeAttribute('required');
-                campoConselho.classList.add('hidden');
                 campoEspecialidade.classList.add('hidden');
+                especialidadeSelect.removeAttribute('required');
             }
         }
-
-        document.getElementById('profissionalForm').addEventListener('submit', function(event) {
-            var form = event.target;
-
-            // Verificação se o Tipo de Profissional está selecionado
-            var tipoProfissional = document.getElementById('tipo_profissional');
-            if (!tipoProfissional.value) {
-                tipoProfissional.classList.add('is-invalid');
-                event.preventDefault();
-            } else {
-                tipoProfissional.classList.remove('is-invalid');
-            }
-
-            // Verificação se os campos Conselho e Especialidade são obrigatórios e estão preenchidos
-            var conselhoRequired = !document.getElementById('campo_conselho').classList.contains('hidden');
-            var inputConselho = document.getElementById('input_conselho');
-            var especialidadeSelect = document.getElementById('especialidade_id');
-
-            if (conselhoRequired) {
-                if (!inputConselho.value) {
-                    inputConselho.classList.add('is-invalid');
-                    event.preventDefault();
-                } else {
-                    inputConselho.classList.remove('is-invalid');
-                }
-                if (!especialidadeSelect.value) {
-                    especialidadeSelect.classList.add('is-invalid');
-                    event.preventDefault();
-                } else {
-                    especialidadeSelect.classList.remove('is-invalid');
-                }
-            }
-
-            // Verificação se o campo Étnia está selecionado
-            var etnia = document.getElementById('cor');
-            if (!etnia.value) {
-                etnia.classList.add('is-invalid');
-                event.preventDefault();
-            } else {
-                etnia.classList.remove('is-invalid');
-            }
-        });
-
-        document.getElementById('tipo_profissional').addEventListener('change', function() {
-            this.classList.remove('is-invalid');
-        });
     </script>
 @endsection

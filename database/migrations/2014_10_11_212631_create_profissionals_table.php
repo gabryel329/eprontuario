@@ -32,7 +32,10 @@ return new class extends Migration
             $table->string('cor')->nullable();
             $table->integer('tipoprof_id')->nullable();
             $table->foreign('tipoprof_id')->references('id')->on('tipo_profs')->onDelete('cascade');
+            $table->string('uf_conselho1')->nullable();
+            $table->string('uf_conselho')->nullable();
             $table->string('conselho')->nullable();
+            $table->string('conselho1')->nullable();
             $table->string('imagem')->nullable();
             $table->integer('permisoes_id')->nullable();
             $table->foreign('permisoes_id')->references('id')->on('permisoes')->onDelete('cascade');

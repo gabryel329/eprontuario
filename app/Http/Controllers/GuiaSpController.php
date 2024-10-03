@@ -182,8 +182,8 @@ class GuiaSpController extends Controller
         $agenda = Agenda::findOrFail($id);
         $paciente = Pacientes::find($agenda->paciente_id);
 
-        $profissional = Profissional::join('tipo_profs', 'profissionals.tipoprof_id', '=', 'tipo_profs.id')
-        ->select('profissionals.*', 'tipo_profs.conselho as conselho_profissional')
+        $profissional = Profissional::join('especialidades', 'profissionals.especialidade_id', '=', 'especialidades.id')
+        ->select('profissionals.*', 'especialidades.conselho as conselho_especialidade')
         ->where('profissionals.id', $agenda->profissional_id)
         ->first();
 

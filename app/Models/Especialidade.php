@@ -10,7 +10,7 @@ class Especialidade extends Model
 {
     use HasFactory, SoftDeletes;
     protected $table='especialidades';
-    protected $fillable=['especialidade'];
+    protected $fillable=['especialidade','conselho'];
     protected $dates=['deleted_at'];
 
     public function profissional()

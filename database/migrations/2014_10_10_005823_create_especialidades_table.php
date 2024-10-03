@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('especialidades', function (Blueprint $table) {
             $table->id();
+            $table->string('conselho');
             $table->string('especialidade');
             $table->softDeletes();
             $table->timestamps();

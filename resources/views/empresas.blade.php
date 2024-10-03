@@ -104,6 +104,12 @@
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="form-label">Código CNES</label>
+                                        <input class="form-control" id="licenca" name="licenca" type="text" value="{{ $empresa->cnes }}">
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-md-3">
                                         <label class="form-label">CEP</label>
                                         <input class="form-control" type="text" id="cep" name="cep" onblur="pesquisacep(this.value)" value="{{ $empresa->cep }}">
