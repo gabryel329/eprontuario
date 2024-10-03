@@ -85,11 +85,6 @@ class GuiaHonorarioController extends Controller
     }
 
 
-
-
-    
-
-
     public function listarGuiasHonorario(Request $request)
     {
         $convenio_id = $request->get('convenio_id');

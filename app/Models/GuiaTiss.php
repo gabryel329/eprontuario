@@ -9,7 +9,7 @@ class GuiaTiss extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'guia_tiss';
+    protected $table = 'guia_consulta';
 
     protected $fillable = [
         'user_id',

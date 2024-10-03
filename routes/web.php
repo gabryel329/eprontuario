@@ -97,6 +97,7 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::get('/rel-agenda', [AgendaController::class, 'consultaAgenda'])->name('agenda.consulta');
         Route::post('/filtrar-agenda', [AgendaController::class, 'filtrarAgenda'])->name('agenda.filtrar');
         Route::get('/agenda/{id}/guia-consulta', [GuiaTissController::class, 'gerarGuiaConsulta'])->name('guia.consulta');
+        Route::get('/agenda/{id}/guia-sadt', [GuiaSpController::class, 'gerarGuiaSadt'])->name('guia.sadt');
 
         // Rota para recuperar os dados salvos
         

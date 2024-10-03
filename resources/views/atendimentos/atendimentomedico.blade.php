@@ -192,15 +192,15 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="mb-3 col-md-4">
-                                                            <input class="form-control" id="alergia1" name="alergia1"
+                                                            <input class="form-control border border-danger" id="alergia1" name="alergia1"
                                                                 type="text">
                                                         </div>
                                                         <div class="mb-3 col-md-4">
-                                                            <input class="form-control" id="alergia2" name="alergia2"
+                                                            <input class="form-control border border-danger" id="alergia2" name="alergia2"
                                                                 type="text">
                                                         </div>
                                                         <div class="mb-3 col-md-4">
-                                                            <input class="form-control" id="alergia3" name="alergia3"
+                                                            <input class="form-control border border-danger" id="alergia3" name="alergia3"
                                                                 type="text">
                                                         </div>
                                                     </div>
@@ -269,7 +269,15 @@
                                             </div>
                                             <div class="tab-pane fade" id="atendimento-evolucao">
                                                 <div class="timeline-post">
-                                                    <h4 class="line-head">Evolução</h4>
+                                                    <h4 class="line-head">
+                                                        Evolução 
+                                                        @foreach($historico as $registro)
+                                                            @if(!empty($registro->an_alergia1) || !empty($registro->an_alergia2) || !empty($registro->an_alergia3))
+                                                                <i class="bi bi-exclamation-circle-fill text-danger" id="alerta-alergia" style="cursor: pointer;" title="Paciente tem alergias!" href="#atendimento-anamnese"></i>
+                                                                @break
+                                                            @endif
+                                                        @endforeach
+                                                    </h4>
                                                     <div class="row mb-12">
                                                         <div class="col-md-12">
                                                             <textarea class="form-control" rows="15" id="evolucao" name="evolucao"></textarea>
@@ -706,17 +714,17 @@
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="mb-3 col-md-4">
-                                                                        <input class="form-control" id="alergia1"
+                                                                        <input class="form-control border border-danger" id="alergia1"
                                                                             name="alergia1" type="text" readonly
                                                                             value="{{ $registro->an_alergia1 }}">
                                                                     </div>
                                                                     <div class="mb-3 col-md-4">
-                                                                        <input class="form-control" id="alergia2"
+                                                                        <input class="form-control border border-danger" id="alergia2"
                                                                             name="alergia2" type="text" readonly
                                                                             value="{{ $registro->an_alergia2 }}">
                                                                     </div>
                                                                     <div class="mb-3 col-md-4">
-                                                                        <input class="form-control" id="alergia3"
+                                                                        <input class="form-control border border-danger" id="alergia3"
                                                                             name="alergia3" type="text" readonly
                                                                             value="{{ $registro->an_alergia3 }}">
                                                                     </div>
@@ -906,6 +914,19 @@
     <script src="{{ asset('js/jquery-3.7.0.min.js') }}"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('alerta-alergia').addEventListener('click', function(event) {
+            event.preventDefault(); // Previne o comportamento padrão
+            var href = this.getAttribute('href'); // Obtém o valor do atributo href
+            var targetTab = document.querySelector('a[href="' + href + '"]'); // Seleciona a aba correspondente
+
+            if (targetTab) {
+                var tabInstance = new bootstrap.Tab(targetTab); // Cria uma instância da aba
+                tabInstance.show(); // Mostra a aba correspondente
+            }
+        });
+        });
+
         $(document).ready(function() {
             $('#altura').mask('0.00');
         });

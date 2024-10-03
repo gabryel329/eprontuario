@@ -57,6 +57,9 @@ return new class extends Migration
             $table->string('hash')->nullable(); // Hash para validação de integridade
             $table->timestamps(); // Timestamps para created_at e updated_at
             $table->softDeletes(); // Soft Deletes
+
+            $table->integer('convenio_id')->nullable();
+            $table->foreign('convenio_id')->references('id')->on('convenios')->onDelete('cascade');
         });        
     }
 

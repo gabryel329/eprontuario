@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Agenda;
 use App\Models\Convenio;
 use App\Models\Empresas;
 use App\Models\GuiaSp;
+use App\Models\Pacientes;
+use App\Models\Profissional;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -168,15 +171,34 @@ class GuiaSpController extends Controller
     {
         
         $guia = GuiaSp::find($id);
-        $empresa = Empresas::first(); 
-        $convenio = Convenio::find($guia->convenio_id);
-        
-        if (!$guia) {
-            return redirect()->back()->with('error', 'Guia não encontrada.');
-        }
-        
+        $empresa = Empresas::first();
 
-        return view('formulario.guiasp', compact('guia', 'empresa', 'convenio'));
+        return view('formulario.guiasp', compact('guia', 'empresa'));
+    }
+
+    public function gerarGuiaSadt($id)
+    {
+        // Buscar a agenda pelo ID
+        $agenda = Agenda::findOrFail($id);
+        $paciente = Pacientes::find($agenda->paciente_id);
+
+        $profissional = Profissional::join('tipo_profs', 'profissionals.tipoprof_id', '=', 'tipo_profs.id')
+        ->select('profissionals.*', 'tipo_profs.conselho as conselho_profissional')
+        ->where('profissionals.id', $agenda->profissional_id)
+        ->first();
+
+        $convenio = Convenio::find($agenda->convenio_id);
+        
+        $empresa = Empresas::first();
+
+        return view('formulario.guiasp', [
+            'agenda' => $agenda,
+            'paciente' => $paciente,
+            'profissional' => $profissional,
+            'convenio' => $convenio,
+            'empresa' => $empresa,
+        ]);
+
     }
 
     public function visualizarSp($id)

@@ -173,13 +173,13 @@
         <!-- Seção: Dados do Beneficiário -->
         <div class="section-title">Dados do Beneficiário</div>
         <div class="block">
-            <div>4 - Número da Carteira: <strong>{{ $paciente->matricula }}</strong></div>
+            <div>4 - Número da Carteira: <strong>{{ $paciente->matricula ?? $agenda->matricula}}</strong></div>
             <div>5 - Validade da Carteira: 
-                <strong>{{ \Carbon\Carbon::parse($paciente->validade)->format('m/Y') }}</strong>
+                <strong>{{ \Carbon\Carbon::parse($paciente->validade ?? '')->format('m/Y') }}</strong>
             </div>
             <div>6 - Atendimento a RN (Sim ou Não):  
                 <strong>
-                    @if (\Carbon\Carbon::parse($paciente->nasc)->year == \Carbon\Carbon::now()->year)
+                    @if (\Carbon\Carbon::parse($paciente->nasc ?? '')->year == \Carbon\Carbon::now()->year)
                         Sim
                     @else
                         Não
@@ -188,8 +188,8 @@
             </div>
         </div>
         <div class="block">
-            <div>26 - Nome Social: <strong>{{$paciente->nome_social}}</strong> </div>
-            <div>7 - Nome: <strong>{{$paciente->name}}</strong> </div>
+            <div>26 - Nome Social: <strong>{{$paciente->nome_social ?? ''}}</strong> </div>
+            <div>7 - Nome: <strong>{{$paciente->name ?? $agenda->name}}</strong> </div>
         </div>
 
         <!-- Seção: Dados do Contratado -->

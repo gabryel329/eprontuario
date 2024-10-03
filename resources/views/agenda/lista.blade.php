@@ -337,13 +337,14 @@
                         case 'consulta':
                             url = "{{ route('guia.consulta', ':id') }}".replace(':id', agendaId);
                             break;
-                        
+                        case 'sadt': // ajuste no case 'sadt'
+                            url = "{{ route('guia.sadt', ':id') }}".replace(':id', agendaId);
+                            break;
                     }
                     window.open(url, '_blank');
                 }
             });
         });
-
 
         $(document).ready(function() {
             var dataSessao = $('#dataSessao').val();
