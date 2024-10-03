@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('guia_tiss', function (Blueprint $table) {
+        Schema::create('guia_consulta', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             // Dados da Guia
@@ -60,7 +60,7 @@ return new class extends Migration
 
             $table->integer('convenio_id')->nullable();
             $table->foreign('convenio_id')->references('id')->on('convenios')->onDelete('cascade');
-        });        
+        });
     }
 
     /**
@@ -68,6 +68,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('guia_tiss');
+        Schema::dropIfExists('guia_consulta');
     }
 };

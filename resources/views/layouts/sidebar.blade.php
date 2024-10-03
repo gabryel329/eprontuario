@@ -133,6 +133,9 @@
                             <li>
                                 <a class="treeview-item" href="{{ route('guiasp.index') }}"><i
                                 class="icon bi bi-file-earmark-break"></i> Guia SP/SADT</a>
+                            </li><li>
+                                <a class="treeview-item" href="{{ route('guiaconsulta.index') }}"><i
+                                class="icon bi bi-file-earmark-break"></i> Guia de Consulta</a>
                             </li>
                             <li>
                                 <a class="treeview-item" href="{{ route('guiahonorario.index') }}"><i

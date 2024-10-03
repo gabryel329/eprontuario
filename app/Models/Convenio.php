@@ -36,6 +36,10 @@ class Convenio extends Model
     {
         return $this->hasMany(GuiaSp::class, 'convenio_id');
     }
+    public function guia()
+    {
+        return $this->hasMany(GuiaConsulta::class, 'convenio_id');
+    }
     public function pacientes()
     {
         return $this->hasMany(Pacientes::class, 'convenio_id');

@@ -1,15 +1,16 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class GuiaTiss extends Model
+class GuiaConsulta extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'guia_tiss';
+    protected $table = 'guia_consulta';
 
     protected $fillable = [
         'user_id',

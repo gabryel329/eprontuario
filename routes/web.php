@@ -7,6 +7,7 @@ use App\Http\Controllers\ConvenioController;
 use App\Http\Controllers\EmpresasController;
 use App\Http\Controllers\EspecialidadeController;
 use App\Http\Controllers\GenerateIAController;
+use App\Http\Controllers\GuiaConsultaController;
 use App\Http\Controllers\GuiaHonorarioController;
 use App\Http\Controllers\GuiaSpController;
 use App\Http\Controllers\GuiaTissController;
@@ -17,9 +18,6 @@ use App\Http\Controllers\PermisoesController;
 use App\Http\Controllers\ProfissionalController;
 use App\Http\Controllers\TipoProfController;
 use App\Http\Controllers\UserController;
-use App\Models\GuiaSp;
-use App\Models\GuiaTiss;
-use App\Models\TipoProf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -73,14 +71,17 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::get('/empresa', [EmpresasController::class, 'index'])->name('empresa.index');
         Route::get('/convenio', [ConvenioController::class, 'index'])->name('convenio.index');
 
+        Route::get('/guia-consulta', [GuiaConsultaController::class, 'index'])->name('guiaconsulta.index');
         Route::get('/guia-tiss', [GuiaTissController::class, 'index'])->name('guiatiss.index');
         Route::get('/guia-honorario', [GuiaHonorarioController::class, 'index'])->name('guiahonorario.index');
         Route::get('/guia-sp', [GuiaSpController::class, 'index'])->name('guiasp.index');
+        Route::get('/guia-consulta/listar', [GuiaConsultaController::class, 'listarGuiasConsulta'])->name('guiasconsulta.listar');
         Route::get('/guia-tiss/listar', [GuiaTissController::class, 'listarGuiasTiss'])->name('guiastiss.listar');
         Route::get('/guia-honorario/listar', [GuiaHonorarioController::class, 'listarGuiasHonorario'])->name('guiahonorario.listar');
         Route::get('/guia-sp/listar', [GuiaSpController::class, 'listarGuiasSp'])->name('guiasp.listar');
 
         Route::get('/guia-honorario/detalhes/{id}', [GuiaHonorarioController::class, 'visualizarHonorario']);
+        Route::get('/guia-consulta/detalhes/{id}', [GuiaConsultaController::class, 'visualizarConsulta']);
         Route::get('/guia-tiss/detalhes/{id}', [GuiaTissController::class, 'visualizarTiss']);
         Route::get('/guia-sp/detalhes/{id}', [GuiaSpController::class, 'visualizarSp']);
 
@@ -96,7 +97,8 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::post('/agendar', [AgendaController::class, 'agendar']);
         Route::get('/rel-agenda', [AgendaController::class, 'consultaAgenda'])->name('agenda.consulta');
         Route::post('/filtrar-agenda', [AgendaController::class, 'filtrarAgenda'])->name('agenda.filtrar');
-        Route::get('/agenda/{id}/guia-consulta', [GuiaTissController::class, 'gerarGuiaConsulta'])->name('guia.consulta');
+        Route::get('/agenda/{id}/guia-tiss', [GuiaTissController::class, 'gerarGuiaTiss'])->name('guia.tiss');
+        Route::get('/agenda/{id}/guia-consulta', [GuiaConsultaController::class, 'gerarGuiaConsulta'])->name('guia.consulta');
         Route::get('/agenda/{id}/guia-sadt', [GuiaSpController::class, 'gerarGuiaSadt'])->name('guia.sadt');
 
         // Rota para recuperar os dados salvos
@@ -107,6 +109,7 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::post('/save-disponibilidade', [HonorarioController::class, 'saveDisponibilidade']);
     });
 
+    Route::post('/guia_consulta', [GuiaConsultaController::class, 'store'])->name('guiaconsulta.store');
     Route::post('/guia_tiss', [GuiaTissController::class, 'store'])->name('guiatiss.store');
     Route::post('/guia_sp', [GuiaSpController::class, 'store'])->name('guiasp.store');
     Route::post('/guia_honorario', [GuiaHonorarioController::class, 'store'])->name('guiahonorario.store');
@@ -210,6 +213,7 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::get('/paciente/ficha/{id}', [PacientesController::class, 'fichaPaciente'])->name('paciente.ficha');
     Route::get('/guia/honorario/{id}', [GuiaHonorarioController::class, 'impressaoGuia'])->name('guia.honorario');
     Route::get('/guia/sp/{id}', [GuiaSpController::class, 'impressaoGuia'])->name('guia.sp');
+    Route::get('/guia/consulta/{id}', [GuiaConsultaController::class, 'impressaoGuia'])->name('guia.consulta');
     Route::get('/guia/tiss/{id}', [GuiaTissController::class, 'impressaoGuia'])->name('guia.tiss');
 
     
