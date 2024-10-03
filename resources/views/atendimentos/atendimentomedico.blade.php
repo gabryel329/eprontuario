@@ -274,6 +274,7 @@
                                                         @foreach($historico as $registro)
                                                             @if(!empty($registro->an_alergia1) || !empty($registro->an_alergia2) || !empty($registro->an_alergia3))
                                                                 <i class="bi bi-exclamation-circle-fill text-danger" id="alerta-alergia" style="cursor: pointer;" title="Paciente tem alergias!" href="#atendimento-anamnese"></i>
+                                                                <span class="text-danger" style="font-weight: bold; font-size: 16px;"> O paciente tem alergia!</span>
                                                                 @break
                                                             @endif
                                                         @endforeach
