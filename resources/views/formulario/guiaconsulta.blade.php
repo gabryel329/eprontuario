@@ -162,24 +162,24 @@
         @else
             <p style="text-align: center;">Nenhuma empresa encontrada.</p>
         @endif
-        <h3 class="right-align">2 - Nº Guia no Prestador: ____________</h3>
+        <h3 class="right-align">2 - Nº Guia no Prestador: {{ $guia->id }}</h3>
 
         <!-- Primeira Parte: Registro ANS e Número da Guia -->
         <div class="block">
-            <div>1 - Registro ANS: <strong>{{ $convenio->ans }}</strong></div>
-            <div>3 - Número da Guia Atribuída pela Operadora: ___________________</div>
+            <div>1 - Registro ANS: <strong>{{ $guia->registro_ans }}</strong></div>
+            <div>3 - Número da Guia Atribuída pela Operadora: <strong>{{ $guia->numero_guia_operadora }}</strong></div>
         </div>
 
         <!-- Seção: Dados do Beneficiário -->
         <div class="section-title">Dados do Beneficiário</div>
         <div class="block">
-            <div>4 - Número da Carteira: <strong>{{ $paciente->matricula ?? $agenda->matricula}}</strong></div>
+            <div>4 - Número da Carteira: <strong>{{ $guia->numero_carteira ?? ''}}</strong></div>
             <div>5 - Validade da Carteira: 
-                <strong>{{ \Carbon\Carbon::parse($paciente->validade ?? '')->format('m/Y') }}</strong>
+                <strong>{{ \Carbon\Carbon::parse($guia->validade_carteira ?? '')->format('m/Y') }}</strong>
             </div>
             <div>6 - Atendimento a RN (Sim ou Não):  
                 <strong>
-                    @if (\Carbon\Carbon::parse($paciente->nasc ?? '')->year == \Carbon\Carbon::now()->year)
+                    @if ($guia->atendimento_rn == 'S')
                         Sim
                     @else
                         Não
@@ -188,47 +188,47 @@
             </div>
         </div>
         <div class="block">
-            <div>26 - Nome Social: <strong>{{$paciente->nome_social ?? ''}}</strong> </div>
-            <div>7 - Nome: <strong>{{$paciente->name ?? $agenda->name}}</strong> </div>
+            <div>26 - Nome Social: <strong>{{$guia->nome_social ?? ''}}</strong> </div>
+            <div>7 - Nome: <strong>{{$guia->nome_beneficiario ?? ''}}</strong> </div>
         </div>
 
         <!-- Seção: Dados do Contratado -->
         <div class="section-title">Dados do Contratado</div>
         <div class="block">
-            <div>9 - Código na Operadora: ___________________</div>
+            <div>9 - Código na Operadora: <strong>{{ $guia->codigo_operadora ?? ''}}</strong></div>
             <div>10 - Nome do Contratado:  <strong>{{$empresa->name}}</strong> </div>
         </div>
         <div class="block">
-            <div>11 - Código CNES: ___________________</div>
-            <div>12 - Nome do Profissional Executante: <strong>{{$profissional->name}}</strong> </div>
+            <div>11 - Código CNES: <strong>{{ $guia->codigo_cnes ?? ''}}</strong></div>
+            <div>12 - Nome do Profissional Executante: <strong>{{$guia->nome_profissional_executante ?? ''}}</strong> </div>
         </div>
         <div class="block">
-            <div>13 - Conselho Profissional: <strong>{{$profissional->conselho_profissional}}</strong> </div>
-            <div>14 - Número no Conselho: <strong>{{$profissional->conselho}}</strong> </div>
-            <div>15 - UF: <strong>{{$profissional->uf}}</strong> </div>
-            <div>16 - Código CBO: ___________________</div>
+            <div>13 - Conselho Profissional: <strong>{{$guia->conselho_profissional ?? ''}}</strong> </div>
+            <div>14 - Número no Conselho: <strong>{{$guia->numero_conselho ?? ''}}</strong> </div>
+            <div>15 - UF: <strong>{{$guia->uf_conselho ?? ''}}</strong> </div>
+            <div>16 - Código CBO: <strong>{{$guia->codigo_cbo ?? ''}}</strong></div>
         </div>
 
         <!-- Seção: Dados do Atendimento -->
         <div class="section-title">Dados do Atendimento / Procedimento Realizado</div>
         <div class="block">
-            <div>17 - Indicação de Acidente (acidente ou doença relacionada): ______</div>
-            <div>27 - Indicação de Cobertura Especial: ______</div>
-            <div>28 - Regime de Atendimento: ______</div>
-            <div>29 - Saúde Ocupacional: ______</div>
+            <div>17 - Indicação de Acidente (acidente ou doença relacionada): <strong>{{$guia->indicacao_acidente ?? ''}}</strong></div>
+            <div>27 - Indicação de Cobertura Especial <strong>{{$guia->indicacao_cobertura_especial ?? ''}}</strong></div>
+            <div>28 - Regime de Atendimento <strong>{{$guia->regime_atendimento ?? ''}}</strong></div>
+            <div>29 - Saúde Ocupacional <strong>{{$guia->saude_ocupacional ?? ''}}</strong></div>
         </div>
         <div class="block">
-            <div>18 - Data do Atendimento:<strong>{{ \Carbon\Carbon::parse($agenda->data)->format('d/m/Y') }}</strong></div>
-            <div>19 - Tipo de Consulta: ___________________</div>
-            <div>20 - Tabela: ___________________</div>
-            <div>21 - Código do Procedimento: <strong>{{$agenda->codigo}}</strong> </div>
-            <div>22 - Valor do Procedimento: ___________________</div>
+            <div>18 - Data do Atendimento:<strong>{{ \Carbon\Carbon::parse($guia->data_atendimento ?? '')->format('d/m/Y')}}</strong></div>
+            <div>19 - Tipo de Consulta <strong>{{$guia->tipo_consulta ?? ''}}</strong></div>
+            <div>20 - Tabela <strong>{{$guia->codigo_tabela ?? ''}}</strong></div>
+            <div>21 - Código do Procedimento: <strong>{{$guia->codigo_procedimento ?? ''}}</strong> </div>
+            <div>22 - Valor do Procedimento <strong>{{$guia->valor_procedimento ?? ''}}</strong></div>
         </div>
 
         <!-- Observação / Justificativa -->
         <div class="section-title">Observação / Justificativa</div>
         <div class="block">
-            <div>23 - Observação/Justificativa: ___________________</div>
+            <div>23 - Observação/Justificativa <strong>{{$guia->observacao ?? ''}}</strong></div>
         </div>
 
         <!-- Assinaturas -->

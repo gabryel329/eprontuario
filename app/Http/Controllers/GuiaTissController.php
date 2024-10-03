@@ -38,31 +38,7 @@ class GuiaTissController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function gerarGuiaConsulta($id)
-    {
-        // Buscar a agenda pelo ID
-        $agenda = Agenda::findOrFail($id);
-
-        $paciente = Pacientes::find($agenda->paciente_id);
-
-        $profissional = Profissional::join('tipo_profs', 'profissionals.tipoprof_id', '=', 'tipo_profs.id')
-        ->select('profissionals.*', 'tipo_profs.conselho as conselho_profissional')
-        ->where('profissionals.id', $agenda->profissional_id)
-        ->first();
-
-        $convenio = Convenio::find($agenda->convenio_id);
-        
-        $empresa = Empresas::first();
-
-        return view('formulario.guiatiss', [
-            'agenda' => $agenda,
-            'paciente' => $paciente,
-            'profissional' => $profissional,
-            'convenio' => $convenio,
-            'empresa' => $empresa,
-        ]);
-
-    }
+    
 
     /**
      * Store a newly created resource in storage.
@@ -120,15 +96,15 @@ class GuiaTissController extends Controller
 
     public function impressaoGuia($id)
     {
-        
+
         $guia = GuiaTiss::find($id);
-        $empresa = Empresas::first(); 
+        $empresa = Empresas::first();
         $convenio = Convenio::find($guia->convenio_id);
-        
+
         if (!$guia) {
             return redirect()->back()->with('error', 'Guia não encontrada.');
         }
-        
+
 
         return view('formulario.guiatiss', compact('guia', 'empresa', 'convenio'));
     }

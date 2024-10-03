@@ -93,7 +93,8 @@
                             @else
                                 N/A
                             @endif
-                            <input type="hidden" id="dataSessao" name="dataSessao" value="{{ $data ? \Carbon\Carbon::parse($data)->format('Y-m-d') : '' }}">
+                            <input type="hidden" id="dataSessao" name="dataSessao"
+                                value="{{ $data ? \Carbon\Carbon::parse($data)->format('Y-m-d') : '' }}">
                         @else
                             Nenhum filtro aplicado.
                         @endif
@@ -129,11 +130,14 @@
                                                 data-paciente-id="{{ $item->paciente_id }}">
                                                 <option value="MARCADO" {{ $item->status == 'MARCADO' ? 'selected' : '' }}>
                                                     MARCADO</option>
-                                                <option value="CHEGOU" {{ $item->status == 'CHEGOU' ? 'selected' : '' }}>CHEGOU
+                                                <option value="CHEGOU" {{ $item->status == 'CHEGOU' ? 'selected' : '' }}>
+                                                    CHEGOU
                                                 </option>
-                                                <option value="CANCELADO" {{ $item->status == 'CANCELADO' ? 'selected' : '' }}>
+                                                <option value="CANCELADO"
+                                                    {{ $item->status == 'CANCELADO' ? 'selected' : '' }}>
                                                     CANCELADO</option>
-                                                <option value="EVADIO" {{ $item->status == 'EVADIO' ? 'selected' : '' }}>EVADIO
+                                                <option value="EVADIO" {{ $item->status == 'EVADIO' ? 'selected' : '' }}>
+                                                    EVADIO
                                                 </option>
                                             </select>
                                         </td>
@@ -157,14 +161,24 @@
                                                 onclick="openEditModal('{{ $item->id }}')"><i
                                                     class="bi bi-pencil-square"></i></button>
                                         </td>
-                                        <td>
+                                        {{-- <td>
                                             <select class="form-control guia-select" data-id="{{ $item->id }}" data-paciente-id="{{ $item->paciente_id }}">
                                                 <option selected disabled>Selecione a Guia</option>
                                                 <option value="consulta">Guia de Consulta</option>
                                                 <option value="sadt">Guia SADT</option>
                                                 <option value="tiss">Guia TISS</option>
                                             </select>
+                                        </td> --}}
+                                        <td>
+                                            <select class="form-control guia-select" data-id="{{ $item->id }}"
+                                                data-paciente-id="{{ $item->paciente_id }}">
+                                                <option selected disabled>Selecione a Guia</option>
+                                                <option value="consulta">Guia de Consulta</option>
+                                                <option value="sadt">Guia SADT</option>
+                                                <option value="tiss">Guia TISS</option>
+                                            </select>
                                         </td>
+
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -204,8 +218,10 @@
                                     <label class="form-label"><strong>Nome Completo:</strong></label>
                                     <input type="hidden" id="paciente_id{{ $item->id }}" name="paciente_id"
                                         value="{{ $item->paciente_id }}">
-                                    <input type="hidden" id="convenio_id{{ $item->id }}" name="convenio_id" value="{{ $item->convenio_id }}">
-                                    <input type="hidden" id="matricula{{ $item->id }}" name="matricula" value="{{ $item->matricula }}">
+                                    <input type="hidden" id="convenio_id{{ $item->id }}" name="convenio_id"
+                                        value="{{ $item->convenio_id }}">
+                                    <input type="hidden" id="matricula{{ $item->id }}" name="matricula"
+                                        value="{{ $item->matricula }}">
                                     <input class="form-control" id="edit-name-{{ $item->id }}" name="name"
                                         type="text" value="{{ $item->name }}">
                                 </div>
@@ -321,30 +337,379 @@
                 </div>
             </div>
         </div>
+
+        {{-- MODALS DE GUIAS --}}
+        <!-- Modal para Guia de Consulta -->
+        <div class="modal fade" id="modalConsulta" tabindex="-1" role="dialog" aria-labelledby="modalConsultaLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalConsultaLabel">Guia de Consulta</h5>
+                    </div>
+                    <form id="guiaForm">
+                        @csrf
+                        <div class="modal-body">
+                            <input class="form-control" id="convenio_id" name="convenio_id" type="hidden">
+                            <input class="form-control" id="paciente_id" value="{{$item->paciente_id}}" name="paciente_id" type="hidden">
+                            <input class="form-control" id="profissional_id" value="{{$item->profissional_id}}" name="profissional_id" type="hidden">
+                            <input class="form-control" id="agenda_id" name="agenda_id" value="{{$item->id}}" type="hidden">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="registro_ans" class="form-label">Registro ANS</label>
+                                    <input class="form-control" id="registro_ans" name="registro_ans" type="text">
+                                </div>
+                                <div class="col-md-5">
+                                    <label for="numero_guia_operadora" class="form-label">Nº Guia Atribuído pela
+                                        Operadora</label>
+                                    <input class="form-control" id="numero_guia_operadora" name="numero_guia_operadora"
+                                        type="text">
+                                </div>
+                            </div>
+                            <hr>
+                            <h5>Dados do Beneficiário</h5>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="numero_carteira" class="form-label">Número da Carteira</label>
+                                    <input class="form-control" id="numero_carteira" name="numero_carteira"
+                                        type="text">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="validade_carteira" class="form-label">Validade da Carteira</label>
+                                    <input class="form-control" id="validade_carteira" name="validade_carteira"
+                                        type="date">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="atendimento_rn" class="form-label">Atendimento RN</label>
+                                    <select class="form-select" id="atendimento_rn" name="atendimento_rn">
+                                        <option selected>Escolha</option>
+                                        <option value="S">Sim</option>
+                                        <option value="N">Não</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="nome_social" class="form-label">Nome Social</label>
+                                    <input class="form-control" id="nome_social" name="nome_social" type="text">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="nome_beneficiario" class="form-label">Nome do Beneficiário</label>
+                                    <input class="form-control" id="nome_beneficiario" name="nome_beneficiario"
+                                        type="text">
+                                </div>
+                            </div>
+                            <hr>
+                            <h5>Dados do Contratado</h5>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="codigo_operadora" class="form-label">Código na Operadora</label>
+                                    <input class="form-control" id="codigo_operadora" name="codigo_operadora"
+                                        type="text">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="nome_contratado" class="form-label">Nome do Contratado</label>
+                                    <input class="form-control" id="nome_contratado" name="nome_contratado"
+                                        type="text">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="codigo_cnes" class="form-label">Código CNES</label>
+                                    <input class="form-control" id="codigo_cnes" name="codigo_cnes" type="text">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="nome_profissional_executante" class="form-label">Nome do Profissional
+                                        Executante</label>
+                                    <input class="form-control" id="nome_profissional_executante"
+                                        name="nome_profissional_executante" type="text">
+                                </div>
+                                <div class="col-md-1">
+                                    <label for="conselho_profissional" class="form-label">Conselho</label>
+                                    <input class="form-control" id="conselho_profissional" name="conselho_profissional"
+                                        type="text">
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="numero_conselho" class="form-label">Nº Conselho</label>
+                                    <input class="form-control" id="numero_conselho" name="numero_conselho"
+                                        type="text">
+                                </div>
+                                <div class="col-md-1">
+                                    <label for="uf_conselho" class="form-label">UF</label>
+                                    <input class="form-control" id="uf_conselho" name="uf_conselho" type="text">
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="codigo_cbo" class="form-label">Código CBO</label>
+                                    <input class="form-control" id="codigo_cbo" name="codigo_cbo" type="text">
+                                </div>
+                            </div>
+                            <hr>
+                            <h5>Dados do Atendimento / Procedimento Realizado</h5>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="indicacao_acidente" class="form-label">Indicação de Acidente</label>
+                                    <select class="form-select" id="indicacao_acidente" name="indicacao_acidente">
+                                        <option selected>Escolha</option>
+                                        <option value="S">Sim</option>
+                                        <option value="N">Não</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="indicacao_cobertura_especial" class="form-label">Indicação de Cobertura
+                                        Especial</label>
+                                    <select class="form-select" id="indicacao_cobertura_especial"
+                                        name="indicacao_cobertura_especial">
+                                        <option selected>Escolha</option>
+                                        <option value="S">Sim</option>
+                                        <option value="N">Não</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="regime_atendimento" class="form-label">Regime de Atendimento</label>
+                                    <input class="form-control" id="regime_atendimento" name="regime_atendimento"
+                                        value="Ambulatorial" type="text">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="saude_ocupacional" class="form-label">Saúde Ocupacional</label>
+                                    <select class="form-select" id="saude_ocupacional" name="saude_ocupacional">
+                                        <option selected>Escolha</option>
+                                        <option value="S">Sim</option>
+                                        <option value="N">Não</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label for="data_atendimento" class="form-label">Data do Atendimento</label>
+                                    <input class="form-control" id="data_atendimento" name="data_atendimento"
+                                        type="date">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="tipo_consulta" class="form-label">Tipo de Consulta</label>
+                                    <select class="form-select" id="tipo_consulta" name="tipo_consulta">
+                                        <option selected><span id="tipo_consulta"></span></option>
+                                        <option value="1">Consulta de rotina</option>
+                                        <option value="2">Consulta de urgência</option>
+                                        <option value="3">Consulta de especialidade</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="codigo_tabela" class="form-label">Código da Tabela</label>
+                                    <input class="form-control" id="codigo_tabela" name="codigo_tabela" type="text">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="codigo_procedimento" class="form-label">Código do Procedimento</label>
+                                    <input class="form-control" id="codigo_procedimento" name="codigo_procedimento"
+                                        type="text">
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="valor_procedimento" class="form-label">Valor do Procedimento</label>
+                                    <input class="form-control" id="valor_procedimento" name="valor_procedimento"
+                                        type="text">
+                                </div>
+                            </div>
+                            <hr>
+                            <h5>Observações</h5>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <textarea class="form-control" id="observacao" name="observacao"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="saveButton" class="btn btn-primary" type="submit">
+                                <i class="bi bi-check-circle-fill me-2"></i>Salvar
+                            </button>
+                            <button id="extraButton" class="btn btn-success d-none">Novo Botão</button>
+                            <!-- O botão que aparecerá após o sucesso -->
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para Guia SADT -->
+        <div class="modal fade" id="modalSADT" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Guia SADT</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Conteúdo do modal de Guia SADT -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para Guia TISS -->
+        <div class="modal fade" id="modalTISS" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Guia TISS</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Conteúdo do modal de Guia TISS -->
+                    </div>
+                </div>
+            </div>
+        </div>
     @endforeach
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('.guia-select').change(function() {
-                var guiaType = $(this).val();
-                var agendaId = $(this).data('id');
-                var pacienteId = $(this).data('paciente-id');
+            $('.guia-select').on('change', function() {
+                var selectedValue = $(this).val();
+                var agendaId = $(this).data('id'); // Pegar o ID da agenda a partir do atributo data-id
 
-                if (guiaType) {
-                    var url = '';
-                    switch (guiaType) {
-                        case 'consulta':
-                            url = "{{ route('guia.consulta', ':id') }}".replace(':id', agendaId);
-                            break;
-                        case 'sadt': // ajuste no case 'sadt'
-                            url = "{{ route('guia.sadt', ':id') }}".replace(':id', agendaId);
-                            break;
-                    }
-                    window.open(url, '_blank');
+                // Fechar qualquer modal aberto anteriormente
+                $('.modal').modal('hide');
+
+                // Se for a guia de consulta, fazer a requisição AJAX
+                if (selectedValue === 'consulta') {
+                    $.ajax({
+                        url: '/gerar-guia-consulta/' + agendaId, // URL para fazer a requisição
+                        type: 'GET',
+                        success: function(response) {
+                            if (response.error) {
+                                alert('Erro: ' + response.error);
+                                return;
+                            }
+
+                            // Preencher os inputs no modal com os dados retornados
+                            $('#modalConsulta #nome_beneficiario').val(response.paciente ?
+                                response.paciente.name : '');
+                            $('#modalConsulta #numero_carteira').val(response.paciente ?
+                                response.paciente.matricula : '');
+                            $('#modalConsulta #validade_carteira').val(response.paciente ?
+                                response.paciente.validade : '');
+                            $('#modalConsulta #nome_social').val(response.paciente ? response
+                                .paciente.nome_social : '');
+                            $('#modalConsulta #convenio_id').val(response.paciente ? response
+                            .paciente.convenio_id : '');
+                            $('#modalConsulta #nome_profissional_executante').val(response
+                                .profissional ? response.profissional.name : '');
+                            $('#modalConsulta #conselho_profissional').val(response
+                                .profissional ? response.profissional
+                                .conselho_profissional : '');
+                            $('#modalConsulta #numero_conselho').val(response.profissional ?
+                                response.profissional.conselho : '');
+                            $('#modalConsulta #uf_conselho').val(response.profissional ?
+                                response.profissional.uf : '');
+                            $('#modalConsulta #registro_ans').val(response.convenio ? response
+                                .convenio.ans : '');
+                            $('#modalConsulta #nome_contratado').val(response.empresa ? response
+                                .empresa.name : '');
+                            $('#modalConsulta #data_atendimento').val(response.agenda ? response
+                                .agenda.data : '');
+                            $('#modalConsulta #codigo_procedimento').val(response.agenda ?
+                                response.agenda.codigo : '');
+
+
+                            $('#modalConsulta #numero_guia_operadora').val(response.guia ?
+                            response.guia.numero_guia_operadora : '');
+                            $('#modalConsulta #atendimento_rn').val(response.guia ?
+                            response.guia.atendimento_rn : '');
+                            $('#modalConsulta #indicacao_acidente').val(response.guia ?
+                            response.guia.indicacao_acidente : '');
+                            $('#modalConsulta #indicacao_cobertura_especial').val(response.guia ?
+                            response.guia.indicacao_cobertura_especial : '');
+                            $('#modalConsulta #regime_atendimento').val(response.guia ?
+                            response.guia.regime_atendimento : '');
+                            $('#modalConsulta #saude_ocupacional').val(response.guia ?
+                            response.guia.saude_ocupacional : '');
+                            $('#modalConsulta #tipo_consulta').val(response.guia ?
+                            response.guia.tipo_consulta : '');
+                            $('#modalConsulta #codigo_tabela').val(response.guia ?
+                            response.guia.codigo_tabela : '');
+                            $('#modalConsulta #valor_procedimento').val(response.guia ?
+                            response.guia.valor_procedimento : '');
+                            $('#modalConsulta #observacao').val(response.guia ?
+                            response.guia.observacao : '');
+
+                            // Abrir o modal após preencher os campos
+                            $('#modalConsulta').modal('show');
+                        },
+                        error: function(xhr) {
+                            console.error('Erro ao buscar os dados da guia:', xhr);
+                        }
+                    });
+                } else if (selectedValue === 'sadt') {
+                    // Exibir o modal SADT (você pode também fazer uma requisição aqui se precisar)
+                    $('#modalSADT').modal('show');
+                } else if (selectedValue === 'tiss') {
+                    // Exibir o modal TISS
+                    $('#modalTISS').modal('show');
                 }
             });
         });
+
+        $(document).ready(function() {
+            $('#guiaForm').on('submit', function(event) {
+                event.preventDefault(); // Impedir o envio padrão do formulário
+
+                // Serializar os dados do formulário
+                var formData = $(this).serialize();
+
+                // Fazer a requisição AJAX para enviar os dados
+                $.ajax({
+                    url: '/salvar-guia-consulta', // A URL onde os dados serão enviados (ajuste conforme necessário)
+                    type: 'POST',
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                            'content') // Incluindo o token CSRF no cabeçalho
+                    },
+                    success: function(response) {
+                        // Sucesso - Exibir o botão
+                        if (response.success) {
+                            // Exibir o botão após o sucesso
+                            $('#extraButton').removeClass('d-none');
+
+                            // Você pode também exibir uma mensagem de sucesso se desejar
+                            alert('Dados salvos com sucesso!');
+                        }
+                    },
+                    error: function(xhr) {
+                        // Exibir uma mensagem de erro se houver falha
+                        console.error('Erro ao salvar os dados:', xhr);
+                        alert('Ocorreu um erro ao salvar os dados.');
+                    }
+                });
+            });
+        });
+
+
+        // $(document).ready(function() {
+        //     $('.guia-select').change(function() {
+        //         var guiaType = $(this).val();
+        //         var agendaId = $(this).data('id');
+        //         var pacienteId = $(this).data('paciente-id');
+
+        //         if (guiaType) {
+        //             var url = '';
+        //             switch (guiaType) {
+        //                 case 'consulta':
+        //                     url = "{{ route('guia.consulta', ':id') }}".replace(':id', agendaId);
+        //                     break;
+        //                 case 'sadt': // ajuste no case 'sadt'
+        //                     url = "{{ route('guia.sadt', ':id') }}".replace(':id', agendaId);
+        //                     break;
+        //             }
+        //             window.open(url, '_blank');
+        //         }
+        //     });
+        // });
 
         $(document).ready(function() {
             var dataSessao = $('#dataSessao').val();
@@ -363,7 +728,7 @@
                     if (!pacienteId) {
                         if (confirm(
                                 'Paciente não tem cadastro ou não vinculado. Deseja criar um novo paciente?'
-                                )) {
+                            )) {
                             window.location.href = "{{ route('paciente.index') }}";
                         } else {
                             $(this).val($(this).data('original-status'));
@@ -374,7 +739,8 @@
                     // Verificar se a data da agenda é diferente da data atual
                     if (dataAgenda !== dataAtualFormatada) {
                         alert(
-                            'A data da agenda não coincide com a data atual. Não é possível marcar como CHEGOU.');
+                            'A data da agenda não coincide com a data atual. Não é possível marcar como CHEGOU.'
+                        );
                         $(this).val($(this).data('original-status'));
                         return;
                     }

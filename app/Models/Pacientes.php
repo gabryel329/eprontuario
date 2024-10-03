@@ -85,4 +85,9 @@ class Pacientes extends Model
         return $this->belongsTo(Convenio::class, 'convenio_id');
     }
 
+    public function guia()
+    {
+        return $this->hasMany(GuiaConsulta::class, 'paciente_id');
+    }
+
 }
