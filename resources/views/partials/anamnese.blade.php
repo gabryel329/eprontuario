@@ -81,13 +81,13 @@
 </div>
 <div class="row">
     <div class="mb-3 col-md-4">
-        <input class="form-control anamneseIA" id="alergia1" name="alergia1" type="text" value="{{ $historico->an_alergia1 }}" readonly>
+        <input class="form-control anamneseIA border border-danger" id="alergia1" name="alergia1" type="text" value="{{ $historico->an_alergia1 }}" readonly>
     </div>
     <div class="mb-3 col-md-4">
-        <input class="form-control anamneseIA" id="alergia2" name="alergia2" type="text" value="{{ $historico->an_alergia2 }}" readonly>
+        <input class="form-control anamneseIA border border-danger" id="alergia2" name="alergia2" type="text" value="{{ $historico->an_alergia2 }}" readonly>
     </div>
     <div class="mb-3 col-md-4">
-        <input class="form-control anamneseIA" id="alergia3" name="alergia3" type="text" value="{{ $historico->an_alergia3 }}" readonly>
+        <input class="form-control anamneseIA border border-danger" id="alergia3" name="alergia3" type="text" value="{{ $historico->an_alergia3 }}" readonly>
     </div>
 </div>
 <div class="row">
