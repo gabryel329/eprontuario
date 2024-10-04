@@ -386,50 +386,53 @@
 
             // Evento de mudança no Select2
             $('#especialidade_id').on('change', function() {
-                var especialidadeSelect = document.getElementById('especialidade_id');
-                var campoConselho = document.getElementById('campo_conselho');
-                var campoUfConselho = document.getElementById('campo_uf_conselho');
-                var inputConselho = document.getElementById('input_conselho');
-                var ufConselho = document.getElementById('uf_conselho');
-                var labelConselho = document.getElementById('label_conselho');
+            var especialidadeSelect = document.getElementById('especialidade_id');
+            var campoConselho = document.getElementById('campo_conselho');
+            var campoUfConselho = document.getElementById('campo_uf_conselho');
+            var inputConselho = document.getElementById('input_conselho');
+            var ufConselho = document.getElementById('uf_conselho');
+            var labelConselho = document.getElementById('label_conselho');
 
-                var campoConselho1 = document.getElementById('campo_conselho1');
-                var campoUfConselho1 = document.getElementById('campo_uf_conselho1');
-                var inputConselho1 = document.getElementById('input_conselho1');
-                var ufConselho1 = document.getElementById('uf_conselho1');
-                var labelConselho1 = document.getElementById('label_conselho1');
+            var campoConselho1 = document.getElementById('campo_conselho1');
+            var campoUfConselho1 = document.getElementById('campo_uf_conselho1');
+            var inputConselho1 = document.getElementById('input_conselho1');
+            var ufConselho1 = document.getElementById('uf_conselho1');
+            var labelConselho1 = document.getElementById('label_conselho1');
 
-                var selectedOptions = especialidadeSelect.selectedOptions;
+            var selectedOptions = especialidadeSelect.selectedOptions;
 
-                // Mostrar ou esconder campos baseados no número de especialidades selecionadas
-                if (selectedOptions.length >= 1) {
-                    var conselho = selectedOptions[0].getAttribute('data-conselho');
-                    labelConselho.textContent = conselho;
-                    campoConselho.classList.remove('hidden');
-                    campoUfConselho.classList.remove('hidden');
-                    inputConselho.setAttribute('required', true);
-                    ufConselho.setAttribute('required', true);
-                } else {
-                    campoConselho.classList.add('hidden');
-                    campoUfConselho.classList.add('hidden');
-                    inputConselho.removeAttribute('required');
-                    ufConselho.removeAttribute('required');
-                }
+            // Mostrar ou esconder campos baseados no número de especialidades selecionadas
+            if (selectedOptions.length >= 1) {
+                var especialidade1 = selectedOptions[0].textContent.trim();
+                var conselho1 = selectedOptions[0].getAttribute('data-conselho');
+                labelConselho.textContent = `${especialidade1} - ${conselho1}`;
+                campoConselho.classList.remove('hidden');
+                campoUfConselho.classList.remove('hidden');
+                inputConselho.setAttribute('required', true);
+                ufConselho.setAttribute('required', true);
+            } else {
+                campoConselho.classList.add('hidden');
+                campoUfConselho.classList.add('hidden');
+                inputConselho.removeAttribute('required');
+                ufConselho.removeAttribute('required');
+            }
 
-                if (selectedOptions.length === 2) {
-                    var conselho1 = selectedOptions[1].getAttribute('data-conselho');
-                    labelConselho1.textContent = conselho1;
-                    campoConselho1.classList.remove('hidden');
-                    campoUfConselho1.classList.remove('hidden');
-                    inputConselho1.setAttribute('required', true);
-                    ufConselho1.setAttribute('required', true);
-                } else {
-                    campoConselho1.classList.add('hidden');
-                    campoUfConselho1.classList.add('hidden');
-                    inputConselho1.removeAttribute('required');
-                    ufConselho1.removeAttribute('required');
-                }
-            });
+            if (selectedOptions.length === 2) {
+                var especialidade2 = selectedOptions[1].textContent.trim();
+                var conselho2 = selectedOptions[1].getAttribute('data-conselho');
+                labelConselho1.textContent = `${especialidade2} - ${conselho2}`;
+                campoConselho1.classList.remove('hidden');
+                campoUfConselho1.classList.remove('hidden');
+                inputConselho1.setAttribute('required', true);
+                ufConselho1.setAttribute('required', true);
+            } else {
+                campoConselho1.classList.add('hidden');
+                campoUfConselho1.classList.add('hidden');
+                inputConselho1.removeAttribute('required');
+                ufConselho1.removeAttribute('required');
+            }
+        });
+
         });
 
         function mostrarCamposEspecificos() {
