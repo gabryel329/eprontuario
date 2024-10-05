@@ -41,6 +41,7 @@ class EmpresasController extends Controller
         $cnpj = $request->input('cnpj');
         $email = $request->input('email');
         $cep = $request->input('cep');
+        $cnes = $request->input('cnes');
         $rua = $request->input('rua');
         $bairro = $request->input('bairro');
         $cidade = $request->input('cidade');
@@ -79,6 +80,7 @@ class EmpresasController extends Controller
         $empresa->cnpj = $cnpj;
         $empresa->email = $email;
         $empresa->cep = $cep;
+        $empresa->cnes = $cnes;
         $empresa->rua = $rua;
         $empresa->bairro = $bairro;
         $empresa->cidade = $cidade;

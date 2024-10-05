@@ -49,6 +49,25 @@
             <label class="form-label">Fim</label>
             <input class="form-control" id="fimhonorario_{{ $turno }}" name="fimhonorario" type="time">
         </div>
+        <div class="mb-3 col-md-2">
+            <label class="form-label">Mês</label>
+            <select class="form-select" id="mes_{{ $turno }}" name="mes">
+                <option value="" disabled selected>Selecione o mês</option>
+                <option value="01">Janeiro</option>
+                <option value="02">Fevereiro</option>
+                <option value="03">Março</option>
+                <option value="04">Abril</option>
+                <option value="05">Maio</option>
+                <option value="06">Junho</option>
+                <option value="07">Julho</option>
+                <option value="08">Agosto</option>
+                <option value="09">Setembro</option>
+                <option value="10">Outubro</option>
+                <option value="11">Novembro</option>
+                <option value="12">Dezembro</option>
+            </select>
+        </div>
+        
     </div>
 
     <div class="row">

@@ -126,8 +126,7 @@
                                         <td>{{ optional($item->profissional)->name ?? '-' }}</td>
                                         <td>{{ $item->procedimento_id }}</td>
                                         <td>
-                                            <select class="form-control status-select" data-id="{{ $item->id }}"
-                                                data-paciente-id="{{ $item->paciente_id }}">
+                                            <select class="form-control status-select" data-id="{{ $item->id }}" data-paciente-id="{{ $item->paciente_id }}">
                                                 <option value="MARCADO" {{ $item->status == 'MARCADO' ? 'selected' : '' }}>
                                                     MARCADO</option>
                                                 <option value="CHEGOU" {{ $item->status == 'CHEGOU' ? 'selected' : '' }}>
@@ -161,24 +160,16 @@
                                                 onclick="openEditModal('{{ $item->id }}')"><i
                                                     class="bi bi-pencil-square"></i></button>
                                         </td>
-                                        {{-- <td>
-                                            <select class="form-control guia-select" data-id="{{ $item->id }}" data-paciente-id="{{ $item->paciente_id }}">
-                                                <option selected disabled>Selecione a Guia</option>
-                                                <option value="consulta">Guia de Consulta</option>
-                                                <option value="sadt">Guia SADT</option>
-                                                <option value="tiss">Guia TISS</option>
-                                            </select>
-                                        </td> --}}
                                         <td>
-                                            <select class="form-control guia-select" data-id="{{ $item->id }}"
-                                                data-paciente-id="{{ $item->paciente_id }}">
+                                            <select class="form-control guia-select" data-id="{{ $item->id }}" data-paciente-id="{{ $item->paciente_id }}"
+                                                {{ is_null($item->paciente_id) ? 'disabled' : '' }}>
                                                 <option selected disabled>Selecione a Guia</option>
                                                 <option value="consulta">Guia de Consulta</option>
                                                 <option value="sadt">Guia SADT</option>
                                                 <option value="tiss">Guia TISS</option>
                                             </select>
                                         </td>
-
+                                        
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -382,7 +373,7 @@
                                 <div class="col-md-4">
                                     <label for="atendimento_rn" class="form-label">Atendimento RN</label>
                                     <select class="form-select" id="atendimento_rn" name="atendimento_rn">
-                                        <option selected>Escolha</option>
+                                        <option selected disabled>Escolha</option>
                                         <option value="S">Sim</option>
                                         <option value="N">Não</option>
                                     </select>
@@ -449,30 +440,32 @@
                                 <div class="col-md-3">
                                     <label for="indicacao_acidente" class="form-label">Indicação de Acidente</label>
                                     <select class="form-select" id="indicacao_acidente" name="indicacao_acidente">
-                                        <option selected>Escolha</option>
+                                        <option selected disabled>Escolha</option>
                                         <option value="S">Sim</option>
                                         <option value="N">Não</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="indicacao_cobertura_especial" class="form-label">Indicação de Cobertura
-                                        Especial</label>
+                                    <label for="indicacao_cobertura_especial" class="form-label">Indicação de Cobertura Especial</label>
                                     <select class="form-select" id="indicacao_cobertura_especial"
                                         name="indicacao_cobertura_especial">
-                                        <option selected>Escolha</option>
+                                        <option selected disabled>Escolha</option>
                                         <option value="S">Sim</option>
                                         <option value="N">Não</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="regime_atendimento" class="form-label">Regime de Atendimento</label>
-                                    <input class="form-control" id="regime_atendimento" name="regime_atendimento"
-                                        value="Ambulatorial" type="text">
+                                    <select class="form-select" id="regime_atendimento" name="regime_atendimento">
+                                        <option selected disabled>Escolha</option>
+                                        <option value="1">Ambulatórial</option>
+                                        <option value="2">Emergência</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="saude_ocupacional" class="form-label">Saúde Ocupacional</label>
                                     <select class="form-select" id="saude_ocupacional" name="saude_ocupacional">
-                                        <option selected>Escolha</option>
+                                        <option selected disabled>Escolha</option>
                                         <option value="S">Sim</option>
                                         <option value="N">Não</option>
                                     </select>
@@ -487,7 +480,7 @@
                                 <div class="col-md-3">
                                     <label for="tipo_consulta" class="form-label">Tipo de Consulta</label>
                                     <select class="form-select" id="tipo_consulta" name="tipo_consulta">
-                                        <option selected><span id="tipo_consulta"></span></option>
+                                        <option selected disabled>Escolha</option>
                                         <option value="1">Consulta de rotina</option>
                                         <option value="2">Consulta de urgência</option>
                                         <option value="3">Consulta de especialidade</option>
@@ -520,10 +513,10 @@
                             <button id="saveButton" class="btn btn-primary" type="submit">
                                 <i class="bi bi-check-circle-fill me-2"></i>Salvar
                             </button>
-                            <button id="extraButton" class="btn btn-success d-none">Novo Botão</button>
-                            <!-- O botão que aparecerá após o sucesso -->
                         </div>
                     </form>
+                    <button id="extraButton" class="btn btn-danger d-none guia-consulta" data-id="{{ $item->id }}">Gerar Guia<i
+                        class="icon bi bi-file-earmark-break"></i></button>
                 </div>
             </div>
         </div>
@@ -605,15 +598,21 @@
                             $('#modalConsulta #numero_conselho').val(response.profissional ?
                                 response.profissional.conselho : '');
                             $('#modalConsulta #uf_conselho').val(response.profissional ?
-                                response.profissional.uf : '');
+                                response.profissional.uf_conselho : '');
                             $('#modalConsulta #registro_ans').val(response.convenio ? response
                                 .convenio.ans : '');
+                            $('#modalConsulta #codigo_operadora').val(response.convenio ? response
+                                .convenio.operadora : '');
                             $('#modalConsulta #nome_contratado').val(response.empresa ? response
                                 .empresa.name : '');
+                            $('#modalConsulta #codigo_cnes').val(response.empresa ? response
+                                .empresa.cnes : '');
                             $('#modalConsulta #data_atendimento').val(response.agenda ? response
                                 .agenda.data : '');
                             $('#modalConsulta #codigo_procedimento').val(response.agenda ?
                                 response.agenda.codigo : '');
+                            $('#modalConsulta #codigo_cbo').val(response.guia ?
+                                response.guia.codigo_cbo : '');
 
 
                             $('#modalConsulta #numero_guia_operadora').val(response.guia ?
@@ -655,6 +654,31 @@
         });
 
         $(document).ready(function() {
+            // Quando o modal for exibido, verificar se o campo "numero_guia_operadora" está preenchido
+            $('#modalConsulta').on('shown.bs.modal', function() {
+                var numeroGuiaOperadora = $('#numero_guia_operadora').val(); // Obter o valor do campo
+
+                // Se o campo "numero_guia_operadora" não estiver vazio, exibir o botão
+                if (numeroGuiaOperadora) {
+                    $('#extraButton').removeClass('d-none');
+                } else {
+                    $('#extraButton').addClass('d-none'); // Ocultar o botão se o campo estiver vazio
+                }
+            });
+
+            // Adicionando listener ao campo "numero_guia_operadora" para monitorar alterações
+            $('#numero_guia_operadora').on('input', function() {
+                var numeroGuiaOperadora = $(this).val(); // Obter o valor atualizado
+
+                // Se o campo "numero_guia_operadora" não estiver vazio, exibir o botão
+                if (numeroGuiaOperadora) {
+                    $('#extraButton').removeClass('d-none');
+                } else {
+                    $('#extraButton').addClass('d-none'); // Ocultar o botão se o campo estiver vazio
+                }
+            });
+
+            // Envio do formulário
             $('#guiaForm').on('submit', function(event) {
                 event.preventDefault(); // Impedir o envio padrão do formulário
 
@@ -663,25 +687,20 @@
 
                 // Fazer a requisição AJAX para enviar os dados
                 $.ajax({
-                    url: '/salvar-guia-consulta', // A URL onde os dados serão enviados (ajuste conforme necessário)
+                    url: '/salvar-guia-consulta',
                     type: 'POST',
                     data: formData,
                     headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                            'content') // Incluindo o token CSRF no cabeçalho
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Incluindo o token CSRF no cabeçalho
                     },
                     success: function(response) {
-                        // Sucesso - Exibir o botão
                         if (response.success) {
                             // Exibir o botão após o sucesso
                             $('#extraButton').removeClass('d-none');
-
-                            // Você pode também exibir uma mensagem de sucesso se desejar
-                            alert('Dados salvos com sucesso!');
+                            alert(response.message);
                         }
                     },
                     error: function(xhr) {
-                        // Exibir uma mensagem de erro se houver falha
                         console.error('Erro ao salvar os dados:', xhr);
                         alert('Ocorreu um erro ao salvar os dados.');
                     }
@@ -689,27 +708,20 @@
             });
         });
 
+        $(document).ready(function() {
+            // Escutar o evento de clique no botão de gerar guia
+            $('.guia-consulta').on('click', function() {
+                // Capturar o ID da agenda a partir do botão
+                var agendaId = $(this).data('id');
+                
+                // Substituir ':id' na rota com o ID da agenda
+                var url = "{{ route('guia.consulta2', ':id') }}".replace(':id', agendaId);
+                
+                // Abrir a URL em uma nova aba/janela
+                window.open(url, '_blank');
+            });
+        });
 
-        // $(document).ready(function() {
-        //     $('.guia-select').change(function() {
-        //         var guiaType = $(this).val();
-        //         var agendaId = $(this).data('id');
-        //         var pacienteId = $(this).data('paciente-id');
-
-        //         if (guiaType) {
-        //             var url = '';
-        //             switch (guiaType) {
-        //                 case 'consulta':
-        //                     url = "{{ route('guia.consulta', ':id') }}".replace(':id', agendaId);
-        //                     break;
-        //                 case 'sadt': // ajuste no case 'sadt'
-        //                     url = "{{ route('guia.sadt', ':id') }}".replace(':id', agendaId);
-        //                     break;
-        //             }
-        //             window.open(url, '_blank');
-        //         }
-        //     });
-        // });
 
         $(document).ready(function() {
             var dataSessao = $('#dataSessao').val();

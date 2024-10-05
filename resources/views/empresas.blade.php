@@ -105,8 +105,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-2">
-                                        <label class="form-label">Código CNES</label>
-                                        <input class="form-control" id="licenca" name="licenca" type="text" value="{{ $empresa->cnes }}">
+                                        <label class="form-label">CNES</label>
+                                        <input class="form-control" id="cnes" name="cnes" type="text" value="{{ $empresa->cnes }}">
                                     </div>
                                 </div>
                                 <div class="row">

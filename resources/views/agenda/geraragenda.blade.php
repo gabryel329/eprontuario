@@ -100,9 +100,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Definindo horários para cada turno
     const horariosTurnos = {
-        'M': { inicio: '08:00', fim: '12:00' },  // Manhã
-        'T': { inicio: '13:00', fim: '18:00' },  // Tarde
-        'N': { inicio: '19:00', fim: '23:00' }   // Noite
+        'M': { inicio: '08:00', fim: '11:59' },  // Manhã
+        'T': { inicio: '12:00', fim: '17:59' },  // Tarde
+        'N': { inicio: '18:00', fim: '23:00' }   // Noite
     };
 
     // Função para atualizar os horários de início e fim com base no turno

@@ -30,6 +30,7 @@ class Empresas extends Model
         'complemento',
         'celular',
         'telefone',
+        'cnes',
         'medico',
         'crm',
         'fantasia',

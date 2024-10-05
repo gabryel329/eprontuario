@@ -42,6 +42,7 @@ class ConvenioController extends Controller
         $cidade=$request->input('cidade');
         $complemento=$request->input('complemento');
         $telefone=$request->input('telefone');
+        $operadora=$request->input('operadora');
         $celular=$request->input('celular');
         $numero=$request->input('numero');
     
@@ -60,6 +61,7 @@ class ConvenioController extends Controller
             'numero' => $numero,
             'celular' => $celular,
             'telefone' => $telefone,
+            'operadora' => $operadora,
             'rua' => $rua,
             'uf' => $uf,
             'complemento' => $complemento,
@@ -110,6 +112,7 @@ class ConvenioController extends Controller
             $convenio->cidade=$request->input('cidade');
             $convenio->complemento=$request->input('complemento');
             $convenio->telefone=$request->input('telefone');
+            $convenio->operadora=$request->input('operadora');
             $convenio->celular=$request->input('celular');
             $convenio->numero=$request->input('numero');
 

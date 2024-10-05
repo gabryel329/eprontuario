@@ -23,6 +23,7 @@ class Disponibilidade extends Model
         'matricula',
         'codigo',
         'convenio_id',
+        'mes',
         // Campos de dias e hor�rios para manh�
         'manha_dom',
         'manha_seg',

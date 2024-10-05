@@ -21,7 +21,7 @@ return new class extends Migration
             // Dados do Beneficiário
             $table->string('numero_carteira')->nullable(); // 4 - Número da Carteira
             $table->date('validade_carteira')->nullable(); // 5 - Validade da Carteira
-            $table->boolean('atendimento_rn')->nullable(); // 6 - Atendimento a RN (Sim ou Não)
+            $table->string('atendimento_rn')->nullable(); // 6 - Atendimento a RN (Sim ou Não)
             $table->string('nome_social')->nullable(); // 26 - Nome Social
             $table->string('nome_beneficiario')->nullable(); // 7 - Nome do Beneficiário
             
@@ -46,7 +46,7 @@ return new class extends Migration
             $table->string('tipo_consulta')->nullable(); // 19 - Tipo de Consulta
             $table->string('codigo_tabela')->nullable(); // 20 - Código da Tabela
             $table->string('codigo_procedimento')->nullable(); // 21 - Código do Procedimento
-            $table->decimal('valor_procedimento', 10, 2)->nullable(); // 22 - Valor do Procedimento
+            $table->string('valor_procedimento')->nullable(); // 22 - Valor do Procedimento
             
             // Observações e Assinaturas
             $table->text('observacao')->nullable(); // 23 - Observação / Justificativa

@@ -44,22 +44,16 @@ class GuiaConsultaController extends Controller
         // Buscar a agenda pelo ID
         $agenda = Agenda::findOrFail($id);
 
-        $paciente = Pacientes::find($agenda->paciente_id);
-
-        $profissional = Profissional::join('tipo_profs', 'profissionals.tipoprof_id', '=', 'tipo_profs.id')
-            ->select('profissionals.*', 'tipo_profs.conselho as conselho_profissional')
-            ->where('profissionals.id', $agenda->profissional_id)
+        $guia = GuiaConsulta::join('agendas', 'guia_consulta.agenda_id', '=', 'agendas.id')
+            ->select('guia_consulta.*')
+            ->where('guia_consulta.agenda_id', $agenda->id)
             ->first();
-
-        $convenio = Convenio::find($agenda->convenio_id);
 
         $empresa = Empresas::first();
 
-        return view('formulario.guiatiss', [
+        return view('formulario.guiaconsulta', [
             'agenda' => $agenda,
-            'paciente' => $paciente,
-            'profissional' => $profissional,
-            'convenio' => $convenio,
+            'guia' => $guia,
             'empresa' => $empresa,
         ]);
 
@@ -72,11 +66,15 @@ class GuiaConsultaController extends Controller
 
         $paciente = Pacientes::find($agenda->paciente_id);
 
-        $profissional = Profissional::join('tipo_profs', 'profissionals.tipoprof_id', '=', 'tipo_profs.id')
-            ->select('profissionals.*', 'tipo_profs.conselho as conselho_profissional')
+        $profissional = Profissional::join('especialidade_profissional', 'profissionals.id', '=', 'especialidade_profissional.profissional_id')
+            ->leftJoin('especialidades', 'especialidade_profissional.especialidade_id', '=', 'especialidades.id') // Fazendo o left join com especialidades
+            ->select(
+                'profissionals.*',
+                'especialidades.conselho as conselho_profissional' // Selecionando o nome da especialidade
+            )
             ->where('profissionals.id', $agenda->profissional_id)
             ->first();
-        
+
         $guia = GuiaConsulta::where('agenda_id', $agenda->id)->first();
 
         $convenio = Convenio::find($agenda->convenio_id);
@@ -96,7 +94,18 @@ class GuiaConsultaController extends Controller
 
     public function salvarGuiaConsulta(Request $request)
     {
-        // Exemplo de como salvar os dados no banco de dados
+        // Verifica se já existe uma guia para o mesmo agenda_id
+        $guiaExistente = GuiaConsulta::where('agenda_id', $request->input('agenda_id'))->exists();
+
+        if ($guiaExistente) {
+            // Se já existe, retorna uma mensagem de sucesso sem salvar uma nova guia
+            return response()->json([
+                'success' => true,
+                'message' => 'Guia Consulta já existente.'
+            ]);
+        }
+
+        // Se não existe, cria uma nova guia
         $guia = new GuiaConsulta();
         $guia->user_id = auth()->user()->id;
         $guia->convenio_id = $request->input('convenio_id');
@@ -107,7 +116,7 @@ class GuiaConsultaController extends Controller
         $guia->registro_ans = $request->input('registro_ans');
         $guia->numero_carteira = $request->input('numero_carteira');
         $guia->validade_carteira = $request->input('validade_carteira');
-        $guia->atendimento_rn = $request->input('atendimento_rn') === 'S' ? true : false;
+        $guia->atendimento_rn = $request->input('atendimento_rn');
         $guia->nome_social = $request->input('nome_social');
         $guia->nome_beneficiario = $request->input('nome_beneficiario');
         $guia->codigo_operadora = $request->input('codigo_operadora');
@@ -118,10 +127,10 @@ class GuiaConsultaController extends Controller
         $guia->numero_conselho = $request->input('numero_conselho');
         $guia->uf_conselho = $request->input('uf_conselho');
         $guia->codigo_cbo = $request->input('codigo_cbo');
-        $guia->indicacao_acidente = $request->input('indicacao_acidente') === 'S' ? true : false;
-        $guia->indicacao_cobertura_especial = $request->input('indicacao_cobertura_especial') === 'S' ? true : false;
+        $guia->indicacao_acidente = $request->input('indicacao_acidente');
+        $guia->indicacao_cobertura_especial = $request->input('indicacao_cobertura_especial');
         $guia->regime_atendimento = $request->input('regime_atendimento');
-        $guia->saude_ocupacional = $request->input('saude_ocupacional') === 'S' ? true : false;
+        $guia->saude_ocupacional = $request->input('saude_ocupacional');
         $guia->data_atendimento = $request->input('data_atendimento');
         $guia->tipo_consulta = $request->input('tipo_consulta');
         $guia->codigo_tabela = $request->input('codigo_tabela');
@@ -129,12 +138,16 @@ class GuiaConsultaController extends Controller
         $guia->valor_procedimento = $request->input('valor_procedimento');
         $guia->observacao = $request->input('observacao');
 
-        // Continue atribuindo os outros campos...
+        // Salva a nova guia no banco de dados
         $guia->save();
 
-        // Retornar uma resposta de sucesso
-        return response()->json(['success' => true]);
+        // Retorna uma resposta de sucesso após salvar
+        return response()->json([
+            'success' => true,
+            'message' => 'Guia Consulta criada no sucesso!.'
+        ]);
     }
+
 
 
     /**
@@ -198,12 +211,12 @@ class GuiaConsultaController extends Controller
     {
         $guia = GuiaConsulta::findOrFail($id);
 
-        $empresa = Empresas::first(); 
-        
+        $empresa = Empresas::first();
+
         if (!$guia) {
             return redirect()->back()->with('error', 'Guia não encontrada.');
         }
-        
+
 
         return view('formulario.guiaconsulta', compact('guia', 'empresa'));
     }

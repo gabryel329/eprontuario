@@ -36,11 +36,15 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="mb-3 col-md-6">
+                                <div class="mb-3 col-md-4">
+                                    <label class="form-label">Cód. Operadora</label>
+                                    <input class="form-control" id="operadora" name="operadora" type="text">
+                                </div>
+                                <div class="mb-3 col-md-4">
                                     <label class="form-label">Telefone</label>
                                     <input class="form-control" id="telefone" name="telefone" type="text">
                                 </div>
-                                <div class="mb-3 col-md-6">
+                                <div class="mb-3 col-md-4">
                                     <label class="form-label">Celular</label>
                                     <input class="form-control" id="celular" name="celular" type="text" required>
                                 </div>
@@ -167,11 +171,15 @@
                                                             </div>
                                                         </div>
                                                         <div class="row">
-                                                            <div class="mb-3 col-md-6">
+                                                            <div class="mb-3 col-md-4">
+                                                                <label class="form-label">Cód. Operadora</label>
+                                                                <input class="form-control" id="operadora{{ $item->id }}" name="operadora" type="text" value="{{ $item->operadora }}">
+                                                            </div>
+                                                            <div class="mb-3 col-md-4">
                                                                 <label class="form-label">Telefone</label>
                                                                 <input class="form-control" id="telefone{{ $item->id }}" name="telefone" type="text" value="{{ $item->telefone }}">
                                                             </div>
-                                                            <div class="mb-3 col-md-6">
+                                                            <div class="mb-3 col-md-4">
                                                                 <label class="form-label">Celular</label>
                                                                 <input class="form-control" id="celular{{ $item->id }}" name="celular" type="text" value="{{ $item->celular }}" required>
                                                             </div>
