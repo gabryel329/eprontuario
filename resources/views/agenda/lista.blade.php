@@ -611,8 +611,8 @@
                                 .agenda.data : '');
                             $('#modalConsulta #codigo_procedimento').val(response.agenda ?
                                 response.agenda.codigo : '');
-                            $('#modalConsulta #codigo_cbo').val(response.guia ?
-                                response.guia.codigo_cbo : '');
+                            $('#modalConsulta #codigo_cbo').val(response.profissional ?
+                                response.profissional.cbo : '');
 
 
                             $('#modalConsulta #numero_guia_operadora').val(response.guia ?
