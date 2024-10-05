@@ -3,8 +3,10 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Faker\Factory as Faker;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,6 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $faker = Faker::create();
         // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([
@@ -20,9 +23,44 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         DB::table('convenios')->insert([
-            ['nome' => 'Particular'],
-            ['nome' => 'Amil'],
+            [
+                'nome' => 'Particular',
+                'cnpj' => null,
+                'ans' => null,
+                'cep' => null,
+                'rua' => null,
+                'bairro' => null,
+                'cidade' => null,
+                'uf' => null,
+                'numero' => null,
+                'complemento' => null,
+                'telefone' => null,
+                'celular' => null,
+                'deleted_at' => null,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'operadora' => null
+            ],
+            [
+                'nome' => 'Amil',
+                'cnpj' => null,
+                'ans' => '00001',
+                'cep' => '41254458',
+                'rua' => 'Alameda Ednaldo Santos de Jesus',
+                'bairro' => 'São Rafael',
+                'cidade' => 'Salvador',
+                'uf' => 'BA',
+                'numero' => '87',
+                'complemento' => null,
+                'telefone' => '71986082537',
+                'celular' => '2',
+                'deleted_at' => null,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'operadora' => '123'
+            ],
         ]);
+
         DB::table('permisoes')->insert([
             ['cargo' => 'Medico'],
             ['cargo' => 'Recepção'],
@@ -34,13 +72,105 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('especialidades')->insert([
-            ['especialidade' => 'Clinico Geral','conselho' => 'CRM'],
-            ['especialidade' => 'Fisioterapia', 'conselho' => 'CTO'],
+            ['especialidade' => 'Clínico Geral', 'conselho' => 'CRM'],
+            ['especialidade' => 'Fisioterapia', 'conselho' => 'CREFITO'],
+            ['especialidade' => 'Cardiologia', 'conselho' => 'CRM'],
+            ['especialidade' => 'Dermatologia', 'conselho' => 'CRM'],
+            ['especialidade' => 'Pediatria', 'conselho' => 'CRM'],
+            ['especialidade' => 'Ortopedia', 'conselho' => 'CRM'],
+            ['especialidade' => 'Oftalmologia', 'conselho' => 'CRM'],
+            ['especialidade' => 'Odontologia', 'conselho' => 'CRO'],
+            ['especialidade' => 'Nutrição', 'conselho' => 'CRN'],
+            ['especialidade' => 'Psicologia', 'conselho' => 'CRP'],
+            ['especialidade' => 'Enfermagem', 'conselho' => 'COREN'],
+            ['especialidade' => 'Fonoaudiologia', 'conselho' => 'CREFONO'],
+            ['especialidade' => 'Ginecologia', 'conselho' => 'CRM'],
+            ['especialidade' => 'Psiquiatria', 'conselho' => 'CRM'],
+            ['especialidade' => 'Neurologia', 'conselho' => 'CRM'],
+            ['especialidade' => 'Geriatria', 'conselho' => 'CRM'],
+            ['especialidade' => 'Radiologia', 'conselho' => 'CRM'],
+            ['especialidade' => 'Urologia', 'conselho' => 'CRM'],
         ]);
 
         DB::table('profissionals')->insert([
-            ['name' => 'Medico', 'sobrenome' => 'Souza', 'email' => 'admin@anb.com', 'conselho' => 123, 'tipoprof_id' => 1 ],
-            ['name' => 'Recepcao', 'sobrenome' => 'Silva', 'email' => 'cando@gmail.com', 'conselho' => null, 'tipoprof_id' => null],
+            [
+                'name' => 'Medico',
+                'sobrenome' => 'Souza',
+                'email' => 'admin@anb.com',
+                'nasc' => $faker->date($format = 'Y-m-d', $max = 'now'),
+                'cpf' => '123.123.123-12', // CPF gerado manualmente
+                'cep' => $faker->postcode,
+                'rua' => $faker->streetAddress,
+                'bairro' => $faker->streetName,
+                'cidade' => $faker->city,
+                'uf' => $faker->stateAbbr,
+                'numero' => $faker->buildingNumber,
+                'complemento' => $faker->secondaryAddress,
+                'telefone' => $faker->phoneNumber,
+                'celular' => '(71) 98608-2537',
+                'genero' => 'M',
+                'rg' => '123.123.123.12',
+                'cor' => 'Branco',
+                'tipoprof_id' => 1,
+                'uf_conselho' => 'BA',
+                'conselho' => 123,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                // Definir como null os campos que não possuem valores para todos os registros
+                'cbo' => '123',
+                'imagem' => null,
+                'permisoes_id' => null,
+                'especialidade_id' => null,
+                'valor' => null,
+                'porcentagem' => null,
+                'material' => null,
+                'medicamento' => null,
+                'inihonorariomanha' => null,
+                'interhonorariomanha' => null,
+                'fimhonorariomanha' => null,
+                'inihonorarionoite' => null,
+                'interhonorarionoite' => null,
+                'fimhonorarionoite' => null,
+            ],
+            [
+                'name' => 'Recepcao',
+                'sobrenome' => 'Silva',
+                'email' => 'cando@gmail.com',
+                'nasc' => $faker->date($format = 'Y-m-d', $max = 'now'),
+                'cpf' => '123.123.123-12', // CPF gerado manualmente
+                'cep' => $faker->postcode,
+                'rua' => $faker->streetAddress,
+                'bairro' => $faker->streetName,
+                'cidade' => $faker->city,
+                'uf' => $faker->stateAbbr,
+                'numero' => $faker->buildingNumber,
+                'complemento' => $faker->secondaryAddress,
+                'telefone' => $faker->phoneNumber,
+                'celular' => '(71) 98608-2537',
+                'genero' => 'F',
+                'rg' => '123.123.123.12',
+                'cor' => 'Branco',
+                'tipoprof_id' => null,
+                'uf_conselho' => null,
+                'conselho' => null,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                // Definir como null os campos que não possuem valores para todos os registros
+                'cbo' => '123',
+                'imagem' => null,
+                'permisoes_id' => null,
+                'especialidade_id' => null,
+                'valor' => null,
+                'porcentagem' => null,
+                'material' => null,
+                'medicamento' => null,
+                'inihonorariomanha' => null,
+                'interhonorariomanha' => null,
+                'fimhonorariomanha' => null,
+                'inihonorarionoite' => null,
+                'interhonorarionoite' => null,
+                'fimhonorarionoite' => null,
+            ]
         ]);
 
         DB::table('especialidade_profissional')->insert([
@@ -86,22 +216,101 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Rafael',
                 'sobrenome' => 'Souza',
-                'convenio_id' => '1'
+                'email' => $faker->email,
+                'nasc' => $faker->date($format = 'Y-m-d', $max = 'now'),
+                'cpf' => '123.123.123-12', // CPF sem pontuação
+                'cep' => $faker->postcode,
+                'rua' => $faker->streetAddress,
+                'bairro' => $faker->streetName,
+                'cidade' => $faker->city,
+                'uf' => $faker->stateAbbr,
+                'numero' => '2',
+                'complemento' => $faker->secondaryAddress,
+                'telefone' => $faker->phoneNumber,
+                'celular' => '(71) 98608-2537',
+                'nome_social' => null,
+                'nome_pai' => $faker->firstNameMale . ' ' . $faker->lastName,
+                'nome_mae' => $faker->firstNameFemale . ' ' . $faker->lastName,
+                'acompanhante' => null,
+                'genero' => 'M',
+                'rg' => '53.335.333-3', // RG sem pontuação
+                'certidao' => null,
+                'pcd' => 'N',
+                'estado_civil' => 'Solteiro(a)',
+                'sus' => $faker->numerify('###.####.####'),
+                'convenio_id' => 1, // Convenio 'Particular'
+                'matricula' => $faker->numerify('###'),
+                'plano' => 'Basic',
+                'titular' => null,
+                'produto' => null,
+                'cor' => 'Branco',
+                'imagem' => null,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'validade' => $faker->date($format = 'Y-m-d', $max = 'now')
             ],
             [
                 'name' => 'Igor',
                 'sobrenome' => 'Tavares',
-                'convenio_id' => '2'
-            ],
+                'email' => $faker->email,
+                'nasc' => $faker->date($format = 'Y-m-d', $max = 'now'),
+                'cpf' => '123.123.123-12', // CPF sem pontuação
+                'cep' => $faker->postcode,
+                'rua' => $faker->streetAddress,
+                'bairro' => $faker->streetName,
+                'cidade' => $faker->city,
+                'uf' => $faker->stateAbbr,
+                'numero' => '2',
+                'complemento' => $faker->secondaryAddress,
+                'telefone' => $faker->phoneNumber,
+                'celular' => '(71) 98608-2537',
+                'nome_social' => null,
+                'nome_pai' => $faker->firstNameMale . ' ' . $faker->lastName,
+                'nome_mae' => $faker->firstNameFemale . ' ' . $faker->lastName,
+                'acompanhante' => null,
+                'genero' => 'M',
+                'rg' => '53.335.333-3', // RG sem pontuação
+                'certidao' => null,
+                'pcd' => 'N',
+                'estado_civil' => 'Solteiro(a)',
+                'sus' => $faker->numerify('###.####.####'),
+                'convenio_id' => 2, // Convenio 'Amil'
+                'matricula' => $faker->numerify('###'),
+                'plano' => 'Gold',
+                'titular' => null,
+                'produto' => null,
+                'cor' => 'Branco',
+                'imagem' => null,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'validade' => $faker->date($format = 'Y-m-d', $max = 'now')
+            ]
         ]);
 
         DB::table('empresas')->insert([
             [
-                'name' => 'Nome da CLinica',
-                'cnpj' => '0000000000',
-                'imagem' => 'LOGO_01_VERDE.png',
-                'licenca' => '2030-01-01'
-            ],
+                'name' => 'Eprontuario',
+                'email' => $faker->email,
+                'cnpj' => $faker->numerify('##.###.###/####-##'), // Gerando CNPJ aleatório
+                'cep' => $faker->postcode,
+                'rua' => $faker->streetAddress,
+                'bairro' => $faker->streetName,
+                'cidade' => $faker->city,
+                'uf' => $faker->stateAbbr,
+                'numero' => '2',
+                'complemento' => $faker->secondaryAddress,
+                'celular' => '(71) 98608-2537',
+                'telefone' => $faker->phoneNumber,
+                'crm' => $faker->numerify('######'), // CRM aleatório
+                'fantasia' => 'Nome Fantasia',
+                'medico' => $faker->name('male'),
+                'imagem' => 'LOGO_01_VERDE.png', // Mantendo a logo fixa
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'licenca' => '2030-01-01',
+                'contrato' => null, // Se não houver valor para contrato, definir como null
+                'cnes' => $faker->numerify('###') // CNES aleatório
+            ]
         ]);
 
         DB::table('feriados')->insert([

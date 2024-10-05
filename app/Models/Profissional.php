@@ -20,6 +20,7 @@ class Profissional extends Model
         'nasc',
         'cpf',
         'cor',
+        'cbo',
         'rg',
         'cep',
         'rua',

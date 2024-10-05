@@ -54,6 +54,7 @@ class ProfissionalController extends Controller
 
         // Get the other inputs
         $email = $request->input('email');
+        $cbo = $request->input('cbo');
         $nasc = $request->input('nasc');
         $cpf = $request->input('cpf');
         $genero = $request->input('genero');
@@ -150,6 +151,7 @@ class ProfissionalController extends Controller
                 'genero' => $genero,
                 'rg' => $rg,
                 'cor' => $cor,
+                'cbo' => $cbo,
                 'imagem' => $imageName,
                 'permisoes_id' => $permisoes_id,
                 'conselho' => $conselho,
@@ -221,6 +223,7 @@ class ProfissionalController extends Controller
                 'genero' => $genero,
                 'rg' => $rg,
                 'cor' => $cor,
+                'cbo' => $cbo,
                 'permisoes_id' => $permisoes_id,
                 'uf_conselho' => $ufconselho,
                 'conselho' => $conselho,
@@ -329,6 +332,7 @@ class ProfissionalController extends Controller
         $genero = $request->input('genero');
         $rg = $request->input('rg');
         $cor = $request->input('cor');
+        $cbo = $request->input('cbo');
         $imagem = $request->file('imagem');
         $permisoes_id = $request->input('permisoes_id');
         $especialidade_ids = $request->input('especialidade_id'); // Este é um array de IDs de especialidade
@@ -420,6 +424,7 @@ class ProfissionalController extends Controller
                 'genero' => $genero,
                 'rg' => $rg,
                 'cor' => $cor,
+                'cbo' => $cbo,
                 'imagem' => $imageName,
                 'permisoes_id' => $permisoes_id,
                 'uf_conselho' => $ufconselho,
@@ -488,6 +493,7 @@ class ProfissionalController extends Controller
                 'genero' => $genero,
                 'rg' => $rg,
                 'cor' => $cor,
+                'cbo' => $cbo,
                 'permisoes_id' => $permisoes_id,
                 'uf_conselho' => $ufconselho,
                 'conselho' => $conselho,

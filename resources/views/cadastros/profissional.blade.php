@@ -242,6 +242,13 @@
                                         </div>
                                         <div class="row">
                                             <div class="mb-3 col-md-3">
+                                                <label class="form-label">CBO</label>
+                                                <input class="form-control" id="cbo" name="cbo" type="text">
+                                                <div class="invalid-feedback">Por favor, preencha o campo CBO.</div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="mb-3 col-md-3">
                                                 <label class="form-label">CEP </label>
                                                 <input class="form-control" name="cep" type="text" id="cep"
                                                     value="" size="10" maxlength="9"

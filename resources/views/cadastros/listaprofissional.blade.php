@@ -217,6 +217,12 @@
                                                         </div>
                                                         <div class="row">
                                                             <div class="mb-3 col-md-3">
+                                                                <label class="form-label">CBO</label>
+                                                                <input class="form-control" name="cbo" type="text" id="cbo" value="{{ old('cbo', $item->cbo) }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="mb-3 col-md-3">
                                                                 <label class="form-label">CEP</label>
                                                                 <input class="form-control" name="cep" type="text" id="cep" value="{{ old('cep', $item->cep) }}" size="10" maxlength="9" onblur="pesquisacep(this.value);">
                                                             </div>
