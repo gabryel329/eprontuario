@@ -108,6 +108,9 @@ Route::middleware(['check.session.expired'])->group(function () {
         #GUIA RECEPÇÂO
         Route::get('/agenda/{id}/guia-consulta', [GuiaConsultaController::class, 'gerarGuiaConsulta'])->name('guia.consulta2');
 
+        Route::get('/gerar-xml-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarXmlGuiaConsulta']);
+
+
         // Rota para recuperar os dados salvos
         
         Route::get('/get-agenda-data/{profissionalId}/{especialidadeId}/{selectedDate}', [AgendaController::class, 'getAgendaData']);

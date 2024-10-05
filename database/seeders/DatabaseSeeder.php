@@ -238,7 +238,7 @@ class DatabaseSeeder extends Seeder
                 'pcd' => 'N',
                 'estado_civil' => 'Solteiro(a)',
                 'sus' => $faker->numerify('###.####.####'),
-                'convenio_id' => 1, // Convenio 'Particular'
+                'convenio_id' => 2, // Convenio 'Particular'
                 'matricula' => $faker->numerify('###'),
                 'plano' => 'Basic',
                 'titular' => null,

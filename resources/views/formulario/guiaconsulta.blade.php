@@ -212,14 +212,56 @@
         <!-- Seção: Dados do Atendimento -->
         <div class="section-title">Dados do Atendimento / Procedimento Realizado</div>
         <div class="block">
-            <div>17 - Indicação de Acidente (acidente ou doença relacionada): <strong>{{$guia->indicacao_acidente ?? ''}}</strong></div>
-            <div>27 - Indicação de Cobertura Especial <strong>{{$guia->indicacao_cobertura_especial ?? ''}}</strong></div>
-            <div>28 - Regime de Atendimento <strong>{{$guia->regime_atendimento ?? ''}}</strong></div>
-            <div>29 - Saúde Ocupacional <strong>{{$guia->saude_ocupacional ?? ''}}</strong></div>
+            <div>17 - Indicação de Acidente (acidente ou doença relacionada): 
+                <strong>
+                    @if ($guia->indicacao_acidente == 'S')
+                        Sim
+                    @else
+                        Não
+                    @endif
+                </strong>
+            </div>
+            <div>27 - Indicação de Cobertura Especial
+                <strong>
+                    @if ($guia->indicacao_cobertura_especial == 'S')
+                        Sim
+                    @else
+                        Não
+                    @endif
+                </strong>
+            </div>
+            <div>28 - Regime de Atendimento 
+                <strong>
+                    @if ($guia->regime_atendimento == '1')
+                        Ambulatórial
+                    @else
+                        Emergência
+                    @endif
+                </strong>
+            </div>
+            <div>29 - Saúde Ocupacional 
+                <strong>
+                    @if ($guia->saude_ocupacional == 'S')
+                        Sim
+                    @else
+                        Não
+                    @endif
+                </strong>
+            </div>
         </div>
         <div class="block">
             <div>18 - Data do Atendimento:<strong>{{ \Carbon\Carbon::parse($guia->data_atendimento ?? '')->format('d/m/Y')}}</strong></div>
-            <div>19 - Tipo de Consulta <strong>{{$guia->tipo_consulta ?? ''}}</strong></div>
+            <div>19 - Tipo de Consulta 
+                <strong>
+                    @if ($guia->tipo_consulta == '1')
+                        Consulta de rotina
+                    @elseif ($guia->tipo_consulta == '2')
+                        Consulta de urgência
+                    @else
+                        Consulta de especialidade
+                    @endif
+                </strong>
+            </div>
             <div>20 - Tabela <strong>{{$guia->codigo_tabela ?? ''}}</strong></div>
             <div>21 - Código do Procedimento: <strong>{{$guia->codigo_procedimento ?? ''}}</strong> </div>
             <div>22 - Valor do Procedimento <strong>{{$guia->valor_procedimento ?? ''}}</strong></div>
