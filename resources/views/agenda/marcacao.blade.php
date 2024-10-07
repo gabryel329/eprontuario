@@ -84,7 +84,7 @@
                     </h4>
                     
                     <div class="tile-body">
-                        <div class="table-responsive" id="horariosDisponiveis">
+                        <div class="table-responsive" id="horariosDisponiveis" style="overflow-x: auto;">
                             <!-- Aqui será inserida a tabela dinamicamente -->
                         </div>
                     </div>
@@ -240,11 +240,11 @@
         function renderHorariosTable(horarios, convenios, procedimentos, isToday, currentHour, currentMinute) {
             var table = `
         <div class="table-responsive">
-            <table class="table table-bordered">
+            <table class="table table-bordered" style="font-size: 12px; min-width: 1200px;">
                 <thead>
                     <tr>
                         <th>Hora</th>
-                        <th>Paciente</th>
+                        <th class="col-3">Paciente</th>
                         <th>Contato</th>
                         <th>Convênio</th>
                         <th>Matricula</th>
@@ -277,7 +277,7 @@
             return `
         <tr>
             <td><input type="text" readonly name="hora[${horario}]" value="${horario.hora ?? ''}" class="form-control" ${isDisabled}></td>
-            <td><input type="text" name="paciente[${horario}]" value="${horario.name ?? ''}" class="form-control" ${isDisabled}></td>
+            <td class="col-3"><input type="text" name="paciente[${horario}]" value="${horario.name ?? ''}" class="form-control" ${isDisabled}></td>
             <td><input type="text" name="celular[${horario}]" value="${horario.celular ?? ''}" class="form-control" ${isDisabled}></td>
             <td>${renderConvenioSelect(horario, convenios, isDisabled)}</td>
             <td><input type="text" name="matricula[${horario}]" value="${horario.matricula ?? ''}" class="form-control" ${isDisabled}></td>

@@ -126,18 +126,13 @@
                                         <td>{{ optional($item->profissional)->name ?? '-' }}</td>
                                         <td>{{ $item->procedimento_id }}</td>
                                         <td>
-                                            <select class="form-control status-select" data-id="{{ $item->id }}" data-paciente-id="{{ $item->paciente_id }}">
-                                                <option value="MARCADO" {{ $item->status == 'MARCADO' ? 'selected' : '' }}>
-                                                    MARCADO</option>
-                                                <option value="CHEGOU" {{ $item->status == 'CHEGOU' ? 'selected' : '' }}>
-                                                    CHEGOU
-                                                </option>
-                                                <option value="CANCELADO"
-                                                    {{ $item->status == 'CANCELADO' ? 'selected' : '' }}>
-                                                    CANCELADO</option>
-                                                <option value="EVADIO" {{ $item->status == 'EVADIO' ? 'selected' : '' }}>
-                                                    EVADIO
-                                                </option>
+                                            <select class="form-control status-select" data-id="{{ $item->id }}" data-paciente-id="{{ $item->paciente_id }}"
+                                                {{ $item->status == 'FINALIZADO' ? 'disabled' : '' }}>
+                                                <option value="MARCADO" {{ $item->status == 'MARCADO' ? 'selected' : '' }}>MARCADO</option>
+                                                <option value="CHEGOU" {{ $item->status == 'CHEGOU' ? 'selected' : '' }}>CHEGOU</option>
+                                                <option value="CANCELADO" {{ $item->status == 'CANCELADO' ? 'selected' : '' }}>CANCELADO</option>
+                                                <option value="EVADIO" {{ $item->status == 'EVADIO' ? 'selected' : '' }}>EVADIO</option>
+                                                <option value="FINALIZADO" {{ $item->status == 'FINALIZADO' ? 'selected' : '' }}>FINALIZADO</option>
                                             </select>
                                         </td>
                                         <td>
@@ -150,13 +145,13 @@
                                             </a>
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                            <button {{ $item->status == 'FINALIZADO' ? 'disabled' : '' }} type="button" class="btn btn-danger" data-bs-toggle="modal"
                                                 data-bs-target="#deleteModal{{ $item->id }}">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-info"
+                                            <button {{ $item->status == 'FINALIZADO' ? 'disabled' : '' }} type="button" class="btn btn-info"
                                                 onclick="openEditModal('{{ $item->id }}')"><i
                                                     class="bi bi-pencil-square"></i></button>
                                         </td>
