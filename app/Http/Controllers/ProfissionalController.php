@@ -20,10 +20,10 @@ class ProfissionalController extends Controller
         $permissoes = Permisoes::all();
         $especialidades = Especialidade::all();
         $tipoprof = TipoProf::all();
-    
+
         return view('cadastros.profissional', compact('profissioanls', 'permissoes', 'especialidades', 'tipoprof'));
     }
-    
+
 
     public function index1()
     {
@@ -64,10 +64,10 @@ class ProfissionalController extends Controller
         $permisoes_id = $request->input('permisoes_id');
         $especialidade_ids = $request->input('especialidade_id');
         $tipoprof_id = $request->input('tipoprof_id');
-        $ufconselho = $request->input('uf_conselho');
-        $conselho = $request->input('conselho');
-        $ufconselho1 = $request->input('uf_conselho1');
-        $conselho1 = $request->input('conselho1');
+        $ufconselho2 = $request->input('uf_conselho_2');
+        $conselho2 = $request->input('conselho_2');
+        $ufconselho1 = $request->input('uf_conselho_1');
+        $conselho1 = $request->input('conselho_1');
         $cep = $request->input('cep');
         $rua = $request->input('rua');
         $bairro = $request->input('bairro');
@@ -115,7 +115,7 @@ class ProfissionalController extends Controller
         $inihonorarionoite = $request->input('inihonorarionoite');
         $interhonorarionoite = $request->input('interhonorarionoite');
         $fimhonorarionoite = $request->input('fimhonorarionoite');
-        
+
         // Check if the user already exists
         $existeProfissional = Profissional::where('cpf', $cpf)->first();
 
@@ -154,10 +154,10 @@ class ProfissionalController extends Controller
                 'cbo' => $cbo,
                 'imagem' => $imageName,
                 'permisoes_id' => $permisoes_id,
-                'conselho' => $conselho,
-                'uf_conselho' => $ufconselho,
-                'conselho1' => $conselho1,
-                'uf_conselho1' => $ufconselho1,
+                'conselho_2' => $conselho2,
+                'uf_conselho_2' => $ufconselho2,
+                'conselho_1' => $conselho1,
+                'uf_conselho_1' => $ufconselho1,
                 'tipoprof_id' => $tipoprof_id,
                 'cep' => $cep,
                 'rua' => $rua,
@@ -172,7 +172,7 @@ class ProfissionalController extends Controller
                 'medicamento' => $medicamento,
                 'valor' => $valor,
                 'porcentagem' => $porcentagem,
-                
+
                 // Manhã
                 'manha_dom' => $manha_dom,
                 'manha_seg' => $manha_seg,
@@ -225,9 +225,9 @@ class ProfissionalController extends Controller
                 'cor' => $cor,
                 'cbo' => $cbo,
                 'permisoes_id' => $permisoes_id,
-                'uf_conselho' => $ufconselho,
-                'conselho' => $conselho,
-                'conselho1' => $conselho1,
+                'uf_conselho' => $ufconselho2,
+                'conselho_2' => $conselho2,
+                'conselho_1' => $conselho1,
                 'uf_conselho1' => $ufconselho1,
                 'tipoprof_id' => $tipoprof_id,
                 'cep' => $cep,
@@ -337,10 +337,10 @@ class ProfissionalController extends Controller
         $permisoes_id = $request->input('permisoes_id');
         $especialidade_ids = $request->input('especialidade_id'); // Este é um array de IDs de especialidade
         $tipoprof_id = $request->input('tipoprof_id');
-        $ufconselho = $request->input('uf_conselho');
-        $conselho = $request->input('conselho');
-        $ufconselho1 = $request->input('uf_conselho1');
-        $conselho1 = $request->input('conselho1');
+        $ufconselho2 = $request->input('uf_conselho_2');
+        $conselho2 = $request->input('conselho_2');
+        $ufconselho1 = $request->input('uf_conselho_1');
+        $conselho1 = $request->input('conselho_1');
         $cep = $request->input('cep');
         $rua = $request->input('rua');
         $bairro = $request->input('bairro');
@@ -393,7 +393,9 @@ class ProfissionalController extends Controller
         $fimhonorarionoite = $request->input('fimhonorarionoite');
 
         // Verificar se já existe um profissional com o mesmo CPF ou email
+        $cpf = preg_replace('/\D/', '', $cpf); // Remove qualquer formatação (pontos e traços) do CPF
         $existeProfissional = Profissional::where('cpf', $cpf)->where('id', '!=', $id)->first();
+
         if ($existeProfissional) {
             return redirect()->route('profissional.index')->with('error', 'Outro profissional com este CPF já existe!');
         }
@@ -427,11 +429,11 @@ class ProfissionalController extends Controller
                 'cbo' => $cbo,
                 'imagem' => $imageName,
                 'permisoes_id' => $permisoes_id,
-                'uf_conselho' => $ufconselho,
-                'conselho' => $conselho,
+                'uf_conselho_2' => $ufconselho2,
+                'conselho_2' => $conselho2,
                 'tipoprof_id' => $tipoprof_id,
-                'conselho1' => $conselho1,
-                'uf_conselho1' => $ufconselho1,
+                'conselho_1' => $conselho1,
+                'uf_conselho_1' => $ufconselho1,
                 'cep' => $cep,
                 'rua' => $rua,
                 'bairro' => $bairro,
@@ -495,10 +497,10 @@ class ProfissionalController extends Controller
                 'cor' => $cor,
                 'cbo' => $cbo,
                 'permisoes_id' => $permisoes_id,
-                'uf_conselho' => $ufconselho,
-                'conselho' => $conselho,
-                'conselho1' => $conselho1,
-                'uf_conselho1' => $ufconselho1,
+                'uf_conselho_2' => $ufconselho2,
+                'conselho_2' => $conselho2,
+                'conselho_1' => $conselho1,
+                'uf_conselho_1' => $ufconselho1,
                 'tipoprof_id' => $tipoprof_id,
                 'cep' => $cep,
                 'rua' => $rua,

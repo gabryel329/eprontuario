@@ -45,7 +45,7 @@
                         Buscar <i class="bi bi-search"></i>
                     </button>
                 </div>
-                
+
                 <div class="modal fade" id="pacienteModal" tabindex="-1" aria-labelledby="pacienteModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog modal-lg">
@@ -174,21 +174,22 @@
                                                     name="especialidade_id[]" multiple style="width: 100%;">
                                                     @foreach ($especialidades as $especialidade)
                                                         <option value="{{ $especialidade->id }}"
-                                                            data-conselho="{{ $especialidade->conselho }}">{{ $especialidade->especialidade }}</option>
+                                                            data-conselho="{{ $especialidade->conselho }}">
+                                                            {{ $especialidade->especialidade }}</option>
                                                     @endforeach
                                                 </select>
                                                 <div class="invalid-feedback">Por favor, selecione uma especialidade.</div>
                                             </div>
                                             <div class="mb-3 col-md-4 hidden" id="campo_conselho">
                                                 <label id="label_conselho" class="form-label"></label>
-                                                <input type="text" name="conselho" class="form-control"
+                                                <input type="text" name="conselho_1" class="form-control"
                                                     id="input_conselho" placeholder="">
                                                 <div class="invalid-feedback">Por favor, preencha o campo Conselho.</div>
                                             </div>
                                             <div class="mb-3 col-md-2 hidden" id="campo_uf_conselho">
                                                 <label class="form-label">UF do Conselho</label>
-                                                <input type="text" name="uf_conselho" class="form-control"
-                                                    id="uf_conselho" placeholder="">
+                                                <input type="text" name="uf_conselho_1" class="form-control"
+                                                    id="uf_conselho_1" placeholder="">
                                                 <div class="invalid-feedback">Por favor, selecione a UF do Conselho.</div>
                                             </div>
                                         </div>
@@ -197,14 +198,14 @@
                                             <div class="mb-3 col-md-2"></div>
                                             <div class="mb-3 col-md-4 hidden" id="campo_conselho1">
                                                 <label id="label_conselho1" class="form-label"></label>
-                                                <input type="text" name="conselho1" class="form-control"
+                                                <input type="text" name="conselho_2" class="form-control"
                                                     id="input_conselho1" placeholder="">
                                                 <div class="invalid-feedback">Por favor, preencha o campo Conselho.</div>
                                             </div>
                                             <div class="mb-3 col-md-2 hidden" id="campo_uf_conselho1">
                                                 <label class="form-label">UF do Conselho</label>
-                                                <input type="text" name="uf_conselho1" class="form-control"
-                                                    id="uf_conselho1" placeholder="">
+                                                <input type="text" name="uf_conselho_2" class="form-control"
+                                                    id="uf_conselho_2" placeholder="">
                                                 <div class="invalid-feedback">Por favor, selecione a UF do Conselho.</div>
                                             </div>
                                         </div>
@@ -243,7 +244,8 @@
                                         <div class="row">
                                             <div class="mb-3 col-md-3">
                                                 <label class="form-label">CBO</label>
-                                                <input class="form-control" id="cbo" name="cbo" type="text">
+                                                <input class="form-control" id="cbo" name="cbo"
+                                                    type="text">
                                                 <div class="invalid-feedback">Por favor, preencha o campo CBO.</div>
                                             </div>
                                         </div>
@@ -405,30 +407,37 @@
         });
 
         $(document).ready(function() {
+            // Máscaras de campos
             $('#cpf').mask('000.000.000-00');
             $('#telefone').mask('(00) 0000-0000');
             $('#celular').mask('(00) 00000-0000');
-            $('#corem').mask('0000000-AA', {
-                translation: {
-                    'A': {
-                        pattern: /[A-Za-z]/
-                    },
-                    '0': {
-                        pattern: /\d/,
-                        optional: true
+            $('#cep').mask('00000-000');
+            $('#rg').mask('00.000.000-0');
+            $('#certidao').mask('00.000.000-00');
+            $('#sus').mask('000.0000.0000.0000');
+
+            // Detecta quando o CPF está completo e valida
+            $('#cpf').on('input', function() {
+                var cpf = $(this).val();
+                if (cpf.length === 14) { // A máscara usa 14 caracteres (11 dígitos + pontos e traço)
+                    if (validarCPF(cpf)) {
+                        $('#cpfValidationMessage').hide(); // CPF válido
+                        $(this).removeClass('is-invalid').addClass('is-valid');
+                    } else {
+                        $('#cpfValidationMessage').show(); // CPF inválido
+                        $(this).removeClass('is-valid').addClass('is-invalid');
                     }
-                },
-                onKeyPress: function(cep, event, currentField, options) {
-                    var masks = ['000000-AA', '0000000-AA'];
-                    var mask = (cep.length > 5) ? masks[1] : masks[0];
-                    $('#corem').mask(mask, options);
                 }
             });
-            $('#crm').mask('000000-AA', {
-                translation: {
-                    'A': {
-                        pattern: /[A-Za-z]/
-                    }
+
+            // Verifica o CPF ao submeter o formulário
+            $('form').on('submit', function(event) {
+                var cpf = $('#cpf').val();
+                if (!validarCPF(cpf)) {
+                    event.preventDefault(); // Impede o envio do formulário
+                    $('#cpfValidationMessage').show(); // Exibe a mensagem de erro
+                    $('#cpf').removeClass('is-valid').addClass('is-invalid');
+                    alert('CPF inválido. Por favor, verifique o número informado.');
                 }
             });
         });
@@ -508,53 +517,52 @@
 
             // Evento de mudança no Select2
             $('#especialidade_id').on('change', function() {
-            var especialidadeSelect = document.getElementById('especialidade_id');
-            var campoConselho = document.getElementById('campo_conselho');
-            var campoUfConselho = document.getElementById('campo_uf_conselho');
-            var inputConselho = document.getElementById('input_conselho');
-            var ufConselho = document.getElementById('uf_conselho');
-            var labelConselho = document.getElementById('label_conselho');
+                var especialidadeSelect = document.getElementById('especialidade_id');
+                var campoConselho = document.getElementById('campo_conselho');
+                var campoUfConselho = document.getElementById('campo_uf_conselho');
+                var inputConselho = document.getElementById('input_conselho');
+                var ufConselho = document.getElementById('uf_conselho');
+                var labelConselho = document.getElementById('label_conselho');
 
-            var campoConselho1 = document.getElementById('campo_conselho1');
-            var campoUfConselho1 = document.getElementById('campo_uf_conselho1');
-            var inputConselho1 = document.getElementById('input_conselho1');
-            var ufConselho1 = document.getElementById('uf_conselho1');
-            var labelConselho1 = document.getElementById('label_conselho1');
+                var campoConselho1 = document.getElementById('campo_conselho1');
+                var campoUfConselho1 = document.getElementById('campo_uf_conselho1');
+                var inputConselho1 = document.getElementById('input_conselho1');
+                var ufConselho1 = document.getElementById('uf_conselho1');
+                var labelConselho1 = document.getElementById('label_conselho1');
 
-            var selectedOptions = especialidadeSelect.selectedOptions;
+                var selectedOptions = especialidadeSelect.selectedOptions;
 
-            // Mostrar ou esconder campos baseados no número de especialidades selecionadas
-            if (selectedOptions.length >= 1) {
-                var especialidade1 = selectedOptions[0].textContent.trim();
-                var conselho1 = selectedOptions[0].getAttribute('data-conselho');
-                labelConselho.textContent = `${especialidade1} - ${conselho1}`;
-                campoConselho.classList.remove('hidden');
-                campoUfConselho.classList.remove('hidden');
-                inputConselho.setAttribute('required', true);
-                ufConselho.setAttribute('required', true);
-            } else {
-                campoConselho.classList.add('hidden');
-                campoUfConselho.classList.add('hidden');
-                inputConselho.removeAttribute('required');
-                ufConselho.removeAttribute('required');
-            }
+                // Mostrar ou esconder campos baseados no número de especialidades selecionadas
+                if (selectedOptions.length >= 1) {
+                    var especialidade1 = selectedOptions[0].textContent.trim();
+                    var conselho1 = selectedOptions[0].getAttribute('data-conselho');
+                    labelConselho.textContent = `${especialidade1} - ${conselho1}`;
+                    campoConselho.classList.remove('hidden');
+                    campoUfConselho.classList.remove('hidden');
+                    inputConselho.setAttribute('required', true);
+                    ufConselho.setAttribute('required', true);
+                } else {
+                    campoConselho.classList.add('hidden');
+                    campoUfConselho.classList.add('hidden');
+                    inputConselho.removeAttribute('required');
+                    ufConselho.removeAttribute('required');
+                }
 
-            if (selectedOptions.length === 2) {
-                var especialidade2 = selectedOptions[1].textContent.trim();
-                var conselho2 = selectedOptions[1].getAttribute('data-conselho');
-                labelConselho1.textContent = `${especialidade2} - ${conselho2}`;
-                campoConselho1.classList.remove('hidden');
-                campoUfConselho1.classList.remove('hidden');
-                inputConselho1.setAttribute('required', true);
-                ufConselho1.setAttribute('required', true);
-            } else {
-                campoConselho1.classList.add('hidden');
-                campoUfConselho1.classList.add('hidden');
-                inputConselho1.removeAttribute('required');
-                ufConselho1.removeAttribute('required');
-            }
-        });
-
+                if (selectedOptions.length === 2) {
+                    var especialidade2 = selectedOptions[1].textContent.trim();
+                    var conselho2 = selectedOptions[1].getAttribute('data-conselho');
+                    labelConselho1.textContent = `${especialidade2} - ${conselho2}`;
+                    campoConselho1.classList.remove('hidden');
+                    campoUfConselho1.classList.remove('hidden');
+                    inputConselho1.setAttribute('required', true);
+                    ufConselho1.setAttribute('required', true);
+                } else {
+                    campoConselho1.classList.add('hidden');
+                    campoUfConselho1.classList.add('hidden');
+                    inputConselho1.removeAttribute('required');
+                    ufConselho1.removeAttribute('required');
+                }
+            });
         });
 
         function mostrarCamposEspecificos() {
@@ -564,13 +572,34 @@
             var campoEspecialidade = document.getElementById('campo_especialidade');
             var especialidadeSelect = document.getElementById('especialidade_id');
 
-            // Mostrar campo de especialidades ao escolher tipo de profissional
-            if (selectedTipoProfissional) {
+            var campoConselho = document.getElementById('campo_conselho');
+            var campoUfConselho = document.getElementById('campo_uf_conselho');
+            var inputConselho = document.getElementById('input_conselho');
+            var ufConselho = document.getElementById('uf_conselho');
+            var campoConselho1 = document.getElementById('campo_conselho1');
+            var campoUfConselho1 = document.getElementById('campo_uf_conselho1');
+            var inputConselho1 = document.getElementById('input_conselho1');
+            var ufConselho1 = document.getElementById('uf_conselho1');
+
+            // Mostrar campo de especialidades e conselhos somente quando o tipo de profissional com ID 1 for selecionado
+            if (selectedTipoProfissional === '1') {
                 campoEspecialidade.classList.remove('hidden');
                 especialidadeSelect.setAttribute('required', true);
             } else {
+                // Esconder campos de especialidade e conselhos quando o tipo de profissional for diferente de 1
                 campoEspecialidade.classList.add('hidden');
                 especialidadeSelect.removeAttribute('required');
+
+                // Esconder os campos de conselhos e UF
+                campoConselho.classList.add('hidden');
+                campoUfConselho.classList.add('hidden');
+                inputConselho.removeAttribute('required');
+                ufConselho.removeAttribute('required');
+
+                campoConselho1.classList.add('hidden');
+                campoUfConselho1.classList.add('hidden');
+                inputConselho1.removeAttribute('required');
+                ufConselho1.removeAttribute('required');
             }
         }
     </script>

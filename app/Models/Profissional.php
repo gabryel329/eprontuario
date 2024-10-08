@@ -40,11 +40,11 @@ class Profissional extends Model
         'valor',
         'material',
         'medicamento',
-        'conselho',
-        'uf_conselho',
-        'conselho1',
-        'uf_conselho1',
-    
+        'conselho_1',
+        'uf_conselho_1',
+        'conselho_2',
+        'uf_conselho_2',
+
         // Campos de dias e horários para manhã
         'manha_dom',
         'manha_seg',
@@ -56,7 +56,7 @@ class Profissional extends Model
         'inihonorariomanha',
         'interhonorariomanha',
         'fimhonorariomanha',
-    
+
         // Campos de dias e horários para tarde
         'tarde_dom',
         'tarde_seg',
@@ -68,7 +68,7 @@ class Profissional extends Model
         'inihonorariotarde',
         'interhonorariotarde',
         'fimhonorariotarde',
-    
+
         // Campos de dias e horários para noite
         'noite_dom',
         'noite_seg',
@@ -81,7 +81,7 @@ class Profissional extends Model
         'interhonorarionoite',
         'fimhonorarionoite'
     ];
-    
+
     protected $dates=['deleted_at'];
     public function permisao()
     {

@@ -165,7 +165,7 @@
                                                                             {{ $tipo->nome }}
                                                                         </option>
                                                                     @endforeach
-                                                                </select>                                                                
+                                                                </select>
                                                             </div>
                                                             <div class="mb-3 col-md-4 hidden" id="campo_conselho">
                                                                 <label id="label_conselho" class="form-label">Conselho</label>
@@ -176,11 +176,11 @@
                                                                 <label class="form-label">Especialidades</label>
                                                                 @foreach ($especialidades as $especialidade)
                                                                     <div class="form-check">
-                                                                        <input 
-                                                                            type="checkbox" 
-                                                                            class="form-check-input" 
-                                                                            id="especialidade_{{ $especialidade->id }}" 
-                                                                            name="especialidade_id[]" 
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            class="form-check-input"
+                                                                            id="especialidade_{{ $especialidade->id }}"
+                                                                            name="especialidade_id[]"
                                                                             value="{{ $especialidade->id }}"
                                                                             {{ $item->especialidades->contains($especialidade->id) ? 'checked' : '' }}
                                                                         >
@@ -189,9 +189,9 @@
                                                                         </label>
                                                                     </div>
                                                                 @endforeach
-                                                            </div>                                                   
+                                                            </div>
                                                         </div>
-                                                        <div class="row" id="campos_comuns">
+                                                        <div class="row">
                                                             <div class="mb-3 col-md-3">
                                                                 <label class="form-label">RG</label>
                                                                 <input class="form-control" name="rg" type="text" value="{{ old('rg', $item->rg) }}">
@@ -274,7 +274,7 @@ document.getElementById('pacienteSearch').addEventListener('keyup', function() {
     for (var i = 0; i < rows.length; i++) {
         var name = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
         var cpf = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
-        
+
         // Verifica se o nome ou CPF contém o valor digitado no input
         if (name.includes(input) || cpf.includes(input)) {
             rows[i].style.display = "";
@@ -303,7 +303,7 @@ $(document).ready(function(){
             'A': { pattern: /[A-Za-z]/ }
         }
     });
-    
+
 });
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -353,7 +353,7 @@ function meu_callback(conteudo) {
         alert("CEP não encontrado.");
     }
 }
-    
+
 function pesquisacep(valor) {
 
     //Nova variável "cep" somente com dígitos.
@@ -395,18 +395,18 @@ function pesquisacep(valor) {
         limpa_formulário_cep();
     }
 };
-   
+
 function mostrarCamposEspecificos() {
     var selectElement = document.getElementsByName('tipoprof_id')[0];
     var selectedOption = selectElement.options[selectElement.selectedIndex];
     var conselho = selectedOption.getAttribute('data-conselho');
-    
+
     var campoConselho = document.getElementById('campo_conselho');
     var labelConselho = document.getElementById('label_conselho');
     var inputConselho = document.getElementById('input_conselho');
     var campoEspecialidade = document.getElementById('campo_especialidade');
     var especialidadeSelect = document.getElementById('especialidade_id');
-    
+
     if (conselho && conselho !== '') {
         labelConselho.textContent = conselho;
         inputConselho.placeholder = '123456-BA';
