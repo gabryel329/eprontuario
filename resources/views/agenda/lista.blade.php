@@ -126,13 +126,20 @@
                                         <td>{{ optional($item->profissional)->name ?? '-' }}</td>
                                         <td>{{ $item->procedimento_id }}</td>
                                         <td>
-                                            <select class="form-control status-select" data-id="{{ $item->id }}" data-paciente-id="{{ $item->paciente_id }}"
+                                            <select class="form-control status-select" data-id="{{ $item->id }}"
+                                                data-paciente-id="{{ $item->paciente_id }}"
                                                 {{ $item->status == 'FINALIZADO' ? 'disabled' : '' }}>
-                                                <option value="MARCADO" {{ $item->status == 'MARCADO' ? 'selected' : '' }}>MARCADO</option>
-                                                <option value="CHEGOU" {{ $item->status == 'CHEGOU' ? 'selected' : '' }}>CHEGOU</option>
-                                                <option value="CANCELADO" {{ $item->status == 'CANCELADO' ? 'selected' : '' }}>CANCELADO</option>
-                                                <option value="EVADIO" {{ $item->status == 'EVADIO' ? 'selected' : '' }}>EVADIO</option>
-                                                <option value="FINALIZADO" {{ $item->status == 'FINALIZADO' ? 'selected' : '' }}>FINALIZADO</option>
+                                                <option value="MARCADO" {{ $item->status == 'MARCADO' ? 'selected' : '' }}>
+                                                    MARCADO</option>
+                                                <option value="CHEGOU" {{ $item->status == 'CHEGOU' ? 'selected' : '' }}>
+                                                    CHEGOU</option>
+                                                <option value="CANCELADO"
+                                                    {{ $item->status == 'CANCELADO' ? 'selected' : '' }}>CANCELADO</option>
+                                                <option value="EVADIO" {{ $item->status == 'EVADIO' ? 'selected' : '' }}>
+                                                    EVADIO</option>
+                                                <option value="FINALIZADO"
+                                                    {{ $item->status == 'FINALIZADO' ? 'selected' : '' }}>FINALIZADO
+                                                </option>
                                             </select>
                                         </td>
                                         <td>
@@ -145,18 +152,20 @@
                                             </a>
                                         </td>
                                         <td>
-                                            <button {{ $item->status == 'FINALIZADO' ? 'disabled' : '' }} type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                            <button {{ $item->status == 'FINALIZADO' ? 'disabled' : '' }} type="button"
+                                                class="btn btn-danger" data-bs-toggle="modal"
                                                 data-bs-target="#deleteModal{{ $item->id }}">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </td>
                                         <td>
-                                            <button {{ $item->status == 'FINALIZADO' ? 'disabled' : '' }} type="button" class="btn btn-info"
-                                                onclick="openEditModal('{{ $item->id }}')"><i
+                                            <button {{ $item->status == 'FINALIZADO' ? 'disabled' : '' }} type="button"
+                                                class="btn btn-info" onclick="openEditModal('{{ $item->id }}')"><i
                                                     class="bi bi-pencil-square"></i></button>
                                         </td>
                                         <td>
-                                            <select class="form-control guia-select" data-id="{{ $item->id }}" data-paciente-id="{{ $item->paciente_id }}"
+                                            <select class="form-control guia-select" data-id="{{ $item->id }}"
+                                                data-paciente-id="{{ $item->paciente_id }}"
                                                 {{ is_null($item->paciente_id) ? 'disabled' : '' }}>
                                                 <option selected disabled>Selecione a Guia</option>
                                                 <option value="consulta">Guia de Consulta</option>
@@ -164,7 +173,7 @@
                                                 <option value="tiss">Guia TISS</option>
                                             </select>
                                         </td>
-                                        
+
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -191,16 +200,21 @@
                             @csrf
                             @method('PUT')
                             <div class="row">
-                                <div class="mb-3 col-md-12">
+                                <div class="mb-3 col-md-12" id="selecionarPaciente">
                                     <label class="form-label">Selecione o Paciente</label>
                                     <button type="button" class="btn btn-primary form-control" data-bs-toggle="modal"
                                         data-bs-target="#pacienteModal-{{ $item->id }}">
-                                        <i class="bi bi-person-add"></i>
+                                        <i class="bi bi-list"></i>
                                     </button>
                                 </div>
+                                <div class="mb-3 col-md-6" id="novoPaciente" style="display:none;">
+                                    <label class="form-label">Novo Paciente</label>
+                                    <a href="{{route('paciente.index')}}" class="btn btn-primary form-control"><i class="bi bi-person-add"></i></a>
+                                </div>
                             </div>
+
                             <div class="row">
-                                <div class="mb-3 col-md-12">
+                                <div class="mb-3 col-md-12" id="nomeCompleto">
                                     <label class="form-label"><strong>Nome Completo:</strong></label>
                                     <input type="hidden" id="paciente_id{{ $item->id }}" name="paciente_id"
                                         value="{{ $item->paciente_id }}">
@@ -212,6 +226,7 @@
                                         type="text" value="{{ $item->name }}">
                                 </div>
                             </div>
+
                             <div class="row">
                                 <div class="mb-3 col-md-12">
                                     <label class="form-label">Médico</label>
@@ -337,9 +352,12 @@
                         @csrf
                         <div class="modal-body">
                             <input class="form-control" id="convenio_id" name="convenio_id" type="hidden">
-                            <input class="form-control" id="paciente_id" value="{{$item->paciente_id}}" name="paciente_id" type="hidden">
-                            <input class="form-control" id="profissional_id" value="{{$item->profissional_id}}" name="profissional_id" type="hidden">
-                            <input class="form-control" id="agenda_id" name="agenda_id" value="{{$item->id}}" type="hidden">
+                            <input class="form-control" id="paciente_id" value="{{ $item->paciente_id }}"
+                                name="paciente_id" type="hidden">
+                            <input class="form-control" id="profissional_id" value="{{ $item->profissional_id }}"
+                                name="profissional_id" type="hidden">
+                            <input class="form-control" id="agenda_id" name="agenda_id" value="{{ $item->id }}"
+                                type="hidden">
                             <div class="row">
                                 <div class="col-md-3">
                                     <label for="registro_ans" class="form-label">Registro ANS</label>
@@ -441,7 +459,8 @@
                                     </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="indicacao_cobertura_especial" class="form-label">Indicação de Cobertura Especial</label>
+                                    <label for="indicacao_cobertura_especial" class="form-label">Indicação de Cobertura
+                                        Especial</label>
                                     <select class="form-select" id="indicacao_cobertura_especial"
                                         name="indicacao_cobertura_especial">
                                         <option selected disabled>Escolha</option>
@@ -510,8 +529,8 @@
                             </button>
                         </div>
                     </form>
-                    <button id="extraButton" class="btn btn-danger d-none guia-consulta" data-id="{{ $item->id }}">Gerar Guia<i
-                        class="icon bi bi-file-earmark-break"></i></button>
+                    <button id="extraButton" class="btn btn-danger d-none guia-consulta"
+                        data-id="{{ $item->id }}">Gerar Guia<i class="icon bi bi-file-earmark-break"></i></button>
                 </div>
             </div>
         </div>
@@ -556,6 +575,22 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
+            var pacienteId = $('#paciente_id{{ $item->id }}').val(); // Obtém o valor do paciente_id
+
+            if (!pacienteId) { // Verifica se o paciente_id está nulo ou vazio
+                // Ajusta o tamanho da div "Selecionar Paciente"
+                $('#selecionarPaciente').removeClass('col-md-12').addClass('col-md-6');
+
+                // Exibe o botão "Novo Paciente"
+                $('#novoPaciente').show();
+            } else {
+                // Garante que o botão "Novo Paciente" esteja escondido se o paciente_id não estiver nulo
+                $('#novoPaciente').hide();
+            }
+        });
+
+
+        $(document).ready(function() {
             $('.guia-select').on('change', function() {
                 var selectedValue = $(this).val();
                 var agendaId = $(this).data('id'); // Pegar o ID da agenda a partir do atributo data-id
@@ -584,7 +619,7 @@
                             $('#modalConsulta #nome_social').val(response.paciente ? response
                                 .paciente.nome_social : '');
                             $('#modalConsulta #convenio_id').val(response.paciente ? response
-                            .paciente.convenio_id : '');
+                                .paciente.convenio_id : '');
                             $('#modalConsulta #nome_profissional_executante').val(response
                                 .profissional ? response.profissional.name : '');
                             $('#modalConsulta #conselho_profissional').val(response
@@ -596,7 +631,8 @@
                                 response.profissional.uf_conselho : '');
                             $('#modalConsulta #registro_ans').val(response.convenio ? response
                                 .convenio.ans : '');
-                            $('#modalConsulta #codigo_operadora').val(response.convenio ? response
+                            $('#modalConsulta #codigo_operadora').val(response.convenio ?
+                                response
                                 .convenio.operadora : '');
                             $('#modalConsulta #nome_contratado').val(response.empresa ? response
                                 .empresa.name : '');
@@ -611,25 +647,26 @@
 
 
                             $('#modalConsulta #numero_guia_operadora').val(response.guia ?
-                            response.guia.numero_guia_operadora : '');
+                                response.guia.numero_guia_operadora : '');
                             $('#modalConsulta #atendimento_rn').val(response.guia ?
-                            response.guia.atendimento_rn : '');
+                                response.guia.atendimento_rn : '');
                             $('#modalConsulta #indicacao_acidente').val(response.guia ?
-                            response.guia.indicacao_acidente : '');
-                            $('#modalConsulta #indicacao_cobertura_especial').val(response.guia ?
-                            response.guia.indicacao_cobertura_especial : '');
+                                response.guia.indicacao_acidente : '');
+                            $('#modalConsulta #indicacao_cobertura_especial').val(response
+                                .guia ?
+                                response.guia.indicacao_cobertura_especial : '');
                             $('#modalConsulta #regime_atendimento').val(response.guia ?
-                            response.guia.regime_atendimento : '');
+                                response.guia.regime_atendimento : '');
                             $('#modalConsulta #saude_ocupacional').val(response.guia ?
-                            response.guia.saude_ocupacional : '');
+                                response.guia.saude_ocupacional : '');
                             $('#modalConsulta #tipo_consulta').val(response.guia ?
-                            response.guia.tipo_consulta : '');
+                                response.guia.tipo_consulta : '');
                             $('#modalConsulta #codigo_tabela').val(response.guia ?
-                            response.guia.codigo_tabela : '');
+                                response.guia.codigo_tabela : '');
                             $('#modalConsulta #valor_procedimento').val(response.guia ?
-                            response.guia.valor_procedimento : '');
+                                response.guia.valor_procedimento : '');
                             $('#modalConsulta #observacao').val(response.guia ?
-                            response.guia.observacao : '');
+                                response.guia.observacao : '');
 
                             // Abrir o modal após preencher os campos
                             $('#modalConsulta').modal('show');
@@ -686,7 +723,8 @@
                     type: 'POST',
                     data: formData,
                     headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Incluindo o token CSRF no cabeçalho
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                            'content') // Incluindo o token CSRF no cabeçalho
                     },
                     success: function(response) {
                         if (response.success) {
@@ -708,10 +746,10 @@
             $('.guia-consulta').on('click', function() {
                 // Capturar o ID da agenda a partir do botão
                 var agendaId = $(this).data('id');
-                
+
                 // Substituir ':id' na rota com o ID da agenda
                 var url = "{{ route('guia.consulta2', ':id') }}".replace(':id', agendaId);
-                
+
                 // Abrir a URL em uma nova aba/janela
                 window.open(url, '_blank');
             });

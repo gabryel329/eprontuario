@@ -493,5 +493,41 @@
                 limpa_formulário_cep();
             }
         }
+
+        $(document).ready(function() {
+            // Máscaras de campos
+            $('#cpf').mask('000.000.000-00');
+            $('#telefone').mask('(00) 0000-0000');
+            $('#celular').mask('(00) 00000-0000');
+            $('#cep').mask('00000-000');
+            $('#rg').mask('00.000.000-0');
+            $('#certidao').mask('00.000.000-00');
+            $('#sus').mask('000.0000.0000.0000');
+
+            // Detecta quando o CPF está completo e valida
+            $('#cpf').on('input', function() {
+                var cpf = $(this).val();
+                if (cpf.length === 14) { // A máscara usa 14 caracteres (11 dígitos + pontos e traço)
+                    if (validarCPF(cpf)) {
+                        $('#cpfValidationMessage').hide(); // CPF válido
+                        $(this).removeClass('is-invalid').addClass('is-valid');
+                    } else {
+                        $('#cpfValidationMessage').show(); // CPF inválido
+                        $(this).removeClass('is-valid').addClass('is-invalid');
+                    }
+                }
+            });
+
+            // Verifica o CPF ao submeter o formulário
+            $('form').on('submit', function(event) {
+                var cpf = $('#cpf').val();
+                if (!validarCPF(cpf)) {
+                    event.preventDefault(); // Impede o envio do formulário
+                    $('#cpfValidationMessage').show(); // Exibe a mensagem de erro
+                    $('#cpf').removeClass('is-valid').addClass('is-invalid');
+                    alert('CPF inválido. Por favor, verifique o número informado.');
+                }
+            });
+        });
     </script>
 @endsection

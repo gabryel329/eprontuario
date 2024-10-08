@@ -232,72 +232,153 @@ class GuiaConsultaController extends Controller
     }
 
     public function gerarXmlGuiaConsulta($id)
-{
-    // Buscar a guia pelo ID
-    $guia = GuiaConsulta::findOrFail($id);
+    {
+        // Buscar a guia pelo ID
+        $guia = GuiaConsulta::findOrFail($id);
 
-    // Criar o XML utilizando SimpleXMLElement
-    $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas tissV4_01_00.xsd"></ans:mensagemTISS>');
+        // Criar o XML utilizando SimpleXMLElement
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas tissV4_01_00.xsd"></ans:mensagemTISS>');
 
-    // Cabeçalho
-    $cabecalho = $xml->addChild('ans:cabecalho');
-    $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
-    $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
-    $identificacaoTransacao->addChild('ans:sequencialTransacao', '0000000001');
-    $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
-    $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
+        // Cabeçalho
+        $cabecalho = $xml->addChild('ans:cabecalho');
+        $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
+        $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
+        $identificacaoTransacao->addChild('ans:sequencialTransacao', '0000000001');
+        $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
+        $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
 
-    $origem = $cabecalho->addChild('ans:origem');
-    $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
-    $identificacaoPrestador->addChild('ans:codigoPrestadorNaOperadora', $guia->codigo_operadora);
+        $origem = $cabecalho->addChild('ans:origem');
+        $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
+        $identificacaoPrestador->addChild('ans:codigoPrestadorNaOperadora', $guia->codigo_operadora);
 
-    $destino = $cabecalho->addChild('ans:destino');
-    $destino->addChild('ans:registroANS', $guia->registro_ans);
+        $destino = $cabecalho->addChild('ans:destino');
+        $destino->addChild('ans:registroANS', $guia->registro_ans);
 
-    $cabecalho->addChild('ans:versaoPadrao', '4.01.00');
+        $cabecalho->addChild('ans:versaoPadrao', '4.01.00');
 
-    // Lote de Guias
-    $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
-    $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
-    $loteGuias->addChild('ans:numeroLote', '0001');
-    $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
+        // Lote de Guias
+        $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
+        $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
+        $loteGuias->addChild('ans:numeroLote', '0001');
+        $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
 
-    // Guia de Consulta
-    $guiaConsulta = $guiasTISS->addChild('ans:guiaConsulta');
-    $cabecalhoConsulta = $guiaConsulta->addChild('ans:cabecalhoConsulta');
-    $identificacaoGuia = $cabecalhoConsulta->addChild('ans:identificacaoGuia');
-    $identificacaoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_operadora);
-    $cabecalhoConsulta->addChild('ans:numeroGuiaPrincipal', $guia->numero_guia_operadora);
+        // Guia de Consulta
+        $guiaConsulta = $guiasTISS->addChild('ans:guiaConsulta');
+        $cabecalhoConsulta = $guiaConsulta->addChild('ans:cabecalhoConsulta');
+        $identificacaoGuia = $cabecalhoConsulta->addChild('ans:identificacaoGuia');
+        $identificacaoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_operadora);
+        $cabecalhoConsulta->addChild('ans:numeroGuiaPrincipal', $guia->numero_guia_operadora);
 
-    // Dados do Beneficiário
-    $dadosBeneficiario = $guiaConsulta->addChild('ans:dadosBeneficiario');
-    $dadosBeneficiario->addChild('ans:numeroCarteira', $guia->numero_carteira);
-    $dadosBeneficiario->addChild('ans:nomeBeneficiario', $guia->nome_beneficiario);
-    $dadosBeneficiario->addChild('ans:atendimentoRN', $guia->atendimento_rn);
+        // Dados do Beneficiário
+        $dadosBeneficiario = $guiaConsulta->addChild('ans:dadosBeneficiario');
+        $dadosBeneficiario->addChild('ans:numeroCarteira', $guia->numero_carteira);
+        $dadosBeneficiario->addChild('ans:nomeBeneficiario', $guia->nome_beneficiario);
+        $dadosBeneficiario->addChild('ans:atendimentoRN', $guia->atendimento_rn);
 
-    // Dados do Contratado Executante
-    $dadosContratadoExecutante = $guiaConsulta->addChild('ans:dadosContratadoExecutante');
-    $dadosContratadoExecutante->addChild('ans:codigoPrestadorNaOperadora', $guia->codigo_operadora);
-    $dadosContratadoExecutante->addChild('ans:nomeContratado', $guia->nome_contratado);
-    $conselhoProfissional = $dadosContratadoExecutante->addChild('ans:conselhoProfissional');
-    $conselhoProfissional->addChild('ans:siglaConselho', $guia->conselho_profissional); // Ex: CRM
-    $conselhoProfissional->addChild('ans:numeroConselho', $guia->numero_conselho);
-    $conselhoProfissional->addChild('ans:UF', $guia->uf_conselho);
+        // Dados do Contratado Executante
+        $dadosContratadoExecutante = $guiaConsulta->addChild('ans:dadosContratadoExecutante');
+        $dadosContratadoExecutante->addChild('ans:codigoPrestadorNaOperadora', $guia->codigo_operadora);
+        $dadosContratadoExecutante->addChild('ans:nomeContratado', $guia->nome_contratado);
+        $conselhoProfissional = $dadosContratadoExecutante->addChild('ans:conselhoProfissional');
+        $conselhoProfissional->addChild('ans:siglaConselho', $guia->conselho_profissional); // Ex: CRM
+        $conselhoProfissional->addChild('ans:numeroConselho', $guia->numero_conselho);
+        $conselhoProfissional->addChild('ans:UF', $guia->uf_conselho);
 
-    // Dados do Atendimento
-    $dadosAtendimento = $guiaConsulta->addChild('ans:dadosAtendimento');
-    $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta); // Ex: 1 (Consulta de rotina)
-    $dadosAtendimento->addChild('ans:dataAtendimento', $guia->data_atendimento);
+        // Dados do Atendimento
+        $dadosAtendimento = $guiaConsulta->addChild('ans:dadosAtendimento');
+        $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta); // Ex: 1 (Consulta de rotina)
+        $dadosAtendimento->addChild('ans:dataAtendimento', $guia->data_atendimento);
 
-    // Epílogo
-    $epilogo = $xml->addChild('ans:epilogo');
-    $epilogo->addChild('ans:hash', $guia->hash); // Utiliza o hash do banco de dados
+        // Epílogo
+        $epilogo = $xml->addChild('ans:epilogo');
+        $epilogo->addChild('ans:hash', $guia->hash); // Utiliza o hash do banco de dados
 
-    // Retornar o XML como download
-    return response($xml->asXML(), 200)
-        ->header('Content-Type', 'application/xml')
-        ->header('Content-Disposition', 'attachment; filename="guia_consulta_' . $guia->id . '.xml"');
-}
+        // Retornar o XML como download
+        return response($xml->asXML(), 200)
+            ->header('Content-Type', 'application/xml')
+            ->header('Content-Disposition', 'attachment; filename="guia_consulta_' . $guia->id . '.xml"');
+    }
+
+    public function gerarZipGuiaConsulta($id)
+    {
+        // Buscar a guia pelo ID
+        $guia = GuiaConsulta::findOrFail($id);
+
+        // Criar o XML utilizando SimpleXMLElement
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas tissV4_01_00.xsd"></ans:mensagemTISS>');
+
+        // Cabeçalho
+        $cabecalho = $xml->addChild('ans:cabecalho');
+        $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
+        $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
+        $identificacaoTransacao->addChild('ans:sequencialTransacao', '0000000001');
+        $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
+        $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
+
+        $origem = $cabecalho->addChild('ans:origem');
+        $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
+        $identificacaoPrestador->addChild('ans:codigoPrestadorNaOperadora', $guia->codigo_operadora);
+
+        $destino = $cabecalho->addChild('ans:destino');
+        $destino->addChild('ans:registroANS', $guia->registro_ans);
+
+        $cabecalho->addChild('ans:versaoPadrao', '4.01.00');
+
+        // Lote de Guias
+        $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
+        $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
+        $loteGuias->addChild('ans:numeroLote', '0001');
+        $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
+
+        // Guia de Consulta
+        $guiaConsulta = $guiasTISS->addChild('ans:guiaConsulta');
+        $cabecalhoConsulta = $guiaConsulta->addChild('ans:cabecalhoConsulta');
+        $identificacaoGuia = $cabecalhoConsulta->addChild('ans:identificacaoGuia');
+        $identificacaoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_operadora);
+        $cabecalhoConsulta->addChild('ans:numeroGuiaPrincipal', $guia->numero_guia_operadora);
+
+        // Dados do Beneficiário
+        $dadosBeneficiario = $guiaConsulta->addChild('ans:dadosBeneficiario');
+        $dadosBeneficiario->addChild('ans:numeroCarteira', $guia->numero_carteira);
+        $dadosBeneficiario->addChild('ans:nomeBeneficiario', $guia->nome_beneficiario);
+        $dadosBeneficiario->addChild('ans:atendimentoRN', $guia->atendimento_rn);
+
+        // Dados do Contratado Executante
+        $dadosContratadoExecutante = $guiaConsulta->addChild('ans:dadosContratadoExecutante');
+        $dadosContratadoExecutante->addChild('ans:codigoPrestadorNaOperadora', $guia->codigo_operadora);
+        $dadosContratadoExecutante->addChild('ans:nomeContratado', $guia->nome_contratado);
+        $conselhoProfissional = $dadosContratadoExecutante->addChild('ans:conselhoProfissional');
+        $conselhoProfissional->addChild('ans:siglaConselho', $guia->conselho_profissional); // Ex: CRM
+        $conselhoProfissional->addChild('ans:numeroConselho', $guia->numero_conselho);
+        $conselhoProfissional->addChild('ans:UF', $guia->uf_conselho);
+
+        // Dados do Atendimento
+        $dadosAtendimento = $guiaConsulta->addChild('ans:dadosAtendimento');
+        $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta); // Ex: 1 (Consulta de rotina)
+        $dadosAtendimento->addChild('ans:dataAtendimento', $guia->data_atendimento);
+
+        // Epílogo
+        $epilogo = $xml->addChild('ans:epilogo');
+        $epilogo->addChild('ans:hash', $guia->hash); // Utiliza o hash do banco de dados
+
+        // Salvar o XML temporariamente no servidor
+        $fileName = 'guia_consulta_' . $guia->id . '.xml';
+        $filePath = storage_path('app/public/' . $fileName);
+        $xml->asXML($filePath);
+
+        // Criar um arquivo ZIP contendo o XML
+        $zipFileName = 'guia_consulta_' . $guia->id . '.zip';
+        $zipFilePath = storage_path('app/public/' . $zipFileName);
+
+        $zip = new \ZipArchive;
+        if ($zip->open($zipFilePath, \ZipArchive::CREATE) === TRUE) {
+            $zip->addFile($filePath, $fileName);  // Adiciona o XML ao ZIP
+            $zip->close();
+        }
+
+        // Retornar o arquivo ZIP como download
+        return response()->download($zipFilePath)->deleteFileAfterSend(true);
+    }
 
     /**
      * Show the form for editing the specified resource.

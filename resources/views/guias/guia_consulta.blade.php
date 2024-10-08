@@ -483,14 +483,19 @@
                                     html += '<td>';
                                     html +=
                                         '<button type="button" class="btn btn-info btnVisualizarGuia me-2" data-id="' +
-                                        guia.id + '" title="Visualizar"><i class="bi bi-eye"></i></button>';
+                                        guia.id +
+                                        '" title="Visualizar"><i class="bi bi-eye"></i></button>';
                                     html += '<a href="/guia/consulta/' + guia.id +
                                         '" class="btn btn-primary me-2" title="Imprimir" target="_blank">';
                                     html += '<i class="bi bi-printer"></i>';
                                     html += '</a>';
-                                    html += '<a href="/gerar-xml-guia-consulta/' + guia.id + '" class="btn btn-danger" title="Gerar XML" target="_blank">';
+                                    html += '</a>';
+                                    html +=
+                                        '<a href="javascript:void(0);" class="btn btn-danger" title="Gerar XML e ZIP" onclick="baixarArquivos(' +
+                                        guia.id + ')">';
                                     html += '<i class="bi bi-filetype-xml"></i>';
                                     html += '</a>';
+
 
                                     html += '</td>';
                                     html += '</tr>';
@@ -566,5 +571,23 @@
                 });
             });
         });
+
+        function baixarArquivos(guiaId) {
+            // Disparar o download do XML
+            var downloadXml = document.createElement('a');
+            downloadXml.href = '/gerar-xml-guia-consulta/' + guiaId;
+            downloadXml.setAttribute('download', '');
+            document.body.appendChild(downloadXml);
+            downloadXml.click();
+            document.body.removeChild(downloadXml);
+
+            // Disparar o download do ZIP
+            var downloadZip = document.createElement('a');
+            downloadZip.href = '/gerar-zip-guia-consulta/' + guiaId;
+            downloadZip.setAttribute('download', '');
+            document.body.appendChild(downloadZip);
+            downloadZip.click();
+            document.body.removeChild(downloadZip);
+        }
     </script>
 @endsection

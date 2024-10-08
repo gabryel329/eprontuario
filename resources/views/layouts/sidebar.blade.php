@@ -155,7 +155,7 @@
         @endif
 
         @if (Auth::user()->permissoes->pluck('id')->intersect([3])->isNotEmpty())
-            <li class="treeview {{ request()->is('honorario*', 'convenioProcedimento*', 'relatorioFinanceiro*') ? 'is-expanded' : '' }}">
+            <li class="treeview {{ request()->is('TabelaProcedimento*','honorario*', 'convenioProcedimento*', 'relatorioFinanceiro*') ? 'is-expanded' : '' }}">
                 <a class="app-menu__item" href="#" data-toggle="treeview">
                     <i class="app-menu__icon bi bi-bank"></i>
                     <span class="app-menu__label">Financeiro</span>
@@ -169,13 +169,25 @@
                     </li>
                     <li>
                         <a class="treeview-item {{ request()->is('convenioProcedimento*') ? 'active' : '' }}" href="{{ route('convenioProcedimento.index') }}">
-                            <i class="icon bi bi-list-task"></i> Valor Procedimento
+                            <i class="icon bi bi-list-task"></i> Cotação Convenio
                         </a>
                     </li>
                     <li>
-                        <a class="treeview-item {{ request()->is('relatorioFinanceiro*') ? 'active' : '' }}" href="{{ route('relatorioFinanceiro.index') }}">
-                            <i class="icon bi bi-cash"></i> Honorários
+                        <a class="treeview-item {{ request()->is('TabelaProcedimento*') ? 'active' : '' }}" href="{{ route('TabelaProcedimento.index') }}">
+                            <i class="icon bi bi-table"></i> Tabelas
                         </a>
+                    </li>
+                    <li>
+                        <a class="treeview-item">
+                            <i class="icon bi bi-file-earmark-excel"></i> Relatórios
+                        </a>
+                        <ul>
+                            <li>
+                                <a class="treeview-item {{ request()->is('relatorioFinanceiro*') ? 'active' : '' }}" href="{{ route('relatorioFinanceiro.index') }}">
+                                    <i class="icon bi bi-cash"></i> Honorários Médico
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </li>
@@ -196,11 +208,11 @@
                             <i class="icon bi bi-file-earmark-break"></i> Guia de Consulta
                         </a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a class="treeview-item {{ request()->is('guiahonorario.index*') ? 'active' : '' }}" href="{{ route('guiahonorario.index') }}">
                             <i class="icon bi bi-file-earmark-post"></i> Guia de Honorários
                         </a>
-                    </li>
+                    </li> --}}
                 </ul>
             </li>
         @endif

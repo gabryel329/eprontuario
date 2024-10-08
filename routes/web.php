@@ -16,6 +16,8 @@ use App\Http\Controllers\PacientesController;
 use App\Http\Controllers\PainelController;
 use App\Http\Controllers\PermisoesController;
 use App\Http\Controllers\ProfissionalController;
+use App\Http\Controllers\TabConvenioController;
+use App\Http\Controllers\TabelaController;
 use App\Http\Controllers\TipoProfController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -37,6 +39,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+//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
 // Rotas de Autenticação
 Auth::routes();
 
@@ -105,10 +108,11 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::get('/gerar-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarGuiaConsultaMODAL'])->name('gerar.guia.consulta');
         Route::post('/salvar-guia-consulta', [GuiaConsultaController::class, 'salvarGuiaConsulta'])->name('salvar.guiaConsulta');
         
-        #GUIA RECEP��O
+        #GUIA RECEP��O
         Route::get('/agenda/{id}/guia-consulta', [GuiaConsultaController::class, 'gerarGuiaConsulta'])->name('guia.consulta2');
 
         Route::get('/gerar-xml-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarXmlGuiaConsulta']);
+        Route::get('/gerar-zip-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarZipGuiaConsulta']);
 
 
         // Rota para recuperar os dados salvos
@@ -130,8 +134,8 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::post('/convenioProcedimento', [ConvenioController::class, 'convenioProcedimentoStore'])->name('convenioProcedimento.store');
     Route::delete('/convenioProcedimento/bulkDestroy', [ConvenioController::class, 'bulkDestroy'])->name('convenioProcedimento.bulkDestroy');
 
-    Route::get('/Honorario', [HonorarioController::class, 'index'])->name('Honorario.index');
-    Route::post('/Honorario', [HonorarioController::class, 'store'])->name('honorario.store');
+    Route::get('/honorario', [HonorarioController::class, 'index'])->name('Honorario.index');
+    Route::post('/honorario', [HonorarioController::class, 'store'])->name('honorario.store');
     Route::get('/honorarios/{profissionalId}', [HonorarioController::class, 'getHonorariosByProfissional'])->name('honorarios.getByProfissional');
     Route::post('/honorarios/{id}', [HonorarioController::class, 'update'])->name('honorarios.update');
     Route::post('/honorario/delete-selected', [HonorarioController::class, 'bulkDestroy'])->name('honorario.deleteSelected');
@@ -248,6 +252,15 @@ Route::middleware(['check.session.expired'])->group(function () {
     #RelatorioFinanceiro
     Route::get('/relatorioFinanceiro', [HonorarioController::class, 'relatorioFinanceiroIndex'])->name('relatorioFinanceiro.index');
     Route::post('/relatorioFinanceiro', [HonorarioController::class, 'relatorioFinanceiroIndex']);
+
+    Route::get('/TabelaProcedimento', [TabelaController::class, 'TabelaProcedimento'])->name('TabelaProcedimento.index');
+    Route::post('/TabelaProcedimento', [TabelaController::class, 'store'])->name('TabelaProcedimento.store');
+    Route::put('/TabelaProcedimento/{id}', [TabelaController::class, 'update'])->name('TabelaProcedimento.update');
+    Route::delete('/TabelaProcedimento/{id}', [TabelaController::class, 'destroy'])->name('TabelaProcedimento.destroy');
+
+    Route::post('/tabconvenios', [TabConvenioController::class, 'store'])->name('tabconvenios.store');
+    Route::put('/tabconvenios/{id}', [TabConvenioController::class, 'update'])->name('tabconvenios.update');
+    Route::delete('/tabconvenios/{id}', [TabConvenioController::class, 'destroy'])->name('tabconvenios.destroy');
 
 
     #SalaVerificação
