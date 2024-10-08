@@ -207,7 +207,7 @@
 
         @if (Auth::user()->permissoes->pluck('id')->intersect([3])->isNotEmpty())
             <li>
-                <a class="app-menu__item {{ request()->is('empresa  *') ? 'active' : '' }}" href="{{ route('empresa   ') }}">
+                <a class="app-menu__item {{ request()->is('empresa*') ? 'active' : '' }}" href="{{ route('empresa.index') }}">
                     <i class="app-menu__icon bi bi-buildings"></i>
                     <span class="app-menu__label">Empresa</span>
                 </a>
