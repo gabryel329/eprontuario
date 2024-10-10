@@ -11,7 +11,7 @@
     <main class="app-content">
         <div class="app-title d-flex justify-content-between align-items-center">
             <div>
-                <h1><i class="bi bi-table"></i> Lista de Convênios</h1>
+                <h1><i class="bi bi-table"></i> Cotação de Convênios</h1>
             </div>
         </div>
 
@@ -72,11 +72,11 @@
                                                                     <input type="checkbox" class="select-item larger-checkbox" placeholder="selecione" value="{{ $convenioProcedimento->id }}" />
                                                                 </div>
                                                                 
-                                                                <div class="col-md-2 d-flex justify-content-center align-items-center ">
+                                                                <div class="col-md-1 d-flex justify-content-center align-items-center ">
                                                                     <input type="text" name="codigo[]" value="{{ $convenioProcedimento->codigo }}" class="form-control" readonly>
                                                                 </div>
                                                                 
-                                                                <div class="col-md-5 d-flex justify-content-center align-items-center">
+                                                                <div class="col-md-4 d-flex justify-content-center align-items-center">
                                                                     <select name="procedimento_id[]" class="form-select" onchange="updateCodigo(this)">
                                                                         <option value="">Escolha o procedimento</option>
                                                                         @foreach ($procedimentos as $procedimento)
@@ -84,8 +84,19 @@
                                                                         @endforeach
                                                                     </select>
                                                                 </div>
-                                                                
+
                                                                 <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                                                    <select class="form-control" id="operador" name="operador[]">
+                                                                        <option disabled selected value="" style="font-size:18px;color: black;">Operador</option>
+                                                                        <option value="+">+</option>
+                                                                        <option value="-">-</option>
+                                                                        <option value="*">*</option>
+                                                                        <option value="/">/</option>
+                                                                        <option value="%">%</option>
+                                                                    </select>
+                                                                </div>
+                                                                
+                                                                <div class="col-md-1 d-flex justify-content-center align-items-center">
                                                                     <input type="text" placeholder="Valor" name="valor[]" value="{{ $convenioProcedimento->valor }}" class="form-control">
                                                                 </div>
                                                                 
@@ -104,7 +115,7 @@
                                                                 <div class="col-md-2 d-flex justify-content-center align-items-center ">
                                                                     <input type="text" name="codigo[]" placeholder="Código" value="" class="form-control" readonly>
                                                                 </div>
-                                                                <div class="col-md-6 d-flex justify-content-center align-items-center">
+                                                                <div class="col-md-5 d-flex justify-content-center align-items-center">
                                                                     <select name="procedimento_id[]" class="form-select" onchange="updateCodigo(this)">
                                                                         <option value="">Escolha o procedimento</option>
                                                                         @foreach ($procedimentos as $procedimento)
@@ -113,6 +124,16 @@
                                                                     </select>
                                                                 </div>
                                                                 <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                                                    <select class="form-control" id="operador" name="operador[]">
+                                                                        <option disabled selected value="" style="font-size:18px;color: black;">Operador</option>
+                                                                        <option value="+">+</option>
+                                                                        <option value="-">-</option>
+                                                                        <option value="*">*</option>
+                                                                        <option value="/">/</option>
+                                                                        <option value="%">%</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-1 d-flex justify-content-center align-items-center">
                                                                     <input type="text" placeholder="Valor" name="valor[]" class="form-control">
                                                                 </div>
                                                                 <div class="col-md-2 d-flex justify-content-center align-items-center">
@@ -247,6 +268,7 @@ function submitForm(convenioId) {
         const codigo = row.querySelector(`input[name="codigo[]"]`).value;
         const procedimentoId = row.querySelector(`select[name="procedimento_id[]"]`).value;
         const valor = row.querySelector(`input[name="valor[]"]`).value;
+        const operador = row.querySelector(`select[name="operador[]"]`).value;
 
         // Check for duplicate procedimento_id
         if (procedimentoIds.includes(procedimentoId)) {
@@ -256,6 +278,7 @@ function submitForm(convenioId) {
             formData.append(`codigo[${index}]`, codigo);
             formData.append(`procedimento_id[${index}]`, procedimentoId);
             formData.append(`valor[${index}]`, valor);
+            formData.append(`operador[${index}]`, operador);
             formData.append(`convenio_id[${index}]`, convenioId);
         }
     });

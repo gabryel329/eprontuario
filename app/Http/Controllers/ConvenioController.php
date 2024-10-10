@@ -137,7 +137,8 @@ class ConvenioController extends Controller
 
     public function convenioProcedimentoIndex()
     {
-        $convenios = Convenio::with('convenioProcedimentos.procedimento')->get();
+        $convenios = Convenio::with('convenioProcedimentos.procedimento')->skip(1)->get();
+
         $procedimentos = Procedimentos::all();
         $convProces = ConvenioProcedimento::all();
         return view('financeiro.convenioProcedimento', compact('convenios', 'procedimentos', 'convProces'));
