@@ -262,7 +262,7 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::put('/tabconvenios/{id}', [TabConvenioController::class, 'update'])->name('tabconvenios.update');
     Route::delete('/tabconvenios/{id}', [TabConvenioController::class, 'destroy'])->name('tabconvenios.destroy');
 
-
+    Route::get('/detalhesConsulta/{id}', [AgendaController::class, 'detalhesConsulta']);
     #SalaVerificação
 
     Route::middleware(['auth', 'check.question'])->group(function () {

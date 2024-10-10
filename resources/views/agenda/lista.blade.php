@@ -6,6 +6,41 @@
         font-size: 1rem;
         color: #666;
     }
+
+    .table-scroll-wrapper {
+        position: relative;
+    }
+
+    .table-scroll {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 15px;
+        overflow-x: auto;
+    }
+
+    .table-scroll div {
+        height: 15px;
+    }
+
+    /* Estilo para o hover */
+    .hoverable-td {
+        cursor: pointer; /* Indica que é clicável */
+    }
+
+    /* Quando o mouse passar por cima */
+    .hoverable-td:hover {
+        background-color: #17a2b8; /* Cor de fundo da classe btn-info */
+        color: white; /* Cor do texto quando o mouse passar por cima */
+    }
+
+    .table td, .table th {
+        vertical-align: middle; /* Alinha o conteúdo verticalmente no centro */
+        padding-top: 4px;      /* Ajusta o espaçamento superior */
+        padding-bottom: 4px;   /* Ajusta o espaçamento inferior */
+        font-size: 13px;       /* Define o tamanho da fonte */
+    }
 </style>
 
 @section('content')
@@ -99,86 +134,96 @@
                             Nenhum filtro aplicado.
                         @endif
                     </span>
-                    <div class="table-responsive">
-                        <table class="table table-striped" style="text-align: center">
-                            <thead>
-                                <tr>
-                                    <th>Hora</th>
-                                    <th>Nome</th>
-                                    <th>CPF</th>
-                                    <th>Contato</th>
-                                    <th>Medico</th>
-                                    <th>Consulta</th>
-                                    <th>Status</th>
-                                    <th>Chamar</th>
-                                    <th>Excluir</th>
-                                    <th>Editar</th>
-                                    <th>Guias</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($agendas as $item)
+                    {{-- <iframe id="detalhesConsultaIframe" style="width:100%; height:400px; display:none;"
+                        frameborder="0"></iframe> --}}
+                    <div class="table-scroll-wrapper">
+                        <div class="table-responsive" style="overflow-x: auto;">
+                            <table class="table table-striped" style="text-align: center; white-space: nowrap; font-size: 12px; min-width: 1800px; vertical-align: middle;">
+                                <thead>
                                     <tr>
-                                        <td>{{ $item->hora }}</td>
-                                        <td>{{ optional($item->paciente)->name ?? $item->name }}</td>
-                                        <td>{{ optional($item->paciente)->cpf ?? 'PACIENTE SEM CPF' }}</td>
-                                        <td>{{ $item->celular ?? optional($item->paciente)->celular }}</td>
-                                        <td>{{ optional($item->profissional)->name ?? '-' }}</td>
-                                        <td>{{ $item->procedimento_id }}</td>
-                                        <td>
-                                            <select class="form-control status-select" data-id="{{ $item->id }}"
-                                                data-paciente-id="{{ $item->paciente_id }}"
-                                                {{ $item->status == 'FINALIZADO' ? 'disabled' : '' }}>
-                                                <option value="MARCADO" {{ $item->status == 'MARCADO' ? 'selected' : '' }}>
-                                                    MARCADO</option>
-                                                <option value="CHEGOU" {{ $item->status == 'CHEGOU' ? 'selected' : '' }}>
-                                                    CHEGOU</option>
-                                                <option value="CANCELADO"
-                                                    {{ $item->status == 'CANCELADO' ? 'selected' : '' }}>CANCELADO</option>
-                                                <option value="EVADIO" {{ $item->status == 'EVADIO' ? 'selected' : '' }}>
-                                                    EVADIO</option>
-                                                <option value="FINALIZADO"
-                                                    {{ $item->status == 'FINALIZADO' ? 'selected' : '' }}>FINALIZADO
-                                                </option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <a type="submit"
-                                                class="btn btn-warning form-control chamar-btn {{ $item->paciente_id ? '' : 'disabled' }}"
-                                                data-paciente-id="{{ $item->paciente_id ?? null }}"
-                                                data-agenda-id="{{ $item->id ?? null }}"
-                                                data-paciente-nome="{{ $item->paciente->nome ?? null }}">
-                                                <i class="bi bi-volume-up"></i>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <button {{ $item->status == 'FINALIZADO' ? 'disabled' : '' }} type="button"
-                                                class="btn btn-danger" data-bs-toggle="modal"
-                                                data-bs-target="#deleteModal{{ $item->id }}">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <button {{ $item->status == 'FINALIZADO' ? 'disabled' : '' }} type="button"
-                                                class="btn btn-info" onclick="openEditModal('{{ $item->id }}')"><i
-                                                    class="bi bi-pencil-square"></i></button>
-                                        </td>
-                                        <td>
-                                            <select class="form-control guia-select" data-id="{{ $item->id }}"
-                                                data-paciente-id="{{ $item->paciente_id }}"
-                                                {{ is_null($item->paciente_id) ? 'disabled' : '' }}>
-                                                <option selected disabled>Selecione a Guia</option>
-                                                <option value="consulta">Guia de Consulta</option>
-                                                <option value="sadt">Guia SADT</option>
-                                                <option value="tiss">Guia TISS</option>
-                                            </select>
-                                        </td>
-
+                                        <th>#</th>
+                                        <th>Hora</th>
+                                        <th>Nome</th>
+                                        <th>Consulta</th>
+                                        <th>Medico</th>
+                                        <th>Guias</th>
+                                        <th>Status</th>
+                                        <th>Editar</th>
+                                        <th>Chamar</th>
+                                        <th>CPF</th>
+                                        <th>Contato</th>
+                                        <th>Excluir</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($agendas as $item)
+                                        <tr>
+                                            <td onclick="abrirNovaJanela({{ $item->id }});" title="Detalhes" class="hoverable-td" style="color: red;">
+                                                {{ $item->id }}
+                                            </td>
+                                            <td>{{ $item->hora }}</td>
+                                            <td>{{ optional($item->paciente)->name ?? $item->name }}</td>
+                                            <td>{{ $item->procedimento_id }}</td>
+                                            <td>{{ optional($item->profissional)->name ?? '-' }}</td>
+                                            <td>
+                                                <select class="form-control guia-select" data-id="{{ $item->id }}"
+                                                    data-paciente-id="{{ $item->paciente_id }}"
+                                                    {{ is_null($item->paciente_id) ? 'disabled' : '' }}>
+                                                    <option selected disabled>Selecione a Guia</option>
+                                                    <option value="consulta">Guia de Consulta</option>
+                                                    <option value="sadt">Guia SADT</option>
+                                                    <option value="tiss">Guia TISS</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="form-control status-select" data-id="{{ $item->id }}"
+                                                    data-paciente-id="{{ $item->paciente_id }}"
+                                                    {{ $item->status == 'FINALIZADO' ? 'disabled' : '' }}>
+                                                    <option value="MARCADO"
+                                                        {{ $item->status == 'MARCADO' ? 'selected' : '' }}>MARCADO</option>
+                                                    <option value="CHEGOU"
+                                                        {{ $item->status == 'CHEGOU' ? 'selected' : '' }}>CHEGOU</option>
+                                                    <option value="CANCELADO"
+                                                        {{ $item->status == 'CANCELADO' ? 'selected' : '' }}>CANCELADO
+                                                    </option>
+                                                    <option value="EVADIO"
+                                                        {{ $item->status == 'EVADIO' ? 'selected' : '' }}>EVADIO</option>
+                                                    <option value="FINALIZADO"
+                                                        {{ $item->status == 'FINALIZADO' ? 'selected' : '' }}>FINALIZADO
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <button {{ $item->status == 'FINALIZADO' ? 'disabled' : '' }}
+                                                    type="button" class="btn btn-info"
+                                                    onclick="openEditModal('{{ $item->id }}')"><i
+                                                        class="bi bi-pencil-square"></i></button>
+                                            </td>
+                                            <td>
+                                                <a type="submit"
+                                                    class="btn btn-warning form-control chamar-btn {{ $item->paciente_id ? '' : 'disabled' }}"
+                                                    data-paciente-id="{{ $item->paciente_id ?? null }}"
+                                                    data-agenda-id="{{ $item->id ?? null }}"
+                                                    data-paciente-nome="{{ $item->paciente->nome ?? null }}">
+                                                    <i class="bi bi-volume-up"></i>
+                                                </a>
+                                            </td>
+                                            <td>{{ optional($item->paciente)->cpf ?? 'PACIENTE SEM CPF' }}</td>
+                                            <td>{{ $item->celular ?? optional($item->paciente)->celular }}</td>
+                                            <td>
+                                                <button {{ $item->status == 'FINALIZADO' ? 'disabled' : '' }}
+                                                    type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                                    data-bs-target="#deleteModal{{ $item->id }}">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -209,7 +254,8 @@
                                 </div>
                                 <div class="mb-3 col-md-6" id="novoPaciente" style="display:none;">
                                     <label class="form-label">Novo Paciente</label>
-                                    <a href="{{route('paciente.index')}}" class="btn btn-primary form-control"><i class="bi bi-person-add"></i></a>
+                                    <a href="{{ route('paciente.index') }}" class="btn btn-primary form-control"><i
+                                            class="bi bi-person-add"></i></a>
                                 </div>
                             </div>
 
@@ -574,6 +620,10 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        function abrirNovaJanela(id) {
+            // Abrir uma nova janela popup com o ID da consulta
+            window.open('/detalhesConsulta/' + id, '_blank', 'toolbar=no,scrollbars=yes,resizable=yes,width=800,height=600');
+        }
         $(document).ready(function() {
             var pacienteId = $('#paciente_id{{ $item->id }}').val(); // Obtém o valor do paciente_id
 
