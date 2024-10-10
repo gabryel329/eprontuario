@@ -36,7 +36,7 @@ class AgendaController extends Controller
 
         $agendas = Agenda::all();
         $pacientes = Pacientes::all();
-        $profissional = Profissional::whereNotNull('conselho')->get();
+        $profissional = Profissional::whereNotNull('conselho_1')->get();
         $procedimentos = Procedimentos::all();
         $feriado = Feriado::all();
 
@@ -45,7 +45,7 @@ class AgendaController extends Controller
 
     public function geraAgenda(Request $request)
     {
-        $profissionais = Profissional::whereNotNull('conselho')->get();
+        $profissionais = Profissional::whereNotNull('conselho_1')->get();
 
         return view('agenda.geraragenda', compact(['profissionais']));
     }
@@ -341,114 +341,116 @@ class AgendaController extends Controller
     }
 
     public function GerarAgendaStore(Request $request)
-{
-    // Coleta dos dados do request
-    $profissionalId = $request->input('profissional_id');
-    $especialidadeId = $request->input('especialidade_id');
-    $turno = $request->input('turno');
-    $inicio = $request->input('inihonorario'); // Formato: HH:MM
-    $intervalo = $request->input('interhonorario'); // Intervalo em minutos
-    $fim = $request->input('fimhonorario'); // Formato: HH:MM
-    $mes = $request->input('mes');
-    $anoAtual = date('Y'); // Ano atual
+    {
+        // Coleta dos dados do request
+        $profissionalId = $request->input('profissional_id');
+        $especialidadeId = $request->input('especialidade_id');
+        $turno = $request->input('turno');
+        $inicio = $request->input('inihonorario'); // Formato: HH:MM
+        $intervalo = $request->input('interhonorario'); // Intervalo em minutos
+        $fim = $request->input('fimhonorario'); // Formato: HH:MM
+        $mes = $request->input('mes');
+        $anoAtual = date('Y'); // Ano atual
 
-    $diasSemana = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
+        $diasSemana = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
 
-    // Convertendo os horários para o formato DateTime
-    $inicio = DateTime::createFromFormat('H:i', $inicio);
-    $fim = DateTime::createFromFormat('H:i', $fim);
-    $intervalo = (int) $intervalo;
+        // Convertendo os horários para o formato DateTime
+        $inicio = DateTime::createFromFormat('H:i', $inicio);
+        $fim = DateTime::createFromFormat('H:i', $fim);
+        $intervalo = (int) $intervalo;
 
-    // Função para encontrar todas as datas para um dia da semana específico no mês
-    function encontrarDatasPorDiaDaSemana($diaSemana, $mes, $ano) {
-        $datas = [];
-        $totalDiasNoMes = cal_days_in_month(CAL_GREGORIAN, $mes, $ano); // Total de dias no mês
-        for ($dia = 1; $dia <= $totalDiasNoMes; $dia++) {
-            $data = DateTime::createFromFormat('Y-m-d', "{$ano}-{$mes}-{$dia}");
-            if ($data->format('w') == $diaSemana) { // Se o dia da semana for o desejado
-                $datas[] = $data;
+        // Função para encontrar todas as datas para um dia da semana específico no mês
+        function encontrarDatasPorDiaDaSemana($diaSemana, $mes, $ano)
+        {
+            $datas = [];
+            $totalDiasNoMes = cal_days_in_month(CAL_GREGORIAN, $mes, $ano); // Total de dias no mês
+            for ($dia = 1; $dia <= $totalDiasNoMes; $dia++) {
+                $data = DateTime::createFromFormat('Y-m-d', "{$ano}-{$mes}-{$dia}");
+                if ($data->format('w') == $diaSemana) { // Se o dia da semana for o desejado
+                    $datas[] = $data;
+                }
             }
+            return $datas;
         }
-        return $datas;
-    }
 
-    // Mapear os dias da semana do PHP (0=Domingo, 6=Sábado) com os nomes de dias do formulário
-    $diasSemanaMap = [
-        'dom' => 0,
-        'seg' => 1,
-        'ter' => 2,
-        'qua' => 3,
-        'qui' => 4,
-        'sex' => 5,
-        'sab' => 6,
-    ];
+        // Mapear os dias da semana do PHP (0=Domingo, 6=Sábado) com os nomes de dias do formulário
+        $diasSemanaMap = [
+            'dom' => 0,
+            'seg' => 1,
+            'ter' => 2,
+            'qua' => 3,
+            'qui' => 4,
+            'sex' => 5,
+            'sab' => 6,
+        ];
 
-    $disponibilidades = [];
+        $disponibilidades = [];
 
-    // Iterar sobre os dias da semana selecionados
-    foreach ($diasSemana as $dia) {
-        if ($request->input($dia)) { // Verifica se o dia foi selecionado
-            // Encontrar todas as datas no mês para o dia da semana específico
-            $datasPorDia = encontrarDatasPorDiaDaSemana($diasSemanaMap[$dia], $mes, $anoAtual);
-            
-            // Iterar sobre todas as datas e gerar os horários
-            foreach ($datasPorDia as $data) {
-                $tempInicio = clone $inicio; // Clonar o objeto DateTime para não alterar a referência original
-                while ($tempInicio <= $fim) {
-                    $disponibilidade = [
-                        'profissional_id' => $profissionalId,
-                        'especialidade_id' => $especialidadeId,
-                        'turno' => $turno,
-                        'hora' => $tempInicio->format('H:i'),
-                        'data' => $data->format('Y-m-d'), // A data específica para o dia da semana
-                        'mes' => $mes,
-                        'material' => null,
-                        'medicamento' => null,
-                        'inicio' => $inicio->format('H:i'),
-                        'fim' => $fim->format('H:i'),
-                        'intervalo' => $intervalo,
-                    ];
+        // Iterar sobre os dias da semana selecionados
+        foreach ($diasSemana as $dia) {
+            if ($request->input($dia)) { // Verifica se o dia foi selecionado
+                // Encontrar todas as datas no mês para o dia da semana específico
+                $datasPorDia = encontrarDatasPorDiaDaSemana($diasSemanaMap[$dia], $mes, $anoAtual);
 
-                    // Marca o dia da semana atual com 'S'
-                    foreach ($diasSemana as $d) {
-                        $disponibilidade[$d] = ($d === $dia) ? 'S' : null;
+                // Iterar sobre todas as datas e gerar os horários
+                foreach ($datasPorDia as $data) {
+                    $tempInicio = clone $inicio; // Clonar o objeto DateTime para não alterar a referência original
+                    while ($tempInicio <= $fim) {
+                        $disponibilidade = [
+                            'profissional_id' => $profissionalId,
+                            'especialidade_id' => $especialidadeId,
+                            'turno' => $turno,
+                            'hora' => $tempInicio->format('H:i'),
+                            'data' => $data->format('Y-m-d'), // A data específica para o dia da semana
+                            'mes' => $mes,
+                            'material' => null,
+                            'medicamento' => null,
+                            'inicio' => $inicio->format('H:i'),
+                            'fim' => $fim->format('H:i'),
+                            'intervalo' => $intervalo,
+                        ];
+
+                        // Marca o dia da semana atual com 'S'
+                        foreach ($diasSemana as $d) {
+                            $disponibilidade[$d] = ($d === $dia) ? 'S' : null;
+                        }
+
+                        $disponibilidades[] = $disponibilidade;
+                        $tempInicio->modify("+{$intervalo} minutes");
                     }
-
-                    $disponibilidades[] = $disponibilidade;
-                    $tempInicio->modify("+{$intervalo} minutes");
                 }
             }
         }
-    }
 
-    // Verifique se já existem registros para o profissional_id, especialidade_id e turno
-    $existingDisponibilidade = DB::table('disponibilidades')
-        ->where('profissional_id', $profissionalId)
-        ->where('especialidade_id', $especialidadeId)
-        ->where('turno', $turno)
-        ->first();
-
-    if ($existingDisponibilidade) {
-        // Se existir, faz o update
-        DB::table('disponibilidades')
+        // Verifique se já existem registros para o profissional_id, especialidade_id e turno
+        $existingDisponibilidade = DB::table('disponibilidades')
             ->where('profissional_id', $profissionalId)
             ->where('especialidade_id', $especialidadeId)
             ->where('turno', $turno)
-            ->delete(); // Remove as antigas disponibilidades para inserir as novas
+            ->where('mes', $mes)
+            ->first();
 
-        // Insere as novas disponibilidades
-        DB::table('disponibilidades')->insert($disponibilidades);
+        if ($existingDisponibilidade) {
+            // Se existir, faz o update
+            DB::table('disponibilidades')
+                ->where('profissional_id', $profissionalId)
+                ->where('especialidade_id', $especialidadeId)
+                ->where('turno', $turno)
+                ->delete(); // Remove as antigas disponibilidades para inserir as novas
 
-        // Redireciona com sucesso para update
-        return redirect()->back()->with('success', 'Disponibilidades atualizadas com sucesso!');
-    } else {
-        // Caso não existam registros, faz o insert
-        DB::table('disponibilidades')->insert($disponibilidades);
+            // Insere as novas disponibilidades
+            DB::table('disponibilidades')->insert($disponibilidades);
 
-        // Redireciona com sucesso para store
-        return redirect()->back()->with('success', 'Disponibilidades cadastradas com sucesso!');
+            // Redireciona com sucesso para update
+            return redirect()->back()->with('success', 'Disponibilidades atualizadas com sucesso!');
+        } else {
+            // Caso não existam registros, faz o insert
+            DB::table('disponibilidades')->insert($disponibilidades);
+
+            // Redireciona com sucesso para store
+            return redirect()->back()->with('success', 'Disponibilidades cadastradas com sucesso!');
+        }
     }
-}
 
 
     public function getSavedData($profissionalId, $especialidadeId, $data)
@@ -498,7 +500,7 @@ class AgendaController extends Controller
     {
         $procedimentos = Procedimentos::all();
         $pacientes = Pacientes::all();
-        $profissionals = Profissional::whereNotNull('conselho')->get();
+        $profissionals = Profissional::whereNotNull('conselho_1')->get();
         $agendas = collect();
 
         // Store form values in the session
