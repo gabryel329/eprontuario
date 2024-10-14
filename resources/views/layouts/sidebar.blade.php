@@ -152,9 +152,6 @@
                     </li>
                 </ul>
             </li>
-        @endif
-
-        @if (Auth::user()->permissoes->pluck('id')->intersect([3])->isNotEmpty())
             <li class="treeview {{ request()->is('TabelaProcedimento*','honorario*', 'convenioProcedimento*', 'relatorioFinanceiro*') ? 'is-expanded' : '' }}">
                 <a class="app-menu__item" href="#" data-toggle="treeview">
                     <i class="app-menu__icon bi bi-bank"></i>
@@ -191,6 +188,20 @@
                     </li>
                 </ul>
             </li>
+            <li class="treeview {{ request()->is( 'produtos*') ? 'is-expanded' : '' }}">
+                <a class="app-menu__item" href="#" data-toggle="treeview">
+                    <i class="app-menu__icon bi bi-cash-coin"></i>
+                    <span class="app-menu__label">Estoque</span>
+                    <i class="treeview-indicator bi bi-chevron-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a class="treeview-item {{ request()->is('produtos*') ? 'active' : '' }}" href="{{ route('produtos.index') }}">
+                            <i class="icon bi bi-file-earmark-break"></i> Produtos
+                        </a>
+                    </li>
+                </ul>
+            </li>
             <li class="treeview {{ request()->is( 'guia-sp*', 'guia-consulta*', 'guia-honorario') ? 'is-expanded' : '' }}">
                 <a class="app-menu__item" href="#" data-toggle="treeview">
                     <i class="app-menu__icon bi bi-cash-coin"></i>
@@ -215,9 +226,6 @@
                     </li> --}}
                 </ul>
             </li>
-        @endif
-
-        @if (Auth::user()->permissoes->pluck('id')->intersect([3])->isNotEmpty())
             <li>
                 <a class="app-menu__item {{ request()->is('empresa*') ? 'active' : '' }}" href="{{ route('empresa.index') }}">
                     <i class="app-menu__icon bi bi-buildings"></i>

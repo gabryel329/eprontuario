@@ -15,11 +15,13 @@ use App\Http\Controllers\HonorarioController;
 use App\Http\Controllers\PacientesController;
 use App\Http\Controllers\PainelController;
 use App\Http\Controllers\PermisoesController;
+use App\Http\Controllers\ProdutosController;
 use App\Http\Controllers\ProfissionalController;
 use App\Http\Controllers\TabConvenioController;
 use App\Http\Controllers\TabelaController;
 use App\Http\Controllers\TipoProfController;
 use App\Http\Controllers\UserController;
+use App\Models\Produtos;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -80,7 +82,7 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::get('/guia-sp', [GuiaSpController::class, 'index'])->name('guiasp.index');
 
         Route::get('/guia-consulta/listar', [GuiaConsultaController::class, 'listarGuiasConsulta'])->name('guiasconsulta.listar');
-        
+
         Route::get('/guia-tiss/listar', [GuiaTissController::class, 'listarGuiasTiss'])->name('guiastiss.listar');
         Route::get('/guia-honorario/listar', [GuiaHonorarioController::class, 'listarGuiasHonorario'])->name('guiahonorario.listar');
         Route::get('/guia-sp/listar', [GuiaSpController::class, 'listarGuiasSp'])->name('guiasp.listar');
@@ -104,25 +106,25 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::post('/filtrar-agenda', [AgendaController::class, 'filtrarAgenda'])->name('agenda.filtrar');
         Route::get('/agenda/{id}/guia-tiss', [GuiaTissController::class, 'gerarGuiaTiss'])->name('guia.tiss');
         Route::get('/agenda/{id}/guia-sadt', [GuiaSpController::class, 'gerarGuiaSadt'])->name('guia.sadt');
-        
+
         Route::get('/gerar-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarGuiaConsultaMODAL'])->name('gerar.guia.consulta');
         Route::post('/salvar-guia-consulta', [GuiaConsultaController::class, 'salvarGuiaConsulta'])->name('salvar.guiaConsulta');
-        
-        #GUIA RECEP��O
+
         Route::get('/agenda/{id}/guia-consulta', [GuiaConsultaController::class, 'gerarGuiaConsulta'])->name('guia.consulta2');
 
         Route::get('/gerar-xml-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarXmlGuiaConsulta']);
         Route::get('/gerar-zip-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarZipGuiaConsulta']);
 
+        Route::get('/produtos', [ProdutosController::class, 'index'])->name('produtos.index');
 
-        // Rota para recuperar os dados salvos
-        
+
         Route::get('/get-agenda-data/{profissionalId}/{especialidadeId}/{selectedDate}', [AgendaController::class, 'getAgendaData']);
         Route::get('/get-disponibilidade/{profissionalId}', [AgendaController::class, 'getDisponibilidade'])->name('get.disponibilidade');
 
         Route::post('/save-disponibilidade', [HonorarioController::class, 'saveDisponibilidade']);
     });
 
+    Route::post('/produtos', [ProdutosController::class, 'store'])->name('produtos.store');
     Route::post('/guia_consulta', [GuiaConsultaController::class, 'store'])->name('guiaconsulta.store');
     Route::post('/guia_tiss', [GuiaTissController::class, 'store'])->name('guiatiss.store');
     Route::post('/guia_sp', [GuiaSpController::class, 'store'])->name('guiasp.store');
@@ -230,7 +232,7 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::get('/guia/consulta/{id}', [GuiaConsultaController::class, 'impressaoGuia'])->name('guia.consulta');
     Route::get('/guia/tiss/{id}', [GuiaTissController::class, 'impressaoGuia'])->name('guia.tiss');
 
-    
+
     Route::post('/ficha_atendimento', [AtendimentosController::class, 'processarFormulario'])->name('processarFormulario');
 
     Route::post('/solicitacoes', [AtendimentosController::class, 'solicitacoes']);
