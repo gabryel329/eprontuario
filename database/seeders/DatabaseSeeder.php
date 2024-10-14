@@ -94,7 +94,7 @@ class DatabaseSeeder extends Seeder
 
         DB::table('profissionals')->insert([
             [
-                'name' => 'Medico',
+                'name' => 'Eduardo Lisboa Ferreira',
                 'sobrenome' => 'Souza',
                 'email' => 'admin@anb.com',
                 'nasc' => $faker->date($format = 'Y-m-d', $max = 'now'),
@@ -218,7 +218,7 @@ class DatabaseSeeder extends Seeder
 
         DB::table('pacientes')->insert([
             [
-                'name' => 'Rafael',
+                'name' => 'Ednaldo Santos de Jesus',
                 'sobrenome' => 'Souza',
                 'email' => $faker->email,
                 'nasc' => $faker->date($format = 'Y-m-d', $max = 'now'),
@@ -254,7 +254,7 @@ class DatabaseSeeder extends Seeder
                 'validade' => $faker->date($format = 'Y-m-d', $max = 'now')
             ],
             [
-                'name' => 'Igor',
+                'name' => 'Fabricio Souza de Oliveira',
                 'sobrenome' => 'Tavares',
                 'email' => $faker->email,
                 'nasc' => $faker->date($format = 'Y-m-d', $max = 'now'),
@@ -519,6 +519,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('procedimentos')->insert([
+            ['codigo' => '0000000000', 'procedimento' => 'RETORNO', 'idade' => '0 MESES - 130 ANOS', 'limite' => 'SEM LIMITE'],
             ['codigo' => '0202090027', 'procedimento' => 'ADENOGRAMA', 'idade' => '0 MESES - 130 ANOS', 'limite' => 'SEM LIMITE'],
             ['codigo' => '0202080056', 'procedimento' => 'BACILOSCOPIA DIRETA P/ BAAR (HANSENIASE)', 'idade' => '0 MESES - 130 ANOS', 'limite' => 'SEM LIMITE'],
             ['codigo' => '0202080064', 'procedimento' => 'BACILOSCOPIA DIRETA P/ BAAR TUBERCULOS (CONTROLE)', 'idade' => '0 MESES - 130 ANOS', 'limite' => 'SEM LIMITE'],

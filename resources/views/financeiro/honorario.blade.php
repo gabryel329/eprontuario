@@ -11,7 +11,7 @@
     <main class="app-content">
         <div class="app-title d-flex justify-content-between align-items-center">
             <div>
-                <h1><i class="bi bi-table"></i> Lista de Profissionais</h1>
+                <h1><i class="bi bi-table"></i> Honorário dos Profissionais</h1>
             </div>
         </div>
 

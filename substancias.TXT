@@ -1,0 +1,1886 @@
+SUB_DESC                                                         
+=============================================================    
+ACEBROFILINA                                                     
+ACETAMIDO, DERIVADO CLORADO DO                                   
+ACETAMINOFEN (OU N-ACETIL-PARA-AMINOFENOL)                       
+ACETAMINOFENOL                                                   
+ACETARSOL                                                        
+ACETILCISTEINA                                                   
+ACETILMETIONINA                                                  
+ACETOFENETIDINA                                                  
+ACETONIL-TRIANCINOLONA                                           
+ACICLOVIR                                                        
+ACIDO ACETICO                                                    
+ACIDO ACETICO GLACIAL                                            
+ACIDO ACETILSALICILICO                                           
+ACIDO ACETILSALICILICO TAMPONADO                                 
+ACIDO ACEXAMICO                                                  
+ACIDO AMINOACETICO                                               
+ACIDO AMINOETANSULFONICO                                         
+ACIDO 4-AMINOMETIL-PTEROILGLUTAMICO                              
+ACIDO 5-AMINOSALICILICO                                          
+ACIDO ASCORBICO                                                  
+ACIDO ASPARTICO                                                  
+ACIDO AZELAICO                                                   
+ACIDO BETA-(AMINOMETIL)-PARA CLOROCINAMICO E ACIDO CLORIDROC     
+ACIDO BORICO                                                     
+ACIDO CITRICO                                                    
+ACIDO CLAVULANICO                                                
+ACIDO CLORBENZAMIDO-ETIL-FENOXIL-METILPROPIONICO                 
+ACIDO CLORO-HIDROXI-BENZOICO, BUTILAMIDA DO                      
+ACIDO DEIDROCOLICO                                               
+ACIDO DESOXICOLICO                                               
+ACIDO EPSILONAMINO-CAPROICO                                      
+ACIDO ESTEARICO                                                  
+ACIDO FENILETILBARBITURICO                                       
+ACIDO FLUFENAMICO                                                
+ACIDO FOLICO                                                     
+ACIDO FOLINICO                                                   
+ACIDO FOSFORICO                                                  
+ACIDO GAMA-AMINO-BETA-HIDROXIBUTIRICO                            
+ACIDO GAMAAMINOBUTIRICO (GABA)                                   
+ACIDO GLUTAMICO                                                  
+ACIDO HIDROXIFENILCICLOPENTANOACETICO, ESTER DIETILAMINICO D     
+ACIDO HIDROXI-ISOFTALICO                                         
+ACIDO ISONICOTINICO, HIDRAZIDA                                   
+ACIDO LACTICO                                                    
+ACIDO MEFENAMICO                                                 
+ACIDO METACRESOLIL-SULFONICO, DERIVADO DO                        
+ACIDO METIL PTEROILGLUTAMICO                                     
+ACIDO METOXINAFTILPROPIONICO                                     
+ACIDO MUCOPOLISSACARIDO-POLISSULFURICO                           
+ACIDO N-ACETIL-NEURAMINICO (NANA)                                
+ACIDO NALIDIXICO                                                 
+ACIDO NICOTINICO                                                 
+ACIDO NICOTINICO, AMIDA DO                                       
+ACIDO OROTICO                                                    
+ACIDO PANTOTENICO                                                
+ACIDO PARA-AMINOBENZOICO ESTERES ETILICO E BUTILICO DO           
+ACIDO PIPEMIDICO                                                 
+ACIDO PIRIDINOCARBOXILICO                                        
+ACIDO PROPIONICO                                                 
+ACIDO PTEROIL-GLUTAMICO                                          
+ACIDO QUENODESOXILICO                                            
+ACIDO RETINOICO                                                  
+ACIDO SALICILICO                                                 
+ACIDO SILICICO                                                   
+ACIDO SUCCINICO                                                  
+ACIDO TANICO                                                     
+ACIDO TARTARICO                                                  
+ACIDO TOLFENAMICO                                                
+ACIDO TRANS-4 AMINOMETIL-CICLOHEXANO-CARBOXILICO                 
+ACIDO TRIIODOTIROACETICO                                         
+ACIDO UNDECILENICO                                               
+ACIDO URSODESOXICOLICO                                           
+ACIDO VALPROICO                                                  
+ACIDOS GRAXOS POLIINSATURADOS MARINHOS                           
+ACIPIMOX                                                         
+ACONITO                                                          
+ACTH                                                             
+ADENOSINA                                                        
+ADESIVO CIRURGICO HEMOSTATICO                                    
+ADIFENINA                                                        
+ADRENALINA                                                       
+ADRENOCROMO                                                      
+ADRIAMICINA, CLORIDRATO DE                                       
+ADSORBOBASE                                                      
+AGAR-AGAR                                                        
+AGONIADA, EXTRATO FLUIDO DE                                      
+ALANTOINA                                                        
+ALBENDAZOL                                                       
+ALBUMINA HUMANA                                                  
+ALCACHOFRA, EXTRATO DE                                           
+ALCACUZ                                                          
+ALCATRAO                                                         
+ALCATRAO DE PINHO                                                
+ALCATRAO MINERAL                                                 
+ALCOOL CETILICO                                                  
+ALCOOL ESTEARILICO                                               
+ALCOOL PANTOTENILICO                                             
+ALCOOL POLIVINILICO                                              
+ALENDRONATO SODICO                                               
+ALERGENOS                                                        
+ALERGIAS                                                         
+ALFA-AMILASE                                                     
+ALFA-AMINO-P-HIDROXIBENZIL-PENICILINA                            
+MATERIAL                                                         
+ALFAMETILDOPA                                                    
+ALFA-PINENO                                                      
+ALFAQUIMOTRIPSINA                                                
+ALFARROBA, FARINHA DA POLPA DE                                   
+ALFATOCOFEROL                                                    
+ALFENTANIL                                                       
+ALFUZOSINA                                                       
+ALGESTONA                                                        
+ALHO, EXTRATO DE                                                 
+ALILA, SULFETO DE                                                
+ALILESTRENOLOL                                                   
+ALIZAPRIDA                                                       
+ALLOPURINOL                                                      
+ALMITRINA, BISMETILATO DE                                        
+ALOES                                                            
+ALOPURINOL                                                       
+ALOINA                                                           
+ALPRAZOLAM                                                       
+ALUMEN                                                           
+ALUMEN AMONIACAL                                                 
+ALUMINATO DE MAGNESIO                                            
+ALUMINIO, CLOFIBRATO DE                                          
+ALUMINIO, HIDROXIDO DE                                           
+AMANTADINA                                                       
+DIT                                                              
+AMBUFILINA +ETAFEDRINA+FENILEFRINA+DOXILAMINA                    
+AMETOPTERIM                                                      
+AMICACINA                                                        
+AMIDOPIRAZOLINA                                                  
+AMIDOPIRINA                                                      
+AMILASE                                                          
+AMILASE ALFA                                                     
+AMILOCAINA                                                       
+AMILORIDA                                                        
+AMINAFTONA                                                       
+AMINEPTINA                                                       
+AMINOACIDOS                                                      
+AMINOACIDOS BACTERIANOS POLIVALENTES                             
+AMINOACIDOS (PARA SUPLEMENTACAO DIETETICA)                       
+AMINOACRIDINA                                                    
+AMINOBENZOIL-DIETILAMINOETANOL                                   
+AMINOFILINA                                                      
+AMINOGLUTETIMIDA                                                 
+AMINOPIRINA                                                      
+AMIODARONA                                                       
+AMISULPRIDA                                                      
+AMITRIPTILINA                                                    
+AMLODIPINA                                                       
+AMONIO, CLORETO DE                                               
+AMOROLFINA                                                       
+AMOXICILINA                                                      
+AMPICILINA                                                       
+AMPICILINA BENZATINA                                             
+AMPICILINA SODICA                                                
+AMRINONE                                                         
+ANALGESINA (FENILDIMETIL-PIRAZOLONA)                             
+ANATOXINA DIFTERICA                                              
+ANATOXINA ESTAFILOCOCCICA                                        
+ANATOXINA PERTUSSIS                                              
+ANATOXINA TETANICA                                               
+ANFEPRAMONA                                                      
+ANFOTERICINA B                                                   
+ANICLORIDE                                                       
+ANIDRO-HIDROXI-NOR-PROGESTERONA                                  
+ANIS, EXTRATO DE                                                 
+ANTAZOLINA                                                       
+ANTICORPOS ANTITETANICO                                          
+ANTIGENOS, (POEIRA, LA, FUNGOS E GERMES)                         
+ANTIGENOS ALERGENICOS DE USO DIAGNOSTICO                         
+ANTIGENOS BACTERIANOS                                            
+ANTIGENOS BACTERIANOS POLIVALENTES                               
+ANTIGENOS DE BRUCELLA, (PARA USO TERAPEUTICO)                    
+ANTIGENOS DE INSETOS                                             
+ANTIGENOS INALANTES E INGESTANTES                                
+ANTITOXINA ANTIBIOTROPICA                                        
+ANTITOXINA ANTICROTALICA                                         
+ANTITOXINA ANTITETANICA                                          
+ARABINOSIL-CITOSINA                                              
+ARAQUIDE, OLEO DE                                                
+ARGININA                                                         
+ARGININA-ASPARTATO                                               
+ARGININA, PIDOLATO DE                                            
+ARGYROL                                                          
+ARRENAL (METILARSENIATO DE SODIO)                                
+ASPARAGINA                                                       
+ASPARAGINASE                                                     
+ASPARTAME                                                        
+ASPARTATO(S)                                                     
+ASTEMIZOL                                                        
+ATP                                                              
+ATAPULGITA                                                       
+ATENOLOL                                                         
+ATRACURIUM, DOBESILATO DE                                        
+ATROPINA, SULFATO DE                                             
+AURANOFILIN                                                      
+AUROTIOMALATO DE SODIO                                           
+AVEIA (USO TOPICO)                                               
+AXETILCEFUROXIMA                                                 
+AZATADINA                                                        
+AZATIOPRINA                                                      
+AZELASTINA                                                       
+AZIDOTIMIDINA                                                    
+AZITROMICINA                                                     
+AZT                                                              
+AZTREONAM                                                        
+AZUL DE METILENO                                                 
+AZULENO                                                          
+BACILLUS CEREUS                                                  
+BACILOS BULGARICOS                                               
+BACILOS LATICOS                                                  
+BACITRACINA                                                      
+BACLOFENO                                                        
+BALSAMO DO PERU                                                  
+BALSAMO DE TOLU                                                  
+BAMETANO                                                         
+BAMIFILINA                                                       
+BARIO, SULFATO DE                                                
+BECLOMETASONA                                                    
+BELADONA                                                         
+BENAZEPRILA                                                      
+BENJOIM, TINTURA DE                                              
+BENZALCONIO, CLORETO DE                                          
+BENZETONIO, CLORETO DE                                           
+BENZIDAMINA                                                      
+BENZILA, BENZOATO DE                                             
+BENZILA, CINAMATO DE                                             
+BENZILA, NICOTINATO DE                                           
+BENZILPENICILINA                                                 
+BENZOATO DE SODIO                                                
+BENZOBROMARONA                                                   
+BENZOCAINA                                                       
+BENZOFENONA                                                      
+BENZOILA, PEROXIDO DE                                            
+BENZOILMETRONIDAZOL                                              
+BENZONIDAZOL                                                     
+BERBERINA                                                        
+BETACAROTENO                                                     
+BETAINA                                                          
+BETAINA-COLINA, TARTARATO DE                                     
+BETAMETASONA                                                     
+BETAMETILDIGOXINA                                                
+BETAXOLOL                                                        
+BEZAFIBRATO                                                      
+BILE                                                             
+BIOLETRINA                                                       
+BIOTINA                                                          
+BIPERIDENO                                                       
+BISACODIL                                                        
+BISMUTO, CARBONATO DE                                            
+BISMUTO, SUBGALATO DE                                            
+BISMUTO, SUBNITRATO DE                                           
+BISMUTO COLOIDAL, SUBNITRATO DE                                  
+BISOLVON (OU N-CICLO-HEXIL-N-METIL-2-AMINA-3,5-DIBROMOBENZIL     
+BITHIONOL                                                        
+BLEOMICINA                                                       
+BOLDO                                                            
+BOLUS ALBA                                                       
+BORAX                                                            
+BORO                                                             
+BROMAZEPAM                                                       
+BROMELINA                                                        
+BROMEXINA                                                        
+BROMOCRIPTINA                                                    
+BROMOFENIRAMINA                                                  
+BROMOFORMIO                                                      
+BROMOPRIDA                                                       
+BROVANEXINA                                                      
+BUCLIZINA                                                        
+BUFLOMEDIL                                                       
+BUMETANIDA                                                       
+BUPIVACAINA                                                      
+BUPRENORFINA                                                     
+BUSERELIN, ACETATO DE                                            
+BUSPIRONA, CLORIDRATO DE                                         
+BUSULFANO                                                        
+BUTAFILAMINA                                                     
+BUTALBITAL                                                       
+BUTAMIRATO                                                       
+MATERIAL                                                         
+BUTILNAFTALENOSSULFONATO DE SODIO                                
+BUTIL PIRAZOLIDINA, DERIVADO DA                                  
+BUTIMERINA                                                       
+BUTIRAMIDA, DERIVADO DA                                          
+BUTIROFENONA, DERIVADO DA                                        
+CADE, OLEO DE                                                    
+CAFEINA                                                          
+CALAMINA                                                         
+CALCIFEROL                                                       
+CALCIO                                                           
+CALCIO, CARBONATO DE                                             
+CALCIO, CLORETO DE                                               
+CALCIO, DIATRIZOATO DE                                           
+CALCIO, DOBESILATO DE                                            
+CALCIO, FOSFATO DE                                               
+CALCIO, GLICEROFOSFATO DE                                        
+CALCIO, GLUCOLACTOBIONATO DE                                     
+CALCIO, GLUCONATO DE                                             
+CALCIO, GLUTAMATO DE                                             
+CALCIO, INOSITOEXAFOSFATO DE                                     
+CALCIO, LACTATO DE                                               
+CALCIO, LACTOBIONATO DE                                          
+CALCIO, PANTOTENATO DE                                           
+CALCIO, POLIESTIRENO-SULFONATO DE                                
+CALCIPOTRIOL                                                     
+CALCITONINA HUMANA SINTETICA                                     
+CALCITONINA DE PORCO (NATURAL)                                   
+CALCITONINA DE SALMAO (SINTETICA)                                
+CALCITONINA DE ENGUIA (SINTETICA)                                
+CALCITRIOL (SINTETICO)                                           
+CAMOMILA                                                         
+CANFENO                                                          
+CANFORA                                                          
+CANFORA MONOBROMADA                                              
+CANFOSSULFONATO DE SODIO                                         
+CANSILATO DE SODIO                                               
+CAOLIM                                                           
+CAPEBA, EXTRATO DE                                               
+CAPSICINA                                                        
+CAPSICO, EXTRATO OU OLEO DE                                      
+CAPSICUM                                                         
+CAPTOPRIL                                                        
+CARBACOL                                                         
+CARBAMAZEPINA                                                    
+CARBENICILINA                                                    
+CARBETAPENTANE                                                   
+CARBETAPENTANO                                                   
+CARBIDOPA                                                        
+CARBINOXAMINA                                                    
+CARBOCISTEINA                                                    
+CARBOPLATINA                                                     
+CARBOXIMETILCELULOSE                                             
+CARBOXIMETILCISTEINA                                             
+CARBOXISULFAMIDO CRISOIDINA                                      
+CARDIAZOL                                                        
+CARISOPRODOL + ASSOCIAÇÕES                                       
+CARMUSTINA                                                       
+CARNITINA                                                        
+CARQUEJA                                                         
+CARVAO                                                           
+CASCARA DE LARANJA AMARGA                                        
+CASCARA SAGRADA                                                  
+CASEINA EM PREPARADO DESTINADO A DIETA DE EMAGRECIMENTO          
+CASSIA ANGUSTIFOLIA                                              
+CASSIA FISTULA, EXTRATO DE                                       
+RUTOSIDO + CASTANHA DA INDIA + MIROTON                           
+CATALIN                                                          
+CATUABA, EXTRATO OU TINTURA DE                                   
+CAULIM                                                           
+CEDILANIDE                                                       
+CEFACLOR                                                         
+CEFADROXIL                                                       
+CEFALEXINA                                                       
+CEFALOTINA                                                       
+CEFALOTINA SODICA TAMPONADA                                      
+CEFAZOLINA                                                       
+CEFETAMET                                                        
+CEFODIZIMA                                                       
+CEFOPERAZONA                                                     
+CEFOTAXIMA                                                       
+CEFOXITINA                                                       
+CEFTAZIDIMA                                                      
+CEFTRIAXONA                                                      
+CEFUROXIMA                                                       
+CELULASE                                                         
+CEREAIS, ALIMENTO A BASE DE                                      
+CETALCONIO                                                       
+CETILPIRIDINIO                                                   
+CETIRIZINA                                                       
+CETOCONAZOL                                                      
+CETOPROFENO                                                      
+CETOTIFENO                                                       
+CETRIMONIO                                                       
+CIANOCOBALAMINA                                                  
+CICLAMATO                                                        
+CICLOEXILMETILAMINA                                              
+CICLOEXILUREIA                                                   
+CICLOPENTOLATO, CLORIDRATO DE                                    
+CICLOPIROXOLAMINA                                                
+CICLOSPORINA                                                     
+CILASTATINA                                                      
+CILAZAPRILA                                                      
+CIMETIDINA                                                       
+CINAMATO DE BENZILA                                              
+CINAMEDRINA                                                      
+CINARIZINA                                                       
+CINCHOCAINA                                                      
+CINEOL                                                           
+CIPROEPTADINA                                                    
+CIPROFLOXACINA                                                   
+CIPROTERONA, ACETATO DE                                          
+CISAPRIDA                                                        
+CIS-DIAMMINEDICHLOROPLATINUM II                                  
+CISPLATINA                                                       
+CISTEINA                                                         
+CITALOPRAN                                                       
+CITARABINA                                                       
+CITRATO DE SODIO                                                 
+CITRULINA                                                        
+CLADRIBINA                                                       
+CLARITROMICINA                                                   
+CLAVULANATO DE POTASSIO                                          
+CLINDAMICINA                                                     
+CLIOQUINOL                                                       
+CLOBAZAM                                                         
+CLOBETASOL                                                       
+CLOBETASONA, 17-BISMUTO DE                                       
+CLOBUTINOL                                                       
+CLOFIBRATO                                                       
+CLOFIBRATO DE ALUMINIO                                           
+CLOFIBRATO DE MAGNESIO                                           
+CLOMAG                                                           
+CLOMIFENO                                                        
+CLOMIPRAMINA                                                     
+CLONAZEPAM                                                       
+CLONIDINA                                                        
+CLOPAMIDA                                                        
+CLOPERASTINA, FENDIZOATO DE                                      
+CLORAMBUCIL                                                      
+CLORANFENICOL                                                    
+CLORAZEPATO DIPOTASSICO                                          
+CLORDIAZEPOXIDO                                                  
+CLORETAMINA                                                      
+CLORETO DE SODIO                                                 
+CLOREXIDINA                                                      
+CLORFENAMINA                                                     
+CLORFENESINA                                                     
+CLORFENIRAMINA                                                   
+CLORFENOXAMINA                                                   
+CLORHEXIDINA                                                     
+CLORIMIPRAMINA                                                   
+CLORMEZANONA                                                     
+CLOROBUTANOL                                                     
+CLOROFENIRAMINA                                                  
+CLOROFILA                                                        
+CLOROIDROXIQUINOLINA                                             
+CLOROIODOIDROXIQUINOLEINA                                        
+CLORO-ISOPROPILMETILFENOL                                        
+CLOROQUINA, DICLORIDRATO DE                                      
+CLOROQUINA, DIFOSFATO DE                                         
+CLOROQUINA, SULFATO DE                                           
+CLOROTENILPIRAMINA                                               
+CLORPROMAZINA                                                    
+CLORPROPAMIDA                                                    
+CLORQUINALDOL                                                    
+CLORTALIDONA                                                     
+CLOSTEBOL                                                        
+CLOSTRIDIOPEPTIDASE A                                            
+CLOTRIMAZOL                                                      
+CLOXACILINA                                                      
+CLOXAZOLAM                                                       
+CLOZAPINA                                                        
+C.M.P. (CITIDINA MONOFOSFORICO).                                 
+COALTAR                                                          
+COBALTO                                                          
+COBAMAMIDA                                                       
+COBRE                                                            
+COBRE, SULFATO DE                                                
+COBRE (D.I.U. DE FILAMENTO DE)                                   
+CODEINA                                                          
+CODERGOCRINA                                                     
+CODETILINA                                                       
+COENTRO                                                          
+COENZIMA B12                                                     
+COLAGENASE                                                       
+COLAGENO, IMPLANTE DE                                            
+COLCHICINA                                                       
+COLECALCIFEROL                                                   
+COLESTIRAMINA                                                    
+COLFOSCERIL, PALMITATO DE                                        
+COLINA                                                           
+COMPLEXO B                                                       
+CONTRASTES RADIOLOGICOS                                          
+CONVALOTOXINA                                                    
+CORIANDRUM SATIVUM                                               
+CORTEX SUPRA-RENAL, EXTRATO DE                                   
+CORTISONA                                                        
+CRATAEGUS                                                        
+CREMES HIDRATANTES CUTANEOS                                      
+CRESOTAMIDA                                                      
+CRIOPRECIPITADO                                                  
+CRISOIDINA, DERIVADO DE                                          
+CROMO                                                            
+CROMO, CLORETO DE                                                
+CROMO E POTASSIO, SULFATO DE                                     
+CROMOGLICATO DISSODICO                                           
+CUMARINA (5,6-BENZO-ALFA-PIRONA)                                 
+CUMARINA, DERIVADO DA (FENIL-PROPIL-4-HIDROXICUMARINA).          
+CYNARA SCOLIMUS                                                  
+CYPROHEPTADINE                                                   
+DACTINOMICINA                                                    
+DAFLAZACORT                                                      
+DANAZOL                                                          
+DAUNOMICINA (OU DAUNORUBICINA)                                   
+DEFEROXAMINA, MESILATO DE                                        
+DELTA-HIDROCORTISONA                                             
+DELTAMETRINA                                                     
+DEPRENIL                                                         
+DEQUALINIO                                                       
+DESACETIL-LANATOSIDIO C                                          
+DESFERIOXAMINA                                                   
+DESLANOSIDO                                                      
+DESMOPRESSINA                                                    
+DESOGESTREL                                                      
+DESONIDA                                                         
+DESOXIMETASONA                                                   
+DESOXIRRIBONUCLEASE                                              
+DEXAMETASONA                                                     
+DEXAMETASONA, FOSFATO SODICO E ACETATO DE                        
+DEXFENFLURAMINA                                                  
+DEXTRANO                                                         
+DEXTRINA-MALTOSE                                                 
+DEXTROBROMOFENIRAMINA                                            
+DEXTROCLORFENIRAMINA                                             
+DEXTROCLOROFENIRAMINA                                            
+DEXTROISOEFEDRINA                                                
+DEXTROMETORFANO                                                  
+DIALILBISNORTOXIFERINA                                           
+DIAMINOFELILAZOPIRIDINA                                          
+DIAMINOMETILACRIDINA                                             
+DIASTASE                                                         
+DIATRIZOATO DE CALCIO                                            
+DIAZEPAM                                                         
+DIBUCAINA                                                        
+DICICLOVERINA                                                    
+DICICLOMINA                                                      
+DICLOFENACO DIETILAMONIO                                         
+DICLOFENACO POTASSICO                                            
+DICLOFENACO RESINATO                                             
+DICLOFENACO SODICO                                               
+DICLOXACILINA                                                    
+DIDANOSINA                                                       
+DIETA ENTERAL                                                    
+DIETA ORAL                                                       
+DIETILENODIAMINA, DERIVADO DA                                    
+DIETILPROPIONA                                                   
+DIFENIDOL                                                        
+DIFENIDRAMINA                                                    
+DIFENIL-HIDANTOINA                                               
+DIFENILPIRILENO                                                  
+DIFENILPIPERIDINOETIL-ACETAMIDA                                  
+DIFENILPROPILAMINA                                               
+DIFENOXILATO                                                     
+DIFLUNISAL                                                       
+DIFLUOCORTOLONA                                                  
+DIGITOXINA                                                       
+DIGOXINA                                                         
+DIIDRALAZINA                                                     
+DIIDRAZINOFTALAZINA                                              
+DIIDROERGOCONINA                                                 
+DIIDROERGOCRIPTINA                                               
+DIIDROERGOCRISTINA                                               
+DIIDROERGOTAMINA                                                 
+DIIDROERGOTOXINA                                                 
+DIIDROESTREPTOMICINA                                             
+DIIDROFOLICULINA                                                 
+DIIDROXIPROGESTERONA, ACETOFENIDO DE                             
+DIIDROXIQUINA                                                    
+DIIODOIDROXIQUINA                                                
+DIIODOIDROXIQUINOLEINA                                           
+DILTIAZEM                                                        
+DIMENIDRINATO+PIRIDOXINA                                         
+DIMETICONA                                                       
+DIMETILAMINOFENAZONA                                             
+DIMETILAMINOFENILDIMETILPIRAZOLONA                               
+DIMETILAMINOIDROXIBUTAN                                          
+DIMETILFENILMETILIMIDAZOLINA                                     
+DIMETILPOLISSILOXONA                                             
+DIMETILTEOBROMINA                                                
+DIOSMINA                                                         
+DIOXIDIFENILBUTIL-PIRAZOLIDINA                                   
+DIOXITETRACICLINA                                                
+DIPEREDON                                                        
+DIPIRIDAMOL                                                      
+DIPIRONA                                                         
+DIPIVEFRINA                                                      
+DISOPIRAMIDA                                                     
+DISSULFIRAM                                                      
+DISPOSITIVO INTRA-UTERINO                                        
+DITERBUTILNAFTALENO-SULFONATO DE SODIO                           
+DITETRAETILAMONIO                                                
+D.I.U. DE FILAMENTO DE COBRE                                     
+DITRANOL                                                         
+DIRITROMICINA                                                    
+DOBESILATO DE CALCIO                                             
+DOBUTAMINA                                                       
+DOMIFENO, BROMETO DE                                             
+DOMPERIDONA                                                      
+DOPAMINA                                                         
+DOXAZOSINA, MESILATO DE                                          
+DOXICICLINA                                                      
+DOXILAMINA                                                       
+DOXORUBICINA                                                     
+D-PROPOXIFENO                                                    
+DROPERIDOL                                                       
+DROPROPIZINA                                                     
+DUASORB                                                          
+ECONAZOL                                                         
+EDETATO DE SODIO                                                 
+EFEDRINA                                                         
+EMEPRONIO                                                        
+ENALAPRIL, MALEATO DE                                            
+ENFLURANE                                                        
+ENOXAPARINA                                                      
+ENXOFRE                                                          
+EPINEFRINA (OU ADRENALINA)                                       
+EPIRUBICINA                                                      
+ERETRINA (OU ERITRINA)                                           
+ERGOCALCIFEROL                                                   
+ERGOMETRINA                                                      
+ERGONOVINA                                                       
+ERGOSTERINA OU ERGOSTEROL                                        
+ERGOTAMINA                                                       
+ERITROMICINA                                                     
+ERITROPOETINA HUMANA RECOMBINANTE                                
+ERVA CIDREIRA                                                    
+ESCALOL                                                          
+ESCINA + SALICILATO DIETILAMÔNIO                                 
+ESCINA POLISSULFONADA                                            
+ESCOPOLAMINA                                                     
+ESPARTEINA                                                       
+ESPECTINOMICINA                                                  
+ESPIRAMICINA                                                     
+ESPIRONOLACTONA                                                  
+ESTANHO, CLORETO DE                                              
+ESTAVUDINA                                                       
+ESTAZOLAM                                                        
+ESTOMAGO, EXTRATO DE MUCOSA DE                                   
+ESTORAQUE                                                        
+ESTRADIOL                                                        
+ESTRADIOL, ENANTATO DE                                           
+ESTREPTOCINASE                                                   
+ESTREPTOQUINASE                                                  
+ESTREPTOMICINA                                                   
+ESTRICNINA                                                       
+ESTRIOL                                                          
+ESTROGENOS CONJUGADOS                                            
+ETAEFEDRINA                                                      
+ETANSILATO                                                       
+ETANOLAMINA                                                      
+ETER GLICERILGUAIACOLICO                                         
+ETILA, MORRUATO DE                                               
+ETILENOGLICOL, SALICILATO DE                                     
+ETILPAPAVERINA                                                   
+ETILPIPERIDILBENZILATO                                           
+ETINILESTRADIOL                                                  
+ETOFAMIDA                                                        
+ETOFENAMATO                                                      
+ETOMIDATO                                                        
+ETOPOSIDO                                                        
+ETOXIBENZAMIDA                                                   
+EUCALIPTO, EXTRATO DE                                            
+EUCALIPTOL                                                       
+EUSOLEX                                                          
+EXTRATO HEPATICO                                                 
+FAMOTIDINA                                                       
+FATOR VIII                                                       
+FATOR IX                                                         
+FATOR INTRINSECO                                                 
+FATORES DA COAGULACAO DO COMPLEXO PROTROMBINICO                  
+FAVA DE SANTO INACIO                                             
+FEBUZINA                                                         
+FEDRILATO                                                        
+FEMBUTAZONA                                                      
+FEMPIVERINEO, BROMETO DE                                         
+FENACETINA                                                       
+FENAZONA                                                         
+FENAZOPIRIDINA                                                   
+FENETILAMINA                                                     
+FENFLURAMINA                                                     
+FENFORMIN (OU FENETILBIGUANIDA)                                  
+FENILALAMINA                                                     
+FENILAZODIAMINOPIRIDINA                                          
+FENILBUTAZONA                                                    
+FENILCICLOHEXILPROPANOL, DERIVADO DO                             
+FENIL-DIMETIL-PIRAZOLONA-METILAMINO-METANSULFONATO DE MAGNES     
+FENIL-DIMETIL-PIRAZOLONA-METILAMINO-METANSULFONATO DE SODIO      
+FENILEFRINA                                                      
+FENILETILMALONILUREIA                                            
+FENIL-METILAMINOPROPANOL                                         
+FENILPROPANOL                                                    
+FENILPROPANOLAMINA                                               
+FENILTOLOXAMINA                                                  
+FENINDAMINA                                                      
+FENIRAMINA                                                       
+FENITOINA                                                        
+FENOBARBITAL                                                     
+FENOL                                                            
+PICOSSULFATO SODICO, OLEO MINERAL , AGAR-AGAR                    
+FENOPIRAZONA                                                     
+FENOPROFENO                                                      
+FENOTEROL                                                        
+FENOXAZOL                                                        
+FENOXAZOLINA                                                     
+FENOXIMETIL-PENICILINA (OU PENICILINA V)                         
+FENOZONA                                                         
+FENTANIL                                                         
+FENTETRAMINA                                                     
+FENTIAZACO                                                       
+FEPRAZONA                                                        
+FERRO                                                            
+FERRO, FUMARATO DE                                               
+FERRO POLIMALTOSADO, COMPLEXO DE                                 
+FERRO, PROTOXALATO DE                                            
+FEVILLEA TRILOBATA                                               
+FIBRA DIETETICA                                                  
+FIBRINA                                                          
+FIBRINOLISINA                                                    
+FIGADO, EXTRATO DE                                               
+FIGADO, FRACAO ANTIANEMICA DO                                    
+FIGADO, FRACAO ANTITOXICA DO                                     
+FILGRASTIMA                                                      
+FINASTERIDA                                                      
+FITINA                                                           
+FITOMENADIONA (OU VITAMINA K1)                                   
+FLAVONOIDES                                                      
+FLAVOXATO                                                        
+FLOCTAFENINA                                                     
+FLUANDRENOLIDA                                                   
+FLUCONAZOL                                                       
+FLUDROCORTISONA                                                  
+FLUFENAZINA, CLORIDRATO DE                                       
+FLUFENAZINA, ENANTATO DE                                         
+FLUMAZENIL                                                       
+FLUMETASONA, PIVALATO DE                                         
+FLUNARIZINA                                                      
+FLUNISOLIDA                                                      
+FLUNITRAZEPAM                                                    
+FLUOCINOLONA, ACETONIDO DE                                       
+FLUOCORTOLONA                                                    
+FLUOR                                                            
+FLUORANDRENOLIDA                                                 
+FLUORESCEINA SODICA                                              
+FLUOR-HIDROCORTISONA                                             
+FLUORMETILENOPREDNISOLONA                                        
+5-FLUOROCITOSINA                                                 
+FLUORMETOLONA                                                    
+FLUOROMETALONA                                                   
+FLUOTHANE                                                        
+FLUPIRTINA                                                       
+FLUPREDNIDENO                                                    
+S-FLUORO-URACIL                                                  
+FLUOXETINA                                                       
+FLURAZEPAM                                                       
+FLUTAMIDA                                                        
+FLUTICASONA                                                      
+FLUVASTATINA                                                     
+FOLCODINA                                                        
+FOLICO, ACIDO                                                    
+FORMINA                                                          
+FOSFATODILSERINA                                                 
+FOSFATOS MONOSSODICO E DISSODICO HIDRATADOS                      
+FOSFATO TRICALCICO                                               
+FOSFOMICINA-TROMETAMOL                                           
+FOSFORILSERINA                                                   
+FOSFORO                                                          
+FOSINOPRIL                                                       
+FRACAO FOSFOLIPIDICA DE PULMOES BOVINOS                          
+FRACAO G ANTIANEMICA                                             
+FRAMICETINA                                                      
+FRUTOSE (OU LEVULOSE)                                            
+FTALILSULFACETAMIDA                                              
+FTALILSULFATIAZOL                                                
+FUCSINA                                                          
+FUCUS VESICULOSUS                                                
+FUMARIA OFFICINALIS, NEBULIZADO DE                               
+FURALDEIDO-SEMICARBAZONA                                         
+FURAZOLIDONA                                                     
+FUROSEMIDA                                                       
+FURSEMIDA                                                        
+FUSAFUNGINA                                                      
+GABAPENTINA                                                      
+GALAMINA                                                         
+GAMA-HEXACLOROCICLOEXANO                                         
+GAMAGLOBULINA                                                    
+GANGLIOSIDEOS                                                    
+GELATINA                                                         
+NELFINAVIR                                                       
+GELATINA ANIMAL HEMOSTATICA                                      
+GELATINA POLIMERIZADA                                            
+GELEIA REAL                                                      
+GENCIANA, EXTRATO DE                                             
+GENTAMICINA                                                      
+GESTODENE                                                        
+GERME DE TRIGO, EXTRATO SECO DE                                  
+GESTRINONA                                                       
+GINKGO BILOBA, EXTRATO DE                                        
+GINSENG                                                          
+GINSENG, EXTRATO DE (GINSENOSIDEOS)                              
+GLIBENCLAMIDA                                                    
+GLICERILA, GUAIACOLATO DE                                        
+GLICERILA, TRINITRATO DE                                         
+GLICERILMONOESTERATO                                             
+GLICERINA                                                        
+GLICEROFOSFATO DE CALCIO                                         
+GLICEROFOSFATO DE MANGANES                                       
+GLICEROFOSFATO DE POTASSIO                                       
+GLICEROFOSFATO DE SODIO                                          
+GLICINA                                                          
+GLICLAZIDA                                                       
+GLICOCOLA                                                        
+GLICOFURANOSIDEO, DERIVADO DO                                    
+GLICOSE                                                          
+GLICOSE URINARIA, TESTE PARA A DETECCAO DA                       
+GLIPIZIDA                                                        
+GLOBO OCULAR E NERVO OPTICO, HIDROLISADO DE                      
+GLUCAGON                                                         
+GLUCAMETACINA                                                    
+GLUCITOL                                                         
+GLUTAMATO DE CALCIO                                              
+GLUTAMINA                                                        
+GLUTATIONA                                                       
+GOMENOL                                                          
+GONADORRELINA (FATOR DE LIBERACAO DE GONADOTROFINAS)             
+GONADOTROFINA CORIONICA (OU H.C.G.)                              
+GONADOTROFINA HUMANA DA MENOPAUSA                                
+GONADOTROFINA SERICA (OU H.M.G.)                                 
+GONADOTROFINAS HIPOFISARIAS, FATOR HIPOTALAMICO DE LIBERACAO     
+GOSERRELINA                                                      
+GRAMICIDINA                                                      
+GRANISETRONA                                                     
+GRAVIDEZ, TESTE DA DETERMINACAO DA                               
+GRINDELIA, XAROPE OU EXTRATO DE                                  
+GRISEOFULVINA                                                    
+GUAIACOL                                                         
+GUAIAFENESINA                                                    
+GUAIANESINA                                                      
+GUAIFENESINA                                                     
+GUALTERIA, ESSENCIA DE                                           
+GUANABENZENO                                                     
+HAEMOPHILUS, ANTIGENO OU VACINA DE                               
+HALCINONIDA                                                      
+HALOPERIDOL                                                      
+HALOTANO                                                         
+HAMAMELIS                                                        
+H.C.G.                                                           
+HELICINA                                                         
+HEMATOPORFIRINA                                                  
+HEPARINA                                                         
+HEPARINOIDE DUODENAL                                             
+HEPARINOIDES SIMPLES                                             
+HEPATICO, EXTRATO                                                
+HEPTAMINOL                                                       
+HESPERIDINA                                                      
+HEXACLOROFENO                                                    
+HEXAMETILENOTETRAMINA                                            
+HEXAMIDINA                                                       
+HEXANICOTINATO DE MESO-INOSITOL                                  
+H.G.H. (HUMAN GROWTH HORMONE)                                    
+HEXILRESORCINOL                                                  
+HIALURONIDASE                                                    
+HIDRALAZINA                                                      
+HIDRARGIRIO, BISSULFETO DE                                       
+HIDRATANTES CUTANEOS                                             
+HIDRAZIDA DO ACIDO ISONICOTINICO                                 
+HIDROCLOROTIAZIDA                                                
+HIDROCORTISONA                                                   
+HIDROXICOBALAMINA                                                
+HIDROXICLOROQUIA, SULFATO DE                                     
+HIDROXIDO DE ALUMINIO                                            
+HIDROXIFENETILAMINA                                              
+HIDROXIPROGESTERONA                                              
+HIDROXIPROPILMETILCELULOSE                                       
+HIDROXIQUINOLEINA                                                
+HIDROXIQUINOLINA                                                 
+HIDROXIUREIA                                                     
+HIOSCIAMINA                                                      
+HIOSCINA                                                         
+HIPROMELOSE                                                      
+HISTAMINA, DICLORIDRATO DE                                       
+HISTIDINA                                                        
+H.M.G.                                                           
+HOFFMANN, LICOR DE                                               
+HOMATROPINA                                                      
+HOMOCISTEINA-TIOLACTONA                                          
+HORMONIO DE CRESCIMENTO                                          
+HORMONIO GONADOTROFICO                                           
+HORTELA, OLEO OU ESSENCIA DE                                     
+HYOSCIAMUS, EXTRATO OU TINTURA DE                                
+IBOPAMINA                                                        
+IBUPROFENO                                                       
+ICONAZOL                                                         
+ICONAZOLIODOCLOROIDROXIQUINA                                     
+IDARRUBICINA                                                     
+IDOXURIDINA                                                      
+IDU                                                              
+IFOSFAMIDA                                                       
+IMIDAZOLINA, DERIVADO DA                                         
+IMIDAZOLILMETANO, DERIVADO DO                                    
+IMIPENEM                                                         
+IMIPRAMINA, CLORIDRATO DE                                        
+IMIPRAMIDA, PAMOATO DE                                           
+IMUNOGLOBINA ANTITETANICA                                        
+IMUNOGLOBULINA ANTI-HEMOLITICA                                   
+IMUNOGLOBULINA G                                                 
+IMUNOGLOBULINA RHO (D) HUMANA                                    
+INDOMETACINA                                                     
+INOSITOEXAFOSFATO DE CALCIO E MAGNESIO                           
+INOSITOL                                                         
+INSETOS, ANTIGENOS DE                                            
+INSULINA HUMANA                                                  
+INSULINA BOVINA-SUINA                                            
+INTERFERON                                                       
+IODETO DE POTASSIO                                               
+IODO                                                             
+IODO-DEOXI-URIDINA                                               
+IODOCLOROIDROXIQUINOLEINA                                        
+IODOCLOROQUINOLEINA                                              
+IODOCLOROXIQUINOLEINA                                            
+IODOPOVIDONA (OU IODOPOLIVIDONA)                                 
+IOHEXOL                                                          
+IOIMBINA                                                         
+IPECA                                                            
+IPECACUANHA                                                      
+IPRATROPIO                                                       
+IRGASAN DP 300                                                   
+ISOCONAZOL                                                       
+ISOFLUORANO                                                      
+ISOLEUCINA                                                       
+ISOMETEPTENO                                                     
+ISONIAZIDA                                                       
+ISOPRENALINA                                                     
+ISOPROPAMIDA                                                     
+ISOPROPILARTERENOL                                               
+ISOPROPILNORADRENALINA                                           
+ISOSSORBIDA, DINITRATO DE                                        
+ISOSSORBIDA, MONONITRATO DE                                      
+ISOSSORBITOL, DINITRATO DE                                       
+ISOTIPENDIL                                                      
+ISOTRETINOINA                                                    
+ISOXSUPRINA                                                      
+ISRADIPINA                                                       
+ITRACONAZOL                                                      
+JABORANDI, TINTURA DE                                            
+JURUBEBA, EXTRATO DE                                             
+KETAMINA                                                         
+KLEBSIELLA PNEUMONIAE, GLICOPROTEINA DE                          
+KETOCONAZOLE                                                     
+KETOPROFENO                                                      
+LABIADAS, PO DE                                                  
+LACIDIPINA                                                       
+LACTATO TOPICO                                                   
+LACTOBACILLUS ACIDOPHILLUS                                       
+LACTULOSE                                                        
+LAMOTRIGINA                                                      
+LANATOSIDIO C                                                    
+LANSOPRAZOL                                                      
+LANTANA, EXTRATO DE                                              
+L-ARGININA                                                       
+L-CARBOCISTEINA                                                  
+L-CARBOXICISTEINA                                                
+L-CITRULINA                                                      
+L-DOPA                                                           
+LEITE INFANTIL EM PO                                             
+LEITE EM PO INTEGRAL ACIDIFICADO                                 
+LEITE EM PO SEMIDESNATADO                                        
+LEITE ISENTO DE LACTOSE                                          
+LENTES DE CONTATO, SOLUCAO DESEMBACANTE E REUMIDIFICANTE DE      
+LENTES DE CONTATO CONVENCIONAIS (OU DURAS), SOLUCAO PARA LIM     
+LENTES DE CONTATO GELATINOSAS, SOLUCAO PARA ENXAGUE DE           
+LENTES DE CONTATO GELATINOSAS (OU HIDROFILICAS), SOLUCAO PAR     
+LENTES DE CONTATO GELATINOSAS, SOLUCAO SEQUESTRANTE DE DEPOS     
+LEPTOLOBIUM ELEGANS, EXTRATO DE                                  
+LEUCINA                                                          
+LEUPROLIDE                                                       
+LEVAMISOL                                                        
+LEVEDURA DE CERVEJA                                              
+LEVOBUNOLOL                                                      
+LEVOMEPROMAZINA                                                  
+LEVONORGESTREL                                                   
+LEVOTIROXINA                                                     
+LEVULOSE                                                         
+LICINA                                                           
+LICOR DE HOFFMANN                                                
+LIDOCAINA                                                        
+LINCOMICINA                                                      
+LINDANO                                                          
+LINESTRENOL                                                      
+LIOTIRONINA (T3)                                                 
+LIPASE                                                           
+LIPIDIOS PARENTERAIS, EMULSAO DE                                 
+LIPOIDES CEREBRAIS                                               
+LISINA                                                           
+LISINOPRIL                                                       
+LISOZIMA                                                         
+LITIO, CARBONATO DE                                              
+LISURIDA                                                         
+LOBELIA                                                          
+LOCOES DE LIMPEZA DA PELE                                        
+LOCOES E EMULSOES HIDRATANTES CUTANEAS                           
+LOMEFLOXACINA                                                    
+LOMIFILINA                                                       
+LOMUSTINA                                                        
+LOPERAMIDA                                                       
+LORATADINA                                                       
+LORAZEPAM                                                        
+LOSARTAN POTASSICO                                               
+L-ORNITINA                                                       
+LOURO-CEREJA                                                     
+LOVASTATINA                                                      
+L-TIROXINA (LEVOTIROXINA OU T4)                                  
+L-TRIIODOTIRONINA (OU T3)                                        
+LUMINAL                                                          
+LURONASE                                                         
+MAGALDRATO                                                       
+MAGNESIO                                                         
+MAGNESIO, ALUMINATO DE                                           
+MAGNESIO, ACETILMETIOTINATO DE                                   
+MAGNESIO, CARBONATO DE                                           
+MAGNESIO, CITRATO DE                                             
+MAGNESIO, CLOFIBRATO DE                                          
+MAGNESIO, CLORETO DE                                             
+MAGNESIO, CROMOACETATO DE                                        
+MAGNESIO, HIDROXIDO DE                                           
+MAGNESIO, HIPOSSULFITO DE                                        
+MAGNESIO, N-ACETIL-ASPARTIL-GLUTAMATO DE                         
+MAGNESIO, OXIDO DE                                               
+MAGNESIO, PIDOLATO DE                                            
+MAGNESIO, SILICATO DE                                            
+MAGNESIO, SULFATO DE                                             
+MAGNESIO, TRISSILICATO DE                                        
+MAGNESIO E ALUMINIO, HIDROXIDOCARBONATO DE                       
+MALTOSE-DEXTRINAS                                                
+MALVA PAPOULA                                                    
+MALVA PURPUREA                                                   
+MANGANES, GLICEROFOSFATO DE                                      
+MANGANES, SAIS DE                                                
+MAPROTILINA                                                      
+MARACUJA                                                         
+MARAPUAMA, EXTRATO DE                                            
+MAZINDOL                                                         
+MEBENDAZOL                                                       
+MECLORETAMINA                                                    
+MEDROXIPROGESTERONA                                              
+MEDULA ESPINHAL, HIDROLISADO DE                                  
+MEFENAMINA                                                       
+MEFLOQUINA                                                       
+MEGESTROL                                                        
+MEGLUMINA, ANTIMONIATO DE                                        
+MEGLUMINA, DIATRIZOATO DE                                        
+MEIMENDRO                                                        
+MELFALANO                                                        
+MENTOL                                                           
+MENTONA                                                          
+MEPARTRICINA                                                     
+MEPERIDINA                                                       
+MEPIRAMINA                                                       
+MEPIRIZOL                                                        
+MEQUINOL                                                         
+MEQUITAZINA                                                      
+2-MERCAPTOETANO SULFANATO SODICO                                 
+6-MERCAPTOPURINA                                                 
+MERCURIO, IODETO DE                                              
+MEROPENEM                                                        
+MERTIOLATO                                                       
+MESALAZINA                                                       
+MESO-INOSITOL, HEXANICOTINATO DE                                 
+MESTEROLONA                                                      
+MESTRANOL                                                        
+METACOLINA                                                       
+METAMIZOL                                                        
+METAMPICILINA                                                    
+METAMPIRONA                                                      
+METAPIRONA                                                       
+METENAMINA                                                       
+METFORMINA                                                       
+METILA, NICOTINATO DE                                            
+METILA, PARAHIDROXIBENZOATO DE                                   
+METILA, SALICILATO DE                                            
+METILATROPINA                                                    
+METILBENZETONIO, CLORETO DE                                      
+METILBENZODIAPINONA                                              
+METILBUTIFENO                                                    
+METILCELULOSE                                                    
+METILDIGOXINA                                                    
+METILDOPA                                                        
+METILERGOMETRINA                                                 
+METILERGONOVINA                                                  
+METILESTRADIOL                                                   
+METILESTRENOLONA                                                 
+METILFENIDATO                                                    
+METILGLUCAMINA, DIATRIZOATO DE                                   
+METIL-HIDRAZINA, DERIVADO DE                                     
+METIL-HOMATROPINA                                                
+METILMELUBRINA                                                   
+METILPARABEN                                                     
+METILPOLISSILOXANA                                               
+METILPREDNISOLONA                                                
+METILTESTOSTERONA                                                
+METILTIONINIO                                                    
+METIMAZOL                                                        
+METIONINA                                                        
+METIONINA ACETILADA                                              
+METISERGIDA                                                      
+METIXENO                                                         
+MEXITIL                                                          
+METOCLOPRAMIDA                                                   
+METOPINA                                                         
+METOPROLOL                                                       
+METOTREXATO                                                      
+METOXIFENAMINA                                                   
+METOXIFLAVONOL, DERIVADO DO                                      
+METRONIDAZOL                                                     
+MIANSERINA                                                       
+MICONAZOL                                                        
+MIDAZOLAM                                                        
+MILRINONA                                                        
+MILHO, AMIDO DE                                                  
+MINERAIS                                                         
+MINOCICLINA                                                      
+MINOXIDIL                                                        
+MIOCAMICINA                                                      
+MIROTON                                                          
+MISOPROSTOL                                                      
+MITOMICINA C                                                     
+MITOTANO                                                         
+MITOXANTRONA                                                     
+MIVACURIO                                                        
+MOLGRAMOSTINA                                                    
+MOLIBDENIO                                                       
+MONOCLORIMIPRAMINA                                               
+MONO-SEMICARBAZONA DO ADRENOCROMO                                
+MONOSSIALOTETRAESOSILGANGLIOSIDEO                                
+MONOSSULFIRAM                                                    
+MORRUATO DE ETILA                                                
+MORRUATO DE SODIO                                                
+MUCOSA GASTRICA, EXTRATO DE                                      
+MUCOPOLISSACARIDASE                                              
+MULUNGU, EXTRATO OU TINTURA DE                                   
+MUPIROCINA                                                       
+N-ACETIL-L-CISTEINA                                              
+N-ACETILPARAAMINOFENOL                                           
+NABUMETONA                                                       
+NADOLOL                                                          
+NADROPARINA CALCICA                                              
+NAFAZOLINA                                                       
+NAFTIDROFURILO                                                   
+NAFTIL-METIL-IMIDAZOLINA                                         
+NALBUFINA                                                        
+NALORFINA, CLORIDRATO DE                                         
+NALOXONA, HIDROCLORETO DE                                        
+DOXAZOSINA MESILATO                                              
+NANDROLONA, DECANOATO DE                                         
+NANDROLONA, SULFATO MONOSSODICO DE                               
+NAPROXENO                                                        
+N-CICLO-HEXIL-N-METIL-(2-AMINA-3,5-DIBROMOBENZILAMINA)           
+NEOMICINA                                                        
+NEOSTIGMINA                                                      
+NETAMINA                                                         
+NETILMICINA, SULFATO DE                                          
+NIACINA                                                          
+NIACINAMIDA                                                      
+NICERGOLINA                                                      
+NICOTINA                                                         
+NICOTINAMIDA                                                     
+NICOTINILA, TARTARATO DE                                         
+NICOTINILPIRAZOLONA                                              
+NIFEDIPINA                                                       
+NIFUROXAZIDA                                                     
+NIMESSULIDA                                                      
+NIMODIPINA                                                       
+NIMORAZOL                                                        
+NIPAGIN                                                          
+NIQUEL, SULFATO DE                                               
+NIQUETAMIDA                                                      
+NISTATINA                                                        
+NITRAZEPAM                                                       
+NITRENDIPINA                                                     
+NITRIMIDAZOL, DERIVADO DE                                        
+NITROFURANTOINA                                                  
+NITROFURAZONA                                                    
+NITROGLICERINA PERCUTANEA (DISCOS ADESIVOS)                      
+NITROIDROXIQUINOLEINA                                            
+NITRO-IMIDAZOL                                                   
+NITROPRUSSIATO DE SODIO                                          
+NITROXOLINA                                                      
+NIZATIDINA                                                       
+N-METILGLUCAMINA                                                 
+NOMEGESTROL                                                      
+NORETINDRONA                                                     
+NORETISTERONA                                                    
+NORFLOXACINO                                                     
+NORGESTREL                                                       
+NORTRIPTILINA                                                    
+NOVAMINSULFONA                                                   
+NOVATROPINA                                                      
+NOVAZOLONA                                                       
+NOVOCAINA                                                        
+NOZ MOSCADA                                                      
+N-PIRROLIDINOMETILTETRACICLINA                                   
+NUPERCAINA                                                       
+OCITOCINA                                                        
+OCTREOTIDA                                                       
+OCTIDIMETIL-PABA                                                 
+OFLOXACINA                                                       
+OLEO DE AMENDOAS DOCES                                           
+OLEO DE CADE                                                     
+OLEO DE GERME DE TRIGO                                           
+OLEO DE FIGADO DE BACALHAU                                       
+OLEO DE FIGADO DE CACAO                                          
+OLEO MINERAL                                                     
+OLEO SULFONADO COMPOSTO                                          
+OLEOS VEGETAIS                                                   
+OLIGOELEMENTOS PARENTERAIS                                       
+OMEPRAZOL                                                        
+ONDANSENTRON                                                     
+ORFENADRINA                                                      
+ORTO-OXIQUINOLEINA                                               
+OURO, DERIVADO ORGANICO DE                                       
+ORTHOCLONE OKT-3                                                 
+OWENTAR II                                                       
+OXACILINA                                                        
+OXALADINA                                                        
+OXAMNIQUINA                                                      
+OXCARBAZEPINA                                                    
+OXETAZAINA                                                       
+OXIBENZONIO                                                      
+OXIBUTININA                                                      
+OXICONAZOL                                                       
+OXIFEMBUTAZONA                                                   
+OXIFENILBUTAZONA                                                 
+OXIMETALONA                                                      
+OXIMETAZOLINA                                                    
+OXIQUINOLEINA                                                    
+OXITETRACICLINA                                                  
+OXITOCINA                                                        
+OXOMEMAZINA                                                      
+PACLITAXEL                                                       
+PADIMATO                                                         
+PAMIDRONATO DISSODICO                                            
+PANAX GINSENG                                                    
+PANCURONIO, BROMETO DE                                           
+PANCREATINA+DIMETICONA                                           
+PANCRELIPASE                                                     
+PANTENOL                                                         
+PANTOPRAZOL                                                      
+PANTOTENATO DE CALCIO                                            
+PANTOTENATO DE SODIO                                             
+PANTOTENOL                                                       
+PAPAINA                                                          
+PAPAVERINA                                                       
+PARACETAMOL                                                      
+PARACLOROBENZILPIRROLIDINONETILBENZIMIDAZOL                      
+PARACLOROFENILALFAGLICEROL-ETER                                  
+PARACLOROFENOXIISOBUTIRATO DE ETILA                              
+PARAIDROXIFENILBUTAZONA                                          
+PARAMETOXIFENOL                                                  
+PARAOXIFENOLMETILAMINA                                           
+PARAPHLEBON                                                      
+PAROXETINA                                                       
+PARSOL                                                           
+PASSIFLORA, EXTRATO DE                                           
+PASSIFLORA INCARNATA, EXTRATO DE                                 
+PECTINA                                                          
+PEFLOXACINA                                                      
+PENFLURIDOL                                                      
+PENICILAMINA                                                     
+PENICILINA G BENZATINA                                           
+PENICILINA G POTASSICA                                           
+PENICILINA G PROCAINA                                            
+PENICILINA G SODICA                                              
+PENICILINA V                                                     
+PENTAMETILENOTETRAZOL                                            
+PENTETRAZOL                                                      
+PENTOXIFILINA                                                    
+PENTOXIVERINA                                                    
+PEPSINA                                                          
+PEPTIDASE                                                        
+PEPTONA                                                          
+PERGOLIDA                                                        
+PERICIAZINA                                                      
+PETIDINA                                                         
+PICOSULFOL                                                       
+PICOSSULFATO                                                     
+PILOCARPINA                                                      
+PILOCARPUS, EXTRATO DE                                           
+PIMETHIXENO                                                      
+PIMOZIDA                                                         
+PINAVERIO, BROMETO DE                                            
+PINDOLOL                                                         
+PIPERAZINA                                                       
+PIPERIDINOETOXICARBOMETOXIBENZOFENONA                            
+PIPERIDOLATO                                                     
+PIPERONILA, BUTOXIDO DE                                          
+PIPOTIAZINA                                                      
+PIPOTIAZINA, ESTER PALMITICO DE                                  
+PIRACETAM                                                        
+PIRANTEL, PAMOATO DE                                             
+PIRAZOLIDINA, DERIVADO DE                                        
+PIRAZOLIDINDIONA, DERIVADO DE                                    
+PIRAZOLONA                                                       
+PIRETANIDA                                                       
+PIRIBEDIL                                                        
+PIRIDINOBETACARBOXILICO                                          
+PIRIDOSTIGMINA                                                   
+PIRIDOXINA                                                       
+PIRILAMINA                                                       
+PIRIMETAMINA                                                     
+PIRITINOL                                                        
+PIRITIOXINA                                                      
+PIROXICAM                                                        
+PIROXICAM BETACICLODEXTRINA                                      
+PIRROLIDINO, DERIVADO DE                                         
+PIRROLIDINOMETILTETRACICLINA                                     
+PIRROLIDONA-ACETAMIDA                                            
+PIRVINIO, PAMOATO DE                                             
+PITOFENONA                                                       
+PIZOTIFENO                                                       
+PLANTAGO (PLANTAGINIS OVATA), SEMENTE DE                         
+PLASMINOGENIO, ATIVADOR TISSULAR DO                              
+POEIRA DOMESTICA                                                 
+POLICRESULENO + CINCHOCAÍNA                                      
+POLIETILENOSSULFONATO DE SODIO                                   
+POLIESTIRENO-SULFONATO DE CALCIO                                 
+POLIGALA, EXTRATO DE                                             
+POLIMETILMETACRILATO (PMMA)                                      
+POLIMETILSILOXONA                                                
+POLIMIXINA B                                                     
+POLIPEPTIDIOS SUBSTITUTOS DO PLASMA                              
+POLIVINILPIRROLIDONA-IODO                                        
+POLIVIDONA-IODO                                                  
+POLYGALA                                                         
+POTASSIO                                                         
+POTASSIO, CARBONATO ACIDO DE                                     
+POTASSIO, CITRATO DE                                             
+POTASSIO, CLAVULANATO DE                                         
+POTASSIO, CLORETO DE                                             
+POTASSIO (EM SUBSTITUICAO AO SAL COMUM)                          
+POTASSIO, FOSFATO DE                                             
+POTASSIO, GLICEROFOSFATO DE                                      
+POTASSIO, IODETO DE                                              
+POTASSIO, SULFATO DE                                             
+POTASSIO, SULFOGUAIACOLATO DE                                    
+POTASSIO, TARTARATO DE                                           
+POVIDONA                                                         
+POVIDONA-IODO                                                    
+PRALIDOXIMA                                                      
+PRANOPROFENO                                                     
+PRATA, VITELINATO DE                                             
+PRAVASTATINA                                                     
+PRAZIQUANTEL                                                     
+PRAZOSINA                                                        
+PREDNICARBATO                                                    
+PREDNISOLONA                                                     
+PREDNISONA                                                       
+4-PRENIL-1,2-DIFENIL-3,5-PIRAZOLIDINDIONA                        
+PRIMAQUINA, DIFOSFATO DE                                         
+PRIMIDONA                                                        
+PROBENECIDA                                                      
+PROBUCOL                                                         
+PROCAINA                                                         
+PROCAINAMIDA                                                     
+PROCARBAZINA                                                     
+PROGESTERONA                                                     
+PROLASE                                                          
+PROMAZINA                                                        
+PROMESTRIENE                                                     
+PROMETAZINA                                                      
+PROPAFENONA                                                      
+PROPANOCAINA                                                     
+PROPATILNITRATO                                                  
+PROPERICIAZINA                                                   
+PROPIFENAZONA                                                    
+PROPILTIOURACIL                                                  
+PROPILENOGLICOL                                                  
+PROPIONATO DE SODIO                                              
+PROPOFOL                                                         
+PROPOXIFENO                                                      
+PROPRANOLOL                                                      
+PROSTATA DESALBUMINIZADO, EXTRATO DE                             
+PROTEASE                                                         
+PROTEINA DA SOJA                                                 
+PROTEINAS ALIMENTARES                                            
+PROTEINAS ALIMENTARES USADAS EM REGIMES DE EMAGRECIMENTO         
+PROXIFILINA                                                      
+PROXIMETACAINA                                                   
+PRUNUS AFRICANA, EXTRATO DE                                      
+PSEUDO-EFEDRINA                                                  
+PULMAO PORCINO, FRACAO FOSFOLIPIDICA DE                          
+PVPI                                                             
+PYGEUM AFRICANUN                                                 
+QUATERNIUM                                                       
+QUELIDONINA                                                      
+QUIMOTRIPSINA                                                    
+QUINIDINA, FENILETILBARBITURATO DE                               
+QUINIDINA, SULFATO DE                                            
+QUININA, BICLORIDRATO DE                                         
+QUININA, SULFATO DE                                              
+QUINOLINAS, DERIVADOS DIVERSOS                                   
+QUINOSOL                                                         
+RAMIPRIL                                                         
+RANITIDINA                                                       
+RESERPINA                                                        
+RETINOL                                                          
+RHAMNUS PURSHIANA, EXTRATO DE                                    
+RIBOFLAVINA (VITAMINA B2)                                        
+RIFAMICINA                                                       
+RIFAMICINA B DIETILAMIDA                                         
+RIFAMPICINA                                                      
+RIFAMIDA                                                         
+RISPERIDONA                                                      
+RITODRINA                                                        
+ROSOXACINA                                                       
+ROXITROMICINA                                                    
+RUIBARBO, EXTRATO DE                                             
+RUTINA (VITAMINA P)                                              
+RUTOSIDO                                                         
+RUTOSIDO, DERIVADO DO                                            
+SABAO NEUTRO                                                     
+SABONETES E EMULSOES ANTISSEPTICAS CUTANEAS                      
+SACARINA                                                         
+SACCHAROMYCES BOULARDII (LIOFILIZADO)                            
+SAIS BILIARES                                                    
+SAIS MINERAIS (ASSOCIACOES MULTIPLAS DE)                         
+SAIS MINERAIS USADOS PARA HIDRATACAO                             
+SALBUTAMOL                                                       
+SAL COMUM OU DE COZINHA, SUBSTITUTO HIPOSSODICO DE               
+SALICILAMIDA                                                     
+SALICILATO DE ETILENOGLICOL                                      
+SALICILATO DE METILA                                             
+SALICILATO DE SODIO                                              
+SALIX ALBA, EXTRATO DE                                           
+SALMETEROL                                                       
+SANDALO                                                          
+S-CARBOXIMETILCISTEINA                                           
+SECNIDAZOL                                                       
+SELEGILINA                                                       
+SELENIO                                                          
+SELENIO, SULFETO DE                                              
+SENA (GLICOSIDIO DE E/OU PO DE FOLHA DESTA PLANTA)               
+SENOSIDIOS                                                       
+SERRATIOPEPTIDASE                                                
+SERTRALINA                                                       
+SEVOFLURANO                                                      
+SILICIO                                                          
+SILIMARINA                                                       
+SIMETICONA                                                       
+SINVASTATINA                                                     
+SIPARUNA, EXTRATO DE                                             
+SOBREROL                                                         
+SODIO, ACETATO DE                                                
+SODIO, AUROTIOMALATO                                             
+SODIO, BENZOATO DE                                               
+SODIO, BIBORATO DE                                               
+SODIO, BICARBONATO DE                                            
+SODIO, BORATO DE                                                 
+SODIO, CANFOSSULFONATO DE                                        
+SODIO, CANSILATO DE                                              
+SODIO, CARBONATO DE                                              
+SODIO, CARBONATO ACIDO DE                                        
+SODIO, CITRATO DE                                                
+SODIO, CLORETO DE                                                
+SODIO, CROMOGLICATO DE                                           
+SODIO, DIATRIZOATO DE                                            
+SODIO, EDETATO DE                                                
+SODIO, FENILDIMETILPIRAZOLONAMETILAMINOMETANOSSULFONATO DE       
+SODIO, FLUORETO DE                                               
+SODIO, FOSFATO DE                                                
+SODIO, FOSFATO DIBASICO DE                                       
+SODIO, FOSFATO MONOBASICO DE                                     
+SODIO, GLICEROFOSFATO DE                                         
+SODIO, IODETO DE                                                 
+SODIO, LACTATO DE                                                
+SODIO, LAURISULFATO DE                                           
+SODIO, METILARSENIATO DE                                         
+SODIO, MORRUATO DE                                               
+SODIO, METAVANADATO DE                                           
+SODIO, PANTOTENATO DE                                            
+SODIO, PROPIONATO DE                                             
+SODIO, SALICILATO DE                                             
+SODIO, SULFATO DE                                                
+SODIO, VALPROATO DE                                              
+SOFRAMICINA (FRAMICETINA)                                        
+SOJA, PROTEINA DE                                                
+SOMATOSTATINA                                                    
+SOMATOTROFINA                                                    
+SORBITOL + MANITOL                                               
+SORO ANTIBOTROPICO                                               
+SORO ANTICROTALICO                                               
+SORBITOL, ESTERES OLEICOS DO                                     
+SORO ANTI-RABICO                                                 
+SORO ANTITETANICO                                                
+SORO FISIOLOGICO                                                 
+SORO GLICOSADO                                                   
+SOROS (EM GERAL)                                                 
+SOTALOL                                                          
+SUBTILISINA                                                      
+SUCCINILCOLINA                                                   
+SUCRALFATO                                                       
+SUFENTANIL                                                       
+SULBUTIAMINE                                                     
+SULFABENZAMIDA                                                   
+SULFACETAMIDA                                                    
+SULFACLOROPIRIDAZINA                                             
+SULFACRISOIDINA                                                  
+SULFADIAZINA                                                     
+SULFADOXINA                                                      
+SULFAMETILTIADIAZOL                                              
+SULFAMETOXAZOL                                                   
+SULFANILAMIDA                                                    
+SULFATIAZOL                                                      
+SULPIRIDA                                                        
+SUMATRIPTANO                                                     
+SUPLEMENTOS DIETETICOS                                           
+SUPLEMENTOS DIETETICOS DE PREMATUROS E RECEM-NASCIDOS            
+SUPLEMENTOS DIETETICOS INFANTIS                                  
+SUPRA-RENAL, EXTRATO DE CORTEX DE                                
+SURFACTANTES NEUTROS                                             
+SUXIBUZONA                                                       
+TACRINA, CLORIDRATO DE                                           
+TAMARINDUS INDICA                                                
+TAMOXIFENO                                                       
+TAURINA                                                          
+TECLOZAN                                                         
+TEICOPLANINA                                                     
+TENILDIAMINA                                                     
+TENIPOSIDO                                                       
+TENITRAMINA                                                      
+TENOXICAM                                                        
+TEOFILINA                                                        
+TEOFILINA, ETILENODIAMINA                                        
+TERAZOSIN                                                        
+TERBINAFINA                                                      
+TERCONAZOL                                                       
+TEREBENTINA, ESSENCIA DE                                         
+TERFENADINA                                                      
+TERPENOS                                                         
+TERPENOS ETEREOS OLEOSOS                                         
+TERPINA                                                          
+TESTA TRITICUM, FIBRAS DE                                        
+TESTOSTERONA, CAPROATO DE                                        
+TESTOSTERONA, ESTERES DE                                         
+TESTOSTERONA, FENILPROPIONATO DE                                 
+TESTOSTERONA, HEXAHIDROBENZOATO DE                               
+TESTOSTERONA, ISOCAPROATO DE                                     
+TESTOSTERONA, PROPIONATO DE                                      
+TESTOSTERONA, UNDECANOATO DE                                     
+TETRACAINA                                                       
+TETRACICLINA                                                     
+TETRACICLINA, N-PIRROLIDINOMETIL                                 
+TETRACOSACTIDA                                                   
+TETRAETILTIURAM, DISSULFETO DE                                   
+TETRAETILTIURAM, MONOSSULFETO DE                                 
+TETRAIDROPIRIDINA                                                
+TETRAIDROZOLINA                                                  
+TETRAMISOL                                                       
+TETRIZOLINA                                                      
+TIABENDAZOL                                                      
+TIAMINA (VITAMINA B1)                                            
+TIAMIZOL                                                         
+TIANFENICOL                                                      
+TIAPRIDA                                                         
+TIBOLONA                                                         
+TICARCILINA                                                      
+TICLOPIDINA                                                      
+TIMEROSAL                                                        
+TIMO DE VITELO, LISADO ACIDO DE                                  
+TIMOL                                                            
+TIMOLOL, MALEATO DE                                              
+TIMOMODULINA                                                     
+TP-1                                                             
+TIMOSTIMULINA                                                    
+TINIDAZOL                                                        
+TIOBARBITURATO (1-METIL-BUTIL-ETILSODICO)                        
+TIOCOL                                                           
+TIOCONAZOL                                                       
+TIOFENILPIRIDILAMINA, DERIVADO DA                                
+TIOGUANINA                                                       
+TIOMEROSAL                                                       
+TIORIDAZINA                                                      
+TIOTIXENO                                                        
+TIRATRICOL                                                       
+TIREOIDE, EXTRATO DE                                             
+TIROTRICINA                                                      
+TIROXINA                                                         
+TITANIO, DIOXIDO DE                                              
+TIZANIDINA                                                       
+TOBRAMICINA                                                      
+TOCOFEROL                                                        
+TOLCICLATO                                                       
+TOLU (BALSAMO OU XAROPE DE)                                      
+TONSILAMINA                                                      
+TOXINA BOTULINICA                                                
+TOXOIDE                                                          
+TRAMADOL                                                         
+TRANDOLAPRIL                                                     
+TRANILCIPROMINA                                                  
+TRASENTINA                                                       
+TREO-CLORANFENICOL                                               
+TREONINA                                                         
+TRIANCINOLONA                                                    
+TRIANCINOLONA, ACETONIDO DE                                      
+TRIANTERENO                                                      
+TRIBENOSIDIO                                                     
+TRIBENOSIDO                                                      
+TRICLOCARBAN                                                     
+TRICLOROCARBANILIDA                                              
+TRICLOSAN                                                        
+TRIETANOLAMINA                                                   
+TRIEXIFENIDILA                                                   
+TRIFLUOPERAZINA                                                  
+TRIGO, FARELO DE                                                 
+TRIFLUOROETANO, DERIVADO DO                                      
+TRIFLUSAL                                                        
+TRIIDROXIETILRUTOSIDO                                            
+TRIIODOTIRONINA (T3)                                             
+TRIMEBUTINA                                                      
+TRIMETILXANTINA                                                  
+TRIMETOPRIMA                                                     
+TRINITRINA                                                       
+TRIPOLIDINA                                                      
+TRIPSINA                                                         
+TRIPTOFANO                                                       
+TRIPTORRELINA                                                    
+TRITICUM VULGARE, EXTRATO DE                                     
+TROMANTADINA                                                     
+TROMBOPLASTINA                                                   
+TROPICAMIDA                                                      
+TROPISETRON                                                      
+TROXERRUTINA                                                     
+UMECTANTES CUTANEOS                                              
+URAPIDIL                                                         
+UREIA                                                            
+URIDIN-TRIFOSFORICO, SAL TRISSODICO DE (U.T.P.)                  
+UROTROPINA                                                       
+URTICA DIOICA, EXTRATO DE                                        
+VACCINIUM MYRTILLUS, ANTICIANOSIDIOS DE                          
+VACINA ANTICAXUMBA                                               
+VACINA ANTICAXUMBA, SARAMPO E RUBEOLA                            
+VACINA ANTI-HEMOPHILUS                                           
+VACINA ANTI-RINITE ALERGICA                                      
+VACINA ANTI-RUBEOLA                                              
+VACINAS DIVERSAS                                                 
+VALACICLOVIR                                                     
+VALEPOTRIATOS                                                    
+VALINA                                                           
+VALPROATO DE SODIO                                               
+VANADIO                                                          
+VANCOMICINA                                                      
+VANILINA                                                         
+VASELINA                                                         
+VECURONIO, BROMETO DE                                            
+VERALIPRIDE                                                      
+VERAPAMIL                                                        
+VIGABATRIN                                                       
+VIMBLASTINA                                                      
+VIMINOL                                                          
+VINCAMINA                                                        
+VINCRISTINA                                                      
+VINORELIBINA                                                     
+VIOFORMIO                                                        
+VIRUS DO SARAMPO                                                 
+VITAMINA A                                                       
+VITAMINA B1                                                      
+VITAMINA B2                                                      
+VITAMINA B6                                                      
+VITAMINA B12                                                     
+VITAMINA BC                                                      
+VITAMINA C (ACIDO ASCORBICO)                                     
+VITAMINA D                                                       
+VITAMINA D2 (ERGO-CALCIFEROL)                                    
+VITAMINA D3 (COLECALCIFEROL)                                     
+VITAMINA E (ALFA-TOCOFEROL)                                      
+VITAMINA E NICOTINATO                                            
+VITAMINA H (BIOTINA).                                            
+VITAMINA H3                                                      
+VITAMINA K                                                       
+VITAMINA P                                                       
+VITAMINA PP                                                      
+WARFARINA                                                        
+XANTINA                                                          
+XILOCAINA                                                        
+XILOMETAZOLINA                                                   
+YOHIMBA, EXTRATO DE                                              
+ZALCITABINA                                                      
+ZEA MAYZ                                                         
+ZIDOVUDINA                                                       
+ZINCO                                                            
+ZINCO, OXIDO DE                                                  
+ZINCO, PEROXIDO DE                                               
+ZINCO, SULFATO DE                                                
+ZINCO, SULFONATO DE                                              
+ZINCO PIRIDIONE                                                  
+ZOLPIDEN                                                         
+ZOPICLONE                                                        
+VI                                                               
+TERBUTALINA                                                      
+COMPLEXO B + SULFATO FERROSO                                     
+MORFINA                                                          
+SULFATO FERROSO                                                  
+TRIBENOSIDO + SULFATO FERROSO                                    
+VERMIFUGO DE XAVIER                                              
+MANITOL                                                          
+FEMPROCUMONA                                                     
+AMILORIDINA + HIDROCLOROTIAZIDA                                  
+BACITRACINA + NEOMICINA                                          
+CAFEINA + DIPIRONA + ISOMETEPTENO                                
+HIDROXIDO DE FERRO                                               
+PENICILINA POTASSICA CRISTALINA                                  
+ACIDO MEFANAMICO                                                 
+CEFOPROFENO                                                      
+HIDROXIDO DE FERRO + ACIDO FOLICO                                
+BENSERAZIDA + LEVODOPA                                           
+FEMPIRIDINA                                                      
+MULTIVITAMINAS + SAIS MINERAIS                                   
+CLOSTEBOL + NEOMICINA                                            
+TIOPENTAL SODICO                                                 
+SOLUCOES                                                         
+DIBESILATO DE ATRACURIO + AC. BENZENOSSULFONICO                  
+CEFEPIME                                                         
+EXT. DE SUPRARENAL+AC. MUCOPOLISSACARIDO POLISUFURICO+AC.SAL     
+ANFOTERICINA B + TETRACICLINA                                    
+ETAFEDRINA + AMBUFILINA + DOXILAMINA                             
+LEVOMOPRAMINA                                                    
+SILIMARINA + DL-CETOCONAZOL                                      
+BETAMETAONA + CETOCONAZOL                                        
+CLORIDATO DE TIAMINA + CLORIDRATO DE PERIDOXINA                  
+MULTIVITAMINAS DO COMPLEXO B                                     
+ETILEFRINA                                                       
+FITOMENADIONA + VITAMINA K                                       
+DOLANTINA                                                        
+NORADRENALINA                                                    
+AGUA                                                             
+DOCUSATO SODICO + BISACODIL                                      
+HIDROXIDO DE ALUMINIO + HIDROXIDO DE MAGNESIO + METICELULOSE     
+IMIPENEM + CILASTATINA SODICA                                    
+DEXAMETASONA + NEOMICINA + NISTATINA + TIROTRICINA               
+PARACETAMOL + CODEINA                                            
+BENZOPIRONA + TREXERRUTINA                                       
+PEPTIDEOS DERIVADOS DO FATOR BOVINO                              
+SULFAMETOXAZOL + TRIMETROPIMA                                    
+DIPIRONA + N-BUTILBROMETO DE HIOSCINA                            
+LORATADINA + PSEUDOEFEDRINA                                      
+AMOXIXILINA + CLAVULONATO DE POTASSIO                            
+CIPROHEPTADINA + COEZIMA B12                                     
+DIFENOXILATO + FURAZOLIDONA                                      
+DIOSMINA + HESPERIDINA                                           
+ACIDO LATICO + LACTOCERUM                                        
+NISTATINA + OXIDO DE ZINCO                                       
+DIPIRONA + CAFEINA + ORFENADRINA                                 
+FENOTEROL + IPATROPIO                                            
+FIBROLISINA + DESOXIRRIBONUCLEASE                                
+FLUORETO DE SODIO + XILITOL                                      
+CLORETO DE BENZALCONIO + METRONIDAZOL + NISTATINA                
+MICONAZOL + TINIDAZOL                                            
+POLIPEPTIDEOS DEGRADADOS LIGADOS A UREIA                         
+CLORETO DE SODIO + CLORETO DE POTASSIO                           
+DIIDROERGOCORNINA + DIIDROERGOCRIPTINA + DIIDROERGOCRISTINA      
+CLORANFENICOL + COLAGENASE                                       
+DIPIRONA + ADIFENINA + PROMETAZINA                               
+DEXAMETASONA + NEOMICINA + POLIMIXINA B                          
+DEXAMETASONA + NEOMICINA                                         
+CALCITONINA SINTETICA DE SALMAO                                  
+GRAMICINA + NEOMICINA + NISTATINA + TRIANCINOLONA                
+OXIDO DE ZINCO + GLICERINA + AGUA DE CAL                         
+OXIDO DE ZINCO + GLICERINA + AGUA DE CAL + ENXOFRE               
+DIETILAMINA + ESCINA                                             
+AMBUFILINA + DOXILAMINA + ETAFEDRINA + GUAFENESINA               
+CLORANFENICOL + SULFACETAMINA SODICA                             
+ORFENADRINA+DIPIRONA+CAFEÍNA                                     
+MANDELAMINA + CLORETO DE METILTIONÍNIO                           
+CARBONATO CALCIO + LACTOGLICONATO  DE CALCIO                     
+ERTAPENEM                                                        
+MOXIFLOXACINO                                                    
+LEVOFLOXACINO                                                    
+GATIFLOXACINO                                                    
+PIPERACILINA + TAZOBACTAN                                        
+AMPICILINA + SUBACTAN                                            
+TEICOPLANINA                                                     
+CLORETO DE SODIO + GLICOSE                                       
+LINEZOLIDA                                                       
+FORMOTEROL+ BUDESONIDA                                           
+ACETATO DE DESMOPRESSINA                                         
+ROFECOXIB                                                        
+BUPOVACAINA + GLICOSE                                            
+BUPIVACAINA+ EPINEFRINA                                          
+LIDOCAINA + EPINEFRINA                                           
+IVERMECTINA                                                      
+LIDOCAINA + GLICOSE                                              
+BUPIVACAINA ISOBARICA                                            
+TIARIDAZINA                                                      
+CODEINA ASSOCIADA                                                
+DEXCLORFENIRAMINA                                                
+CLORFENIRAMINA                                                   
+VIT. A+ VIT. B+ OXÍDO DE ZINCO                                   
+IOVERSOL                                                         
+VITELINATO DE PRATA                                              
+ETORICOXIB                                                       
+GELATINA FLUIDA MODIFICADA                                       
+ACETAZOLAMIDA                                                    
+AC. GRAXOS ESSENCIAIS+LECITINA DE SOJA E VIT.                    
+SENA ALEXANDRINA + ASSOCIAÇOES                                   
+DIPROPIONATO DE BECLOMETASONA                                    
+NITROGLICERINA                                                   
+NITROGLICERINA                                                   
+NITROGLICERINA                                                   
+SULFADIAZINA DE PRATA + NITRATO DE CERIO                         
+SULFASALAZINA                                                    
+BECLOMETASONA + SALBUTAMOL                                       
+CLOPIDOGREL                                                      
+LUMIRACOXIBE                                                     
+CARVEDILOL                                                       
+CETOROLATO TROMETAMINA                                           
+DIPIRONA+CLOR.ADIFENINA+ PROMETAZINA                             
+ETODOLACO                                                        
+MENTHA PIPERITA                                                  
+ACETATO DE OCTREOTIDA                                            
+CETOROLACO DE TROMETAMINA                                        
+CLORIDRATO DE HIDROXIZINA                                        
+DEXCLORFENIRAMINA + PSEUDOEFEDRINA + GUAIFENASINA                
+MONOSSIALOGANGLIOSIDEO SODICO                                    
+TIOCOLCHICOSIDEO                                                 
+URSODIOL                                                         
+TROMETAMOL CETOROLACO                                            
+BETA-HIDROXI-ETIL-RUTOSÍDEOS                                     
+COMPLEXO PROTROMBINICO                                           
+LOPINAVIR/ RITONAVIR                                             
+DEXAMETASONA+DIPIRONA+VIT.B12                                    
+COMPLEXO B+ VIT.C+ SULFATO FERROSO                               
+GLIMEPIRIDA                                                      
+SACCHAROMYCES CEREVISIAE                                         
+DIMENIDRINATO                                                    
+PROTAMINA                                                        
+CLEMASTINA                                                       
+GLUCONATO DE CLOREXIDINA                                         
+TARTARATO DE BRIMONIDINA +MALEATO DE TIMOLOL                     
+NITRATO DE PRATA                                                 
+BROMETO DE ROCURONIO                                             
+BIMATOPROST+ TIMOLOL                                             
+DEBRIMONIDINA TARTARATO                                          
+ATORVASTATINA                                                    
+RINGER C/LACTATO                                                 
+LEUCOVORINA                                                      
+ACETATO DE METILPREDNISOLONA                                     
+METILPREDNISOLONA SUCCINATO SODICO                               
+CLOR. TRAMADOL + PARACETAMOL                                     
+LOSARTAM+HIDROCLOROTIAZIDA                                       
+DESLORATADINA                                                    
+FELODIPINO                                                       
+CIPROFIBRATO                                                     
+FERRO QUELATO GLICINATO                                          
+CLORIDRATO DE METADONA                                           
+RIVASTIGMINA                                                     
+ACIDO TRANEXAMICO                                                
+BROMETO DE TIOTROPIO                                             
+DEXPANTENOL                                                      
+CILOSTAZOL                                                       
+CLORIDRATO DE BUCLIZINA + LISINA+TRIPTOFANO+PIRIDOXINA           
+MATERIAL                                                         
+ANTISSÉPTICO                                                     
+PERMANGANATO DE POTÁSSIO                                         
+TRAVOPROSTA                                                      
+ACARBOSE                                                         
+CLORIDRATO DE ESMOLOL                                            
+HEMINA                                                           
+TEGASERODE                                                       
+MELOXICAM                                                        
+CLORIDRATO DE BAMBUTEROL                                         
+BETAMETASONA + MALEATO DE DEXCLORFENIRAMINA                      
+DEXMEDETOMIDINA                                                  
+GANCICLOVIR                                                      
+TOPIRAMATO                                                       
+CISATRACURIO BESILATO                                            
+FEXOFENADINA CLORIDRATO                                          
+QUETIAPINA                                                       
+PAMIDRONATO                                                      
+CARBIDOPA + LEVODOPA                                             
+CITIDINA+URIDINA+HIDROXICOBALAMINA                               
+TOBRAMICINA + DEXAMETASONA                                       
+CALCITONINA                                                      
+PAMIDRONATO SODICO                                               
+PETIDINA,CLORIDRATO                                              
+BETANECOL CLORETO                                                
+SULTAMICILINA TOSILATO                                           
+PREGABALINA                                                      
+MATERIAL ESPECIAL                                                
+GLICOFISIOLOGICA                                                 
+CURATIVO                                                         
+HIDROXIETILAMIDO                                                 
+CLORIDRATO DE DOXORRUBICINA                                      
+CICLOFOSFAMIDA                                                   

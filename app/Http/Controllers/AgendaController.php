@@ -50,6 +50,12 @@ class AgendaController extends Controller
         return view('agenda.geraragenda', compact(['profissionais']));
     }
 
+    public function detalhesConsulta($id)
+    {
+
+        return view('agenda.detalhesconsulta', compact('id'));
+    }
+
     public function index3(Request $request)
     {
         $especialidades = Especialidade::all();
