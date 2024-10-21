@@ -25,6 +25,16 @@ return new class extends Migration
             $table->string('complemento')->nullable();
             $table->string('telefone')->nullable();
             $table->string('celular')->nullable();
+            $table->string('multa')->nullable();
+            $table->string('juros')->nullable();
+            $table->string('dias_desc')->nullable();
+            $table->string('desconto')->nullable();
+            $table->string('agfaturamento')->nullable();
+            $table->string('pagamento')->nullable();
+            $table->string('impmedico')->nullable();
+            $table->string('inss')->nullable();
+            $table->string('iss')->nullable();
+            $table->string('ir')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

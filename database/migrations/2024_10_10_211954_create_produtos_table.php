@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('produtos', function (Blueprint $table) {
             $table->id();
-            $table->string('nome');
+            $table->string('nome')->nullable();
             $table->string('marca')->nullable();
-            $table->string('tipo');
+            $table->string('tipo')->nullable();
             $table->string('grupo')->nullable();
             $table->string('sub_grupo')->nullable();
+            $table->string('produto')->nullable();
             $table->decimal('preco_venda', 10, 2)->default(0);
+            $table->string('substancias')->nullable();
             $table->string('natureza')->nullable();
             $table->string('ativo');
             $table->string('controlado');
@@ -30,6 +32,7 @@ return new class extends Migration
             $table->string('disp_paciente');
             $table->string('fracionado');
             $table->string('imobilizado');
+            $table->string('antibiotico')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

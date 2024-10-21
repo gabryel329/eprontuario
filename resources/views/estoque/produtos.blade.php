@@ -29,7 +29,6 @@
                 <div class="tile-body">
                     <form method="POST" action="{{ route('produtos.store') }}" enctype="multipart/form-data">
                         @csrf
-                        <!-- Seção Nome e Marca -->
                         <div class="row">
                             <div class="mb-3 col-md-4">
                                 <label class="form-label">Nome</label>
@@ -40,21 +39,50 @@
                                 <input class="form-control" type="text" name="marca">
                             </div>
                             <div class="mb-3 col-md-4">
-                                <label class="form-label">Substancias</label>
+                                <label class="form-label">Substâncias</label>
                                 <select name="substancias" id="substancias" class="form-control">
-
+                                    <option value="" disabled selected>Selecione a Substância</option>
+                                    <option value="paracetamol">Paracetamol</option>
+                                    <option value="ibuprofeno">Ibuprofeno</option>
+                                    <option value="diclofenaco">Diclofenaco</option>
+                                    <option value="amoxicilina">Amoxicilina</option>
+                                    <option value="azitromicina">Azitromicina</option>
+                                    <option value="prednisona">Prednisona</option>
+                                    <option value="omeprazol">Omeprazol</option>
+                                    <option value="losartana">Losartana</option>
+                                    <option value="simvastatina">Simvastatina</option>
+                                    <option value="metformina">Metformina</option>
+                                    <option value="insulina">Insulina</option>
+                                    <option value="cetoprofeno">Cetoprofeno</option>
+                                    <option value="hidrocortisona">Hidrocortisona</option>
+                                    <option value="cloridrato de sertralina">Cloridrato de Sertralina</option>
+                                    <option value="diazepam">Diazepam</option>
+                                    <option value="clonazepam">Clonazepam</option>
+                                    <option value="furosemida">Furosemida</option>
+                                    <option value="glibenclamida">Glibenclamida</option>
+                                    <option value="levotiroxina">Levotiroxina</option>
+                                    <option value="atorvastatina">Atorvastatina</option>
+                                    <option value="nimesulida">Nimesulida</option>
+                                    <option value="cetirizina">Cetirizina</option>
+                                    <option value="morfina">Morfina</option>
+                                    <option value="tramadol">Tramadol</option>
                                 </select>
                             </div>
                         </div>
-
-                        <!-- Seção Produto -->
                         <h5>Produto</h5>
                         <div class="row">
                             <div class="mb-3 col-md-4">
                                 <label class="form-label">Tipo</label>
                                 <select class="form-control" name="tipo">
+                                    <option value="" disabled selected>Selecione o Tipo</option>
                                     <option value="MEDICAMENTO">Medicamento</option>
-                                    <option value="PRODUTO">Produto</option>
+                                    <option value="MATERIAL">Material</option>
+                                    <option value="OPME">OPME (Órteses, Próteses e Materiais Especiais)</option>
+                                    <option value="SANEANTE">Saneante</option>
+                                    <option value="EQUIPAMENTO">Equipamento</option>
+                                    <option value="INSUMO">Insumo</option>
+                                    <option value="NUTRICIONAL">Produto Nutricional</option>
+                                    <option value="DISPOSITIVO MÉDICO">Dispositivo Médico</option>
                                 </select>
                             </div>
                             <div class="mb-3 col-md-3">
@@ -76,13 +104,11 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Seção Faturamento -->
                         <h5>Dados Para Faturamento</h5>
                         <div class="row">
                             <div class="mb-3 col-md-4">
                                 <label class="form-label">Produto</label>
-                                <input class="form-control" type="text" name="produto_faturamento">
+                                <input class="form-control" type="text" name="produto">
                             </div>
                             <div class="mb-3 col-md-4">
                                 <label class="form-label">Preço de Venda</label>
@@ -91,8 +117,17 @@
                             <div class="mb-3 col-md-4">
                                 <label class="form-label">Natureza</label>
                                 <select class="form-control" name="natureza">
-                                    <option value="NATUREZA">Natureza</option>
-                                    <!-- Adicione outras opções conforme necessário -->
+                                    <option value="" disabled selected>Selecione a Natureza</option>
+                                    <option value="MEDICAMENTO">Medicamento</option>
+                                    <option value="MATERIAL">Material</option>
+                                    <option value="OPME">OPME (Órteses, Próteses e Materiais Especiais)</option>
+                                    <option value="MEDICAMENTO QUIMIOTERÁPICO">Medicamento Quimioterápico</option>
+                                    <option value="MEDICAMENTO RADIOFARMÁCICO">Medicamento Radiofármaco</option>
+                                    <option value="EQUIPAMENTO">Equipamento</option>
+                                    <option value="MATERIAL DESCARTÁVEL">Material Descartável</option>
+                                    <option value="SANEANTE">Saneante</option>
+                                    <option value="PRODUTO NUTRICIONAL">Produto Nutricional</option>
+                                    <option value="CORRELATO">Correlato</option>
                                 </select>
                             </div>
                             <div class="mb-3 col-md-4">
@@ -104,8 +139,6 @@
                                 <input class="form-control" type="date" name="preco_compra">
                             </div>
                         </div>
-
-                        <!-- Seção Outros Dados do Produto -->
                         <h5>Outros Dados do Produto</h5>
                         <div class="row">
                             <div class="mb-3 col-md-2">
@@ -153,8 +186,6 @@
                                 <input class="form-check-input" type="checkbox" value="SIM" name="imobilizado">
                             </div>
                         </div>
-
-                        <!-- Footer -->
                         <div class="tile-footer">
                             <button class="btn btn-primary" type="submit"><i class="bi bi-check-circle-fill me-2"></i>Salvar</button>
                         </div>

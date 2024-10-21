@@ -10,13 +10,15 @@ class Convenio extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table='convenios';
-    protected $fillable=['cnpj', 'ans', 'nome', 'cep', 'rua', 'bairro', 'cidade', 'uf', 'numero', 'complemento', 'celular', 'telefone', 'operadora'];
-    protected $dates=['deleted_at'];
+    protected $table = 'convenios';
+    protected $fillable = ['nome', 'cnpj', 'ans', 'cep', 'rua', 'bairro', 'cidade', 'uf', 'numero', 'complemento', 'telefone', 'celular', 'operadora', 'multa', 'jutos', 'dias_desc', 'desconto', 'agfaturamento', 'pagamento', 'impmedico', 'inss', 'iss', 'ir'];
+    protected $dates = ['deleted_at'];
 
     public function procedimentos()
     {
-        return $this->belongsToMany(Procedimentos::class, 'convenio_procedimento')->withPivot('valor')->withTimestamps();
+        return $this->belongsToMany(Procedimentos::class, 'convenio_procedimento')
+            ->withPivot('valor')
+            ->withTimestamps();
     }
 
     public function convenioProcedimentos()
@@ -54,5 +56,4 @@ class Convenio extends Model
     {
         return $this->hasMany(Disponibilidade::class, 'convenio_id');
     }
-
 }

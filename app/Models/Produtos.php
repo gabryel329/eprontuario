@@ -16,6 +16,7 @@ class Produtos extends Model
         'marca',
         'tipo',
         'grupo',
+        'produto',
         'sub_grupo',
         'preco_venda',
         'natureza',
@@ -29,5 +30,7 @@ class Produtos extends Model
         'disp_paciente',
         'fracionado',
         'imobilizado',
+        'antibiotico',
+        'substancias',
     ];
 }

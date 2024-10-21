@@ -182,7 +182,7 @@ class DatabaseSeeder extends Seeder
             ['profissional_id' => 1, 'especialidade_id' => 2],
         ]);
 
-        
+
         DB::table('users')->insert([
             [
                 'name' => 'Admin',
@@ -209,7 +209,7 @@ class DatabaseSeeder extends Seeder
                 'permisao_id' => 2,
             ],
         ]);
-        
+
         DB::table('permissao_user')->insert([
             ['user_id' => 1, 'permisao_id' => 3],
             ['user_id' => 2, 'permisao_id' => 1],
@@ -351,7 +351,48 @@ class DatabaseSeeder extends Seeder
                 'feriado' => 'Natal'
             ],
         ]);
-    
+
+        DB::table('produtos')->insert([
+            [
+                'nome' => 'Luvas Cirúrgicas',
+                'marca' => 'MedLine',
+                'tipo' => 'MATERIAL',
+                'grupo' => 'EPI',
+                'sub_grupo' => 'Luvas',
+                'preco_venda' => 12.50,
+                'natureza' => 'Descartável',
+                'ativo' => 'SIM',
+                'controlado' => 'NÃO',
+                'padrao' => 'SIM',
+                'ccih' => 'SIM',
+                'generico' => 'NÃO',
+                'consignado' => 'SIM',
+                'disp_emergencia' => 'SIM',
+                'disp_paciente' => 'NÃO',
+                'fracionado' => 'NÃO',
+                'imobilizado' => 'NÃO',
+            ],
+            [
+                'nome' => 'Máscaras N95',
+                'marca' => '3M',
+                'tipo' => 'MATERIAL',
+                'grupo' => 'EPI',
+                'sub_grupo' => 'Máscaras',
+                'preco_venda' => 35.00,
+                'natureza' => 'Descartável',
+                'ativo' => 'SIM',
+                'controlado' => 'NÃO',
+                'padrao' => 'SIM',
+                'ccih' => 'SIM',
+                'generico' => 'NÃO',
+                'consignado' => 'SIM',
+                'disp_emergencia' => 'SIM',
+                'disp_paciente' => 'NÃO',
+                'fracionado' => 'NÃO',
+                'imobilizado' => 'NÃO',
+            ],
+        ]);
+
 
         DB::table('medicamentos')->insert([
             ['nome' => 'abatacepte'],

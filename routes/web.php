@@ -75,6 +75,8 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::get('/tipoprof', [TipoProfController::class, 'index'])->name('tipoprof.index');
         Route::get('/empresa', [EmpresasController::class, 'index'])->name('empresa.index');
         Route::get('/convenio', [ConvenioController::class, 'index'])->name('convenio.index');
+        Route::get('/listaconvenio', [ConvenioController::class, 'index1'])->name('convenio.index1');
+        Route::get('convenios/{id}/edit', [ConvenioController::class, 'edit'])->name('convenio.edit');
 
         Route::get('/guia-consulta', [GuiaConsultaController::class, 'index'])->name('guiaconsulta.index');
         Route::get('/guia-tiss', [GuiaTissController::class, 'index'])->name('guiatiss.index');
@@ -115,6 +117,9 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::get('/gerar-xml-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarXmlGuiaConsulta']);
         Route::get('/gerar-zip-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarZipGuiaConsulta']);
 
+        Route::get('/medicamentos', [ProdutosController::class, 'listaMedicamentos'])->name('medicamentos.index');
+        Route::get('/listaprodutos', [ProdutosController::class, 'listaProdutos'])->name('listaprodutos.index');
+        Route::post('/produtor/edit', [ProdutosController::class, 'update'])->name('produtos.update');
         Route::get('/produtos', [ProdutosController::class, 'index'])->name('produtos.index');
 
 
@@ -143,7 +148,7 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::post('/honorario/delete-selected', [HonorarioController::class, 'bulkDestroy'])->name('honorario.deleteSelected');
 
     Route::post('/convenio', [ConvenioController::class, 'store'])->name('convenio.store');
-    Route::put('/convenio/{id}', [ConvenioController::class, 'update'])->name('convenio.update');
+    Route::post('/convenio/{id}', [ConvenioController::class, 'update'])->name('convenio.update');
     Route::delete('/convenio/{id}', [ConvenioController::class, 'destroy'])->name('convenio.destroy');
     Route::get('/convenio/{id}', [ConvenioController::class, 'show'])->name('convenio.show');
 
@@ -265,7 +270,12 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::delete('/tabconvenios/{id}', [TabConvenioController::class, 'destroy'])->name('tabconvenios.destroy');
 
     Route::get('/detalhesConsulta/{id}', [AgendaController::class, 'detalhesConsulta']);
-    #SalaVerificação
+    Route::post('/procedimentos/store', [AgendaController::class, 'storeProcedimento']);
+    Route::get('/procedimentos/{agenda_id}/{paciente_id}', [AgendaController::class, 'verificarProcedimento']);
+    Route::post('/medicamento/store', [AgendaController::class, 'storeMedicamento']);
+    Route::get('/medicamento/{agenda_id}/{paciente_id}', [AgendaController::class, 'verificarMedicamento']);
+    Route::post('/material/store', [AgendaController::class, 'storeMaterial']);
+    Route::get('/material/{agenda_id}/{paciente_id}', [AgendaController::class, 'verificarMaterial']);
 
     Route::middleware(['auth', 'check.question'])->group(function () {
         Route::post('/salvar-sala', [UserController::class, 'salvarSala']);

@@ -19,6 +19,13 @@ class ConvenioController extends Controller
         return view('cadastros.convenios', compact(['convenios']));
     }
 
+    public function index1()
+    {
+        $convenios = Convenio::all();
+
+        return view('cadastros.listaconvenio', compact(['convenios']));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -31,49 +38,24 @@ class ConvenioController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $nome=$request->input('nome');
-        $cnpj=$request->input('cnpj');
-        $ans=$request->input('ans');
-        $uf=$request->input('uf');
-        $cep=$request->input('cep');
-        $rua=$request->input('rua');
-        $bairro=$request->input('bairro');
-        $cidade=$request->input('cidade');
-        $complemento=$request->input('complemento');
-        $telefone=$request->input('telefone');
-        $operadora=$request->input('operadora');
-        $celular=$request->input('celular');
-        $numero=$request->input('numero');
-    
-        // Check if the permission already exists
-        $existeConvenio = Convenio::where('ans', $ans)->first();
-    
-        if ($existeConvenio) {
-            return redirect()->route('convenio.index')->with('error', 'Convenio já existe!');
-        }
-    
-        // Create a new permission
-        Convenio::create([
-            'nome' => $nome,
-            'ans' => $ans,
-            'cnpj' => $cnpj,
-            'numero' => $numero,
-            'celular' => $celular,
-            'telefone' => $telefone,
-            'operadora' => $operadora,
-            'rua' => $rua,
-            'uf' => $uf,
-            'complemento' => $complemento,
-            'cep' => $cep,
-            'bairro' => $bairro,
-            'cidade' => $cidade,
+{
+    $data = $request->only([
+        'nome', 'cnpj', 'ans', 'cep', 'rua', 'bairro', 'cidade',
+        'uf', 'numero', 'complemento', 'telefone', 'celular',
+        'operadora', 'multa', 'jutos', 'dias_desc', 'desconto',
+        'agfaturamento', 'pagamento', 'impmedico', 'inss',
+        'iss', 'ir'
+    ]);
 
+    $existeConvenio = Convenio::where('ans', $data['ans'])->first();
 
-        ]);
-    
-        return redirect()->route('convenio.index')->with('success', 'Especialidade cadastrada!');
+    if ($existeConvenio) {
+        return redirect()->route('convenio.index')->with('error', 'Convênio já existe!');
     }
+
+    Convenio::create($data);
+    return redirect()->route('convenio.index')->with('success', 'Convênio cadastrado com sucesso!');
+}
 
     /**
      * Display the specified resource.
@@ -86,42 +68,39 @@ class ConvenioController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Convenio $convenio)
-    {
-        //
-    }
+    public function edit($id)
+{
+    $convenios = Convenio::findOrFail($id);
+
+    return view('cadastros.editconvenios', compact('convenios'));
+}
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-    {
-            $convenio = Convenio::find($id);
-    
-            if (!$convenio){
-                return redirect()->back()->with('error', 'Convenio não encontrada!');
-            }
-    
-            $convenio->nome=$request->input('nome');
-            $convenio->cnpj=$request->input('cnpj');
-            $convenio->ans=$request->input('ans');
-            $convenio->uf=$request->input('uf');
-            $convenio->cep=$request->input('cep');
-            $convenio->rua=$request->input('rua');
-            $convenio->bairro=$request->input('bairro');
-            $convenio->cidade=$request->input('cidade');
-            $convenio->complemento=$request->input('complemento');
-            $convenio->telefone=$request->input('telefone');
-            $convenio->operadora=$request->input('operadora');
-            $convenio->celular=$request->input('celular');
-            $convenio->numero=$request->input('numero');
+{
+    // Busca o convênio pelo ID
+    $convenio = Convenio::find($id);
 
-
-    
-            $convenio->save();
-    
-            return redirect()->back()->with('success', 'Convenio Atualizada com sucesso!');
+    if (!$convenio) {
+        return redirect()->back()->with('error', 'Convênio não encontrado!');
     }
+
+    // Pega apenas os campos enviados no request
+    $data = $request->only([
+        'nome', 'cnpj', 'ans', 'cep', 'rua', 'bairro', 'cidade',
+        'uf', 'numero', 'complemento', 'telefone', 'celular',
+        'operadora', 'multa', 'jutos', 'dias_desc', 'desconto',
+        'agfaturamento', 'pagamento', 'impmedico', 'inss',
+        'iss', 'ir'
+    ]);
+
+    // Atualiza o convênio com os novos dados
+    $convenio->update($data);
+
+    return redirect()->back()->with('success', 'Convênio atualizado com sucesso!');
+}
 
     /**
      * Remove the specified resource from storage.
@@ -129,11 +108,11 @@ class ConvenioController extends Controller
     public function destroy(string $id)
     {
         $convenio = Convenio::findOrFail($id);
-    
+
         $convenio->delete();
-    
-        return redirect()->route('convenio.index')->with('error', 'Convenio excluída com sucesso!');
-    } 
+
+        return redirect()->back()->with('sucess', 'Convenio excluido com sucesso!');
+    }
 
     public function convenioProcedimentoIndex()
     {
@@ -153,7 +132,7 @@ class ConvenioController extends Controller
         $procedimentoId = $request->input('procedimento_id')[$index];
         $codigo = $request->input('codigo')[$index];
         $valor = $request->input('valor')[$index];
-
+        $operador = $request->input('operador')[$index];
         if (empty($procedimentoId)) {
             // Skip if procedimento_id is null or empty
             continue;
@@ -187,7 +166,7 @@ class ConvenioController extends Controller
             $convenioProcedimento->procedimento_id = $procedimentoId;
             $convenioProcedimento->codigo = $codigo;
             $convenioProcedimento->valor = $valor;
-
+            $convenioProcedimento->operador = $operador;
             if (!$convenioProcedimento->save()) {
                 $success = false;
             }
@@ -203,14 +182,14 @@ class ConvenioController extends Controller
     }
 }
 
-   
+
     public function convenioProcedimentoDelete(string $id)
     {
         $convProces = ConvenioProcedimento::findOrFail($id);
         $convProces->delete();
 
         return redirect()->back()->with('success', 'Excluído com sucesso!');
-    } 
+    }
 
     public function bulkDestroy(Request $request)
 {
