@@ -45,9 +45,10 @@
                                                 </button>
                                             </td>
                                             <td>
-                                                <form action="{{ route('convenio.destroy', $item->id) }}" method="POST">
+                                                <form action="{{ route('produtos.destroy', $item->id) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
+                                                    <input type="hidden" name="tipo" value="{{ $item->tipo }}">
                                                     <button type="submit" class="btn btn-danger">Excluir</button>
                                                 </form>
                                             </td>
@@ -142,7 +143,7 @@
                                                             <div class="row">
                                                                 <div class="mb-3 col-md-4">
                                                                     <label class="form-label">Produto</label>
-                                                                    <input class="form-control" type="text" name="produto_faturamento" value="{{ old('produto_faturamento', $item->produto_faturamento) }}">
+                                                                    <input class="form-control" type="text" name="produto" value="{{ old('produto', $item->produto) }}">
                                                                 </div>
                                                                 <div class="mb-3 col-md-4">
                                                                     <label class="form-label">Preço de Venda</label>
@@ -177,47 +178,47 @@
                                                             <div class="row">
                                                                 <div class="mb-3 col-md-2">
                                                                     <label class="form-label">Ativo</label>
-                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="ativo" {{ old('ativo', $item->ativo) == '1' ? 'checked' : '' }}>
+                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="ativo" {{ old('ativo', $item->ativo) == 'SIM' ? 'checked' : '' }}>
                                                                 </div>
                                                                 <div class="mb-3 col-md-2">
                                                                     <label class="form-label">Controlado</label>
-                                                                    <input  class="form-check-input" type="checkbox" value="SIM" name="controlado" {{ old('controlado', $item->controlado) == '1' ? 'checked' : '' }}>
+                                                                    <input  class="form-check-input" type="checkbox" value="SIM" name="controlado" {{ old('controlado', $item->controlado) == 'SIM' ? 'checked' : '' }}>
                                                                 </div>
                                                                 <div class="mb-3 col-md-2">
                                                                     <label class="form-label">Padrão</label>
-                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="padrao" {{ old('padrao', $item->padrao) == '1' ? 'checked' : '' }}>
+                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="padrao" {{ old('padrao', $item->padrao) == 'SIM' ? 'checked' : '' }}>
                                                                 </div>
                                                                 <div class="mb-3 col-md-2">
                                                                     <label class="form-label">CCIH</label>
-                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="ccih" {{ old('ccih', $item->ccih) == '1' ? 'checked' : '' }}>
+                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="ccih" {{ old('ccih', $item->ccih) == 'SIM' ? 'checked' : '' }}>
                                                                 </div>
                                                                 <div class="mb-3 col-md-2">
                                                                     <label class="form-label">Generico</label>
-                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="generico" {{ old('generico', $item->generico) == '1' ? 'checked' : '' }}>
+                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="generico" {{ old('generico', $item->generico) == 'SIM' ? 'checked' : '' }}>
                                                                 </div>
                                                                 <div class="mb-3 col-md-2">
                                                                     <label class="form-label">Antibiotico</label>
-                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="antibiotico" {{ old('antibiotico', $item->antibiotico) == '1' ? 'checked' : '' }}>
+                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="antibiotico" {{ old('antibiotico', $item->antibiotico) == 'SIM' ? 'checked' : '' }}>
                                                                 </div>
                                                                 <div class="mb-3 col-md-2">
                                                                     <label class="form-label">Consignado</label>
-                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="consignado" {{ old('consignado', $item->consignado) == '1' ? 'checked' : '' }}>
+                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="consignado" {{ old('consignado', $item->consignado) == 'SIM' ? 'checked' : '' }}>
                                                                 </div>
                                                                 <div class="mb-3 col-md-2">
                                                                     <label class="form-label">Disp. Emergencia</label>
-                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="disp_emergencia" {{ old('disp_emergencia', $item->disp_emergencia) == '1' ? 'checked' : '' }}>
+                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="disp_emergencia" {{ old('disp_emergencia', $item->disp_emergencia) == 'SIM' ? 'checked' : '' }}>
                                                                 </div>
                                                                 <div class="mb-3 col-md-2">
                                                                     <label class="form-label">Disp. Paciente</label>
-                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="disp_paciente" {{ old('disp_paciente', $item->disp_paciente) == '1' ? 'checked' : '' }}>
+                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="disp_paciente" {{ old('disp_paciente', $item->disp_paciente) == 'SIM' ? 'checked' : '' }}>
                                                                 </div>
                                                                 <div class="mb-3 col-md-2">
                                                                     <label class="form-label">Fracionado</label>
-                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="fracionado" {{ old('fracionado', $item->fracionado) == '1' ? 'checked' : '' }}>
+                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="fracionado" {{ old('fracionado', $item->fracionado) == 'SIM' ? 'checked' : '' }}>
                                                                 </div>
                                                                 <div class="mb-3 col-md-2">
                                                                     <label class="form-label">Imobilizado</label>
-                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="imobilizado" {{ old('imobilizado', $item->imobilizado) == '1' ? 'checked' : '' }}>
+                                                                    <input class="form-check-input" type="checkbox" value="SIM" name="imobilizado" {{ old('imobilizado', $item->imobilizado) == 'SIM' ? 'checked' : '' }}>
                                                                 </div>
                                                             </div>
                                                             <div class="tile-footer">

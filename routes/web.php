@@ -121,6 +121,7 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::get('/listaprodutos', [ProdutosController::class, 'listaProdutos'])->name('listaprodutos.index');
         Route::post('/produtor/edit', [ProdutosController::class, 'update'])->name('produtos.update');
         Route::get('/produtos', [ProdutosController::class, 'index'])->name('produtos.index');
+        Route::delete('/produtos/{id}', [ProdutosController::class, 'destroy'])->name('produtos.destroy');
 
 
         Route::get('/get-agenda-data/{profissionalId}/{especialidadeId}/{selectedDate}', [AgendaController::class, 'getAgendaData']);
