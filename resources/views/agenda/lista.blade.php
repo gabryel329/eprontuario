@@ -186,7 +186,6 @@
                                                     <option selected disabled>Selecione a Guia</option>
                                                     <option value="consulta">Guia de Consulta</option>
                                                     <option value="sadt">Guia SADT</option>
-                                                    <option value="tiss">Guia TISS</option>
                                                 </select>
                                             </td>
                                             <td>
@@ -608,24 +607,6 @@
                     </div>
                     <div class="modal-body">
                         <!-- Conteúdo do modal de Guia SADT -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal para Guia TISS -->
-        <div class="modal fade" id="modalTISS" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Guia TISS</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Conteúdo do modal de Guia TISS -->
                     </div>
                 </div>
             </div>
