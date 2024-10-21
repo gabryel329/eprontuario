@@ -7,8 +7,8 @@
     <title>Abrindo Janela Personalizada</title>
     <script type="text/javascript">
         window.onload = function () {
-            const width = 800;
-            const height = 600;
+            const width = 1500;
+            const height = 1000;
             const left = (screen.width - width) / 2;
             const top = (screen.height - height) / 2;
 
