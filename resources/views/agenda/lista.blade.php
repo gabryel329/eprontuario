@@ -26,20 +26,28 @@
 
     /* Estilo para o hover */
     .hoverable-td {
-        cursor: pointer; /* Indica que é clicável */
+        cursor: pointer;
+        /* Indica que é clicável */
     }
 
     /* Quando o mouse passar por cima */
     .hoverable-td:hover {
-        background-color: #17a2b8; /* Cor de fundo da classe btn-info */
-        color: white; /* Cor do texto quando o mouse passar por cima */
+        background-color: #17a2b8;
+        /* Cor de fundo da classe btn-info */
+        color: white;
+        /* Cor do texto quando o mouse passar por cima */
     }
 
-    .table td, .table th {
-        vertical-align: middle; /* Alinha o conteúdo verticalmente no centro */
-        padding-top: 4px;      /* Ajusta o espaçamento superior */
-        padding-bottom: 4px;   /* Ajusta o espaçamento inferior */
-        font-size: 13px;       /* Define o tamanho da fonte */
+    .table td,
+    .table th {
+        vertical-align: middle;
+        /* Alinha o conteúdo verticalmente no centro */
+        padding-top: 4px;
+        /* Ajusta o espaçamento superior */
+        padding-bottom: 4px;
+        /* Ajusta o espaçamento inferior */
+        font-size: 13px;
+        /* Define o tamanho da fonte */
     }
 </style>
 
@@ -138,7 +146,8 @@
                         frameborder="0"></iframe> --}}
                     <div class="table-scroll-wrapper">
                         <div class="table-responsive" style="overflow-x: auto;">
-                            <table class="table table-striped" style="text-align: center; white-space: nowrap; font-size: 12px; min-width: 1800px; vertical-align: middle;">
+                            <table class="table table-striped"
+                                style="text-align: center; white-space: nowrap; font-size: 12px; min-width: 1800px; vertical-align: middle;">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -158,7 +167,12 @@
                                 <tbody>
                                     @foreach ($agendas as $item)
                                         <tr>
-                                            <td onclick="abrirNovaJanela({{ $item->id }});" title="Detalhes" class="hoverable-td" style="color: red;">
+                                            <td @if (empty($item->paciente_id)) 
+                                                    style="pointer-events: none; opacity: 0.5;" 
+                                                @else 
+                                                    onclick="abrirNovaJanela({{ $item->id }});" 
+                                                @endif
+                                                    title="Detalhes" class="hoverable-td" style="color: red;">
                                                 {{ $item->id }}
                                             </td>
                                             <td>{{ $item->hora }}</td>
@@ -622,7 +636,8 @@
     <script>
         function abrirNovaJanela(id) {
             // Abrir uma nova janela popup com o ID da consulta
-            window.open('/detalhesConsulta/' + id, '_blank', 'toolbar=no,scrollbars=yes,resizable=yes,width=1000,height=800');
+            window.open('/detalhesConsulta/' + id, '_blank',
+                'toolbar=no,scrollbars=yes,resizable=yes,width=1000,height=800');
         }
         $(document).ready(function() {
             var pacienteId = $('#paciente_id{{ $item->id }}').val(); // Obtém o valor do paciente_id

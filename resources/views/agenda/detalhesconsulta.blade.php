@@ -324,7 +324,7 @@
                                                 </thead>
                                                 <tbody id="material-table-body">
                                                     <tr class="material-row">
-                                                        <td>
+                                                        <td class="col-md-10">
                                                             <select class="form-control material_id"
                                                                 name="material_id[]" id="material_id">
                                                                 <option value="">Selecione o Material</option>
@@ -434,7 +434,7 @@
                     }
                 },
                 error: function() {
-                    alert('Erro ao carregar dados do banco.');
+                    console.log('Erro ao carregar dados do banco.');
                 }
             });
 
@@ -515,7 +515,7 @@
                     }
                 },
                 error: function(response) {
-                    alert('Erro ao carregar dados do banco.');
+                    console.log('Erro ao carregar dados do banco.');
                 }
             });
 
@@ -591,7 +591,7 @@
                     }
                 },
                 error: function(response) {
-                    alert('Erro ao carregar dados do banco.');
+                    console.log('Erro ao carregar dados do banco.');
                 }
             });
 
