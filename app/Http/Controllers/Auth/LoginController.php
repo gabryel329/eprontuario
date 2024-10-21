@@ -28,7 +28,11 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected function redirectTo()
+{
+    return route('dashboard');
+}
+
 
     /**
      * Create a new controller instance.
@@ -39,7 +43,7 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-    
+
     // protected function sendFailedLoginResponse(Request $request)
     // {
     //     $user = \App\Models\User::where('email', $request->email)->first();

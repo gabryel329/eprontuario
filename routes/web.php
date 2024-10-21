@@ -36,6 +36,11 @@ use Illuminate\Http\Request;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
+
+
 
 Route::get('/', function () {
     return view('welcome');
