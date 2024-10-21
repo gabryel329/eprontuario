@@ -211,7 +211,7 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li>
             <li class="treeview {{ request()->is( 'guia-sp*', 'guia-consulta*', 'guia-honorario') ? 'is-expanded' : '' }}">
                 <a class="app-menu__item" href="#" data-toggle="treeview">
                     <i class="app-menu__icon bi bi-cash-coin"></i>
