@@ -622,7 +622,7 @@
     <script>
         function abrirNovaJanela(id) {
             // Abrir uma nova janela popup com o ID da consulta
-            window.open('/detalhesConsulta/' + id, '_blank', 'toolbar=no,scrollbars=yes,resizable=yes,width=800,height=600');
+            window.open('/detalhesConsulta/' + id, '_blank', 'toolbar=no,scrollbars=yes,resizable=yes,width=1000,height=800');
         }
         $(document).ready(function() {
             var pacienteId = $('#paciente_id{{ $item->id }}').val(); // Obtém o valor do paciente_id

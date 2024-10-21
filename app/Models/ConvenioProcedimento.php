@@ -12,7 +12,7 @@ class ConvenioProcedimento extends Model
 
     protected $table = 'convenio_procedimento';
 
-    protected $fillable = ['convenio_id', 'procedimento_id', 'valor', 'codigo'];
+    protected $fillable = ['convenio_id', 'procedimento_id', 'valor', 'codigo', 'operador'];
 
     public function procedimento()
 {

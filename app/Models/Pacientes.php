@@ -90,4 +90,14 @@ class Pacientes extends Model
         return $this->hasMany(GuiaConsulta::class, 'paciente_id');
     }
 
+    public function medagenda()
+    {
+        return $this->hasMany(MedAgenda::class, 'paciente_id');
+    }
+
+    public function procagenda()
+    {
+        return $this->hasMany(ProcAgenda::class, 'paciente_id');
+    }
+
 }

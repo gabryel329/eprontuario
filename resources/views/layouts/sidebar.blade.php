@@ -188,20 +188,30 @@
                     </li>
                 </ul>
             </li>
-            <li class="treeview {{ request()->is( 'produtos*') ? 'is-expanded' : '' }}">
+            <li class="treeview {{ request()->is( 'produtos*', 'medicamentos*', 'listaprodutos*') ? 'is-expanded' : '' }}">
                 <a class="app-menu__item" href="#" data-toggle="treeview">
-                    <i class="app-menu__icon bi bi-cash-coin"></i>
+                    <i class="app-menu__icon bi bi-box-seam"></i>
                     <span class="app-menu__label">Estoque</span>
                     <i class="treeview-indicator bi bi-chevron-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <li>
                         <a class="treeview-item {{ request()->is('produtos*') ? 'active' : '' }}" href="{{ route('produtos.index') }}">
-                            <i class="icon bi bi-file-earmark-break"></i> Produtos
+                            <i class="icon bi bi-plus-square"></i> Cadastros
+                        </a>
+                    </li>
+                    <li>
+                        <a class="treeview-item {{ request()->is('medicamentos*') ? 'active' : '' }}" href="{{ route('medicamentos.index') }}">
+                            <i class="icon bi bi bi-capsule"></i> Lista de Medicamentos
+                        </a>
+                    </li>
+                    <li>
+                        <a class="treeview-item {{ request()->is('listaprodutos*') ? 'active' : '' }}" href="{{ route('listaprodutos.index') }}">
+                            <i class="icon bi bi-boxes"></i> Lista de Produtos
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li>
             <li class="treeview {{ request()->is( 'guia-sp*', 'guia-consulta*', 'guia-honorario') ? 'is-expanded' : '' }}">
                 <a class="app-menu__item" href="#" data-toggle="treeview">
                     <i class="app-menu__icon bi bi-cash-coin"></i>

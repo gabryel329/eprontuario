@@ -7,10 +7,16 @@ use App\Models\Convenio;
 use App\Models\Disponibilidade;
 use App\Models\Especialidade;
 use App\Models\Feriado;
+use App\Models\MatAgenda;
+use App\Models\MedAgenda;
+use App\Models\Medicamento;
 use App\Models\Pacientes;
 use App\Models\Painel;
+use App\Models\ProcAgenda;
 use App\Models\Procedimentos;
+use App\Models\Produtos;
 use App\Models\Profissional;
+use App\Models\Remedio;
 use App\Models\User;
 use Carbon\Carbon;
 use DateTime;
@@ -52,9 +58,149 @@ class AgendaController extends Controller
 
     public function detalhesConsulta($id)
     {
+        $agendas = Agenda::find($id);
+        $pacientes = Pacientes::join('agendas', 'pacientes.id', '=', 'agendas.paciente_id')
+            ->where('agendas.id', $id) // Filtra pelo ID passado na request
+            ->select('pacientes.*', 'agendas.data', 'agendas.hora') // Selecione os campos desejados
+            ->first(); // Retorna um único resultado (opcional)
+        $medicamento = Medicamento::all();
+        $procedimento = Procedimentos::all();
+        $produto = Produtos::all();
 
-        return view('agenda.detalhesconsulta', compact('id'));
+        return view('agenda.detalhesconsulta', compact('agendas', 'pacientes', 'medicamento', 'procedimento', 'produto'));
     }
+
+    public function storeMedicamento(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'paciente_id' => 'required|exists:pacientes,id',
+                'agenda_id' => 'required|exists:agendas,id',
+                'medicamento_id.*' => 'required|exists:medicamentos,id',
+                'dose.*' => 'required|numeric|min:1',
+                'hora.*' => 'required|numeric|min:1',
+            ]);
+
+            foreach ($validated['medicamento_id'] as $index => $medicamento_id) {
+                MedAgenda::updateOrCreate(
+                    [
+                        'agenda_id' => $validated['agenda_id'],
+                        'paciente_id' => $validated['paciente_id'],
+                        'medicamento_id' => $medicamento_id,
+                    ],
+                    [
+                        'dose' => $validated['dose'][$index],
+                        'hora' => $validated['hora'][$index]
+                    ]
+                );
+            }
+
+            return response()->json(['message' => 'Medicamentos salvas com sucesso!']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage()); // Registra o erro no log
+            return response()->json(['error' => 'Erro ao salvar a medicamento.'], 500);
+        }
+    }
+
+
+    public function verificarMedicamento($agenda_id, $paciente_id)
+    {
+        $remedios = MedAgenda::where('agenda_id', $agenda_id)
+            ->where('paciente_id', $paciente_id)
+            ->get();
+
+        if ($remedios->isEmpty()) {
+            return response()->json(['error' => 'Nenhuma prescrição encontrada'], 404);
+        }
+
+        return response()->json(['data' => $remedios]);
+    }
+
+
+    public function storeProcedimento(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'paciente_id' => 'required|exists:pacientes,id',
+                'agenda_id' => 'required|exists:agendas,id',
+                'procedimento_id.*' => 'required|exists:procedimentos,id',
+                'codigo.*' => 'required|string',
+            ]);
+
+            foreach ($validated['procedimento_id'] as $index => $procedimento_id) {
+                ProcAgenda::updateOrCreate(
+                    [
+                        'agenda_id' => $validated['agenda_id'],
+                        'paciente_id' => $validated['paciente_id'],
+                        'procedimento_id' => $procedimento_id,
+                    ],
+                    [
+                        'codigo' => $validated['codigo'][$index],
+                    ]
+                );
+            }
+
+            return response()->json(['message' => 'Procedimentos salvos com sucesso!']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage()); // Registra o erro no log
+            return response()->json(['error' => 'Erro ao salvar os procedimentos.'], 500);
+        }
+    }
+
+    public function verificarProcedimento($agenda_id, $paciente_id)
+    {
+        $procedimento = ProcAgenda::where('agenda_id', $agenda_id)
+            ->where('paciente_id', $paciente_id)
+            ->get();
+
+        if ($procedimento->isEmpty()) {
+            return response()->json(['error' => 'Nenhum procedimento encontrado'], 404);
+        }
+
+        return response()->json(['data' => $procedimento]);
+    }
+
+    public function storeMaterial(Request $request)
+{
+    try {
+        // Validação dos campos
+        $validated = $request->validate([
+            'paciente_id' => 'required|exists:pacientes,id',
+            'agenda_id' => 'required|exists:agendas,id',
+            'material_id.*' => 'required|exists:produtos,id',
+        ]);
+
+        // Loop para salvar ou atualizar cada material
+        foreach ($validated['material_id'] as $material_id) {
+            MatAgenda::updateOrCreate(
+                [
+                    'agenda_id' => $validated['agenda_id'],
+                    'paciente_id' => $validated['paciente_id'],
+                    'material_id' => $material_id,
+                ]
+            );
+        }
+
+        return response()->json(['message' => 'Materiais salvos com sucesso!']);
+    } catch (\Exception $e) {
+        Log::error($e->getMessage()); // Registra o erro no log
+        return response()->json(['error' => 'Erro ao salvar os materiais.'], 500);
+    }
+}
+
+public function verificarMaterial($agenda_id, $paciente_id)
+{
+    $material = MatAgenda::where('agenda_id', $agenda_id)
+        ->where('paciente_id', $paciente_id)
+        ->get();
+
+    if ($material->isEmpty()) {
+        return response()->json(['error' => 'Nenhum material encontrado'], 404);
+    }
+
+    return response()->json(['data' => $material]);
+}
+
 
     public function index3(Request $request)
     {

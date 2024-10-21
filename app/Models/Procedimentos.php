@@ -28,4 +28,9 @@ class Procedimentos extends Model
     {
         return $this->belongsToMany(Convenio::class, 'convenio_procedimento')->withPivot('valor')->withTimestamps();
     }
+
+    public function procagenda()
+    {
+        return $this->hasMany(ProcAgenda::class, 'procedimento_id');
+    }
 }

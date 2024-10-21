@@ -73,4 +73,14 @@ class Agenda extends Model
     {
         return $this->hasMany(GuiaConsulta::class, 'agenda_id');
     }
+
+    public function medagenda()
+    {
+        return $this->hasMany(MedAgenda::class, 'agenda_id');
+    }
+
+    public function procagenda()
+    {
+        return $this->hasMany(ProcAgenda::class, 'agenda_id');
+    }
 }

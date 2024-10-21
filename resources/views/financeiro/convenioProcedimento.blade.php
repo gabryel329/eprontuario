@@ -72,7 +72,7 @@
                                                                     <input type="checkbox" class="select-item larger-checkbox" placeholder="selecione" value="{{ $convenioProcedimento->id }}" />
                                                                 </div>
                                                                 
-                                                                <div class="col-md-1 d-flex justify-content-center align-items-center ">
+                                                                <div class="col-md-2 d-flex justify-content-center align-items-center ">
                                                                     <input type="text" name="codigo[]" value="{{ $convenioProcedimento->codigo }}" class="form-control" readonly>
                                                                 </div>
                                                                 
@@ -87,7 +87,7 @@
 
                                                                 <div class="col-md-2 d-flex justify-content-center align-items-center">
                                                                     <select class="form-control" id="operador" name="operador[]">
-                                                                        <option disabled selected value="" style="font-size:18px;color: black;">Operador</option>
+                                                                        <option disabled selected value="" style="font-size:18px;color: black;">{{ $convenioProcedimento->operador }}</option>
                                                                         <option value="+">+</option>
                                                                         <option value="-">-</option>
                                                                         <option value="*">*</option>
