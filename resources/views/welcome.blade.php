@@ -7,6 +7,7 @@
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <!-- Font-icon css-->
+    <link rel="icon" type="image/png" href="{{ asset('images/LOGO_01_VERDE.png') }}">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <title>Login - ePRONTUARIO</title>
   </head>
@@ -61,7 +62,7 @@
             </div>
           </div> --}}
           <div class="mb-3 btn-container d-grid">
-            <button type="submit" class="btn btn-primary btn-block"><i class="bi bi-box-arrow-in-right me-2 fs-5"></i>SIGN IN</button>
+            <button type="submit" class="btn btn-primary btn-block"><i class="bi bi-box-arrow-in-right me-2 fs-5"></i>Entrar</button>
           </div>
         </form>
         {{-- <form class="forget-form" action="index.html">

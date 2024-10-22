@@ -46,7 +46,7 @@
                 <li><a class="dropdown-item" href="http://esuporte.com.br:8090"><i class="bi bi-headset"></i>
                         Suporte</a></li>
                 @if (Auth::user()->permissoes->contains('id', 3))
-                    <li><a class="dropdown-item" href="{{ route('painelConsultorio.index') }}" target="_blank"><i
+                    <li><a type="button" onclick="abrirNovaJanela1();" class="dropdown-item"><i
                                 class="bi bi-person-vcard"></i> Tela de Chamado</a></li>
                 @endif
                 <li>
@@ -75,4 +75,11 @@
             </div>
         @endif
     @endif
+    <script>
+        function abrirNovaJanela1() {
+            // Abrir uma nova janela popup com o ID da consulta
+            window.open('/consultorio/', '_blank',
+                'toolbar=no,scrollbars=yes,resizable=yes,width=1000,height=800');
+        }
+    </script>
 </header>
