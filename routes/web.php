@@ -52,7 +52,8 @@ Auth::routes();
 
 // Rota para a Página de Erro 419
 Route::view('/error/419', 'errors.419')->name('error.419');
-
+#GenerateIA
+Route::POST('/generate-ia',  [GenerateIAController::class, 'index'])->name('generateIA.index');
 // Rotas Protegidas pelo Middleware 'check.session.expired'
 Route::middleware(['check.session.expired'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -259,8 +260,7 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::get('/painel/ultimo-registro-atualizado', [PainelController::class, 'getUltimoRegistroAtualizado']);
     Route::get('/main', [PainelController::class, 'showMain']);
 
-    #GenerateIA
-    Route::POST('/generate-ia',  [GenerateIAController::class, 'index'])->name('generateIA.index');
+    
 
     #RelatorioFinanceiro
     Route::get('/relatorioFinanceiro', [HonorarioController::class, 'relatorioFinanceiroIndex'])->name('relatorioFinanceiro.index');
