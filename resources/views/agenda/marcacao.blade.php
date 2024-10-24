@@ -19,6 +19,13 @@
         max-height: 610px;
         overflow-y: auto;
     }
+
+    .custom-modal-body {
+        max-height: 400px;
+        /* Define a altura máxima */
+        overflow-y: auto;
+        /* Habilita o scrollbar vertical */
+    }
 </style>
 <!-- CSS do FullCalendar -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css" rel="stylesheet">
@@ -72,17 +79,23 @@
                         <div id="calendar"></div>
                     </div>
                 </div>
+
+                <div class="tile">
+                    <h3 class="tile-title">Dias disponíveis</h3>
+                    <div class="tile-body">
+                        <p><span id="displayDiasDisponiveis" class="selected-info"></span></p>
+                    </div>
+                </div>
             </div>
 
             <div class="col-md-8">
                 <div class="tile">
-                    <p><span id="displayDiasDisponiveis" class="selected-info"></span></p>
                     <h4>
                         <strong>Data Selecionada: </strong>
                         <span style="color: red" id="displaySelectedData" class="selected-info"></span>
                         <button type="button" class="btn btn-success" onclick="enviarTodosDados()">Salvar</button>
                     </h4>
-                    
+
                     <div class="tile-body">
                         <div class="table-responsive" id="horariosDisponiveis" style="overflow-x: auto;">
                             <!-- Aqui será inserida a tabela dinamicamente -->
@@ -92,6 +105,51 @@
             </div>
         </div>
     </main>
+    <div class="modal fade" id="procedimentoModal" tabindex="-1" aria-labelledby="procedimentoModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="procedimentoModalLabel">Selecione o Procedimento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body custom-modal-body">
+                    <div class="mb-3">
+                        <input class="form-control" id="procedimentoSearch" type="text"
+                            placeholder="Pesquisar por nome ou código...">
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="procedimentoTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Código</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($procedimentos as $procedimento)
+                                    <tr>
+                                        <td>{{ $procedimento->id }}</td>
+                                        <td>{{ $procedimento->procedimento }}</td>
+                                        <td>{{ $procedimento->codigo }}</td>
+                                        <td>
+                                            <button class="btn btn-primary" type="button"
+                                                onclick="selectProcedimento('{{ $procedimento->id }}', '{{ $procedimento->procedimento }}', '{{ $procedimento->codigo }}')">
+                                                Selecionar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Scripts do FullCalendar -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
@@ -281,44 +339,76 @@
             <td><input type="text" name="celular[${horario}]" value="${horario.celular ?? ''}" class="form-control" ${isDisabled}></td>
             <td>${renderConvenioSelect(horario, convenios, isDisabled)}</td>
             <td><input type="text" name="matricula[${horario}]" value="${horario.matricula ?? ''}" class="form-control" ${isDisabled}></td>
-            <td>${renderProcedimentoSelect(horario, procedimentos, isDisabled)}</td>
-            <td><input type="text" name="codigo[${horario}]" value="${horario.codigo ?? ''}" class="form-control" readonly ${isDisabled}></td>
+            <td>${renderProcedimentoInput(horario, procedimentos, isDisabled)}</td>
+            <td><input type="text"name="codigo[${horario.hora}]" id="codigo${horario.hora}" value="${horario.codigo ?? ''}" class="form-control" readonly ${isDisabled}></td>
+
         </tr>
     `;
         }
 
 
+
+        function renderProcedimentoInput(horario, isDisabled) {
+            return `
+                 <input 
+        type="text" 
+        class="form-control" 
+        name="procedimento_nome[${horario.hora}]" 
+        id="procedimento_nome${horario.hora}" 
+        value="${horario.procedimento_id ?? ''}"
+        placeholder="Selecione o Procedimento" 
+        title="${horario.procedimento_id ?? ''}"
+        readonly 
+        onclick="abrirModalProcedimento('${horario.hora}')">
+    <input type="hidden" name="procedimento_id[${horario.hora}]" id="procedimento_id${horario.hora}">
+</td>
+                    `;
+        }
+
+        function abrirModalProcedimento(horario) {
+            console.log('Horário selecionado:', horario); // Verificar o horário selecionado
+            $('#procedimentoModal').data('horario', horario).modal('show');
+        }
+
+
+        function selectProcedimento(id, procedimento, codigo) {
+            const horario = $('#procedimentoModal').data('horario');
+            document.getElementById(`procedimento_id${horario}`).value = id;
+            document.getElementById(`procedimento_nome${horario}`).value = procedimento;
+            document.getElementById(`codigo${horario}`).value = codigo;
+
+            $('#procedimentoModal').modal('hide');
+        }
+
+
+        document.getElementById('procedimentoSearch').addEventListener('keyup', function() {
+            const value = this.value.toLowerCase();
+            document.querySelectorAll('#procedimentoTable tbody tr').forEach(function(row) {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(value) ? '' :
+                    'none'; // Correção de 'procedimento' para 'none'
+            });
+        });
+
+
         function renderConvenioSelect(horario, convenios, isDisabled) {
             return `
-        <select name="convenio[${horario}]" class="select2 form-control" ${isDisabled}>
-            <option value="">${horario.convenio_id ? '' : 'Selecione um Convênio'}</option>
-            ${convenios.map(convenio => `
-                                    <option value="${convenio.id}" ${horario.convenio_id == convenio.id ? 'selected' : ''}>
-                                        ${convenio.nome}
-                                    </option>
-                                `).join('')}
-        </select>
-    `;
+                <select name="convenio[${horario}]" class="select2 form-control" ${isDisabled}>
+                    <option value="">${horario.convenio_id ? '' : 'Selecione um Convênio'}</option>
+                    ${convenios.map(convenio => `
+                                                    <option value="${convenio.id}" ${horario.convenio_id == convenio.id ? 'selected' : ''}>
+                                                        ${convenio.nome}
+                                                    </option>
+                                                `).join('')}
+                </select>
+            `;
         }
 
-        function renderProcedimentoSelect(horario, procedimentos, isDisabled) {
-            return `
-        <select class="select2 form-control" name="procedimento_id[${horario}]" id="procedimento_id${horario}" onchange="updateCodigo(this)" ${isDisabled}>
-            <option value="">${horario.procedimento_id ? '' : 'Selecione o Procedimento'}</option>
-            ${procedimentos.map(proc => `
-                                    <option value="${proc.procedimento}" ${horario.procedimento_id == proc.procedimento ? 'selected' : ''} data-codigo="${proc.codigo}">
-                                        ${proc.procedimento}
-                                    </option>
-                                `).join('')}
-        </select>
-    `;
-        }
-
-        function updateCodigo(selectElement) {
-            var selectedOption = selectElement.options[selectElement.selectedIndex];
-            var codigoInput = selectElement.closest('tr').querySelector('input[name^="codigo"]');
-            codigoInput.value = selectedOption.getAttribute('data-codigo');
-        }
+        // function updateCodigo(selectElement) {
+        //     var selectedOption = selectElement.options[selectElement.selectedIndex];
+        //     var codigoInput = selectElement.closest('tr').querySelector('input[name^="codigo"]');
+        //     codigoInput.value = selectedOption.getAttribute('data-codigo');
+        // }
 
 
         function enviarTodosDados() {
@@ -338,7 +428,7 @@
                 var celular = row.querySelector('input[name^="celular"]')?.value || '';
                 var matricula = row.querySelector('input[name^="matricula"]')?.value || '';
                 var convenio = row.querySelector('select[name^="convenio"]')?.value || '';
-                var procedimento = row.querySelector('select[name^="procedimento_id"]')?.value || '';
+                var procedimento = row.querySelector('input[name^="procedimento_nome"]')?.value || '';
                 var codigo = row.querySelector('input[name^="codigo"]')?.value || '';
 
                 var selectedDate = document.getElementById('displaySelectedData').textContent;
