@@ -282,6 +282,8 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::get('/medicamento/{agenda_id}/{paciente_id}', [AgendaController::class, 'verificarMedicamento']);
     Route::post('/material/store', [AgendaController::class, 'storeMaterial']);
     Route::get('/material/{agenda_id}/{paciente_id}', [AgendaController::class, 'verificarMaterial']);
+    Route::post('/taxa/store', [AgendaController::class, 'storeTaxa']);
+    Route::get('/taxa/{agenda_id}/{paciente_id}', [AgendaController::class, 'verificarTaxa']);
 
     Route::middleware(['auth', 'check.question'])->group(function () {
         Route::post('/salvar-sala', [UserController::class, 'salvarSala']);

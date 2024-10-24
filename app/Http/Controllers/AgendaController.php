@@ -17,6 +17,7 @@ use App\Models\Procedimentos;
 use App\Models\Produtos;
 use App\Models\Profissional;
 use App\Models\Remedio;
+use App\Models\TaxaAgenda;
 use App\Models\User;
 use Carbon\Carbon;
 use DateTime;
@@ -161,45 +162,86 @@ class AgendaController extends Controller
     }
 
     public function storeMaterial(Request $request)
-{
-    try {
-        // Validação dos campos
-        $validated = $request->validate([
-            'paciente_id' => 'required|exists:pacientes,id',
-            'agenda_id' => 'required|exists:agendas,id',
-            'material_id.*' => 'required|exists:produtos,id',
-        ]);
+    {
+        try {
+            // Validação dos campos
+            $validated = $request->validate([
+                'paciente_id' => 'required|exists:pacientes,id',
+                'agenda_id' => 'required|exists:agendas,id',
+                'material_id.*' => 'required|exists:produtos,id',
+            ]);
 
-        // Loop para salvar ou atualizar cada material
-        foreach ($validated['material_id'] as $material_id) {
-            MatAgenda::updateOrCreate(
-                [
-                    'agenda_id' => $validated['agenda_id'],
-                    'paciente_id' => $validated['paciente_id'],
-                    'material_id' => $material_id,
-                ]
-            );
+            // Loop para salvar ou atualizar cada material
+            foreach ($validated['material_id'] as $material_id) {
+                MatAgenda::updateOrCreate(
+                    [
+                        'agenda_id' => $validated['agenda_id'],
+                        'paciente_id' => $validated['paciente_id'],
+                        'material_id' => $material_id,
+                    ]
+                );
+            }
+
+            return response()->json(['message' => 'Materiais salvos com sucesso!']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage()); // Registra o erro no log
+            return response()->json(['error' => 'Erro ao salvar os materiais.'], 500);
+        }
+    }
+
+    public function verificarMaterial($agenda_id, $paciente_id)
+    {
+        $material = MatAgenda::where('agenda_id', $agenda_id)
+            ->where('paciente_id', $paciente_id)
+            ->get();
+
+        if ($material->isEmpty()) {
+            return response()->json(['error' => 'Nenhum material encontrado'], 404);
         }
 
-        return response()->json(['message' => 'Materiais salvos com sucesso!']);
-    } catch (\Exception $e) {
-        Log::error($e->getMessage()); // Registra o erro no log
-        return response()->json(['error' => 'Erro ao salvar os materiais.'], 500);
-    }
-}
-
-public function verificarMaterial($agenda_id, $paciente_id)
-{
-    $material = MatAgenda::where('agenda_id', $agenda_id)
-        ->where('paciente_id', $paciente_id)
-        ->get();
-
-    if ($material->isEmpty()) {
-        return response()->json(['error' => 'Nenhum material encontrado'], 404);
+        return response()->json(['data' => $material]);
     }
 
-    return response()->json(['data' => $material]);
-}
+    public function storeTaxa(Request $request)
+    {
+        try {
+            // Validação dos campos
+            $validated = $request->validate([
+                'paciente_id' => 'required|exists:pacientes,id',
+                'agenda_id' => 'required|exists:agendas,id',
+                'taxa_id.*' => 'required|exists:produtos,id',
+            ]);
+
+            // Loop para salvar ou atualizar cada material
+            foreach ($validated['taxa_id'] as $taxa_id) {
+                TaxaAgenda::updateOrCreate(
+                    [
+                        'agenda_id' => $validated['agenda_id'],
+                        'paciente_id' => $validated['paciente_id'],
+                        'taxa_id' => $taxa_id,
+                    ]
+                );
+            }
+
+            return response()->json(['message' => 'Taxas salvas com sucesso!']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage()); // Registra o erro no log
+            return response()->json(['error' => 'Erro ao salvar as taxas.'], 500);
+        }
+    }
+
+    public function verificarTaxa($agenda_id, $paciente_id)
+    {
+        $taxa = TaxaAgenda::where('agenda_id', $agenda_id)
+            ->where('paciente_id', $paciente_id)
+            ->get();
+
+        if ($taxa->isEmpty()) {
+            return response()->json(['error' => 'Nenhuma taxa encontrada'], 404);
+        }
+
+        return response()->json(['data' => $taxa]);
+    }
 
 
     public function index3(Request $request)

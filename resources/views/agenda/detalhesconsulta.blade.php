@@ -189,6 +189,8 @@
                                 data-bs-toggle="tab">Medicamentos</a></li>
                         <li class="nav-item"><a class="nav-link" href="#Material" data-bs-toggle="tab">Material</a>
                         </li>
+                        <li class="nav-item"><a class="nav-link" href="#Taxa" data-bs-toggle="tab">Taxa</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="col-md-12">
@@ -243,7 +245,7 @@
                                         </div>
                                     </div>
                                     <div class="tile-footer text-center">
-                                        <button class="btn btn-danger" id="saveExameButton" type="button">
+                                        <button {{ $agendas->status == 'FINALIZADO' ? 'disabled' : '' }} class="btn btn-danger" id="saveExameButton" type="button">
                                             <i class="bi bi-check-circle-fill me-2"></i>Salvar/Atualizar
                                         </button>
                                     </div>
@@ -299,7 +301,7 @@
                                     </div>
 
                                     <div class="tile-footer text-center">
-                                        <button class="btn btn-danger" id="saveRemedioButton" type="button">
+                                        <button {{ $agendas->status == 'FINALIZADO' ? 'disabled' : '' }} class="btn btn-danger" id="saveRemedioButton" type="button">
                                             <i class="bi bi-check-circle-fill me-2"></i>Salvar/Atualizar
                                         </button>
                                     </div>
@@ -347,7 +349,55 @@
                                     </div>
 
                                     <div class="tile-footer text-center">
-                                        <button class="btn btn-danger" id="saveMaterialButton" type="button">
+                                        <button {{ $agendas->status == 'FINALIZADO' ? 'disabled' : '' }} class="btn btn-danger" id="saveMaterialButton" type="button">
+                                            <i class="bi bi-check-circle-fill me-2"></i>Salvar/Atualizar
+                                        </button>
+                                    </div>
+                                </form>
+
+                            </div>
+
+                            <div class="tab-pane fade" id="Taxa">
+                                <form id="taxaForm" method="POST" action="#">
+                                    @csrf
+                                    <input type="hidden" name="paciente_id" value="{{ $pacientes->id }}">
+                                    <input type="hidden" name="agenda_id" value="{{ $agendas->id }}">
+
+                                    <div class="timeline-post">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Taxa</th>
+                                                        <th>Ações</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="taxa-table-body">
+                                                    <tr class="taxa-row">
+                                                        <td class="col-md-10">
+                                                            <select class="form-control taxa_id"
+                                                                name="taxa_id[]" id="taxa_id">
+                                                                <option value="">Selecione o Taxa</option>
+                                                                @foreach ($produto as $item)
+                                                                    <option value="{{ $item->id }}">
+                                                                        {{ $item->nome }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td class="actions">
+                                                            <button type="button"
+                                                                class="btn btn-success plus2-row">+</button>
+                                                            <button type="button"
+                                                                class="btn btn-danger delete2-row">-</button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="tile-footer text-center">
+                                        <button {{ $agendas->status == 'FINALIZADO' ? 'disabled' : '' }} class="btn btn-danger" id="saveTaxaButton" type="button">
                                             <i class="bi bi-check-circle-fill me-2"></i>Salvar/Atualizar
                                         </button>
                                     </div>
@@ -610,6 +660,82 @@
                     },
                     success: function(response) {
                         alert('Materiais cadastrados/atualizados com sucesso');
+                    },
+                    error: function(xhr) {
+                        console.error(xhr
+                        .responseText); // Exibir erro no console para depuração
+                        alert('Erro: ' + xhr.responseText);
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function() {
+            var agenda_id = "{{ $agendas->id }}";
+            var paciente_id = "{{ $pacientes->id }}"; // Correção no typo
+
+            function addTaxaRow() {
+                var newRow = `
+        <tr class="taxa-row">
+            <td>
+                <select class="form-control taxa_id" name="taxa_id[]">
+                    <option value="">Selecione o Taxa</option>
+                    @foreach ($produto as $item)
+                        <option value="{{ $item->id }}">{{ $item->nome }}</option>
+                    @endforeach
+                </select>
+            </td>
+            <td class="actions">
+                <button type="button" class="btn btn-success plus2-row">+</button>
+                <button type="button" class="btn btn-danger delete2-row">-</button>
+            </td>
+        </tr>`;
+                $('#taxa-table-body').append(newRow);
+            }
+
+            // Adiciona uma nova linha de material ao clicar no botão '+'
+            $(document).on('click', '.plus2-row', function() {
+                addTaxaRow();
+            });
+
+            // Remove uma linha de material ao clicar no botão '-'
+            $(document).on('click', '.delete2-row', function() {
+                $(this).closest('.taxa-row').remove();
+            });
+
+            // Verificar se existem dados no banco antes de carregar o formulário
+            $.ajax({
+                url: `/taxa/${agenda_id}/${paciente_id}`,
+                type: 'GET',
+                success: function(response) {
+                    if (response.data && response.data.length > 0) {
+                        response.data.forEach(function(item) {
+                            addTaxaRow();
+                            $('#taxa-table-body').find('.taxa-row:last').find(
+                                '.taxa_id').val(item.taxa_id);
+                        });
+                    }
+                },
+                error: function(response) {
+                    console.log('Erro ao carregar dados do banco.');
+                }
+            });
+
+            // Salvar os materiais via AJAX
+            $('#saveTaxaButton').on('click', function(event) {
+                event.preventDefault(); // Previne o envio padrão do formulário
+
+                var url = '/taxa/store';
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: $('#taxaForm').serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        alert('Taxa cadastradas/atualizadas com sucesso');
                     },
                     error: function(xhr) {
                         console.error(xhr
