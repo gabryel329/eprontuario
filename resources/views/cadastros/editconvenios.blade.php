@@ -4,12 +4,12 @@
     <main class="app-content">
         <div class="app-title">
             <div>
-                <h1><i class="bi bi-ui-checks"></i>Convênios</h1>
+                <h1><i class="bi bi-ui-checks"></i>Editar Convênios</h1>
             </div>
             <ul class="app-breadcrumb breadcrumb">
                 <li class="breadcrumb-item"><i class="bi bi-house-door fs-6"></i></li>
                 <li class="breadcrumb-item">Administração</li>
-                <li class="breadcrumb-item">Cadastros</li>
+                <li class="breadcrumb-item">Editar</li>
                 <li class="breadcrumb-item"><a href="#">Convênios</a></li>
             </ul>
         </div>
@@ -43,7 +43,7 @@
                             @csrf
                             <div class="tab-content">
                                 <div class="tab-pane active" id="dados">
-                                    <h3 class="tile-title">Adicionar Convênio</h3>
+                                    <h3 class="tile-title">Editar Convênio</h3>
                                     <div class="tile-body">
                                         <div class="row">
                                             <div class="mb-3 col-md-6">

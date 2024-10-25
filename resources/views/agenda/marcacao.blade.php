@@ -326,11 +326,10 @@
 
             // Verifica se a linha deve ser desabilitada
             var isDisabled = '';
-            if (isToday) {
-                if (horaHorario < currentHour || (horaHorario === currentHour && minutoHorario < currentMinute)) {
-                    isDisabled = 'disabled';
-                }
-            }
+if (isToday && (horaHorario < currentHour || (horaHorario === currentHour && minutoHorario < currentMinute))) {
+    isDisabled = 'disabled="disabled"';
+}
+
 
             return `
         <tr>
@@ -348,22 +347,26 @@
 
 
 
-        function renderProcedimentoInput(horario, isDisabled) {
-            return `
-                 <input 
-        type="text" 
-        class="form-control" 
-        name="procedimento_nome[${horario.hora}]" 
-        id="procedimento_nome${horario.hora}" 
-        value="${horario.procedimento_id ?? ''}"
-        placeholder="Selecione o Procedimento" 
-        title="${horario.procedimento_id ?? ''}"
-        readonly 
-        onclick="abrirModalProcedimento('${horario.hora}')">
-    <input type="hidden" name="procedimento_id[${horario.hora}]" id="procedimento_id${horario.hora}">
-</td>
-                    `;
-        }
+        function renderProcedimentoInput(horario, procedimentos, isDisabled) {
+    return `
+        <input 
+            type="text" 
+            class="form-control" 
+            name="procedimento_nome[${horario.hora}]" 
+            id="procedimento_nome${horario.hora}" 
+            value="${horario.procedimento_id ?? ''}"
+            placeholder="Selecione o Procedimento" 
+            title="${horario.procedimento_id ?? ''}"
+            readonly 
+            onclick="abrirModalProcedimento('${horario.hora}')"
+            ${isDisabled}>
+        <input 
+            type="hidden" 
+            name="procedimento_id[${horario.hora}]" 
+            id="procedimento_id${horario.hora}">
+    `;
+}
+
 
         function abrirModalProcedimento(horario) {
             console.log('Horário selecionado:', horario); // Verificar o horário selecionado

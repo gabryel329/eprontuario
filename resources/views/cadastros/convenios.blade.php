@@ -31,8 +31,8 @@
                 <div class="col-md-12">
                     <ul class="nav nav-tabs user-tabs">
                         <li class="nav-item"><a class="nav-link active" href="#dados" data-bs-toggle="tab">Dados</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#impostos" data-bs-toggle="tab">Imposto</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" href="#impostos" data-bs-toggle="tab">Imposto</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tabelas" data-bs-toggle="tab">Tabelas</a></li>
                     </ul>
                 </div>
                 <div class="tile">
@@ -106,7 +106,7 @@
                                 </div>
                                 </div>
                                 <div class="tab-pane" id="impostos">
-                                    <h3 class="tile-title">Convênio</h3>
+                                    <h3 class="tile-title">Imposto</h3>
                                     <div class="tile-body">
                                         <div class="row">
                                             <div class="mb-3 col-md-3">
@@ -165,6 +165,37 @@
                                                             type="text">
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tabelas">
+                                    <h3 class="tile-title">Tabelas</h3>
+                                    <div class="tile-body">
+                                        <div class="row">
+                                            <div class="mb-3 col-md-4">
+                                                <label class="form-label">Procedimentos</label>
+                                                <input class="form-control" id="impmedico" name="impmedico"
+                                                    placeholder="%" type="text">
+                                            </div>
+                                            <div class="mb-3 col-md-2">
+                                                <label class="form-label">Medicamentos</label>
+                                                <input class="form-control" id="inss" name="inss" type="text">
+                                            </div>
+                                            <div class="mb-3 col-md-2">
+                                                <label class="form-label">Material</label>
+                                                <input class="form-control" id="iss" name="iss"
+                                                    type="text">
+                                            </div>
+                                            <div class="mb-3 col-md-2">
+                                                <label class="form-label">Taxa</label>
+                                                <input class="form-control" id="ir" name="ir"
+                                                    type="text">
+                                            </div>
+                                            <div class="mb-3 col-md-2">
+                                                <label class="form-label">Cotação</label>
+                                                <input class="form-control" id="ir" name="ir"
+                                                    type="text">
                                             </div>
                                         </div>
                                     </div>
