@@ -11,7 +11,7 @@ class Convenio extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'convenios';
-    protected $fillable = ['nome', 'cnpj', 'ans', 'cep', 'rua', 'bairro', 'cidade', 'uf', 'numero', 'complemento', 'telefone', 'celular', 'operadora', 'multa', 'jutos', 'dias_desc', 'desconto', 'agfaturamento', 'pagamento', 'impmedico', 'inss', 'iss', 'ir'];
+    protected $fillable = ['nome', 'cnpj', 'ans', 'cep', 'rua', 'bairro', 'cidade', 'uf', 'numero', 'complemento', 'telefone', 'celular', 'operadora', 'multa', 'jutos', 'dias_desc', 'desconto', 'agfaturamento', 'pagamento', 'impmedico', 'inss', 'iss', 'ir','pis','cofins','csl'];
     protected $dates = ['deleted_at'];
 
     public function procedimentos()

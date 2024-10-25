@@ -21,6 +21,7 @@ use App\Http\Controllers\TabConvenioController;
 use App\Http\Controllers\TabelaController;
 use App\Http\Controllers\TipoProfController;
 use App\Http\Controllers\UserController;
+use App\Models\GuiaSp;
 use App\Models\Produtos;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -114,10 +115,13 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::post('/filtrar-agenda', [AgendaController::class, 'filtrarAgenda'])->name('agenda.filtrar');
         Route::get('/agenda/{id}/guia-tiss', [GuiaTissController::class, 'gerarGuiaTiss'])->name('guia.tiss');
         Route::get('/agenda/{id}/guia-sadt', [GuiaSpController::class, 'gerarGuiaSadt'])->name('guia.sadt');
+        
+        Route::get('/guia-sadt/{agendaId}', [GuiaSpController::class, 'gerarGuiaSadt'])->name('guia.sadt.gerar');
+        Route::post('/salvar-guia-sadt', [GuiaSpController::class, 'store'])->name('guia.sadt.salvar');
+        Route::get('/visualizar-guia-sadt/{id}', [GuiaSpController::class, 'visualizarSp'])->name('guia.sadt.visualizar');
 
         Route::get('/gerar-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarGuiaConsultaMODAL'])->name('gerar.guia.consulta');
         Route::post('/salvar-guia-consulta', [GuiaConsultaController::class, 'salvarGuiaConsulta'])->name('salvar.guiaConsulta');
-
         Route::get('/agenda/{id}/guia-consulta', [GuiaConsultaController::class, 'gerarGuiaConsulta'])->name('guia.consulta2');
 
         Route::get('/gerar-xml-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarXmlGuiaConsulta']);
@@ -260,7 +264,7 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::get('/painel/ultimo-registro-atualizado', [PainelController::class, 'getUltimoRegistroAtualizado']);
     Route::get('/main', [PainelController::class, 'showMain']);
 
-    
+
 
     #RelatorioFinanceiro
     Route::get('/relatorioFinanceiro', [HonorarioController::class, 'relatorioFinanceiroIndex'])->name('relatorioFinanceiro.index');

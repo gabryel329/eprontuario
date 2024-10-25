@@ -167,10 +167,10 @@
                                 <tbody>
                                     @foreach ($agendas as $item)
                                         <tr>
-                                            <td @if (empty($item->paciente_id)) 
-                                                    style="pointer-events: none; opacity: 0.5;" 
-                                                @else 
-                                                    onclick="abrirNovaJanela({{ $item->id }});" 
+                                            <td @if (empty($item->paciente_id))
+                                                    style="pointer-events: none; opacity: 0.5;"
+                                                @else
+                                                    onclick="abrirNovaJanela({{ $item->id }});"
                                                 @endif
                                                     title="Detalhes" class="hoverable-td" style="color: red;">
                                                 {{ $item->id }}
@@ -594,23 +594,172 @@
             </div>
         </div>
 
-        <!-- Modal para Guia SADT -->
-        <div class="modal fade" id="modalSADT" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Guia SADT</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+<div class="modal fade" id="modalSADT" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Guia SADT</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="guiaForm2">
+                @csrf
+                <input class="form-control" id="convenio_id" name="convenio_id" type="hidden">
+                <input class="form-control" id="paciente_id" value="{{ $item->paciente_id }}" name="paciente_id" type="hidden">
+                <input class="form-control" id="profissional_id" value="{{ $item->profissional_id }}" name="profissional_id" type="hidden">
+                <input class="form-control" id="agenda_id" name="agenda_id" value="{{ $item->id }}" type="hidden">
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="registro_ans" class="form-label"><strong>1- Registro ANS</strong></label>
+                        <input class="form-control" id="registro_ans" name="registro_ans" type="text" value="{{ old('registro_ans') }}">
                     </div>
-                    <div class="modal-body">
-                        <!-- Conteúdo do modal de Guia SADT -->
+                    <div class="col-md-4">
+                        <label for="numero_guia_prestador" class="form-label">3- Nº da Guia do Prestador</label>
+                        <input class="form-control" id="numero_guia_prestador" name="numero_guia_prestador" type="text" value="{{ old('numero_guia_prestador') }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="data_autorizacao" class="form-label">4- Data da Autorização</label>
+                        <input class="form-control" id="data_autorizacao" name="data_autorizacao" type="date" value="{{ old('data_autorizacao') }}">
                     </div>
                 </div>
-            </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="senha" class="form-label">5- Senha</label>
+                        <input class="form-control" id="senha" name="senha" type="text" value="{{ old('senha') }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="validade_senha" class="form-label">6- Data de Validade da Senha</label>
+                        <input class="form-control" id="validade_senha" name="validade_senha" type="date" value="{{ old('validade_senha') }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="numero_guia_op" class="form-label">7- Nº da Guia Atribuído pela Operadora</label>
+                        <input class="form-control" id="numero_guia_op" name="numero_guia_op" type="text" value="{{ old('numero_guia_op') }}">
+                    </div>
+                </div>
+
+                <hr>
+                <h5>Dados do Beneficiário</h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="numero_carteira" class="form-label">8- Nº da Carteira</label>
+                        <input class="form-control" id="numero_carteira" name="numero_carteira" type="text" value="{{ old('numero_carteira') }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="validade_carteira" class="form-label">9- Validade da Carteira</label>
+                        <input class="form-control" id="validade_carteira" name="validade_carteira" type="date" value="{{ old('validade_carteira') }}">
+                    </div>
+                    <div class="col-md-8">
+                        <label for="nome_beneficiario" class="form-label">10- Nome do Beneficiário</label>
+                        <input class="form-control" id="nome_beneficiario" name="nome_beneficiario" type="text" value="{{ old('nome_beneficiario') }}">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="atendimento_rn" class="form-label">12- Atendimento RN</label>
+                        <select class="form-select" id="atendimento_rn" name="atendimento_rn">
+                            <option value="0" {{ old('atendimento_rn') == '0' ? 'selected' : '' }}>Não</option>
+                            <option value="1" {{ old('atendimento_rn') == '1' ? 'selected' : '' }}>Sim</option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr>
+                <h5>Dados do Profissional</h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="nome_profissional_solicitante" class="form-label">15- Nome do Profissional Solicitante</label>
+                        <input class="form-control" id="nome_profissional_solicitante" name="nome_profissional_solicitante" type="text" value="{{ old('nome_profissional_solicitante') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="conselho_profissional" class="form-label">16- Conselho</label>
+                        <input class="form-control" id="conselho_profissional" name="conselho_profissional" type="text" value="{{ old('conselho_profissional') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="numero_conselho" class="form-label">17- Nº Conselho</label>
+                        <input class="form-control" id="numero_conselho" name="numero_conselho" type="text" value="{{ old('numero_conselho') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="uf_conselho" class="form-label">18- UF</label>
+                        <input class="form-control" id="uf_conselho" name="uf_conselho" type="text" value="{{ old('uf_conselho') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="codigo_cbo" class="form-label">19- Código CBO</label>
+                        <input class="form-control" id="codigo_cbo" name="codigo_cbo" type="text" value="{{ old('codigo_cbo') }}">
+                    </div>
+                </div>
+                <hr>
+                <h5>Procedimentos e Observações</h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="carater_atendimento" class="form-label">20 - Caráter de Atendimento</label>
+                        <input class="form-control" id="carater_atendimento" name="carater_atendimento" type="text" value="{{ old('carater_atendimento') }}">
+                    </div>
+                    <div class="col-md-8">
+                        <label for="data_solicitacao" class="form-label">22 - Data da Solicitação:</label>
+                        <input class="form-control" id="data_solicitacao" name="data_solicitacao" type="text" value="{{ old('data_solicitacao') }}">
+                    </div>
+                </div>
+                <h5>Dados do Executante</h5>
+                <div class="row">
+                    <div class="col-md-8">
+                        <label for="nome_contratado_executante" class="form-label">23 - Nome Contratado:</label>
+                        <input class="form-control" id="nome_contratado_executante" name="nome_contratado_executante" type="text" value="{{ old('nome_contratado_executante') }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="codigo_operadora_executante" class="form-label">24 - Código Operadora:</label>
+                        <input class="form-control" id="codigo_operadora_executante" name="codigo_operadora_executante" type="text" value="{{ old('codigo_operadora_executante') }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="codigo_cnes" class="form-label">25 - Código CNES:</label>
+                        <input class="form-control" id="codigo_cnes" name="codigo_cnes" type="text" value="{{ old('codigo_cnes') }}">
+                    </div>
+                </div>
+                <h5>Dados do Atendimento</h5>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="tipo_atendimento" class="form-label">26 - Tipo de Atendimento:</label>
+                        <input class="form-control" id="tipo_atendimento" name="tipo_atendimento" type="text" value="{{ old('tipo_atendimento') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="indicacao_acidente" class="form-label">27 - Indicação de Acidente:</label>
+                        <input class="form-control" id="indicacao_acidente" name="indicacao_acidente" type="text" value="{{ old('indicacao_acidente') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="tipo_consulta" class="form-label">28 - Tipo de Consulta:</label>
+                        <input class="form-control" id="tipo_consulta" name="tipo_consulta" type="text" value="{{ old('tipo_consulta') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="motivo_encerramento" class="form-label">29 - Motivo de Encerramento:</label>
+                        <input class="form-control" id="motivo_encerramento" name="motivo_encerramento" type="text" value="{{ old('motivo_encerramento') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="regime_atendimento" class="form-label">30 - Regime Atendimento:</label>
+                        <input class="form-control" id="regime_atendimento" name="regime_atendimento" type="text" value="{{ old('regime_atendimento') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="saude_ocupacional" class="form-label">31 - Saúde Ocupacional:</label>
+                        <input class="form-control" id="saude_ocupacional" name="saude_ocupacional" type="text" value="{{ old('saude_ocupacional') }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="observacao" class="form-label">58- Observação / Justificativa</label>
+                        <textarea class="form-control" id="observacao" name="observacao">{{ old('observacao') }}</textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3">Salvar</button>
+            </form>
         </div>
+    </div>
+</div>
+</div>
+
     @endforeach
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -785,6 +934,65 @@
                     }
                 });
             });
+            // Envio do formulário
+            $(document).ready(function () {
+            // Ao abrir o modal, buscar os dados via AJAX
+            $('.guia-select').on('change', function () {
+                var selectedValue = $(this).val();
+                var agendaId = $(this).data('id');
+
+                if (selectedValue === 'sadt') {
+                    $.ajax({
+                        url: `/visualizar-guia-sadt/${agendaId}`,
+                        type: 'GET',
+                        success: function (response) {
+                            // Preencher o modal com os dados recebidos
+                            $('#modalSADT #registro_ans').val(response.registro_ans || '');
+                            $('#modalSADT #numero_guia_prestador').val(response.numero_guia_prestador || '');
+                            $('#modalSADT #data_autorizacao').val(response.data_autorizacao || '');
+                            $('#modalSADT #senha').val(response.senha || '');
+                            $('#modalSADT #validade_senha').val(response.validade_senha || '');
+                            $('#modalSADT #numero_guia_op').val(response.numero_guia_op || '');
+                            $('#modalSADT #numero_carteira').val(response.numero_carteira || '');
+                            $('#modalSADT #validade_carteira').val(response.validade_carteira || '');
+                            $('#modalSADT #nome_beneficiario').val(response.nome_beneficiario || '');
+                            $('#modalSADT #observacao').val(response.observacao || '');
+
+                            $('#modalSADT').modal('show');  // Abrir o modal
+                        },
+                        error: function (xhr) {
+                            alert('Erro ao carregar os dados da guia.');
+                            console.error(xhr);
+                        }
+                    });
+                }
+            });
+
+            // Enviar o formulário via AJAX para salvar a guia SADT
+            $('#guiaForm2').on('submit', function (event) {
+                event.preventDefault();  // Prevenir o comportamento padrão do formulário
+
+                var formData = $(this).serialize();  // Serializar os dados do formulário
+
+                $.ajax({
+                    url: '{{ route('guia.sadt.salvar') }}',
+                    type: 'POST',
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')  // Adicionar o token CSRF
+                    },
+                    success: function (response) {
+                        alert('Guia SADT salva com sucesso!');
+                        $('#modalSADT').modal('hide');  // Fechar o modal após salvar
+                    },
+                    error: function (xhr) {
+                        alert('Erro ao salvar a guia.');
+                        console.error(xhr);
+                    }
+                });
+            });
+        });
+
         });
 
         $(document).ready(function() {

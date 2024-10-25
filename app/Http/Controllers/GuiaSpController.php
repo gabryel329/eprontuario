@@ -169,7 +169,7 @@ class GuiaSpController extends Controller
 
     public function impressaoGuia($id)
     {
-        
+
         $guia = GuiaSp::find($id);
         $empresa = Empresas::first();
 
@@ -188,7 +188,7 @@ class GuiaSpController extends Controller
         ->first();
 
         $convenio = Convenio::find($agenda->convenio_id);
-        
+
         $empresa = Empresas::first();
 
         return view('formulario.guiasp', [
@@ -205,7 +205,7 @@ class GuiaSpController extends Controller
     {
         $guia = GuiaSp::find($id);
         if ($guia) {
-            return response()->json($guia);
+            return response()->json($guia);  // Enviar os dados como JSON para preenchimento do modal
         } else {
             return response()->json(['error' => 'Guia não encontrada.'], 404);
         }

@@ -44,7 +44,7 @@ class ConvenioController extends Controller
         'uf', 'numero', 'complemento', 'telefone', 'celular',
         'operadora', 'multa', 'jutos', 'dias_desc', 'desconto',
         'agfaturamento', 'pagamento', 'impmedico', 'inss',
-        'iss', 'ir'
+        'iss','ir','pis','cofins','csl',
     ]);
 
     $existeConvenio = Convenio::where('ans', $data['ans'])->first();
@@ -52,7 +52,7 @@ class ConvenioController extends Controller
     if ($existeConvenio) {
         return redirect()->route('convenio.index')->with('error', 'Convênio já existe!');
     }
-
+    dd($data);
     Convenio::create($data);
     return redirect()->route('convenio.index')->with('success', 'Convênio cadastrado com sucesso!');
 }
@@ -93,7 +93,7 @@ class ConvenioController extends Controller
         'uf', 'numero', 'complemento', 'telefone', 'celular',
         'operadora', 'multa', 'jutos', 'dias_desc', 'desconto',
         'agfaturamento', 'pagamento', 'impmedico', 'inss',
-        'iss', 'ir'
+        'iss', 'ir','pis','cofins','csl'
     ]);
 
     // Atualiza o convênio com os novos dados
