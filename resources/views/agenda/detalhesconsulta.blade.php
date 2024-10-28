@@ -16,7 +16,7 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/LOGO_01_VERDE.png') }}">
-
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         /* Estilos para o cabeçalho */
         .app-header {
@@ -64,6 +64,41 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+/* Estilo do Select2 para se parecer com o campo da imagem */
+.select2-container--default .select2-selection--single {
+    height: 38px; /* Ajusta a altura conforme necessário */
+    display: flex;
+    align-items: center;
+    padding: 0 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ced4da; /* Cor da borda */
+    border-radius: 4px; /* Borda arredondada */
+    background-color: #fff; /* Fundo branco */
+    box-shadow: none; /* Remove sombras */
+    font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Remove a seta */
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    display: none;
+}
+
+/* Centraliza o texto no meio verticalmente e aplica a fonte */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: left; /* Alinhado à esquerda */
+    padding: 0;
+    color: #495057; /* Cor do texto */
+    text-align: left;
+    font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Remove o botão de limpar (X) */
+.select2-container--default .select2-selection--single .select2-selection__clear {
+    display: none;
+}
     </style>
 </head>
 
@@ -213,17 +248,15 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody id="exame-table-body">
+                                                    {{-- Gera Exame --}}
+                                                </tbody>
+                                                <tbody id="exame-table-body">
                                                     <tr class="exame-row">
                                                         <td>
-                                                            <select class="select2 form-control procedimento_id"
-                                                                name="procedimento_id[]" id="procedimento_id"
-                                                                style="width: 100%" required
-                                                                onchange="updateCodigo(this)">
-                                                                <option value="" data-codigo="">Selecione o
-                                                                    Procedimento</option>
+                                                            <select name="procedimento_id[]" id="procedimento_id" required>
+                                                                <option value="" data-codigo="">Selecione o Procedimento</option>
                                                                 @foreach ($procedimento as $item)
-                                                                    <option value="{{ $item->id }}"
-                                                                        data-codigo="{{ $item->codigo }}">
+                                                                    <option value="{{ $item->id }}" data-codigo="{{ $item->codigo }}">
                                                                         {{ $item->procedimento }}
                                                                     </option>
                                                                 @endforeach
@@ -270,6 +303,9 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="prescricao-table-body">
+                                                {{-- Aqui gera o do Banco --}}
+                                            </tbody>
+                                            <tbody id="prescricao-table-body_new">
                                                 <tr class="prescricao-row">
                                                     <td>
                                                         <select class="form-control medicamento_id"
@@ -325,6 +361,9 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody id="material-table-body">
+                                                    {{-- Gera Material --}}
+                                                </tbody>
+                                                <tbody id="material-table-body">
                                                     <tr class="material-row">
                                                         <td class="col-md-10">
                                                             <select class="form-control material_id"
@@ -373,6 +412,9 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody id="taxa-table-body">
+                                                    {{-- Gera Taxa --}}
+                                                </tbody>
+                                                <tbody id="taxa-table-body">
                                                     <tr class="taxa-row">
                                                         <td class="col-md-10">
                                                             <select class="form-control taxa_id"
@@ -412,144 +454,147 @@
     </main>
     <script src="{{ asset('js/jquery-3.7.0.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-
     <script src="{{ asset('js/main.js') }}"></script>
+    <!-- JS do Select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
-        function updateCodigo(selectElement) {
-            // Encontra a linha mais próxima que contém o select
-            const row = selectElement.closest('.exame-row');
-
-            // Encontra o campo de input para o código dentro dessa linha
-            const codigoInput = row.querySelector('input[name="codigo[]"]');
-
-            // Obtém a opção selecionada
-            const selectedOption = selectElement.options[selectElement.selectedIndex];
-
-            // Define o valor do input com o código do procedimento selecionado
-            codigoInput.value = selectedOption.getAttribute('data-codigo');
-        }
-
-        $(document).ready(function() {
-            var agenda_id = "{{ $agendas->id }}";
-            var paciente_id = "{{ $pacientes->id }}";
-
-            function addPrescricaoRow() {
-                var newRow = `
-                <tr class="prescricao-row">
-                    <td>
-                        <select class="form-control medicamento_id" name="medicamento_id[]">
-                            <option value="">Selecione o remédio</option>
-                            @foreach ($medicamento as $item)
-                                <option value="{{ $item->id }}">{{ $item->nome }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <input type="number" class="form-control dose" name="dose[]" placeholder="Dose">
-                    </td>
-                    <td>
-                        <input type="number" class="form-control hora" name="hora[]" placeholder="Horas">
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-success add-row">+</button>
-                        <button type="button" class="btn btn-danger remove-row">-</button>
-                    </td>
-                </tr>`;
-                $('#prescricao-table-body').append(newRow);
-            }
-
-            $(document).on('click', '.add-row', function() {
-                addPrescricaoRow();
-            });
-
-            $(document).on('click', '.remove-row', function() {
-                $(this).closest('.prescricao-row').remove();
-            });
-
-            // Verificar se existem dados no banco antes de carregar o formulário
-            $.ajax({
-                url: `/medicamento/${agenda_id}/${paciente_id}`,
-                type: 'GET',
-                success: function(response) {
-                    if (response.data && response.data.length > 0) {
-                        response.data.forEach(function(remedio) {
-                            addPrescricaoRow();
-                            $('#prescricao-table-body').find('.prescricao-row:last').find(
-                                '.medicamento_id').val(remedio.medicamento_id);
-                            $('#prescricao-table-body').find('.prescricao-row:last').find(
-                                '.dose').val(remedio.dose);
-                            $('#prescricao-table-body').find('.prescricao-row:last').find(
-                                '.hora').val(remedio.hora);
-                        });
-                    }
-                },
-                error: function() {
-                    console.log('Erro ao carregar dados do banco.');
-                }
-            });
-
-            $('#saveRemedioButton').on('click', function(event) {
-                event.preventDefault(); // Previne o envio padrão do formulário
-
-                var url = '/medicamento/store';
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: $('#remedioForm').serialize(),
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function() {
-                        alert('Prescrição de remédios cadastrada/atualizada com sucesso');
-                    },
-                    error: function() {
-                        alert('Ocorreu um erro. Tente novamente.');
-                    }
-                });
-            });
+    function applySelect2(element) {
+        element.select2({
+            placeholder: "Selecione o Procedimento",
+            allowClear: false,
+            closeOnSelect: true,
+            width: '100%'
+        }).on('select2:select', function(e) {
+            updateCodigo(this); // Chama updateCodigo ao selecionar uma opção
         });
+    }
+
+    function updateCodigo(selectElement) {
+        const row = selectElement.closest('.exame-row'); // Encontra a linha mais próxima
+        const codigoInput = row.querySelector('input[name="codigo[]"]'); // Campo de código
+        const selectedOption = selectElement.options[selectElement.selectedIndex]; // Opção selecionada
+        codigoInput.value = selectedOption.getAttribute('data-codigo'); // Define o código
+    }
+
+    $(document).ready(function() {
+    var agenda_id = "{{ $agendas->id }}";
+    var paciente_id = "{{ $pacientes->id }}";
+
+    function addPrescricaoRow() {
+        var newRow = `
+            <tr class="prescricao-row">
+                <td>
+                    <select class="form-control medicamento_id" name="medicamento_id[]">
+                        <option value="">Selecione o remédio</option>
+                        @foreach ($medicamento as $item)
+                            <option value="{{ $item->id }}">{{ $item->nome }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td><input type="number" class="form-control dose" name="dose[]" placeholder="Dose"></td>
+                <td><input type="number" class="form-control hora" name="hora[]" placeholder="Horas"></td>
+                <td>
+                    <button type="button" class="btn btn-success add-row">+</button>
+                    <button type="button" class="btn btn-danger remove-row">-</button>
+                </td>
+            </tr>`;
+        $('#prescricao-table-body').append(newRow);
+        applySelect2($('#prescricao-table-body select:last')); // Aplica Select2 ao novo select
+    }
+
+    // Função para carregar medicamentos registrados do banco
+    $.ajax({
+        url: `/medicamento/${agenda_id}/${paciente_id}`,
+        type: 'GET',
+        success: function(response) {
+            if (response.data && response.data.length > 0) {
+                response.data.forEach(function(remedio) {
+                    addPrescricaoRow();
+                    const lastRow = $('#prescricao-table-body').find('.prescricao-row:last');
+                    lastRow.find('.medicamento_id').val(remedio.medicamento_id).trigger('change'); // Dispara 'change'
+                    lastRow.find('.dose').val(remedio.dose);
+                    lastRow.find('.hora').val(remedio.hora);
+                });
+            }
+        },
+        error: function() {
+            console.log('Erro ao carregar dados do banco.');
+        }
+    });
+
+    // Adicionar e remover linhas dinamicamente
+    $(document).on('click', '.add-row', function() {
+        addPrescricaoRow();
+    });
+
+    $(document).on('click', '.remove-row', function() {
+        $(this).closest('.prescricao-row').remove();
+    });
+
+    // Salvar medicamentos via AJAX
+    $('#saveRemedioButton').on('click', function(event) {
+        event.preventDefault();
+
+        $.ajax({
+            url: '/medicamento/store',
+            type: 'POST',
+            data: $('#remedioForm').serialize(),
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function() {
+                alert('Prescrição de remédios cadastrada/atualizada com sucesso');
+            },
+            error: function() {
+                alert('Ocorreu um erro. Tente novamente.');
+            }
+        });
+    });
+
+    // Aplicar Select2 aos selects iniciais
+    applySelect2($('select'));
+});
 
 
         $(document).ready(function() {
-            var agenda_id = "{{ $agendas->id }}";
-            var paciente_id = "{{ $pacientes->id }}"; // Corrigido o typo "paceinte_id"
+            applySelect2($('select')); // Aplica Select2 aos selects existentes
 
             function addExameRow() {
                 var newRow = `
-        <tr class="exame-row">
-            <td>
-            <select class="select2 form-control procedimento_id" name="procedimento_id[]" 
-                    id="procedimento_id" style="width: 100%" required onchange="updateCodigo(this)">
-                <option value="" data-codigo="">Selecione o Procedimento</option>
-                @foreach ($procedimento as $item)
-                    <option value="{{ $item->id }}" data-codigo="{{ $item->codigo }}">
-                        {{ $item->procedimento }}
-                    </option>
-                @endforeach
-            </select>
-        </td>
-        <td>
-            <input type="text" class="form-control codigo" name="codigo[]" placeholder="Código" readonly>
-        </td>
-            <td class="actions">
-                <button type="button" class="btn btn-success plus-row">+</button>
-                <button type="button" class="btn btn-danger delete-row">-</button>
-            </td>
-        </tr>`;
+                    <tr class="exame-row">
+                        <td>
+                            <select class="select2 form-control procedimento_id" name="procedimento_id[]" required>
+                                <option value="" data-codigo="">Selecione o Procedimento</option>
+                                @foreach ($procedimento as $item)
+                                    <option value="{{ $item->id }}" data-codigo="{{ $item->codigo }}">
+                                        {{ $item->procedimento }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control codigo" name="codigo[]" placeholder="Código" readonly>
+                        </td>
+                        <td class="actions">
+                            <button type="button" class="btn btn-success plus-row">+</button>
+                            <button type="button" class="btn btn-danger delete-row">-</button>
+                        </td>
+                    </tr>`;
                 $('#exame-table-body').append(newRow);
+                applySelect2($('#exame-table-body select:last')); // Aplica Select2 ao novo select
             }
 
-            // Adiciona uma nova linha de procedimento ao clicar no botão '+'
             $(document).on('click', '.plus-row', function() {
                 addExameRow();
             });
 
-            // Remove uma linha de procedimento ao clicar no botão '-'
             $(document).on('click', '.delete-row', function() {
                 $(this).closest('.exame-row').remove();
             });
 
-            // Verificar se existem dados no banco antes de carregar o formulário
+            var agenda_id = "{{ $agendas->id }}";
+            var paciente_id = "{{ $pacientes->id }}";
+
             $.ajax({
                 url: `/procedimentos/${agenda_id}/${paciente_id}`,
                 type: 'GET',
@@ -557,10 +602,9 @@
                     if (response.data && response.data.length > 0) {
                         response.data.forEach(function(item) {
                             addExameRow();
-                            $('#exame-table-body').find('.exame-row:last').find(
-                                '.procedimento_id').val(item.procedimento_id);
-                            $('#exame-table-body').find('.exame-row:last').find('.codigo').val(
-                                item.codigo);
+                            const lastRow = $('#exame-table-body').find('.exame-row:last');
+                            lastRow.find('.procedimento_id').val(item.procedimento_id).trigger('change'); // Dispara 'change'
+                            lastRow.find('.codigo').val(item.codigo);
                         });
                     }
                 },
@@ -569,15 +613,13 @@
                 }
             });
 
-            // Salvar os procedimentos via AJAX
             $('#saveExameButton').on('click', function(event) {
-                event.preventDefault(); // Previne o envio padrão do formulário
-
-                var url = '/procedimentos/store'; // A URL correta para a rota POST
+                event.preventDefault();
+                var url = '/procedimentos/store';
 
                 $.ajax({
                     url: url,
-                    type: 'POST', // Certifique-se de que está utilizando POST
+                    type: 'POST',
                     data: $('#exameForm').serialize(),
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -590,162 +632,145 @@
                     }
                 });
             });
-
         });
 
 
         $(document).ready(function() {
-            var agenda_id = "{{ $agendas->id }}";
-            var paciente_id = "{{ $pacientes->id }}"; // Correção no typo
+        var agenda_id = "{{ $agendas->id }}";
+        var paciente_id = "{{ $pacientes->id }}";
 
-            function addMaterialRow() {
-                var newRow = `
-        <tr class="material-row">
-            <td>
-                <select class="form-control material_id" name="material_id[]">
-                    <option value="">Selecione o Material</option>
-                    @foreach ($produto as $item)
-                        <option value="{{ $item->id }}">{{ $item->nome }}</option>
-                    @endforeach
-                </select>
-            </td>
-            <td class="actions">
-                <button type="button" class="btn btn-success plus1-row">+</button>
-                <button type="button" class="btn btn-danger delete1-row">-</button>
-            </td>
-        </tr>`;
-                $('#material-table-body').append(newRow);
-            }
+        function addMaterialRow() {
+            var newRow = `
+            <tr class="material-row">
+                <td>
+                    <select class="form-control material_id" name="material_id[]">
+                        <option value="">Selecione o Material</option>
+                        @foreach ($produto as $item)
+                            <option value="{{ $item->id }}">{{ $item->nome }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td class="actions">
+                    <button type="button" class="btn btn-success plus1-row">+</button>
+                    <button type="button" class="btn btn-danger delete1-row">-</button>
+                </td>
+            </tr>`;
+            $('#material-table-body').append(newRow);
+            applySelect2($('#material-table-body select:last'));
+        }
 
-            // Adiciona uma nova linha de material ao clicar no botão '+'
-            $(document).on('click', '.plus1-row', function() {
-                addMaterialRow();
-            });
+        function addTaxaRow() {
+            var newRow = `
+            <tr class="taxa-row">
+                <td>
+                    <select class="form-control taxa_id" name="taxa_id[]">
+                        <option value="">Selecione a Taxa</option>
+                        @foreach ($produto as $item)
+                            <option value="{{ $item->id }}">{{ $item->nome }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td class="actions">
+                    <button type="button" class="btn btn-success plus2-row">+</button>
+                    <button type="button" class="btn btn-danger delete2-row">-</button>
+                </td>
+            </tr>`;
+            $('#taxa-table-body').append(newRow);
+            applySelect2($('#taxa-table-body select:last'));
+        }
 
-            // Remove uma linha de material ao clicar no botão '-'
-            $(document).on('click', '.delete1-row', function() {
-                $(this).closest('.material-row').remove();
-            });
+        // Eventos para adicionar e remover linhas
+        $(document).on('click', '.plus1-row', function() {
+            addMaterialRow();
+        });
 
-            // Verificar se existem dados no banco antes de carregar o formulário
-            $.ajax({
-                url: `/material/${agenda_id}/${paciente_id}`,
-                type: 'GET',
-                success: function(response) {
-                    if (response.data && response.data.length > 0) {
-                        response.data.forEach(function(item) {
-                            addMaterialRow();
-                            $('#material-table-body').find('.material-row:last').find(
-                                '.material_id').val(item.material_id);
-                        });
-                    }
-                },
-                error: function(response) {
-                    console.log('Erro ao carregar dados do banco.');
+        $(document).on('click', '.delete1-row', function() {
+            $(this).closest('.material-row').remove();
+        });
+
+        $(document).on('click', '.plus2-row', function() {
+            addTaxaRow();
+        });
+
+        $(document).on('click', '.delete2-row', function() {
+            $(this).closest('.taxa-row').remove();
+        });
+
+        // Verificação e carregamento de dados do banco
+        $.ajax({
+            url: `/material/${agenda_id}/${paciente_id}`,
+            type: 'GET',
+            success: function(response) {
+                if (response.data && response.data.length > 0) {
+                    response.data.forEach(function(item) {
+                        addMaterialRow();
+                        $('#material-table-body').find('.material-row:last').find('.material_id').val(item.material_id).trigger('change');
+                    });
                 }
-            });
+            },
+            error: function() {
+                console.log('Erro ao carregar materiais.');
+            }
+        });
 
-            // Salvar os materiais via AJAX
-            $('#saveMaterialButton').on('click', function(event) {
-                event.preventDefault(); // Previne o envio padrão do formulário
+        $.ajax({
+            url: `/taxa/${agenda_id}/${paciente_id}`,
+            type: 'GET',
+            success: function(response) {
+                if (response.data && response.data.length > 0) {
+                    response.data.forEach(function(item) {
+                        addTaxaRow();
+                        $('#taxa-table-body').find('.taxa-row:last').find('.taxa_id').val(item.taxa_id).trigger('change');
+                    });
+                }
+            },
+            error: function() {
+                console.log('Erro ao carregar taxas.');
+            }
+        });
 
-                var url = '/material/store';
-
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: $('#materialForm').serialize(),
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        alert('Materiais cadastrados/atualizados com sucesso');
-                    },
-                    error: function(xhr) {
-                        console.error(xhr
-                        .responseText); // Exibir erro no console para depuração
-                        alert('Erro: ' + xhr.responseText);
-                    }
-                });
+        // Salvar materiais e taxas via AJAX
+        $('#saveMaterialButton').on('click', function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: '/material/store',
+                type: 'POST',
+                data: $('#materialForm').serialize(),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function() {
+                    alert('Materiais cadastrados/atualizados com sucesso');
+                },
+                error: function(xhr) {
+                    console.error(xhr.responseText);
+                    alert('Erro: ' + xhr.responseText);
+                }
             });
         });
 
-        $(document).ready(function() {
-            var agenda_id = "{{ $agendas->id }}";
-            var paciente_id = "{{ $pacientes->id }}"; // Correção no typo
-
-            function addTaxaRow() {
-                var newRow = `
-        <tr class="taxa-row">
-            <td>
-                <select class="form-control taxa_id" name="taxa_id[]">
-                    <option value="">Selecione o Taxa</option>
-                    @foreach ($produto as $item)
-                        <option value="{{ $item->id }}">{{ $item->nome }}</option>
-                    @endforeach
-                </select>
-            </td>
-            <td class="actions">
-                <button type="button" class="btn btn-success plus2-row">+</button>
-                <button type="button" class="btn btn-danger delete2-row">-</button>
-            </td>
-        </tr>`;
-                $('#taxa-table-body').append(newRow);
-            }
-
-            // Adiciona uma nova linha de material ao clicar no botão '+'
-            $(document).on('click', '.plus2-row', function() {
-                addTaxaRow();
-            });
-
-            // Remove uma linha de material ao clicar no botão '-'
-            $(document).on('click', '.delete2-row', function() {
-                $(this).closest('.taxa-row').remove();
-            });
-
-            // Verificar se existem dados no banco antes de carregar o formulário
+        $('#saveTaxaButton').on('click', function(event) {
+            event.preventDefault();
             $.ajax({
-                url: `/taxa/${agenda_id}/${paciente_id}`,
-                type: 'GET',
-                success: function(response) {
-                    if (response.data && response.data.length > 0) {
-                        response.data.forEach(function(item) {
-                            addTaxaRow();
-                            $('#taxa-table-body').find('.taxa-row:last').find(
-                                '.taxa_id').val(item.taxa_id);
-                        });
-                    }
+                url: '/taxa/store',
+                type: 'POST',
+                data: $('#taxaForm').serialize(),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                error: function(response) {
-                    console.log('Erro ao carregar dados do banco.');
+                success: function() {
+                    alert('Taxas cadastradas/atualizadas com sucesso');
+                },
+                error: function(xhr) {
+                    console.error(xhr.responseText);
+                    alert('Erro: ' + xhr.responseText);
                 }
             });
-
-            // Salvar os materiais via AJAX
-            $('#saveTaxaButton').on('click', function(event) {
-                event.preventDefault(); // Previne o envio padrão do formulário
-
-                var url = '/taxa/store';
-
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: $('#taxaForm').serialize(),
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        alert('Taxa cadastradas/atualizadas com sucesso');
-                    },
-                    error: function(xhr) {
-                        console.error(xhr
-                        .responseText); // Exibir erro no console para depuração
-                        alert('Erro: ' + xhr.responseText);
-                    }
-                });
-            });
         });
-    </script>
+
+        // Aplicar Select2 aos selects iniciais
+        applySelect2($('select'));
+    });
+</script>
 </body>
-
 </html>
