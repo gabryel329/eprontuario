@@ -99,5 +99,9 @@ class Pacientes extends Model
     {
         return $this->hasMany(ProcAgenda::class, 'paciente_id');
     }
+    public function guiasadt()
+    {
+        return $this->hasMany(GuiaSp::class, 'paciente_id');
+    }
 
 }

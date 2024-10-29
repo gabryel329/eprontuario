@@ -141,4 +141,8 @@ class Profissional extends Model
     {
         return $this->hasMany(GuiaConsulta::class, 'profissional_id');
     }
+    public function guiasadt()
+    {
+        return $this->hasMany(GuiaSp::class, 'profissional_id');
+    }
 }

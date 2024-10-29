@@ -13,8 +13,7 @@ class GuiaSp extends Model
     protected $table = 'guia_sps';
 
     protected $fillable = [
-        'user_id',
-        'convenio_id',
+        'agenda_id', 'paciente_id', 'profissional_id', 'user_id', 'convenio_id',
         'registro_ans',                  // 1 - Registro ANS
         'numero_guia_prestador',          // 3 - Nº da Guia do Prestador
         'data_autorizacao',               // 4 - Data da autorização
@@ -69,7 +68,7 @@ class GuiaSp extends Model
         'observacao',                     // 58 - Observação / Justificativa
         'hash',                           // Hash para validação de integridade
     ];
-    
+
 
     public function user()
     {
@@ -79,5 +78,18 @@ class GuiaSp extends Model
     public function convenio()
     {
         return $this->belongsTo(Convenio::class, 'convenio_id');
+    }
+
+    public function agenda()
+    {
+        return $this->belongsTo(Agenda::class);
+    }
+    public function profissional()
+    {
+        return $this->belongsTo(Profissional::class);
+    }
+    public function paciente()
+    {
+        return $this->belongsTo(Pacientes::class);
     }
 }

@@ -83,4 +83,10 @@ class Agenda extends Model
     {
         return $this->hasMany(ProcAgenda::class, 'agenda_id');
     }
+
+    public function guiaSps()
+    {
+        return $this->hasOne(GuiaSp::class);
+    }
+
 }
