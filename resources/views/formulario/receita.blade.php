@@ -137,7 +137,7 @@
             <p style="text-align: center;">Nenhuma empresa encontrada.</p>
         @endif
         <h3>Dr(a). {{ $profissional->name }}</h3>
-        <p>{{ $profissional->tipo }} - {{ $profissional->especialidade }} - {{ $profissional->conselho2 }}: {{ $profissional->conselho }}</p>
+        <p>{{ $profissional->tipo }} - {{ $profissional->especialidade }} - {{ $profissional->conselho_1 }}: {{ $profissional->uf_conselho_1 }}</p>
         <div class="section">
             <label for="paciente">Paciente: {{ $paciente->name }}</label>
             <label for="prescricao">Prescrição:</label>

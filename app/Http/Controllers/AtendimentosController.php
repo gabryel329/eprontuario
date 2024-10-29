@@ -387,7 +387,7 @@ class AtendimentosController extends Controller
         // Monta a consulta com joins e leftJoins
         $query = DB::table('agendas as ag')
             ->select(
-                'ag.id as consulta', 
+                'ag.id as consulta',
                 'ag.data',
                 'pa.cpf as cpf',
                 'pa.nasc as nasc',
@@ -474,10 +474,10 @@ class AtendimentosController extends Controller
     {
         // Obtenha todos os dados do formulário
         $dadosFormulario = $request->all();
-        
+
         // Obtenha todos os dados das empresas
         $empresa = Empresas::all();
-        
+
         // Retorne a view 'ficha' passando os dados do formulário e os dados das empresas
         return view('atendimentos.ficha', compact('dadosFormulario', 'empresa'));
     }
@@ -485,7 +485,7 @@ class AtendimentosController extends Controller
     public function processarFormulario(Request $request)
 {
     $agendaId = $request->input('agenda_id1');
-    
+
     // Verifica se o ID da agenda é válido
     if (is_null($agendaId)) {
         return redirect()->back()->with('error', 'ID da agenda não encontrado.');
@@ -579,7 +579,7 @@ class AtendimentosController extends Controller
         )
         ->orderBy('ag.data', 'asc')
         ->get();
-    
+
     return view('atendimentos.fichaAtendimento', [
         'agenda_id' => $agendaId,
         'historico' => $historico,
@@ -587,7 +587,7 @@ class AtendimentosController extends Controller
     ]);
 }
 
-    
+
 
 
     public function solicitacoes(Request $request)
@@ -642,19 +642,27 @@ class AtendimentosController extends Controller
     public function atestadoView($paciente_id, $agenda_id, $profissional_id, $dia, $obs, $cid, Request $request)
     {
         $empresas = Empresas::all();
-        
+
         $paciente = Pacientes::where('name', $paciente_id)->first();
         if (!$paciente) {
             abort(404, 'Paciente não encontrado');
         }
 
         $profissional = DB::table('profissionals')
-            ->select('profissionals.name', 'tp.nome as tipo', 'tp.conselho as conselho2', 'profissionals.conselho', 'e.especialidade')
-            ->join('especialidade_profissional as ep', 'ep.profissional_id', '=', 'profissionals.id')
-            ->join('tipo_profs as tp', 'tp.id', '=', 'profissionals.tipoprof_id')
-            ->leftJoin('especialidades as e', 'ep.especialidade_id', '=', 'e.id')
-            ->where('profissionals.name', $profissional_id)
-            ->first();
+    ->select(
+        'profissionals.name',
+        'tp.nome as tipo',
+        'profissionals.conselho_1',
+        'profissionals.uf_conselho_1',  // Adicionado UF do conselho 1
+        'profissionals.conselho_2',
+        'profissionals.uf_conselho_2',  // Adicionado UF do conselho 2
+        'e.especialidade'               // Especialidade mantida
+    )
+    ->join('especialidade_profissional as ep', 'ep.profissional_id', '=', 'profissionals.id')
+    ->join('tipo_profs as tp', 'tp.id', '=', 'profissionals.tipoprof_id')
+    ->leftJoin('especialidades as e', 'ep.especialidade_id', '=', 'e.id')
+    ->where('profissionals.name', $profissional_id)
+    ->first();
 
         if (!$profissional) {
             abort(404, 'Profissional não encontrado');
@@ -668,24 +676,35 @@ class AtendimentosController extends Controller
     public function receitaView($paciente_id, $agenda_id, $profissional_id, Request $request)
     {
         $empresas = Empresas::all();
-        
+
         $paciente = Pacientes::where('name', $paciente_id)->first();
         if (!$paciente) {
             abort(404, 'Paciente não encontrado');
         }
-    
+
         $profissional = DB::table('profissionals')
-            ->select('profissionals.name', 'tp.nome as tipo', 'tp.conselho as conselho2', 'profissionals.conselho', 'e.especialidade')
-            ->join('especialidade_profissional as ep', 'ep.profissional_id', '=', 'profissionals.id')
-            ->join('tipo_profs as tp', 'tp.id', '=', 'profissionals.tipoprof_id')
-            ->leftJoin('especialidades as e', 'ep.especialidade_id', '=', 'e.id')
-            ->where('profissionals.name', $profissional_id)
-            ->first();
-    
+    ->select(
+        'profissionals.name',
+        'tp.nome as tipo',
+        'profissionals.conselho_1',
+        'profissionals.uf_conselho_1',  // Adicionado UF do conselho 1
+        'profissionals.conselho_2',
+        'profissionals.uf_conselho_2',  // Adicionado UF do conselho 2
+        'e.especialidade'               // Especialidade mantida
+    )
+    ->join('especialidade_profissional as ep', 'ep.profissional_id', '=', 'profissionals.id')
+    ->join('tipo_profs as tp', 'tp.id', '=', 'profissionals.tipoprof_id')
+    ->leftJoin('especialidades as e', 'ep.especialidade_id', '=', 'e.id')
+    ->where('profissionals.name', $profissional_id)
+    ->first();
+
+
+
+
         if (!$profissional) {
             abort(404, 'Profissional não encontrado');
         }
-    
+
         $remedios = DB::table('remedios as re')
             ->select('med.nome as remedios', 're.dose', 're.horas')
             ->join('medicamentos as med', 're.medicamento_id', '=', 'med.id')
@@ -696,34 +715,44 @@ class AtendimentosController extends Controller
             ->where('pac.name', $paciente_id)
             ->where('re.agenda_id', $agenda_id)
             ->get();
-    
+
         $currentDate = now()->format('Y-m-d');
-    
+
         return view('formulario.receita', compact('paciente_id', 'agenda_id', 'profissional_id', 'empresas', 'paciente', 'profissional', 'currentDate', 'remedios'));
     }
-    
+
 
     public function exameView($paciente_id, $agenda_id, $profissional_id, Request $request)
     {
         $empresas = Empresas::all();
-        
+
         $paciente = Pacientes::where('name', $paciente_id)->first();
         if (!$paciente) {
             abort(404, 'Paciente não encontrado');
         }
-    
+
         $profissional = DB::table('profissionals')
-            ->select('profissionals.name', 'tp.nome as tipo', 'tp.conselho as conselho2', 'profissionals.conselho', 'e.especialidade')
-            ->join('especialidade_profissional as ep', 'ep.profissional_id', '=', 'profissionals.id')
-            ->join('tipo_profs as tp', 'tp.id', '=', 'profissionals.tipoprof_id')
-            ->leftJoin('especialidades as e', 'ep.especialidade_id', '=', 'e.id')
-            ->where('profissionals.name', $profissional_id)
-            ->first();
-    
+    ->select(
+        'profissionals.name',
+        'tp.nome as tipo',
+        'profissionals.conselho_1',
+        'profissionals.uf_conselho_1',  // Adicionado UF do conselho 1
+        'profissionals.conselho_2',
+        'profissionals.uf_conselho_2',  // Adicionado UF do conselho 2
+        'e.especialidade'               // Especialidade mantida
+    )
+    ->join('especialidade_profissional as ep', 'ep.profissional_id', '=', 'profissionals.id')
+    ->join('tipo_profs as tp', 'tp.id', '=', 'profissionals.tipoprof_id')
+    ->leftJoin('especialidades as e', 'ep.especialidade_id', '=', 'e.id')
+    ->where('profissionals.name', $profissional_id)
+    ->first();
+
+
+
         if (!$profissional) {
             abort(404, 'Profissional não encontrado');
         }
-    
+
         $exames = DB::table('exames as re')
             ->select('proc.procedimento', 'proc.codigo')
             ->join('procedimentos as proc', 're.procedimento_id', '=', 'proc.id')
@@ -734,9 +763,9 @@ class AtendimentosController extends Controller
             ->where('pac.name', $paciente_id)
             ->where('re.agenda_id', $agenda_id)
             ->get();
-    
+
         $currentDate = now()->format('Y-m-d');
-    
+
         return view('formulario.exame', compact('paciente_id', 'agenda_id', 'profissional_id', 'empresas', 'paciente', 'profissional', 'currentDate', 'exames'));
     }
 }

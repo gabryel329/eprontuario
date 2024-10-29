@@ -64,41 +64,6 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-/* Estilo do Select2 para se parecer com o campo da imagem */
-.select2-container--default .select2-selection--single {
-    height: 38px; /* Ajusta a altura conforme necessário */
-    display: flex;
-    align-items: center;
-    padding: 0 0.75rem;
-    font-size: 1rem;
-    border: 1px solid #ced4da; /* Cor da borda */
-    border-radius: 4px; /* Borda arredondada */
-    background-color: #fff; /* Fundo branco */
-    box-shadow: none; /* Remove sombras */
-    font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
-
-/* Remove a seta */
-.select2-container--default .select2-selection--single .select2-selection__arrow {
-    display: none;
-}
-
-/* Centraliza o texto no meio verticalmente e aplica a fonte */
-.select2-container--default .select2-selection--single .select2-selection__rendered {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: left; /* Alinhado à esquerda */
-    padding: 0;
-    color: #495057; /* Cor do texto */
-    text-align: left;
-    font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
-
-/* Remove o botão de limpar (X) */
-.select2-container--default .select2-selection--single .select2-selection__clear {
-    display: none;
-}
     </style>
 </head>
 
@@ -253,10 +218,13 @@
                                                 <tbody id="exame-table-body">
                                                     <tr class="exame-row">
                                                         <td>
-                                                            <select name="procedimento_id[]" id="procedimento_id" required>
-                                                                <option value="" data-codigo="">Selecione o Procedimento</option>
+                                                            <select name="procedimento_id[]" id="procedimento_id"
+                                                                required>
+                                                                <option value="" data-codigo="">Selecione o
+                                                                    Procedimento</option>
                                                                 @foreach ($procedimento as $item)
-                                                                    <option value="{{ $item->id }}" data-codigo="{{ $item->codigo }}">
+                                                                    <option value="{{ $item->id }}"
+                                                                        data-codigo="{{ $item->codigo }}">
                                                                         {{ $item->procedimento }}
                                                                     </option>
                                                                 @endforeach
@@ -278,7 +246,8 @@
                                         </div>
                                     </div>
                                     <div class="tile-footer text-center">
-                                        <button {{ $agendas->status == 'FINALIZADO' ? 'disabled' : '' }} class="btn btn-danger" id="saveExameButton" type="button">
+                                        <button {{ $agendas->status == 'FINALIZADO' ? 'disabled' : '' }}
+                                            class="btn btn-danger" id="saveExameButton" type="button">
                                             <i class="bi bi-check-circle-fill me-2"></i>Salvar/Atualizar
                                         </button>
                                     </div>
@@ -337,7 +306,8 @@
                                     </div>
 
                                     <div class="tile-footer text-center">
-                                        <button {{ $agendas->status == 'FINALIZADO' ? 'disabled' : '' }} class="btn btn-danger" id="saveRemedioButton" type="button">
+                                        <button {{ $agendas->status == 'FINALIZADO' ? 'disabled' : '' }}
+                                            class="btn btn-danger" id="saveRemedioButton" type="button">
                                             <i class="bi bi-check-circle-fill me-2"></i>Salvar/Atualizar
                                         </button>
                                     </div>
@@ -388,7 +358,8 @@
                                     </div>
 
                                     <div class="tile-footer text-center">
-                                        <button {{ $agendas->status == 'FINALIZADO' ? 'disabled' : '' }} class="btn btn-danger" id="saveMaterialButton" type="button">
+                                        <button {{ $agendas->status == 'FINALIZADO' ? 'disabled' : '' }}
+                                            class="btn btn-danger" id="saveMaterialButton" type="button">
                                             <i class="bi bi-check-circle-fill me-2"></i>Salvar/Atualizar
                                         </button>
                                     </div>
@@ -417,8 +388,8 @@
                                                 <tbody id="taxa-table-body">
                                                     <tr class="taxa-row">
                                                         <td class="col-md-10">
-                                                            <select class="form-control taxa_id"
-                                                                name="taxa_id[]" id="taxa_id">
+                                                            <select class="form-control taxa_id" name="taxa_id[]"
+                                                                id="taxa_id">
                                                                 <option value="">Selecione o Taxa</option>
                                                                 @foreach ($produto as $item)
                                                                     <option value="{{ $item->id }}">
@@ -439,7 +410,8 @@
                                     </div>
 
                                     <div class="tile-footer text-center">
-                                        <button {{ $agendas->status == 'FINALIZADO' ? 'disabled' : '' }} class="btn btn-danger" id="saveTaxaButton" type="button">
+                                        <button {{ $agendas->status == 'FINALIZADO' ? 'disabled' : '' }}
+                                            class="btn btn-danger" id="saveTaxaButton" type="button">
                                             <i class="bi bi-check-circle-fill me-2"></i>Salvar/Atualizar
                                         </button>
                                     </div>
@@ -458,30 +430,30 @@
     <!-- JS do Select2 -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
-    function applySelect2(element) {
-        element.select2({
-            placeholder: "Selecione o Procedimento",
-            allowClear: false,
-            closeOnSelect: true,
-            width: '100%'
-        }).on('select2:select', function(e) {
-            updateCodigo(this); // Chama updateCodigo ao selecionar uma opção
-        });
-    }
+        function applySelect2(element) {
+            element.select2({
+                placeholder: "Selecione o Procedimento",
+                allowClear: false,
+                closeOnSelect: true,
+                width: '100%'
+            }).on('select2:select', function(e) {
+                updateCodigo(this); // Chama updateCodigo ao selecionar uma opção
+            });
+        }
 
-    function updateCodigo(selectElement) {
-        const row = selectElement.closest('.exame-row'); // Encontra a linha mais próxima
-        const codigoInput = row.querySelector('input[name="codigo[]"]'); // Campo de código
-        const selectedOption = selectElement.options[selectElement.selectedIndex]; // Opção selecionada
-        codigoInput.value = selectedOption.getAttribute('data-codigo'); // Define o código
-    }
+        function updateCodigo(selectElement) {
+            const row = selectElement.closest('.exame-row'); // Encontra a linha mais próxima
+            const codigoInput = row.querySelector('input[name="codigo[]"]'); // Campo de código
+            const selectedOption = selectElement.options[selectElement.selectedIndex]; // Opção selecionada
+            codigoInput.value = selectedOption.getAttribute('data-codigo'); // Define o código
+        }
 
-    $(document).ready(function() {
-    var agenda_id = "{{ $agendas->id }}";
-    var paciente_id = "{{ $pacientes->id }}";
+        $(document).ready(function() {
+            var agenda_id = "{{ $agendas->id }}";
+            var paciente_id = "{{ $pacientes->id }}";
 
-    function addPrescricaoRow() {
-        var newRow = `
+            function addPrescricaoRow() {
+                var newRow = `
             <tr class="prescricao-row">
                 <td>
                     <select class="form-control medicamento_id" name="medicamento_id[]">
@@ -498,62 +470,64 @@
                     <button type="button" class="btn btn-danger remove-row">-</button>
                 </td>
             </tr>`;
-        $('#prescricao-table-body').append(newRow);
-        applySelect2($('#prescricao-table-body select:last')); // Aplica Select2 ao novo select
-    }
+                $('#prescricao-table-body').append(newRow);
+                applySelect2($('#prescricao-table-body select:last')); // Aplica Select2 ao novo select
+            }
 
-    // Função para carregar medicamentos registrados do banco
-    $.ajax({
-        url: `/medicamento/${agenda_id}/${paciente_id}`,
-        type: 'GET',
-        success: function(response) {
-            if (response.data && response.data.length > 0) {
-                response.data.forEach(function(remedio) {
-                    addPrescricaoRow();
-                    const lastRow = $('#prescricao-table-body').find('.prescricao-row:last');
-                    lastRow.find('.medicamento_id').val(remedio.medicamento_id).trigger('change'); // Dispara 'change'
-                    lastRow.find('.dose').val(remedio.dose);
-                    lastRow.find('.hora').val(remedio.hora);
+            // Função para carregar medicamentos registrados do banco
+            $.ajax({
+                url: `/medicamento/${agenda_id}/${paciente_id}`,
+                type: 'GET',
+                success: function(response) {
+                    if (response.data && response.data.length > 0) {
+                        response.data.forEach(function(remedio) {
+                            addPrescricaoRow();
+                            const lastRow = $('#prescricao-table-body').find(
+                                '.prescricao-row:last');
+                            lastRow.find('.medicamento_id').val(remedio.medicamento_id).trigger(
+                                'change'); // Dispara 'change'
+                            lastRow.find('.dose').val(remedio.dose);
+                            lastRow.find('.hora').val(remedio.hora);
+                        });
+                    }
+                },
+                error: function() {
+                    console.log('Erro ao carregar dados do banco.');
+                }
+            });
+
+            // Adicionar e remover linhas dinamicamente
+            $(document).on('click', '.add-row', function() {
+                addPrescricaoRow();
+            });
+
+            $(document).on('click', '.remove-row', function() {
+                $(this).closest('.prescricao-row').remove();
+            });
+
+            // Salvar medicamentos via AJAX
+            $('#saveRemedioButton').on('click', function(event) {
+                event.preventDefault();
+
+                $.ajax({
+                    url: '/medicamento/store',
+                    type: 'POST',
+                    data: $('#remedioForm').serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function() {
+                        alert('Prescrição de remédios cadastrada/atualizada com sucesso');
+                    },
+                    error: function() {
+                        alert('Ocorreu um erro. Tente novamente.');
+                    }
                 });
-            }
-        },
-        error: function() {
-            console.log('Erro ao carregar dados do banco.');
-        }
-    });
+            });
 
-    // Adicionar e remover linhas dinamicamente
-    $(document).on('click', '.add-row', function() {
-        addPrescricaoRow();
-    });
-
-    $(document).on('click', '.remove-row', function() {
-        $(this).closest('.prescricao-row').remove();
-    });
-
-    // Salvar medicamentos via AJAX
-    $('#saveRemedioButton').on('click', function(event) {
-        event.preventDefault();
-
-        $.ajax({
-            url: '/medicamento/store',
-            type: 'POST',
-            data: $('#remedioForm').serialize(),
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function() {
-                alert('Prescrição de remédios cadastrada/atualizada com sucesso');
-            },
-            error: function() {
-                alert('Ocorreu um erro. Tente novamente.');
-            }
+            // Aplicar Select2 aos selects iniciais
+            applySelect2($('select'));
         });
-    });
-
-    // Aplicar Select2 aos selects iniciais
-    applySelect2($('select'));
-});
 
 
         $(document).ready(function() {
@@ -603,7 +577,8 @@
                         response.data.forEach(function(item) {
                             addExameRow();
                             const lastRow = $('#exame-table-body').find('.exame-row:last');
-                            lastRow.find('.procedimento_id').val(item.procedimento_id).trigger('change'); // Dispara 'change'
+                            lastRow.find('.procedimento_id').val(item.procedimento_id).trigger(
+                                'change'); // Dispara 'change'
                             lastRow.find('.codigo').val(item.codigo);
                         });
                     }
@@ -636,11 +611,11 @@
 
 
         $(document).ready(function() {
-        var agenda_id = "{{ $agendas->id }}";
-        var paciente_id = "{{ $pacientes->id }}";
+            var agenda_id = "{{ $agendas->id }}";
+            var paciente_id = "{{ $pacientes->id }}";
 
-        function addMaterialRow() {
-            var newRow = `
+            function addMaterialRow() {
+                var newRow = `
             <tr class="material-row">
                 <td>
                     <select class="form-control material_id" name="material_id[]">
@@ -655,12 +630,12 @@
                     <button type="button" class="btn btn-danger delete1-row">-</button>
                 </td>
             </tr>`;
-            $('#material-table-body').append(newRow);
-            applySelect2($('#material-table-body select:last'));
-        }
+                $('#material-table-body').append(newRow);
+                applySelect2($('#material-table-body select:last'));
+            }
 
-        function addTaxaRow() {
-            var newRow = `
+            function addTaxaRow() {
+                var newRow = `
             <tr class="taxa-row">
                 <td>
                     <select class="form-control taxa_id" name="taxa_id[]">
@@ -675,102 +650,105 @@
                     <button type="button" class="btn btn-danger delete2-row">-</button>
                 </td>
             </tr>`;
-            $('#taxa-table-body').append(newRow);
-            applySelect2($('#taxa-table-body select:last'));
-        }
-
-        // Eventos para adicionar e remover linhas
-        $(document).on('click', '.plus1-row', function() {
-            addMaterialRow();
-        });
-
-        $(document).on('click', '.delete1-row', function() {
-            $(this).closest('.material-row').remove();
-        });
-
-        $(document).on('click', '.plus2-row', function() {
-            addTaxaRow();
-        });
-
-        $(document).on('click', '.delete2-row', function() {
-            $(this).closest('.taxa-row').remove();
-        });
-
-        // Verificação e carregamento de dados do banco
-        $.ajax({
-            url: `/material/${agenda_id}/${paciente_id}`,
-            type: 'GET',
-            success: function(response) {
-                if (response.data && response.data.length > 0) {
-                    response.data.forEach(function(item) {
-                        addMaterialRow();
-                        $('#material-table-body').find('.material-row:last').find('.material_id').val(item.material_id).trigger('change');
-                    });
-                }
-            },
-            error: function() {
-                console.log('Erro ao carregar materiais.');
+                $('#taxa-table-body').append(newRow);
+                applySelect2($('#taxa-table-body select:last'));
             }
-        });
 
-        $.ajax({
-            url: `/taxa/${agenda_id}/${paciente_id}`,
-            type: 'GET',
-            success: function(response) {
-                if (response.data && response.data.length > 0) {
-                    response.data.forEach(function(item) {
-                        addTaxaRow();
-                        $('#taxa-table-body').find('.taxa-row:last').find('.taxa_id').val(item.taxa_id).trigger('change');
-                    });
-                }
-            },
-            error: function() {
-                console.log('Erro ao carregar taxas.');
-            }
-        });
+            // Eventos para adicionar e remover linhas
+            $(document).on('click', '.plus1-row', function() {
+                addMaterialRow();
+            });
 
-        // Salvar materiais e taxas via AJAX
-        $('#saveMaterialButton').on('click', function(event) {
-            event.preventDefault();
+            $(document).on('click', '.delete1-row', function() {
+                $(this).closest('.material-row').remove();
+            });
+
+            $(document).on('click', '.plus2-row', function() {
+                addTaxaRow();
+            });
+
+            $(document).on('click', '.delete2-row', function() {
+                $(this).closest('.taxa-row').remove();
+            });
+
+            // Verificação e carregamento de dados do banco
             $.ajax({
-                url: '/material/store',
-                type: 'POST',
-                data: $('#materialForm').serialize(),
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                url: `/material/${agenda_id}/${paciente_id}`,
+                type: 'GET',
+                success: function(response) {
+                    if (response.data && response.data.length > 0) {
+                        response.data.forEach(function(item) {
+                            addMaterialRow();
+                            $('#material-table-body').find('.material-row:last').find(
+                                '.material_id').val(item.material_id).trigger('change');
+                        });
+                    }
                 },
-                success: function() {
-                    alert('Materiais cadastrados/atualizados com sucesso');
-                },
-                error: function(xhr) {
-                    console.error(xhr.responseText);
-                    alert('Erro: ' + xhr.responseText);
+                error: function() {
+                    console.log('Erro ao carregar materiais.');
                 }
             });
-        });
 
-        $('#saveTaxaButton').on('click', function(event) {
-            event.preventDefault();
             $.ajax({
-                url: '/taxa/store',
-                type: 'POST',
-                data: $('#taxaForm').serialize(),
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                url: `/taxa/${agenda_id}/${paciente_id}`,
+                type: 'GET',
+                success: function(response) {
+                    if (response.data && response.data.length > 0) {
+                        response.data.forEach(function(item) {
+                            addTaxaRow();
+                            $('#taxa-table-body').find('.taxa-row:last').find('.taxa_id').val(
+                                item.taxa_id).trigger('change');
+                        });
+                    }
                 },
-                success: function() {
-                    alert('Taxas cadastradas/atualizadas com sucesso');
-                },
-                error: function(xhr) {
-                    console.error(xhr.responseText);
-                    alert('Erro: ' + xhr.responseText);
+                error: function() {
+                    console.log('Erro ao carregar taxas.');
                 }
             });
-        });
 
-        // Aplicar Select2 aos selects iniciais
-        applySelect2($('select'));
-    });
-</script>
+            // Salvar materiais e taxas via AJAX
+            $('#saveMaterialButton').on('click', function(event) {
+                event.preventDefault();
+                $.ajax({
+                    url: '/material/store',
+                    type: 'POST',
+                    data: $('#materialForm').serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function() {
+                        alert('Materiais cadastrados/atualizados com sucesso');
+                    },
+                    error: function(xhr) {
+                        console.error(xhr.responseText);
+                        alert('Erro: ' + xhr.responseText);
+                    }
+                });
+            });
+
+            $('#saveTaxaButton').on('click', function(event) {
+                event.preventDefault();
+                $.ajax({
+                    url: '/taxa/store',
+                    type: 'POST',
+                    data: $('#taxaForm').serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function() {
+                        alert('Taxas cadastradas/atualizadas com sucesso');
+                    },
+                    error: function(xhr) {
+                        console.error(xhr.responseText);
+                        alert('Erro: ' + xhr.responseText);
+                    }
+                });
+            });
+
+            // Aplicar Select2 aos selects iniciais
+            applySelect2($('select'));
+        });
+    </script>
 </body>
+
 </html>

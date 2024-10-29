@@ -31,14 +31,14 @@
                         <li class="nav-item"><a class="nav-link" href="#atendimento-prescricao"
                                 data-bs-toggle="tab">Prescrição</a></li>
                         <hr>
-                        <form id="printForm" action="{{ route('processarFormulario') }}" target="_blank" method="POST">
+                        <form id="printForm" action="{{ route('processarFormulario') }}" method="POST">
                             @csrf
                             <input class="form-control" id="agenda_id1" name="agenda_id1" type="text" value="{{ $agenda->id }}" hidden>
                             <li class="nav-item" style="text-align: center;">
                                 <button type="button" class="btn btn-primary" id="enviarBtn">Imprimir <i class="bi bi-printer"></i></button>
                             </li>
                         </form>
-                        
+
                         <!-- Modal -->
                         <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -270,7 +270,7 @@
                                             <div class="tab-pane fade" id="atendimento-evolucao">
                                                 <div class="timeline-post">
                                                     <h4 class="line-head">
-                                                        Evolução 
+                                                        Evolução
                                                         @foreach($historico as $registro)
                                                             @if(!empty($registro->an_alergia1) || !empty($registro->an_alergia2) || !empty($registro->an_alergia3))
                                                                 <i class="bi bi-exclamation-circle-fill text-danger" id="alerta-alergia" style="cursor: pointer;" title="Paciente tem alergias!" href="#atendimento-anamnese"></i>
@@ -337,7 +337,6 @@
                                     <input class="form-control" id="paciente_id" name="paciente_id" type="text" value="{{ $agenda->paciente_id }}" hidden>
                                     <input class="form-control" id="agenda_id" name="agenda_id" type="text" value="{{ $agenda->id }}" hidden>
                                     <input class="form-control" id="profissional_id" name="profissional_id" type="text" value="{{ $agenda->profissional_id }}" hidden>
-                                
                                     <input class="form-control" id="paciente_id1" name="paciente_id" type="text" value="{{ $agenda->paciente->name }}" hidden>
                                     <input class="form-control" id="agenda_id1" name="agenda_id" type="text" value="{{ $agenda->id }}" hidden>
                                     <input class="form-control" id="profissional_id1" name="profissional_id" type="text" value="{{ $agenda->profissional->name }}" hidden>
@@ -429,6 +428,8 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="exame-table-body">
+                                                            </tbody>
+                                                            <tbody id="exame-table-body2">
                                                                 <tr class="exame-row">
                                                                     <td>
                                                                         <select class="form-control"
@@ -487,34 +488,28 @@
                                                                     <th>Ações</th>
                                                                 </tr>
                                                             </thead>
+                                                            <tbody id="prescricao-table-body2">
+
+                                                            </tbody>
                                                             <tbody id="prescricao-table-body">
                                                                 <tr class="prescricao-row">
                                                                     <td>
-                                                                        <select class="form-control medicamento_id"
-                                                                            name="medicamento_id[]" id="medicamento_id">
-                                                                            <option value="">Selecione o remédio
-                                                                            </option>
+                                                                        <select class="form-control medicamento_id" name="medicamento_id[]">
+                                                                            <option value="">Selecione um medicamento</option>
                                                                             @foreach ($medicamento as $item)
-                                                                                <option value="{{ $item->id }}">
-                                                                                    {{ $item->nome }}</option>
+                                                                                <option value="{{ $item->id }}">{{ $item->nome }}</option>
                                                                             @endforeach
                                                                         </select>
                                                                     </td>
                                                                     <td>
-                                                                        <input type="number" class="form-control dose"
-                                                                            name="dose[]" placeholder="Dose"
-                                                                            id="dose">
+                                                                        <input type="number" class="form-control dose" name="dose[]" placeholder="Dose" min="1">
                                                                     </td>
                                                                     <td>
-                                                                        <input type="number" class="form-control horas"
-                                                                            name="horas[]" placeholder="Horas"
-                                                                            id="horas">
+                                                                        <input type="number" class="form-control horas" name="hora[]" placeholder="Horas" min="1">
                                                                     </td>
                                                                     <td>
-                                                                        <button type="button"
-                                                                            class="btn btn-success add-row">+</button>
-                                                                        <button type="button"
-                                                                            class="btn btn-danger remove-row">-</button>
+                                                                        <button type="button" class="btn btn-success add-row">+</button>
+                                                                        <button type="button" class="btn btn-danger remove-row">-</button>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -912,449 +907,455 @@
         </div>
         </div>
     </main>
-    <script src="{{ asset('js/jquery-3.7.0.min.js') }}"></script>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
+<script src="{{ asset('js/jquery-3.7.0.min.js') }}"></script>
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('alerta-alergia').addEventListener('click', function(event) {
             event.preventDefault(); // Previne o comportamento padrão
             var href = this.getAttribute('href'); // Obtém o valor do atributo href
-            var targetTab = document.querySelector('a[href="' + href + '"]'); // Seleciona a aba correspondente
+            var targetTab = document.querySelector('a[href="' + href +
+                '"]'); // Seleciona a aba correspondente
 
             if (targetTab) {
                 var tabInstance = new bootstrap.Tab(targetTab); // Cria uma instância da aba
                 tabInstance.show(); // Mostra a aba correspondente
             }
         });
-        });
+    });
 
-        $(document).ready(function() {
-            $('#altura').mask('0.00');
-        });
+    $(document).ready(function() {
+        $('#altura').mask('0.00');
+    });
 
-        function calcularIMC() {
-            const peso = parseFloat(document.getElementById('peso').value);
-            const altura = parseFloat(document.getElementById('altura').value);
+    function calcularIMC() {
+        const peso = parseFloat(document.getElementById('peso').value);
+        const altura = parseFloat(document.getElementById('altura').value);
 
-            if (!isNaN(peso) && !isNaN(altura) && altura > 0) {
-                const imc = peso / (altura * altura);
-                document.getElementById('imc').value = imc.toFixed(2);
+        if (!isNaN(peso) && !isNaN(altura) && altura > 0) {
+            const imc = peso / (altura * altura);
+            document.getElementById('imc').value = imc.toFixed(2);
 
-                let classificacao = '';
-                if (imc < 18.5) {
-                    classificacao = 'Peso baixo';
-                } else if (imc >= 18.5 && imc <= 24.9) {
-                    classificacao = 'Peso normal';
-                } else if (imc >= 25 && imc <= 29.9) {
-                    classificacao = 'Acima do peso';
-                } else {
-                    classificacao = 'Obesidade';
-                }
-                document.getElementById('classificacao').value = classificacao;
+            let classificacao = '';
+            if (imc < 18.5) {
+                classificacao = 'Peso baixo';
+            } else if (imc >= 18.5 && imc <= 24.9) {
+                classificacao = 'Peso normal';
+            } else if (imc >= 25 && imc <= 29.9) {
+                classificacao = 'Acima do peso';
             } else {
-                document.getElementById('imc').value = '';
-                document.getElementById('classificacao').value = '';
+                classificacao = 'Obesidade';
             }
+            document.getElementById('classificacao').value = classificacao;
+        } else {
+            document.getElementById('imc').value = '';
+            document.getElementById('classificacao').value = '';
         }
+    }
 
 
-        $(document).ready(function() {
-            var agenda_id = "{{ $agenda->id }}"; // Valor correto para a agenda_id
-            var paciente_id = "{{ $paciente->id }}"; // Valor correto para o paciente_id
-            // alert("agenda_id: " + agenda_id + ", paciente_id: " + paciente_id);
-            // Verificar se existem dados no banco antes de carregar o formulário
-            $.ajax({
-                url: '/atendimentos/' + agenda_id + '/' + paciente_id, // Ajuste a rota conforme necessário
-                type: 'GET',
-                success: function(response) {
-                    // Se houver dados no banco, preencha o formulário
-                    if (response.data) {
-                        $('#queixas').val(response.data.queixas);
-                        $('#evolucao').val(response.data.evolucao);
-                        $('#atestado').val(response.data.atestado);
-                        $('#condicao').val(response.data.condicao);
-                    }
-                },
-                error: function(response) {
-                    // alert('Erro ao carregar dados do banco.');
-                    pass();
+    $(document).ready(function() {
+        var agenda_id = "{{ $agenda->id }}"; // Valor correto para a agenda_id
+        var paciente_id = "{{ $paciente->id }}"; // Valor correto para o paciente_id
+        // alert("agenda_id: " + agenda_id + ", paciente_id: " + paciente_id);
+        // Verificar se existem dados no banco antes de carregar o formulário
+        $.ajax({
+            url: '/atendimentos/' + agenda_id + '/' + paciente_id, // Ajuste a rota conforme necessário
+            type: 'GET',
+            success: function(response) {
+                // Se houver dados no banco, preencha o formulário
+                if (response.data) {
+                    $('#queixas').val(response.data.queixas);
+                    $('#evolucao').val(response.data.evolucao);
+                    $('#atestado').val(response.data.atestado);
+                    $('#condicao').val(response.data.condicao);
                 }
-            });
-
-            $('#saveButton').on('click', function() {
-                // Salvar dados do formulário no localStorage
-                var formData = {
-                    queixas: $('#queixas').val(),
-                    evolucao: $('#evolucao').val(),
-                    atestado: $('#atestado').val(),
-                    condicao: $('#condicao').val(),
-                };
-                localStorage.setItem('formData', JSON.stringify(formData));
-
-                // Definir a URL com base no atendimentoId
-                var url = '/atendimentos/store';
-
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: $('#atendimentoForm').serialize(),
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        alert('Atendimento cadastrado/atualizado com sucesso');
-                        // Atualize o campo atendimento_id com o ID retornado pelo servidor
-                        $('#atendimento_id').val(response.atendimento_id);
-                    },
-                    error: function(response) {
-                        alert('Ocorreu um erro. Tente novamente.');
-                    }
-                });
-            });
+            },
+            error: function(response) {
+                // alert('Erro ao carregar dados do banco.');
+                pass();
+            }
         });
 
-        $(document).ready(function() {
-            // Verificar se já existe uma anamnese para o paciente na data atual
+        $('#saveButton').on('click', function() {
+            // Salvar dados do formulário no localStorage
+            var formData = {
+                queixas: $('#queixas').val(),
+                evolucao: $('#evolucao').val(),
+                atestado: $('#atestado').val(),
+                condicao: $('#condicao').val(),
+            };
+            localStorage.setItem('formData', JSON.stringify(formData));
+
+            // Definir a URL com base no atendimentoId
+            var url = '/atendimentos/store';
+
             $.ajax({
-                url: '/anamneses/check/' + $('#paciente_id').val(),
-                type: 'GET',
+                url: url,
+                type: 'POST',
+                data: $('#atendimentoForm').serialize(),
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
-                    if (response.anamnese) {
-                        // Se já existe uma anamnese, preencha os campos do formulário com os dados existentes
-                        $('#pa').val(response.anamnese.pa);
-                        $('#temp').val(response.anamnese.temp);
-                        $('#peso').val(response.anamnese.peso);
-                        $('#altura').val(response.anamnese.altura);
-                        $('#imc').val(response.anamnese.imc);
-                        $('#classificacao').val(response.anamnese.classificacao);
-                        $('input[name="gestante"][value="' + response.anamnese.gestante + '"]').prop(
-                            'checked', true);
-                        $('#dextro').val(response.anamnese.dextro);
-                        $('#spo2').val(response.anamnese.spo2);
-                        $('#fc').val(response.anamnese.fc);
-                        $('#fr').val(response.anamnese.fr);
-                        $('#acolhimento').val(response.anamnese.acolhimento);
-                        $('#acolhimento1').val(response.anamnese.acolhimento1);
-                        $('#acolhimento2').val(response.anamnese.acolhimento2);
-                        $('#acolhimento3').val(response.anamnese.acolhimento3);
-                        $('#acolhimento4').val(response.anamnese.acolhimento4);
-                        $('#alergia1').val(response.anamnese.alergia1);
-                        $('#alergia2').val(response.anamnese.alergia2);
-                        $('#alergia3').val(response.anamnese.alergia3);
-                        $('#anamnese').val(response.anamnese.anamnese);
-                        $('#agenda_id').val(response.anamnese.agenda_id);
-                    }
+                    alert('Atendimento cadastrado/atualizado com sucesso');
+                    // Atualize o campo atendimento_id com o ID retornado pelo servidor
+                    $('#atendimento_id').val(response.atendimento_id);
                 },
                 error: function(response) {
-                    // alert('Ocorreu um erro ao carregar os dados da anamnese. Tente novamente.');
-                    pass();
+                    alert('Ocorreu um erro. Tente novamente.');
                 }
             });
-
-            $('#saveAnamneseButton').on('click', function() {
-                // Salvar dados do formulário no localStorage
-                var formData = {
-                    pa: $('#pa').val(),
-                    temp: $('#temp').val(),
-                    peso: $('#peso').val(),
-                    altura: $('#altura').val(),
-                    imc: $('#imc').val(),
-                    classificacao: $('#classificacao').val(),
-                    gestante: $('input[name="gestante"]:checked').val(),
-                    dextro: $('#dextro').val(),
-                    spo2: $('#spo2').val(),
-                    fc: $('#fc').val(),
-                    fr: $('#fr').val(),
-                    acolhimento: $('#acolhimento').val(),
-                    acolhimento1: $('#acolhimento1').val(),
-                    acolhimento2: $('#acolhimento2').val(),
-                    acolhimento3: $('#acolhimento3').val(),
-                    acolhimento4: $('#acolhimento4').val(),
-                    alergia1: $('#alergia1').val(),
-                    alergia2: $('#alergia2').val(),
-                    alergia3: $('#alergia3').val(),
-                    anamnese: $('#anamnese').val(),
-                    paciente_id: $('#paciente_id').val(),
-                    profissional_id: $('#profissional_id').val(),
-                    agenda_id: $('#agenda_id').val(),
-                };
-
-                // Enviar formulário via AJAX
-                $.ajax({
-                    url: '/anamneses/store',
-                    type: 'POST',
-                    data: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        alert('Anamnese cadastrada/atualizada com sucesso');
-                    },
-                    error: function(response) {
-                        alert('Ocorreu um erro. Tente novamente.');
-                    }
-                });
-            });
         });
+    });
 
-        $(document).ready(function() {
-            var agenda_id = "{{ $agenda->id }}";
-            var paciente_id = "{{ $paciente->id }}";
-
-            function addPrescricaoRow() {
-                var newRow = `
-        <tr class="prescricao-row">
-            <td>
-                <select class="form-control medicamento_id" name="medicamento_id[]">
-                    <option value="">Selecione o remédio</option>
-                    @foreach ($medicamento as $item)
-                        <option value="{{ $item->id }}">{{ $item->nome }}</option>
-                    @endforeach
-                </select>
-            </td>
-            <td>
-                <input type="number" class="form-control dose" name="dose[]" placeholder="Dose">
-            </td>
-            <td>
-                <input type="number" class="form-control horas" name="horas[]" placeholder="Horas">
-            </td>
-            <td>
-                <button type="button" class="btn btn-success add-row">+</button>
-                <button type="button" class="btn btn-danger remove-row">-</button>
-            </td>
-        </tr>`;
-                $('#prescricao-table-body').append(newRow);
-            }
-
-            $(document).on('click', '.add-row', function() {
-                addPrescricaoRow();
-            });
-
-            $(document).on('click', '.remove-row', function() {
-                $(this).closest('.prescricao-row').remove();
-            });
-
-            // Verificar se existem dados no banco antes de carregar o formulário
-            $.ajax({
-                url: '/remedios/' + agenda_id + '/' + paciente_id,
-                type: 'GET',
-                success: function(response) {
-                    if (response.data && response.data.length > 0) {
-                        // Se houver dados no banco, preencha o formulário
-                        response.data.forEach(function(remedio) {
-                            addPrescricaoRow();
-                            $('#prescricao-table-body').find('.prescricao-row:last').find(
-                                '.medicamento_id').val(remedio.medicamento_id);
-                            $('#prescricao-table-body').find('.prescricao-row:last').find(
-                                '.dose').val(remedio.dose);
-                            $('#prescricao-table-body').find('.prescricao-row:last').find(
-                                '.horas').val(remedio.horas);
-                        });
-                    }
-                },
-                error: function(response) {
-                    //alert('Erro ao carregar dados do banco.');
+    $(document).ready(function() {
+        // Verificar se já existe uma anamnese para o paciente na data atual
+        $.ajax({
+            url: '/anamneses/check/' + $('#paciente_id').val(),
+            type: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                if (response.anamnese) {
+                    // Se já existe uma anamnese, preencha os campos do formulário com os dados existentes
+                    $('#pa').val(response.anamnese.pa);
+                    $('#temp').val(response.anamnese.temp);
+                    $('#peso').val(response.anamnese.peso);
+                    $('#altura').val(response.anamnese.altura);
+                    $('#imc').val(response.anamnese.imc);
+                    $('#classificacao').val(response.anamnese.classificacao);
+                    $('input[name="gestante"][value="' + response.anamnese.gestante + '"]').prop(
+                        'checked', true);
+                    $('#dextro').val(response.anamnese.dextro);
+                    $('#spo2').val(response.anamnese.spo2);
+                    $('#fc').val(response.anamnese.fc);
+                    $('#fr').val(response.anamnese.fr);
+                    $('#acolhimento').val(response.anamnese.acolhimento);
+                    $('#acolhimento1').val(response.anamnese.acolhimento1);
+                    $('#acolhimento2').val(response.anamnese.acolhimento2);
+                    $('#acolhimento3').val(response.anamnese.acolhimento3);
+                    $('#acolhimento4').val(response.anamnese.acolhimento4);
+                    $('#alergia1').val(response.anamnese.alergia1);
+                    $('#alergia2').val(response.anamnese.alergia2);
+                    $('#alergia3').val(response.anamnese.alergia3);
+                    $('#anamnese').val(response.anamnese.anamnese);
+                    $('#agenda_id').val(response.anamnese.agenda_id);
                 }
-            });
-
-            $('#saveRemedioButton').on('click', function() {
-                var formData = {
-                    medicamento_id: [],
-                    dose: [],
-                    horas: []
-                };
-
-                $('.medicamento_id').each(function() {
-                    formData.medicamento_id.push($(this).val());
-                });
-
-                $('.dose').each(function() {
-                    formData.dose.push($(this).val());
-                });
-
-                $('.horas').each(function() {
-                    formData.horas.push($(this).val());
-                });
-
-                localStorage.setItem('formData', JSON.stringify(formData));
-
-                var url = '/remedios/store';
-
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: $('#remedioForm').serialize(),
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        alert('Prescrição de remédios cadastrada/atualizada com sucesso');
-                    },
-                    error: function(response) {
-                        alert('Ocorreu um erro. Tente novamente.');
-                    }
-                });
-            });
+            },
+            error: function(response) {
+                // alert('Ocorreu um erro ao carregar os dados da anamnese. Tente novamente.');
+                pass();
+            }
         });
 
-        $(document).ready(function() {
-            var agenda_id = "{{ $agenda->id }}"; // Valor correto para a agenda_id
-            var paciente_id = "{{ $paciente->id }}"; // Valor correto para o paciente_id
+        $('#saveAnamneseButton').on('click', function() {
+            // Salvar dados do formulário no localStorage
+            var formData = {
+                pa: $('#pa').val(),
+                temp: $('#temp').val(),
+                peso: $('#peso').val(),
+                altura: $('#altura').val(),
+                imc: $('#imc').val(),
+                classificacao: $('#classificacao').val(),
+                gestante: $('input[name="gestante"]:checked').val(),
+                dextro: $('#dextro').val(),
+                spo2: $('#spo2').val(),
+                fc: $('#fc').val(),
+                fr: $('#fr').val(),
+                acolhimento: $('#acolhimento').val(),
+                acolhimento1: $('#acolhimento1').val(),
+                acolhimento2: $('#acolhimento2').val(),
+                acolhimento3: $('#acolhimento3').val(),
+                acolhimento4: $('#acolhimento4').val(),
+                alergia1: $('#alergia1').val(),
+                alergia2: $('#alergia2').val(),
+                alergia3: $('#alergia3').val(),
+                anamnese: $('#anamnese').val(),
+                paciente_id: $('#paciente_id').val(),
+                profissional_id: $('#profissional_id').val(),
+                agenda_id: $('#agenda_id').val(),
+            };
 
-            function addExameRow() {
-                var newRow = `
-        <tr class="exame-row">
-            <td>
-                <select class="form-control procedimento_id" name="procedimento_id[]">
-                    <option value="">Selecione o Procedimento</option>
-                    @foreach ($procedimento as $item)
-                        <option value="{{ $item->id }}">{{ $item->procedimento }}</option>
-                    @endforeach
-                </select>
-            </td>
-            <td class="actions">
-                <button type="button" class="btn btn-success plus-row">+</button>
-                <button type="button" class="btn btn-danger delete-row">-</button>
-            </td>
-        </tr>`;
-                $('#exame-table-body').append(newRow);
-            }
-
-            // Adiciona uma nova linha de procedimento quando o botão '+' é clicado
-            $(document).on('click', '.plus-row', function() {
-                addExameRow();
-            });
-
-            // Remove a linha de procedimento quando o botão '-' é clicado
-            $(document).on('click', '.delete-row', function() {
-                $(this).closest('.exame-row').remove();
-            });
-
-            // Verificar se existem dados no banco antes de carregar o formulário
+            // Enviar formulário via AJAX
             $.ajax({
-                url: '/exames/' + agenda_id + '/' + paciente_id, // Ajuste a rota conforme necessário
-                type: 'GET',
-                success: function(response) {
-                    // Se houver dados no banco, preencha o formulário
-                    if (response.data && response.data.length > 0) {
-                        response.data.forEach(function(item) {
-                            addExameRow();
-                            $('#exame-table-body').find('.exame-row:last').find(
-                                '.procedimento_id').val(item.procedimento_id);
-                        });
-                    }
-                },
-                error: function(response) {
-                    // alert('Erro ao carregar dados do banco.');
-                }
-            });
-
-            $('#saveExameButton').on('click', function() {
-                // Salvar dados do formulário no localStorage
-                var formData = {
-                    procedimento_id: []
-                };
-
-                $('.procedimento_id').each(function() {
-                    formData.procedimento_id.push($(this).val());
-                });
-
-                localStorage.setItem('formData', JSON.stringify(formData));
-
-                // Definir a URL com base no atendimentoId
-                var url = '/exames/store';
-
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: $('#exameForm').serialize(),
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        alert('Exame cadastrado/atualizado com sucesso');
-                        // Atualize o campo atendimento_id com o ID retornado pelo servidor
-                    },
-                    error: function(response) {
-                        alert('Ocorreu um erro. Tente novamente.');
-                    }
-                });
-            });
-        });
-
-        document.getElementById('enviarBtn').addEventListener('click', function() {
-            $('#confirmModal').modal('show');
-        });
-
-        document.getElementById('confirmPrintBtn').addEventListener('click', function() {
-            document.getElementById('printForm').submit();
-            $('#confirmModal').modal('hide');
-        });
-
-
-        document.getElementById('enviarAtes').addEventListener('click', function() {
-            // Capture the selected radio button value
-            let selectedOption = document.querySelector('input[name="flexRadioDefault"]:checked')?.value;
-            if (!selectedOption) {
-                console.error('Nenhuma opção selecionada.');
-                alert('Por favor, selecione uma opção.');
-                return;
-            }
-
-            let dia_id = document.getElementById('dia_id')?.value || '-';
-            let obs_id = document.getElementById('obs_id')?.value || '-';
-            let cid = document.getElementById('cid')?.value || '-';
-            console.log('Dia ID:', dia_id);
-
-            let paciente_id = document.getElementById('paciente_id1')?.value || '';
-            let agenda_id = document.getElementById('agenda_id1')?.value || '';
-            let profissional_id = document.getElementById('profissional_id1')?.value || '';
-
-            if (!paciente_id || !agenda_id || !profissional_id) {
-                console.error('Dados incompletos.');
-                alert('Dados incompletos. Por favor, verifique os campos.');
-                return;
-            }
-
-            // AJAX request
-            $.ajax({
-                url: '/solicitacoes', // Your route here
+                url: '/anamneses/store',
                 type: 'POST',
-                data: {
-                    selectedOption: selectedOption,
-                    dia_id: dia_id,
-                    obs_id: obs_id,
-                    cid: cid,
-                    paciente_id: paciente_id,
-                    agenda_id: agenda_id,
-                    profissional_id: profissional_id,
-                    _token: '{{ csrf_token() }}' // Include CSRF token
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
-                    // Open the new view in another tab
-                    window.open(response.redirect_url, '_blank');
+                    alert('Anamnese cadastrada/atualizada com sucesso');
                 },
-                error: function(xhr) {
-                    console.log(xhr.responseText);
+                error: function(response) {
+                    alert('Ocorreu um erro. Tente novamente.');
+                }
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        var agenda_id = "{{ $agenda->id }}";
+        var paciente_id = "{{ $paciente->id }}";
+
+        function applySelect2(element) {
+            element.select2({
+                allowClear: true,
+                closeOnSelect: true,
+                width: '100%'
+            });
+        }
+
+        function addPrescricaoRow(medicamento = {}) {
+            var newRow = `
+    <tr class="prescricao-row">
+        <td>
+            <select class="form-control medicamento_id" name="medicamento_id[]">
+                <option value="">Selecione um medicamento</option>
+                @foreach ($medicamento as $item)
+                    <option value="{{ $item->id }}">{{ $item->nome }}</option>
+                @endforeach
+            </select>
+        </td>
+        <td><input type="number" class="form-control dose" name="dose[]" placeholder="Dose" min="1" value="${medicamento.dose || ''}"></td>
+        <td><input type="number" class="form-control hora" name="hora[]" placeholder="Horas" min="1" value="${medicamento.hora || ''}"></td>
+        <td>
+            <button type="button" class="btn btn-success add-row">+</button>
+            <button type="button" class="btn btn-danger remove-row">-</button>
+        </td>
+    </tr>`;
+            $('#prescricao-table-body2').append(newRow);
+            const lastRow = $('#prescricao-table-body2 .prescricao-row:last');
+            lastRow.find('.medicamento_id').val(medicamento.medicamento_id).trigger('change');
+            applySelect2(lastRow.find('.medicamento_id'));
+        }
+
+        // Carregar medicamentos via AJAX
+        $.ajax({
+            url: `/medicamento/${agenda_id}/${paciente_id}`,
+            type: 'GET',
+            success: function(response) {
+                if (response.data && response.data.length > 0) {
+                    response.data.forEach(function(medicamento) {
+                        addPrescricaoRow(medicamento);
+                    });
+                }
+            },
+            error: function() {
+                console.log('Erro ao carregar dados do banco.');
+            }
+        });
+
+        // Salvar medicamentos
+        $('#saveRemedioButton').on('click', function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: '/medicamento/store',
+                type: 'POST',
+                data: $('#remedioForm').serialize(),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function() {
+                    alert('Prescrição de remédios cadastrada/atualizada com sucesso');
+                },
+                error: function() {
+                    alert('Ocorreu um erro. Tente novamente.');
                 }
             });
         });
 
-        // Show/Hide input based on selected radio button
-        document.querySelectorAll('input[name="flexRadioDefault"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                if (this.value === 'atestado') {
-                    document.getElementById('diasInput').style.display = 'block';
-                } else {
-                    document.getElementById('diasInput').style.display = 'none';
+        // Adicionar uma nova linha
+        $(document).on('click', '.add-row', function() {
+            addPrescricaoRow();
+        });
+
+        // Remover uma linha
+        $(document).on('click', '.remove-row', function() {
+            $(this).closest('.prescricao-row').remove();
+        });
+
+        // Aplicar Select2 nos selects iniciais
+        applySelect2($('select'));
+    });
+
+
+    $(document).ready(function() {
+        var agenda_id = "{{ $agenda->id }}";
+        var paciente_id = "{{ $paciente->id }}";
+
+        function applySelect2(element) {
+            element.select2({
+                allowClear: true,
+                closeOnSelect: true,
+                width: '100%'
+            });
+        }
+
+        function addExameRow() {
+            var newRow = `
+    <tr class="exame-row">
+        <td>
+            <select class="form-control procedimento_id" name="procedimento_id[]">
+                <option value="">Selecione o Procedimento</option>
+                @foreach ($procedimento as $item)
+                    <option value="{{ $item->id }}">{{ $item->procedimento }}</option>
+                @endforeach
+            </select>
+        </td>
+        <td>
+            <button type="button" class="btn btn-success plus-row">+</button>
+            <button type="button" class="btn btn-danger delete-row">-</button>
+        </td>
+    </tr>`;
+            $('#exame-table-body').append(newRow);
+            applySelect2($('#exame-table-body select:last')); // Aplica Select2 ao novo select
+        }
+
+        // Carregar exames via AJAX
+        $.ajax({
+            url: `/exames/${agenda_id}/${paciente_id}`,
+            type: 'GET',
+            success: function(response) {
+                if (response.data && response.data.length > 0) {
+                    response.data.forEach(function(item) {
+                        addExameRow();
+                        const lastRow = $('#exame-table-body .exame-row:last');
+                        lastRow.find('.procedimento_id').val(item.procedimento_id).trigger(
+                            'change');
+                    });
+                }
+            },
+            error: function() {
+                console.log('Erro ao carregar dados do banco.');
+            }
+        });
+
+        // Eventos para adicionar e remover linhas
+        $(document).on('click', '.plus-row', function() {
+            addExameRow();
+        });
+
+        $(document).on('click', '.delete-row', function() {
+            $(this).closest('.exame-row').remove();
+        });
+
+        // Salvar exames
+        $('#saveExameButton').on('click', function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: '/exames/store',
+                type: 'POST',
+                data: $('#exameForm').serialize(),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function() {
+                    alert('Exame cadastrado/atualizado com sucesso');
+                },
+                error: function() {
+                    alert('Ocorreu um erro. Tente novamente.');
                 }
             });
         });
 
-        function selectCid(id, cid10) {
+        // Aplicar Select2 nos selects iniciais
+        applySelect2($('select'));
+    });
+
+
+    document.getElementById('enviarBtn').addEventListener('click', function() {
+        $('#confirmModal').modal('show');
+    });
+
+    document.getElementById('confirmPrintBtn').addEventListener('click', function() {
+        const form = document.getElementById('printForm');
+
+        // Construir uma URL codificada com os dados do formulário
+        const formData = new FormData(form);
+        const params = new URLSearchParams(formData).toString();
+        const url = form.action + '?' + params;
+
+        // Abrir a nova janela com a URL correta após a confirmação
+        window.open(url, '_blank', 'toolbar=no,scrollbars=yes,resizable=yes,width=1000,height=800');
+
+        // Fechar o modal
+        $('#confirmModal').modal('hide');
+    });
+
+
+    document.getElementById('enviarAtes').addEventListener('click', function() {
+        // Capturar o valor do rádio selecionado
+        let selectedOption = document.querySelector('input[name="flexRadioDefault"]:checked')?.value;
+        if (!selectedOption) {
+            console.error('Nenhuma opção selecionada.');
+            alert('Por favor, selecione uma opção.');
+            return;
+        }
+
+        let dia_id = document.getElementById('dia_id')?.value || '-';
+        let obs_id = document.getElementById('obs_id')?.value || '-';
+        let cid = document.getElementById('cid')?.value || '-';
+        console.log('Dia ID:', dia_id);
+
+        let paciente_id = document.getElementById('paciente_id1')?.value || '';
+        let agenda_id = document.getElementById('agenda_id1')?.value || '';
+        let profissional_id = document.getElementById('profissional_id1')?.value || '';
+
+        if (!paciente_id || !agenda_id || !profissional_id) {
+            console.error('Dados incompletos.');
+            alert('Dados incompletos. Por favor, verifique os campos.');
+            return;
+        }
+
+        // Enviar a requisição AJAX
+        $.ajax({
+            url: '/solicitacoes', // Sua rota aqui
+            type: 'POST',
+            data: {
+                selectedOption: selectedOption,
+                dia_id: dia_id,
+                obs_id: obs_id,
+                cid: cid,
+                paciente_id: paciente_id,
+                agenda_id: agenda_id,
+                profissional_id: profissional_id,
+                _token: '{{ csrf_token() }}' // Inclua o token CSRF
+            },
+            success: function(response) {
+                // Abrir a URL de resposta em uma nova janela/aba
+                window.open(response.redirect_url, '_blank',
+                    'toolbar=no,scrollbars=yes,resizable=yes,width=1000,height=800');
+            },
+            error: function(xhr) {
+                console.log(xhr.responseText);
+                // Exibir mensagem de erro em uma nova janela
+                const errorWindow = window.open('', '_blank',
+                    'toolbar=no,scrollbars=yes,resizable=yes,width=500,height=300');
+                errorWindow.document.write(
+                    '<p>Erro ao processar a solicitação. Tente novamente.</p>');
+            }
+        });
+    });
+
+
+
+    // Show/Hide input based on selected radio button
+    document.querySelectorAll('input[name="flexRadioDefault"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value === 'atestado') {
+                document.getElementById('diasInput').style.display = 'block';
+            } else {
+                document.getElementById('diasInput').style.display = 'none';
+            }
+        });
+    });
+
+    function selectCid(id, cid10) {
         document.getElementById('cid').value = cid10;
         var modal = bootstrap.Modal.getInstance(document.getElementById('cidModal'));
         modal.hide();
@@ -1362,7 +1363,8 @@
 
     document.getElementById('cidSearch').addEventListener('keyup', function() {
         var input = this.value.toLowerCase();
-        var rows = document.getElementById('cidTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        var rows = document.getElementById('cidTable').getElementsByTagName('tbody')[0].getElementsByTagName(
+            'tr');
 
         for (var i = 0; i < rows.length; i++) {
             var name = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
@@ -1374,5 +1376,5 @@
             }
         }
     });
-    </script>
+</script>
 @endsection

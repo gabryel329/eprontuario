@@ -134,9 +134,9 @@
         @else
             <p style="text-align: center;">Nenhuma empresa encontrada.</p>
         @endif
-    
+
     <h3>Dr(a). {{ $profissional->name }}</h3>
-    <p>{{ $profissional->tipo }} - {{ $profissional->especialidade }} - {{ $profissional->conselho2 }}: {{ $profissional->conselho }} - CID: {{ $cid }}</p>
+    <p>{{ $profissional->tipo }} - {{ $profissional->especialidade }} - {{ $profissional->conselho_1 }}: {{ $profissional->uf_conselho_1 }} - CID: {{ $cid }}</p>
     <p>Atesto para os devidos fins, que o(a):</p>
     <table>
         <tr>

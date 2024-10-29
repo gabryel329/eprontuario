@@ -250,7 +250,7 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::get('/guia/tiss/{id}', [GuiaTissController::class, 'impressaoGuia'])->name('guia.tiss');
 
 
-    Route::post('/ficha_atendimento', [AtendimentosController::class, 'processarFormulario'])->name('processarFormulario');
+    Route::get('/ficha_atendimento', [AtendimentosController::class, 'processarFormulario'])->name('processarFormulario');
 
     Route::post('/solicitacoes', [AtendimentosController::class, 'solicitacoes']);
     Route::get('/formulario/atestado/{paciente_id}/{agenda_id}/{profissional_id}/{dia}/{obs}/{cid}', [AtendimentosController::class, 'atestadoView'])->name('formulario.atestado');
