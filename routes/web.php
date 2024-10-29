@@ -290,6 +290,10 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::post('/taxa/store', [AgendaController::class, 'storeTaxa']);
     Route::get('/taxa/{agenda_id}/{paciente_id}', [AgendaController::class, 'verificarTaxa']);
 
+    Route::get('/importar-excel', [TabelaController::class, 'importarExcelIndex'])->name('imp_tabela.index');
+    Route::delete('/tabela/{nome}', [TabelaController::class, 'excluirTabela'])->name('tabela.excluir');
+    Route::post('/importar-excel', [TabelaController::class, 'importarExcel']);
+
     Route::middleware(['auth', 'check.question'])->group(function () {
         Route::post('/salvar-sala', [UserController::class, 'salvarSala']);
         Route::get('/home', function () {

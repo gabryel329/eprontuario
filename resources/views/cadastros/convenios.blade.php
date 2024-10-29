@@ -175,28 +175,54 @@
                                         <div class="row">
                                             <div class="mb-3 col-md-4">
                                                 <label class="form-label">Procedimentos</label>
-                                                <input class="form-control" id="impmedico" name="impmedico"
-                                                    placeholder="%" type="text">
+                                                <select class="form-control" id="tab_proc_id" name="tab_proc_id">
+                                                    <option value="">Selecione um Procedimento</option>
+                                                    @foreach ($procedimentos as $proc)
+                                                        <option value="{{ $proc->table_name }}">{{ $proc->table_name }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
+                                            
                                             <div class="mb-3 col-md-2">
                                                 <label class="form-label">Medicamentos</label>
-                                                <input class="form-control" id="inss" name="inss" type="text">
+                                                <select class="form-control" id="tab_med_id" name="tab_med_id">
+                                                    <option value="">Selecione um Medicamento</option>
+                                                    @foreach ($medicamentos as $med)
+                                                        <option value="{{ $med->table_name }}">{{ $med->table_name }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
+                                            
                                             <div class="mb-3 col-md-2">
                                                 <label class="form-label">Material</label>
-                                                <input class="form-control" id="iss" name="iss"
-                                                    type="text">
+                                                <select class="form-control" id="tab_mat_id" name="tab_mat_id">
+                                                    <option value="">Selecione um Material</option>
+                                                    @foreach ($materiais as $mat)
+                                                        <option value="{{ $mat->table_name }}">{{ $mat->table_name }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
+                                            
                                             <div class="mb-3 col-md-2">
                                                 <label class="form-label">Taxa</label>
-                                                <input class="form-control" id="ir" name="ir"
-                                                    type="text">
+                                                <select class="form-control" id="tab_taxa_id" name="tab_taxa_id">
+                                                    <option value="">Selecione uma Taxa</option>
+                                                    @foreach ($materiais as $taxa) 
+                                                        <option value="{{ $taxa->table_name }}">{{ $taxa->table_name }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
+                                            
                                             <div class="mb-3 col-md-2">
                                                 <label class="form-label">Cotação</label>
-                                                <input class="form-control" id="ir" name="ir"
-                                                    type="text">
+                                                <select class="form-control" id="tab_cota_id" name="tab_cota_id">
+                                                    <option value="">Selecione uma Cotação</option>
+                                                    @foreach ($cotacoes as $cota)
+                                                        <option value="{{ $cota->id }}">{{ $cota->nome }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
+                                            
                                         </div>
                                     </div>
                                 </div>

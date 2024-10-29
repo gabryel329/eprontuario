@@ -152,7 +152,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="treeview {{ request()->is('TabelaProcedimento*','honorario*', 'convenioProcedimento*', 'relatorioFinanceiro*') ? 'is-expanded' : '' }}">
+            <li class="treeview {{ request()->is('TabelaProcedimento*','honorario*', 'convenioProcedimento*', 'relatorioFinanceiro*', 'importar-excel*') ? 'is-expanded' : '' }}">
                 <a class="app-menu__item" href="#" data-toggle="treeview">
                     <i class="app-menu__icon bi bi-bank"></i>
                     <span class="app-menu__label">Financeiro</span>
@@ -167,6 +167,11 @@
                     <li>
                         <a class="treeview-item {{ request()->is('convenioProcedimento*') ? 'active' : '' }}" href="{{ route('convenioProcedimento.index') }}">
                             <i class="icon bi bi-list-task"></i> Cotação Convenio
+                        </a>
+                    </li>
+                    <li>
+                        <a class="treeview-item {{ request()->is('importar-excel*') ? 'active' : '' }}" href="{{ route('imp_tabela.index') }}">
+                            <i class="icon bi bi-building-fill-add"></i> Importar Tabelas
                         </a>
                     </li>
                     <li>

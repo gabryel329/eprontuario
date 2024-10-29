@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Convenio;
 use App\Models\ConvenioProcedimento;
 use App\Models\Procedimentos;
+use App\Models\Tabela;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ConvenioController extends Controller
 {
@@ -15,8 +17,38 @@ class ConvenioController extends Controller
     public function index()
     {
         $convenios = Convenio::all();
+        $procedimentos = DB::select("
+            SELECT table_name 
+            FROM information_schema.tables 
+            WHERE table_schema = 'public' 
+            AND (
+                table_name LIKE 'tab_amb%' OR
+                table_name LIKE 'tab_cbhpm%'
+            );
+        ");
 
-        return view('cadastros.convenios', compact(['convenios']));
+        $materiais = DB::select("
+            SELECT table_name 
+            FROM information_schema.tables 
+            WHERE table_schema = 'public' 
+            AND (
+                table_name LIKE 'tab_simpro%'
+            );
+        ");
+
+        $medicamentos = DB::select("
+            SELECT table_name 
+            FROM information_schema.tables 
+            WHERE table_schema = 'public' 
+            AND (
+                table_name LIKE 'tab_simpro%' OR
+                table_name LIKE 'tab_brasindice%'
+            );
+        ");
+
+        $cotacoes = Tabela::all();
+
+        return view('cadastros.convenios', compact(['convenios','cotacoes','medicamentos','materiais','procedimentos']));
     }
 
     public function index1()
@@ -44,7 +76,8 @@ class ConvenioController extends Controller
         'uf', 'numero', 'complemento', 'telefone', 'celular',
         'operadora', 'multa', 'jutos', 'dias_desc', 'desconto',
         'agfaturamento', 'pagamento', 'impmedico', 'inss',
-        'iss','ir','pis','cofins','csl',
+        'iss','ir','pis','cofins','csl','tab_cota_id', 'tab_taxa_id',
+        'tab_mat_id', 'tab_med_id', 'tab_proc_id'
     ]);
 
     $existeConvenio = Convenio::where('ans', $data['ans'])->first();
@@ -93,7 +126,8 @@ class ConvenioController extends Controller
         'uf', 'numero', 'complemento', 'telefone', 'celular',
         'operadora', 'multa', 'jutos', 'dias_desc', 'desconto',
         'agfaturamento', 'pagamento', 'impmedico', 'inss',
-        'iss', 'ir','pis','cofins','csl'
+        'iss', 'ir','pis','cofins','csl','tab_cota_id', 'tab_taxa_id',
+        'tab_mat_id', 'tab_med_id', 'tab_proc_id'
     ]);
 
     // Atualiza o convênio com os novos dados
