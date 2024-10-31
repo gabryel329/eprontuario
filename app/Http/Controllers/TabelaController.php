@@ -46,62 +46,45 @@ class TabelaController extends Controller
 
     public function importarExcel(Request $request)
     {
-        $request->validate([
-            'tabela' => 'required|in:brasindice,amb92,simpro,amb96,cbhpm',
-            'pdf_text' => 'required|string',
-        ]);
-
-        $prefixoTabela = strtolower($request->input('tabela'));
-        $tableName = "tab_{$prefixoTabela}1";
-
-        while (Schema::hasTable($tableName)) {
-            $tableName = $this->incrementarNomeTabela($tableName);
-        }
-
-        $this->criarTabela($prefixoTabela, $tableName);
-
-        $rows = $this->processarTextoPdf($request->input('pdf_text'));
-
-        if (empty($rows)) {
-            return response()->json(['error' => 'Nenhum dado válido encontrado no PDF.'], 400);
-        }
-
-        foreach ($rows as $row) {
-            DB::table($tableName)->insert($this->formatarDados($prefixoTabela, $row));
-        }
-
-        return response()->json(['message' => "Importação para {$tableName} concluída com sucesso!"]);
-    }
-
-
-
-    // Função para processar o texto extraído do PDF
-    private function processarTextoPdf($pdfText)
-    {
-        // Verificar se o texto não está vazio
-        if (empty(trim($pdfText))) {
-            return []; // Retorna um array vazio se o PDF estiver em branco
-        }
-
-        // Dividir o texto em linhas
-        $lines = explode("\n", trim($pdfText));
-        $data = [];
-
-        // Processar cada linha
-        foreach ($lines as $line) {
-            // Remover espaços extras e dividir por espaços múltiplos
-            $columns = preg_split('/\s+/', trim($line));
-
-            // Apenas adicionar se houver pelo menos uma coluna válida
-            if (!empty($columns)) {
-                $data[] = $columns;
+        \Log::info('Entrou no método importarExcel'); 
+    
+        try {
+            $request->validate([
+                'tabela' => 'required|in:brasindice,amb92,simpro,amb96,cbhpm',
+                'excel_data' => 'required|array',
+                'descricao' => 'required|string|max:255'
+            ]);
+    
+            $prefixoTabela = strtolower($request->input('tabela'));
+            
+            // Formatar a descrição para uso no nome da tabela (substitui espaços por underscores)
+            $descricao = str_replace(' ', '_', $request->input('descricao'));
+    
+            // Concatenar o prefixo da tabela com a descrição formatada
+            $tableName = "tab_{$prefixoTabela}_{$descricao}";
+    
+            // Criar a tabela com o nome final
+            $this->criarTabela($prefixoTabela, $tableName);
+    
+            $rows = $request->input('excel_data');
+    
+            if (empty($rows)) {
+                return response()->json(['error' => 'Nenhum dado válido encontrado no Excel.'], 400);
             }
+    
+            // Percorre cada linha da planilha e insere no banco de dados
+            foreach ($rows as $row) {
+                DB::table($tableName)->insert($this->formatarDados($prefixoTabela, $row));
+            }
+    
+            return response()->json(['message' => "Importação concluída com sucesso!"]);
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            return response()->json(['error' => 'Ocorreu um erro no servidor.'], 500);
         }
-
-        return $data;
     }
-
-
+    
+    
     // Função para incrementar o nome da tabela
     private function incrementarNomeTabela($tableName)
     {
@@ -158,26 +141,29 @@ class TabelaController extends Controller
                 case 'amb96':
                     $table->string('codigo')->nullable();
                     $table->string('descricao')->nullable();
-                    $table->string('m2')->nullable();
-                    $table->string('filme')->nullable();
+                    $table->string('m_filme')->nullable();
                     $table->string('auxiliares')->nullable();
                     $table->string('incidencia')->nullable();
-                    $table->string('porte')->nullable();
-                    $table->string('anestesico')->nullable();
+                    $table->string('porte_anestesico')->nullable();
                     $table->string('tabela')->nullable();
-                    $table->string('valor_co')->nullable();
+                    $table->string('valor')->nullable();
+                    $table->string('co')->nullable();
                     $table->string('valor_total')->nullable();
                     break;
                 case 'cbhpm':
-                    $table->string('particular')->nullable();
-                    $table->string('servico')->nullable();
-                    $table->string('descricao')->nullable();
-                    $table->string('aux')->nullable();
-                    $table->string('m2')->nullable();
-                    $table->string('indice')->nullable();
-                    $table->string('pa')->nullable();
-                    $table->string('ps')->nullable();
-                    $table->string('valor')->nullable();
+                    $table->string('id_grupo')->nullable();
+                    $table->string('descricao_grupo')->nullable();
+                    $table->string('id_subgrupo')->nullable();
+                    $table->string('descricao_subgrupo')->nullable();
+                    $table->string('codigo_anatomico')->nullable();
+                    $table->string('procedimento')->nullable();
+                    $table->string('porte')->nullable();
+                    $table->string('custo_operacional')->nullable();
+                    $table->string('auxiliares')->nullable();
+                    $table->string('porte_anestesico')->nullable();
+                    $table->string('filmes')->nullable();
+                    $table->string('incidencia')->nullable();
+                    $table->string('unidade_radiof')->nullable();
                     break;
             }
             $table->timestamps();
@@ -227,41 +213,34 @@ class TabelaController extends Controller
                     'ANVISA' => $row[14] ?? null,
                 ];
             case 'amb92':
-                return [
-                    'codigo' => $row[0] ?? null,
-                    'descricao' => $row[1] ?? null,
-                    'm2' => $row[2] ?? null,
-                    'filme' => $row[3] ?? null,
-                    'auxiliares' => $row[4] ?? null,
-                    'incidencia' => $row[5] ?? null,
-                    'porte' => $row[6] ?? null,
-                    'anestesico' => $row[7] ?? null,
-                    'tabela' => $row[8] ?? null,
-                    'valor_co' => $row[9] ?? null,
-                    'valor_total' => $row[10] ?? null,
-                ];
             case 'amb96':
                 return [
                     'codigo' => $row[0] ?? null,
-                    'procedimento' => $row[1] ?? null,
-                    'hm' => $row[2] ?? null,
-                    'cop' => $row[3] ?? null,
-                    'num_aux' => $row[4] ?? null,
-                    'porte' => $row[5] ?? null,
-                    'incid' => $row[6] ?? null,
-                    'filme_m2' => $row[7] ?? null,
+                    'descricao' => $row[1] ?? null,
+                    'm_filme' => $row[2] ?? null,
+                    'auxiliares' => $row[3] ?? null,
+                    'incidencia' => $row[4] ?? null,
+                    'porte_anestesico' => $row[5] ?? null,
+                    'tabela' => $row[6] ?? null,
+                    'valor' => $row[7] ?? null,
+                    'co' => $row[8] ?? null,
+                    'valor_total' => $row[9] ?? null,
                 ];
             case 'cbhpm':
                 return [
-                    'particular' => $row[0] ?? null,
-                    'servico' => $row[1] ?? null,
-                    'descricao' => $row[2] ?? null,
-                    'aux' => $row[3] ?? null,
-                    'm2' => $row[4] ?? null,
-                    'indice' => $row[5] ?? null,
-                    'pa' => $row[6] ?? null,
-                    'ps' => $row[7] ?? null,
-                    'valor' => $row[8] ?? null,
+                    'id_grupo' => $row[0] ?? null,
+                    'descricao_grupo' => $row[1] ?? null,
+                    'id_subgrupo' => $row[2] ?? null,
+                    'descricao_subgrupo' => $row[3] ?? null,
+                    'codigo_anatomico' => $row[4] ?? null,
+                    'procedimento' => isset($row[5]) ? substr($row[5], 0, 255) : null, // Truncar para 255 caracteres
+                    'porte' => $row[6] ?? null,
+                    'custo_operacional' => $row[7] ?? null,
+                    'auxiliares' => $row[8] ?? null,
+                    'porte_anestesico' => $row[9] ?? null,
+                    'filmes' => $row[10] ?? null,
+                    'incidencia' => $row[11] ?? null,
+                    'unidade_radiof' => $row[12] ?? null,
                 ];
             default:
                 return [];
