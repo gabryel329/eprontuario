@@ -46,9 +46,16 @@ class ConvenioController extends Controller
             );
         ");
 
-        $cotacoes = Tabela::all();
+        $portes = DB::select("
+            SELECT table_name 
+            FROM information_schema.tables 
+            WHERE table_schema = 'public' 
+            AND (
+                table_name LIKE 'porte_%'
+            );
+        ");
 
-        return view('cadastros.convenios', compact(['convenios','cotacoes','medicamentos','materiais','procedimentos']));
+        return view('cadastros.convenios', compact(['convenios','portes','medicamentos','materiais','procedimentos']));
     }
 
     public function index1()

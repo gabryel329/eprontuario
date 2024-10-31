@@ -174,11 +174,11 @@
                             <i class="icon bi bi-building-fill-add"></i> Importar Tabelas
                         </a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a class="treeview-item {{ request()->is('TabelaProcedimento*') ? 'active' : '' }}" href="{{ route('TabelaProcedimento.index') }}">
                             <i class="icon bi bi-table"></i> Tabelas
                         </a>
-                    </li>
+                    </li> --}}
                     <li>
                         <a class="treeview-item">
                             <i class="icon bi bi-file-earmark-excel"></i> Relatórios

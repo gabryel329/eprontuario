@@ -183,6 +183,21 @@
                                                 </select>
                                             </div>
                                             
+                                            <div class="mb-3 col-md-2" id="porte-container" style="display: none;">
+                                                <label class="form-label">Porte <span style="color: red">*</span></label>
+                                                <select class="form-control" id="tab_cota_porte" name="tab_cota_porte" title="Selecione caso esteja usando a tabela CBHPM">
+                                                    <option value="">Selecione uma Cotação</option>
+                                                    @foreach ($portes as $porte)
+                                                        <option value="{{ $porte->table_name }}">{{ $porte->table_name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="mb-3 col-md-2" id="ch-container" style="display: none;">
+                                                <label class="form-label">CH <span style="color: red">*</span></label>
+                                                <input type="text" class="form-control" id="tab_cota_ch" name="tab_cota_ch" title="Selecione caso esteja usando a tabela AMB">
+                                            </div>
+                                            
                                             <div class="mb-3 col-md-2">
                                                 <label class="form-label">Medicamentos</label>
                                                 <select class="form-control" id="tab_med_id" name="tab_med_id">
@@ -212,17 +227,6 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            
-                                            <div class="mb-3 col-md-2">
-                                                <label class="form-label">Cotação</label>
-                                                <select class="form-control" id="tab_cota_id" name="tab_cota_id">
-                                                    <option value="">Selecione uma Cotação</option>
-                                                    @foreach ($cotacoes as $cota)
-                                                        <option value="{{ $cota->id }}">{{ $cota->nome }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            
                                         </div>
                                     </div>
                                 </div>
@@ -324,5 +328,22 @@ function pesquisacep(valor) {
             alert("CEP não encontrado.");
         }
     }
+
+    document.getElementById('tab_proc_id').addEventListener('change', function() {
+        var selectedTable = this.value;
+        var porteContainer = document.getElementById('porte-container');
+        var chContainer = document.getElementById('ch-container');
+
+        // Oculta ambos os campos por padrão
+        porteContainer.style.display = 'none';
+        chContainer.style.display = 'none';
+
+        // Exibe o campo adequado com base no valor selecionado
+        if (selectedTable.startsWith('tab_cbhpm')) {
+            porteContainer.style.display = 'block';
+        } else if (selectedTable.startsWith('tab_amb')) {
+            chContainer.style.display = 'block';
+        }
+    });
 </script>
 @endsection

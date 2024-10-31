@@ -28,12 +28,33 @@ class TabelaController extends Controller
             );
         ");
 
+        $portes = DB::select("
+            SELECT table_name 
+            FROM information_schema.tables 
+            WHERE table_schema = 'public' 
+            AND (
+                table_name LIKE 'porte_%'
+            );
+        ");
+
         // Extrair apenas os nomes das tabelas
         $tabelas = array_map(function ($table) {
             return $table->table_name;
         }, $tabelas);
 
-        return view('cadastros.imp_tabela', compact('tabelas'));
+        $portes = array_map(function ($table) {
+            return $table->table_name;
+        }, $portes);
+
+        return view('cadastros.imp_tabela', compact(['tabelas', 'portes']));
+    }
+
+    public function porteExcluir($nome)
+    {
+        // Excluir a tabela específica
+        DB::statement("DROP TABLE IF EXISTS {$nome}");
+
+        return redirect()->route('imp_tabela.index')->with('success', "Porte {$nome} excluído com sucesso!");
     }
 
     public function excluirTabela($nome)
@@ -43,6 +64,37 @@ class TabelaController extends Controller
 
         return redirect()->route('imp_tabela.index')->with('success', "Tabela {$nome} excluída com sucesso!");
     }
+
+    public function porteSalvar(Request $request)
+    {
+        // Obter a descrição e formatar para o nome da tabela
+        $descricao = $request->input('descricao');
+        $tableName = 'porte_' . strtolower(str_replace(' ', '_', $descricao)); // Adicionar prefixo "porte_"
+
+        // Coletar todos os dados do formulário, exceto o campo 'descricao' e '_token'
+        $data = $request->except(['descricao', '_token']);
+
+        // Verificar se a tabela existe; caso contrário, criar a tabela
+        if (!Schema::hasTable($tableName)) {
+            Schema::create($tableName, function (Blueprint $table) use ($data) {
+                $table->id();
+                foreach ($data as $column => $value) {
+                    $table->string($column)->nullable();
+                }
+                $table->timestamps();
+            });
+        }
+
+        // Inserir os dados na tabela
+        try {
+            DB::table($tableName)->insert($data);
+            return redirect()->back()->with('success', 'Dados inseridos com sucesso!');
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            return redirect()->back()->with('error', 'Erro ao inserir dados.');
+        }
+    }
+
 
     public function importarExcel(Request $request)
     {

@@ -294,6 +294,9 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::delete('/tabela/{nome}', [TabelaController::class, 'excluirTabela'])->name('tabela.excluir');
     Route::post('/importar-excel', [TabelaController::class, 'importarExcel']);
 
+    Route::post('/porte/salvar', [TabelaController::class, 'porteSalvar'])->name('porte.salvar');
+    Route::delete('/porte/{nome}', [TabelaController::class, 'porteExcluir'])->name('porte.excluir');
+
     Route::middleware(['auth', 'check.question'])->group(function () {
         Route::post('/salvar-sala', [UserController::class, 'salvarSala']);
         Route::get('/home', function () {
