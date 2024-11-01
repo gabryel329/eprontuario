@@ -84,7 +84,7 @@ class ConvenioController extends Controller
         'operadora', 'multa', 'jutos', 'dias_desc', 'desconto',
         'agfaturamento', 'pagamento', 'impmedico', 'inss',
         'iss','ir','pis','cofins','csl','tab_cota_id', 'tab_taxa_id',
-        'tab_mat_id', 'tab_med_id', 'tab_proc_id'
+        'tab_mat_id', 'tab_med_id', 'tab_proc_id', 'tab_cota_porte', 'tab_cota_ch'
     ]);
 
     $existeConvenio = Convenio::where('ans', $data['ans'])->first();
@@ -92,7 +92,6 @@ class ConvenioController extends Controller
     if ($existeConvenio) {
         return redirect()->route('convenio.index')->with('error', 'Convênio já existe!');
     }
-    dd($data);
     Convenio::create($data);
     return redirect()->route('convenio.index')->with('success', 'Convênio cadastrado com sucesso!');
 }
@@ -134,7 +133,7 @@ class ConvenioController extends Controller
         'operadora', 'multa', 'jutos', 'dias_desc', 'desconto',
         'agfaturamento', 'pagamento', 'impmedico', 'inss',
         'iss', 'ir','pis','cofins','csl','tab_cota_id', 'tab_taxa_id',
-        'tab_mat_id', 'tab_med_id', 'tab_proc_id'
+        'tab_mat_id', 'tab_med_id', 'tab_proc_id', 'tab_cota_porte', 'tab_cota_ch'
     ]);
 
     // Atualiza o convênio com os novos dados

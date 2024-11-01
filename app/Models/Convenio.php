@@ -14,7 +14,7 @@ class Convenio extends Model
     protected $fillable = ['nome', 'cnpj', 'ans', 'cep', 'rua', 'bairro', 'cidade', 'uf', 'numero', 'complemento', 
     'telefone', 'celular', 'operadora', 'multa', 'jutos', 'dias_desc', 'desconto', 'agfaturamento', 'pagamento',
     'impmedico', 'inss', 'iss', 'ir','pis','cofins','csl','tab_cota_id', 'tab_taxa_id',
-    'tab_mat_id', 'tab_med_id', 'tab_proc_id'];
+    'tab_mat_id', 'tab_med_id', 'tab_proc_id', 'tab_cota_porte', 'tab_cota_ch'];
     protected $dates = ['deleted_at'];
 
     public function procedimentos()

@@ -24,6 +24,7 @@ use DateTime;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 use Log;
 
 class AgendaController extends Controller
@@ -266,6 +267,38 @@ class AgendaController extends Controller
 
         return view('agenda.marcacao', compact('especialidades', 'convenios', 'profissionais', 'agendas', 'pacientes', 'procedimentos', 'feriado'));
     }
+
+    public function getProcedimentos(Request $request)
+    {
+        try {
+            $convenioId = $request->input('convenio_id');
+            $convenio = Convenio::find($convenioId);
+
+            if ($convenio && $convenio->tab_proc_id) {
+                // Verifica se a tabela existe antes de consultar
+                if (Schema::hasTable($convenio->tab_proc_id)) {
+                    // Verifica se o nome da tabela começa com "tab_amb92" ou "tab_amb96"
+                    if (str_starts_with($convenio->tab_proc_id, 'tab_amb92') || str_starts_with($convenio->tab_proc_id, 'tab_amb96')) {
+                        $procedimentos = DB::table($convenio->tab_proc_id)->select('id', 'descricao', 'codigo')->get();
+                    } else {
+                        $procedimentos = DB::table($convenio->tab_proc_id)->select('id', 'procedimento', 'codigo_anatomico')->get();
+                    }
+
+                    return response()->json($procedimentos);
+                } else {
+                    return response()->json(['error' => 'Tabela de procedimentos não encontrada.'], 404);
+                }
+            }
+
+            return response()->json([]);
+        } catch (\Exception $e) {
+            // Loga o erro e retorna uma resposta com o erro
+            Log::error("Erro ao buscar procedimentos: " . $e->getMessage());
+            return response()->json(['error' => 'Erro interno ao buscar procedimentos.'], 500);
+        }
+    }
+
+
 
     public function verificarDisponibilidade($profissionalId, $especialidadeId, $data)
     {

@@ -105,8 +105,7 @@
             </div>
         </div>
     </main>
-    <div class="modal fade" id="procedimentoModal" tabindex="-1" aria-labelledby="procedimentoModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="procedimentoModal" tabindex="-1" aria-labelledby="procedimentoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -115,8 +114,7 @@
                 </div>
                 <div class="modal-body custom-modal-body">
                     <div class="mb-3">
-                        <input class="form-control" id="procedimentoSearch" type="text"
-                            placeholder="Pesquisar por nome ou código...">
+                        <input class="form-control" id="procedimentoSearch" type="text" placeholder="Pesquisar por nome ou código...">
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover" id="procedimentoTable">
@@ -129,19 +127,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($procedimentos as $procedimento)
-                                    <tr>
-                                        <td>{{ $procedimento->id }}</td>
-                                        <td>{{ $procedimento->procedimento }}</td>
-                                        <td>{{ $procedimento->codigo }}</td>
-                                        <td>
-                                            <button class="btn btn-primary" type="button"
-                                                onclick="selectProcedimento('{{ $procedimento->id }}', '{{ $procedimento->procedimento }}', '{{ $procedimento->codigo }}')">
-                                                Selecionar
-                                            </button>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                <!-- O conteúdo será inserido dinamicamente pelo JavaScript -->
                             </tbody>
                         </table>
                     </div>
@@ -149,12 +135,15 @@
             </div>
         </div>
     </div>
+    
 
 
     <!-- Scripts do FullCalendar -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/locales/pt-br.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/interaction.min.js"></script>
+    <script src="{{ asset('js/jquery-3.7.0.min.js') }}"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
@@ -326,9 +315,9 @@
 
             // Verifica se a linha deve ser desabilitada
             var isDisabled = '';
-if (isToday && (horaHorario < currentHour || (horaHorario === currentHour && minutoHorario < currentMinute))) {
-    isDisabled = 'disabled="disabled"';
-}
+            if (isToday && (horaHorario < currentHour || (horaHorario === currentHour && minutoHorario < currentMinute))) {
+                isDisabled = 'disabled="disabled"';
+            }
 
 
             return `
@@ -348,7 +337,7 @@ if (isToday && (horaHorario < currentHour || (horaHorario === currentHour && min
 
 
         function renderProcedimentoInput(horario, procedimentos, isDisabled) {
-    return `
+            return `
         <input 
             type="text" 
             class="form-control" 
@@ -365,7 +354,7 @@ if (isToday && (horaHorario < currentHour || (horaHorario === currentHour && min
             name="procedimento_id[${horario.hora}]" 
             id="procedimento_id${horario.hora}">
     `;
-}
+        }
 
 
         function abrirModalProcedimento(horario) {
@@ -396,16 +385,69 @@ if (isToday && (horaHorario < currentHour || (horaHorario === currentHour && min
 
         function renderConvenioSelect(horario, convenios, isDisabled) {
             return `
-                <select name="convenio[${horario}]" class="select2 form-control" ${isDisabled}>
+                <select id="convenioProc" name="convenio[${horario}]" class="select2 form-control" ${isDisabled}>
                     <option value="">${horario.convenio_id ? '' : 'Selecione um Convênio'}</option>
                     ${convenios.map(convenio => `
-                                                    <option value="${convenio.id}" ${horario.convenio_id == convenio.id ? 'selected' : ''}>
-                                                        ${convenio.nome}
-                                                    </option>
-                                                `).join('')}
+                                                        <option value="${convenio.id}" ${horario.convenio_id == convenio.id ? 'selected' : ''}>
+                                                            ${convenio.nome}
+                                                        </option>
+                                                    `).join('')}
                 </select>
             `;
         }
+
+        $(document).on('change', '#convenioProc', function() {
+    const convenioId = $(this).val(); // Pega o ID do convênio selecionado
+
+    if (convenioId) {
+        $.ajax({
+            url: '{{ route('get.procedimentos') }}', // URL correta para o controlador
+            type: 'POST',
+            data: {
+                convenio_id: convenioId,
+                _token: '{{ csrf_token() }}' // Token CSRF para segurança
+            },
+            success: function(data) {
+                // Limpa o conteúdo atual da tabela
+                const tbody = $('#procedimentoTable tbody');
+                tbody.empty();
+
+                // Verifica se há procedimentos retornados
+                if (data.length > 0) {
+                    data.forEach(function(procedimento) {
+                        const row = `
+                            <tr>
+                                <td>${procedimento.id}</td>
+                                <td>${procedimento.descricao || procedimento.procedimento}</td>
+                                <td>${procedimento.codigo || procedimento.codigo_anatomico}</td>
+                                <td>
+                                    <button class="btn btn-primary" type="button"
+                                        onclick="selectProcedimento('${procedimento.id}', '${procedimento.descricao || procedimento.procedimento}', '${procedimento.codigo || procedimento.codigo_anatomico}')">
+                                        Selecionar
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                        tbody.append(row);
+                    });
+                } else {
+                    const emptyRow = `
+                        <tr>
+                            <td colspan="4" class="text-center">Nenhum procedimento encontrado</td>
+                        </tr>
+                    `;
+                    tbody.append(emptyRow);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Erro ao buscar procedimentos:', error);
+            }
+        });
+    } else {
+        console.log('Nenhum convênio selecionado');
+    }
+});
+
 
         // function updateCodigo(selectElement) {
         //     var selectedOption = selectElement.options[selectElement.selectedIndex];
