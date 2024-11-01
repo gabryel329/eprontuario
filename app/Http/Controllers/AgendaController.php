@@ -274,22 +274,27 @@ class AgendaController extends Controller
             $convenioId = $request->input('convenio_id');
             $convenio = Convenio::find($convenioId);
 
-            if ($convenio && $convenio->tab_proc_id) {
-                // Verifica se a tabela existe antes de consultar
-                if (Schema::hasTable($convenio->tab_proc_id)) {
-                    // Verifica se o nome da tabela começa com "tab_amb92" ou "tab_amb96"
-                    if (str_starts_with($convenio->tab_proc_id, 'tab_amb92') || str_starts_with($convenio->tab_proc_id, 'tab_amb96')) {
-                        $procedimentos = DB::table($convenio->tab_proc_id)->select('id', 'descricao', 'codigo')->get();
+            if ($convenio) {
+                // Verifica se o convenio possui uma tabela de procedimentos
+                if ($convenio->tab_proc_id) {
+                    // Verifica se a tabela especificada existe antes de consultar
+                    if (Schema::hasTable($convenio->tab_proc_id)) {
+                        // Verifica se o nome da tabela começa com "tab_amb92" ou "tab_amb96"
+                        if (str_starts_with($convenio->tab_proc_id, 'tab_amb92') || str_starts_with($convenio->tab_proc_id, 'tab_amb96')) {
+                            $procedimentos = DB::table($convenio->tab_proc_id)->select('id', 'descricao', 'codigo')->get();
+                        } elseif (str_starts_with($convenio->tab_proc_id, 'tab_amb92')) {
+                            $procedimentos = DB::table($convenio->tab_proc_id)->select('id', 'procedimento', 'codigo_anatomico')->get();
+                        }
                     } else {
-                        $procedimentos = DB::table($convenio->tab_proc_id)->select('id', 'procedimento', 'codigo_anatomico')->get();
+                        return response()->json(['error' => 'Tabela de procedimentos não encontrada.'], 404);
                     }
-
-                    return response()->json($procedimentos);
                 } else {
-                    return response()->json(['error' => 'Tabela de procedimentos não encontrada.'], 404);
+                    // Caso tab_proc_id seja null, usa a tabela padrão 'procedimentos'
+                    $procedimentos = DB::table('procedimentos')->select('id', 'procedimento', 'codigo')->get();
                 }
+            
+                return response()->json($procedimentos);
             }
-
             return response()->json([]);
         } catch (\Exception $e) {
             // Loga o erro e retorna uma resposta com o erro
@@ -297,8 +302,6 @@ class AgendaController extends Controller
             return response()->json(['error' => 'Erro interno ao buscar procedimentos.'], 500);
         }
     }
-
-
 
     public function verificarDisponibilidade($profissionalId, $especialidadeId, $data)
     {
