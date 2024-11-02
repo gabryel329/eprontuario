@@ -474,8 +474,8 @@
                                         type="text">
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="codigo_cnes" class="form-label">Código CNES</label>
-                                    <input class="form-control" id="codigo_cnes" name="codigo_cnes" type="text">
+                                    <label for="cnes" class="form-label">Código CNES</label>
+                                    <input class="form-control" id="cnes" name="cnes" type="text">
                                 </div>
                             </div>
                             <div class="row">
@@ -491,8 +491,8 @@
                                         type="text">
                                 </div>
                                 <div class="col-md-2">
-                                    <label for="numero_conselho" class="form-label">Nº Conselho</label>
-                                    <input class="form-control" id="numero_conselho" name="numero_conselho"
+                                    <label for="conselho_1" class="form-label">Nº Conselho</label>
+                                    <input class="form-control" id="conselho_1" name="conselho_1"
                                         type="text">
                                 </div>
                                 <div class="col-md-1">
@@ -685,7 +685,7 @@
                                 </div>
                             </div>
                             <hr>
-                            <h5>Dados do Profissional</h5>
+                            <h5>Dados do Solicitante</h5>
                             <div class="row">
                                 <div class="col-md-4">
                                     <label for="nome_profissional_solicitante" class="form-label">15- Nome do Profissional
@@ -700,9 +700,9 @@
                                         type="text" value="{{ old('conselho_profissional') }}">
                                 </div>
                                 <div class="col-md-2">
-                                    <label for="numero_conselho" class="form-label">17- Nº Conselho</label>
-                                    <input class="form-control" id="numero_conselho" name="numero_conselho"
-                                        type="text" value="{{ old('numero_conselho') }}">
+                                    <label for="conselho_1" class="form-label">17- Nº Conselho</label>
+                                    <input class="form-control" id="conselho_1" name="conselho_1"
+                                        type="text" value="{{ old('conselho_1') }}">
                                 </div>
                                 <div class="col-md-2">
                                     <label for="uf_conselho" class="form-label">18- UF</label>
@@ -724,62 +724,69 @@
                                     <input class="form-control" id="carater_atendimento" name="carater_atendimento"
                                         type="text" value="{{ old('carater_atendimento') }}">
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-md-4">
                                     <label for="data_solicitacao" class="form-label">22 - Data da Solicitação:</label>
                                     <input class="form-control" id="data_solicitacao" name="data_solicitacao"
-                                        type="text" value="{{ old('data_solicitacao') }}">
+                                        type="date" value="{{ old('data_solicitacao') }}">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="indicacao_clinica" class="form-label">23 - Indicação Clínica:</label>
+                                    <input class="form-control" id="indicacao_clinica" name="indicacao_clinica"
+                                        type="text" value="{{ old('indicacao_clinica') }}">
                                 </div>
                             </div>
                             <h5>Dados do Executante</h5>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label for="nome_contratado_executante" class="form-label">23 - Nome
+                                    <label for="nome_contratado" class="form-label">23 - Nome
                                         Contratado:</label>
-                                    <input class="form-control" id="nome_contratado_executante"
-                                        name="nome_contratado_executante" type="text"
-                                        value="{{ old('nome_contratado_executante') }}">
+                                    <input class="form-control" id="nome_contratado"
+                                        name="nome_contratado" type="text"
+                                        value="{{ old('nome_contratado') }}">
                                 </div>
                                 <div class="col-md-2">
-                                    <label for="codigo_operadora_executante" class="form-label">24 - Código
+                                    <label for="codigo_operadora" class="form-label">24 - Código
                                         Operadora:</label>
-                                    <input class="form-control" id="codigo_operadora_executante"
-                                        name="codigo_operadora_executante" type="text"
-                                        value="{{ old('codigo_operadora_executante') }}">
+                                    <input class="form-control" id="codigo_operadora"
+                                        name="codigo_operadora" type="text"
+                                        value="{{ old('codigo_operadora') }}">
                                 </div>
                                 <div class="col-md-2">
-                                    <label for="codigo_cnes" class="form-label">25 - Código CNES:</label>
-                                    <input class="form-control" id="codigo_cnes" name="codigo_cnes" type="text"
-                                        value="{{ old('codigo_cnes') }}">
+                                    <label for="cnes" class="form-label">25 - Código CNES:</label>
+                                    <input class="form-control" id="cnes" name="cnes" type="text"
+                                        value="{{ old('cnes') }}">
                                 </div>
                             </div>
                             <h5>Dados do Atendimento</h5>
                             <div class="row">
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <label for="tipo_atendimento" class="form-label">26 - Tipo de Atendimento:</label>
                                     <input class="form-control" id="tipo_atendimento" name="tipo_atendimento"
                                         type="text" value="{{ old('tipo_atendimento') }}">
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-4">
+                                    <label for="motivo_encerramento" class="form-label">29 - Encerramento:</label>
+                                    <input class="form-control" id="motivo_encerramento" name="motivo_encerramento"
+                                    type="text" value="{{ old('motivo_encerramento') }}">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="regime_atendimento" class="form-label">30 - Regime Atendimento:</label>
+                                    <input class="form-control" id="regime_atendimento" name="regime_atendimento"
+                                    type="text" value="{{ old('regime_atendimento') }}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
                                     <label for="indicacao_acidente" class="form-label">27 - Indicação de Acidente:</label>
                                     <input class="form-control" id="indicacao_acidente" name="indicacao_acidente"
                                         type="text" value="{{ old('indicacao_acidente') }}">
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="tipo_consulta" class="form-label">28 - Tipo de Consulta:</label>
                                     <input class="form-control" id="tipo_consulta" name="tipo_consulta" type="text"
                                         value="{{ old('tipo_consulta') }}">
                                 </div>
-                                <div class="col-md-2">
-                                    <label for="motivo_encerramento" class="form-label">29 - Encerramento:</label>
-                                    <input class="form-control" id="motivo_encerramento" name="motivo_encerramento"
-                                        type="text" value="{{ old('motivo_encerramento') }}">
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="regime_atendimento" class="form-label">30 - Regime Atendimento:</label>
-                                    <input class="form-control" id="regime_atendimento" name="regime_atendimento"
-                                        type="text" value="{{ old('regime_atendimento') }}">
-                                </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="saude_ocupacional" class="form-label">31 - Saúde Ocupacional:</label>
                                     <input class="form-control" id="saude_ocupacional" name="saude_ocupacional"
                                         type="text" value="{{ old('saude_ocupacional') }}">
@@ -865,18 +872,17 @@
                             $('#modalConsulta #conselho_profissional').val(response
                                 .profissional ? response.profissional
                                 .conselho_profissional : '');
-                            $('#modalConsulta #numero_conselho').val(response.profissional ?
+                            $('#modalConsulta #conselho_1').val(response.profissional ?
                                 response.profissional.conselho : '');
                             $('#modalConsulta #uf_conselho').val(response.profissional ?
                                 response.profissional.uf_conselho : '');
                             $('#modalConsulta #registro_ans').val(response.convenio ? response
                                 .convenio.ans : '');
                             $('#modalConsulta #codigo_operadora').val(response.convenio ?
-                                response
-                                .convenio.operadora : '');
+                                response.convenio.operadora : '');
                             $('#modalConsulta #nome_contratado').val(response.empresa ? response
                                 .empresa.name : '');
-                            $('#modalConsulta #codigo_cnes').val(response.empresa ? response
+                            $('#modalConsulta #cnes').val(response.empresa ? response
                                 .empresa.cnes : '');
                             $('#modalConsulta #data_atendimento').val(response.agenda ? response
                                 .agenda.data : '');
@@ -907,6 +913,7 @@
                                 response.guia.valor_procedimento : '');
                             $('#modalConsulta #observacao').val(response.guia ?
                                 response.guia.observacao : '');
+
 
                             // Abrir o modal após preencher os campos
                             $('#modalConsulta').modal('show');
@@ -1004,8 +1011,24 @@
                                 .profissional?.name || '');
                             $('#modalSADT #conselho_profissional').val(response.profissional
                                 ?.conselho_profissional || '');
-                            $('#modalSADT #numero_conselho').val(response.profissional
-                                ?.numero_conselho || '');
+                            $('#modalSADT #conselho_1').val(response.profissional
+                                ?.conselho_1 || '');
+                            $('#modalSADT #nome_contratado').val(response.empresa ? response
+                                .empresa.name : '');
+                            $('#modalSADT #cnes').val(response.empresa ? response
+                                .empresa.cnes : '');
+                            $('#modalSADT #data_atendimento').val(response.agenda ? response
+                                .agenda.data : '');
+                            $('#modalSADT #codigo_procedimento').val(response.agenda ?
+                                response.agenda.codigo : '');
+                            $('#modalSADT #codigo_cbo').val(response.profissional ?
+                                response.profissional.cbo : '');
+                            $('#modalSADT #validade_carteira').val(response.paciente ?
+                            response.paciente.validade : '');
+                            $('#modalSADT #codigo_operadora').val(response.convenio ?
+                            response.convenio.operadora : '');
+                            $('#modalSADT #nome_social').val(response.paciente ? response
+                            .paciente.nome_social : '');
                             $('#modalSADT #uf_conselho').val(response.profissional?.uf || '');
                             $('#modalSADT #codigo_cbo').val(response.profissional?.cbo || '');
 
@@ -1301,4 +1324,3 @@
         }
     </script>
 @endsection
- 

@@ -66,7 +66,7 @@ class GuiaSpController extends Controller
         $nome_contratado = $request->input('nome_contratado');
         $nome_profissional_solicitante = $request->input('nome_profissional_solicitante');
         $conselho_profissional = $request->input('conselho_profissional');
-        $numero_conselho = $request->input('numero_conselho');
+        $numero_conselho = $request->input('conselho_1');
         $uf_conselho = $request->input('uf_conselho');
         $codigo_cbo = $request->input('codigo_cbo');
         $assinatura_profissional = $request->input('assinatura_profissional');
@@ -77,7 +77,7 @@ class GuiaSpController extends Controller
         $descricao_procedimento = $request->input('descricao_procedimento');
         $codigo_operadora_executante = $request->input('codigo_operadora_executante');
         $nome_contratado_executante = $request->input('nome_contratado_executante');
-        $codigo_cnes = $request->input('codigo_cnes');
+        $codigo_cnes = $request->input('cnes');
         $tipo_atendimento = $request->input('tipo_atendimento');
         $indicacao_acidente = $request->input('indicacao_acidente');
         $tipo_consulta = $request->input('tipo_consulta');
@@ -123,7 +123,7 @@ class GuiaSpController extends Controller
             'nome_contratado' => $nome_contratado,
             'nome_profissional_solicitante' => $nome_profissional_solicitante,
             'conselho_profissional' => $conselho_profissional,
-            'numero_conselho' => $numero_conselho,
+            'conselho_1' => $numero_conselho,
             'uf_conselho' => $uf_conselho,
             'codigo_cbo' => $codigo_cbo,
             'assinatura_profissional' => $assinatura_profissional,
@@ -268,7 +268,7 @@ class GuiaSpController extends Controller
         $guia->nome_contratado = $request->input('nome_contratado');
         $guia->nome_profissional_solicitante = $request->input('nome_profissional_solicitante');
         $guia->conselho_profissional = $request->input('conselho_profissional');
-        $guia->numero_conselho = $request->input('numero_conselho');
+        $guia->numero_conselho = $request->input('conselho_1');
         $guia->uf_conselho = $request->input('uf_conselho');
         $guia->codigo_cbo = $request->input('codigo_cbo');
         $guia->indicacao_acidente = $request->input('indicacao_acidente');
@@ -279,11 +279,38 @@ class GuiaSpController extends Controller
         $guia->descricao_procedimento = $request->input('descricao_procedimento');
         $guia->codigo_operadora_executante = $request->input('codigo_operadora_executante');
         $guia->nome_contratado_executante = $request->input('nome_contratado_executante');
-        $guia->codigo_cnes = $request->input('codigo_cnes');
+        $guia->codigo_cnes = $request->input('cnes');
         $guia->observacao = $request->input('observacao');
+        $guia->assinatura_profissional = $request->input('assinatura_profissional');
+        $guia->carater_atendimento = $request->input('carater_atendimento');
+        $guia->data_solicitacao = $request->input('data_solicitacao');
+        $guia->indicacao_clinica = $request->input('indicacao_clinica');
+        $guia->tipo_consulta = $request->input('tipo_consulta');
+        $guia->motivo_encerramento = $request->input('motivo_encerramento');
+        $guia->tabela = $request->input('tabela');
+        // $guia->hora_inicio_atendimento = $request->input('data_atendimento');
+        // $guia->hora_fim_atendimento = $request->input('data_atendimento');
+        $guia->codigo_procedimento_realizado = $request->input('codigo_procedimento_realizado');
+        $guia->descricao_procedimento_realizado = $request->input('descricao_procedimento_realizado');
+        $guia->quantidade_solicitada = $request->input('quantidade_solicitada');
+        $guia->quantidade_autorizada = $request->input('quantidade_autorizada');
+        $guia->via = $request->input('via');
+        $guia->tecnica = $request->input('tecnica');
+        $guia->valor_unitario = $request->input('valor_unitario');
+        $guia->valor_total = $request->input('valor_total');
+        $guia->codigo_operadora_profissional = $request->input('codigo_operadora_profissional');
+        $guia->nome_profissional = $request->input('nome_profissional_solicitante');
+        $guia->sigla_conselho = $request->input('conselho_profissional');
+        $guia->numero_conselho_profissional = $request->input('conselho_1');
+        $guia->uf_profissional = $request->input('uf_conselho');
+        $guia->codigo_cbo_profissional = $request->input('codigo_cbo');
+        // $guia->data_realizacao = $request->input('data_atendimento');
+        $guia->assinatura_beneficiario = $request->input('assinatura_beneficiario');
+        $guia->hash = $request->input('hash');
 
-        // Salva a nova guia SADT no banco de dados
+        // Salva a guia no banco de dados
         $guia->save();
+
 
         // Retorna uma resposta de sucesso
         return response()->json([
@@ -373,7 +400,7 @@ class GuiaSpController extends Controller
             'valor_procedimento' => 'required|numeric|min:0',
             'nome_profissional' => 'required|string|max:255',
             'sigla_conselho' => 'required|string|max:10',
-            'numero_conselho' => 'required|string|max:255',
+            'conselho_1' => 'required|string|max:255',
             'uf_conselho' => 'required|string|max:2',
             'cbo' => 'required|string|max:255',
             'observacao' => 'nullable|string',

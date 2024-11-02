@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('guia_sps', function (Blueprint $table) {
             $table->id();
-            
+
             // Relacionamentos
             $table->integer('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->date('validade_carteira')->nullable(); // 9 - Validade da Carteira
             $table->string('nome_social')->nullable(); // 10 - Nome Beneficiário
             $table->string('nome_beneficiario')->nullable(); // 10 - Nome Beneficiário
-            $table->boolean('atendimento_rn')->nullable(); // 12 - Atendimento a RN
+            $table->string('atendimento_rn')->nullable(); // 12 - Atendimento a RN
             // Dados do Solicitante
             $table->string('codigo_operadora')->nullable(); // 13 - Código na Operadora
             $table->string('nome_contratado')->nullable(); // 14 - Nome do Contratado
@@ -70,7 +70,7 @@ return new class extends Migration
             $table->integer('tecnica')->nullable(); // 44 - Técnica
             $table->decimal('valor_unitario', 10, 2)->nullable(); // 46 - Valor Unitário
             $table->decimal('valor_total', 10, 2)->nullable(); // 47 - Valor Total
-            
+
             // Identificação do(s) Profissional(is) Executante(s)
             $table->string('codigo_operadora_profissional')->nullable(); // 50 - Código da Operadora/CPF
             $table->string('nome_profissional')->nullable(); // 51 - Nome do Profissional
@@ -78,14 +78,14 @@ return new class extends Migration
             $table->string('numero_conselho_profissional')->nullable(); // 53 - Número do Conselho Profissional
             $table->string('uf_profissional')->nullable(); // 54 - UF do Conselho Profissional
             $table->string('codigo_cbo_profissional')->nullable(); // 55 - Código CBO Profissional
-            
+
             // Assinaturas
             $table->date('data_realizacao')->nullable(); // 56 - Data de Realização do Procedimento
             $table->string('assinatura_beneficiario')->nullable(); // 57 - Assinatura do Beneficiário ou Responsável
-            
+
             // Observações
             $table->text('observacao')->nullable(); // 58 - Observações/Justificativa
-            
+
             // Hash e timestamps
             $table->string('hash')->nullable(); // Hash para validação de integridade
             $table->timestamps(); // Timestamps para created_at e updated_at

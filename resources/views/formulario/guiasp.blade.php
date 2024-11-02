@@ -225,8 +225,8 @@
         <!-- Dados do Executante -->
         <div class="section-title">Dados do Executante</div>
         <div class="block">
-            <div>29 - Código Operadora: <strong>{{ $guia->codigo_operadora_executante ?? '' }}</strong></div>
-            <div>30 - Nome Contratado: <strong>{{ $guia->nome_contratado_executante ?? '' }}</strong></div>
+            <div>29 - Código Operadora: <strong>{{ $guia->codigo_operadora ?? '' }}</strong></div>
+            <div>30 - Nome Contratado: <strong>{{ $guia->nome_contratado ?? '' }}</strong></div>
             <div>31 - Código CNES: <strong>{{ $guia->codigo_cnes ?? '' }}</strong></div>
         </div>
 
