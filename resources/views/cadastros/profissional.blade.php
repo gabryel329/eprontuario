@@ -284,8 +284,9 @@
                                 <div class="tile tab-pane" id="convenio">
                                     <h3 class="tile-title">Convênio</h3>
                                     <div class="tile-body">
-                                        <div class="row">
-                                            <div class="mb-3 col-md-3" id="campo_convenio">
+                                        <div class="row d-flex align-items-center">
+                                            <!-- Select2 de Convênios -->
+                                            <div class="col-md-6 mb-3" id="campo_convenio">
                                                 <label class="form-label">Convênios</label>
                                                 <select class="form-control" id="convenio_id" name="convenio_id[]" multiple style="width: 100%;">
                                                     <option value="">Selecione um convênio</option>
@@ -294,6 +295,11 @@
                                                     @endforeach
                                                 </select>
                                                 <div class="invalid-feedback">Por favor, selecione ao menos um convênio.</div>
+                                            </div>
+
+                                            <!-- Container para os campos de código da operadora, alinhados na mesma linha do select -->
+                                            <div class="col-md-6 d-flex flex-wrap align-items-center" id="codigo_operadora_fields">
+                                                <!-- Campos de Código da Operadora serão gerados aqui dinamicamente -->
                                             </div>
                                         </div>
                                     </div>
@@ -613,6 +619,35 @@ function atualizarCamposConselho() {
     }
 }
 
+$(document).ready(function() {
+        // Inicializar o Select2
+        $('#convenio_id').select2({
+            placeholder: "Selecione um convênio",
+            allowClear: true
+        });
 
-    </script>
+        // Escutar mudanças no Select2
+        $('#convenio_id').on('change', function() {
+            var selectedConvenios = $(this).val();
+            var container = $('#codigo_operadora_fields');
+
+            // Limpar campos antigos
+            container.empty();
+
+            // Adicionar um campo de código da operadora para cada convênio selecionado, na mesma linha do select2
+            if (selectedConvenios) {
+                selectedConvenios.forEach(function(convenioId) {
+                    var convenioNome = $('#convenio_id option[value="' + convenioId + '"]').text(); // Obter nome do convênio
+
+                    container.append(`
+                        <div class="d-flex align-items-center me-3 mb-2" id="codigo_operadora_${convenioId}">
+                            <label class="form-label me-2">${convenioNome} - Código:</label>
+                            <input type="text" name="codigo_operadora[${convenioId}]" class="form-control" style="width: 100px;" required>
+                        </div>
+                    `);
+                });
+            }
+        });
+    });
+</script>
 @endsection

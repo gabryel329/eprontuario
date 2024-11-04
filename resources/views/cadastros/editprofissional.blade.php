@@ -30,6 +30,8 @@
                         <ul class="nav nav-tabs user-tabs">
                             <li class="nav-item"><a class="nav-link active" href="#dados" data-bs-toggle="tab">Dados
                                     Pessoais</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#convenio" data-bs-toggle="tab">Covênios</a>
+                            </li>
                             <li class="nav-item"><a class="nav-link" href="#honorario" data-bs-toggle="tab">Honorário</a>
                             </li>
                         </ul>
@@ -205,6 +207,37 @@
                                                 </div>
                                             </div>
                                         </div>
+                                </div>
+                                <div class="tile tab-pane" id="convenio">
+                                    <h3 class="tile-title">Convênio</h3>
+                                    <div class="tile-body">
+                                        <div class="row d-flex align-items-center">
+                                            <!-- Select2 de Convênios -->
+                                            <div class="col-md-6 mb-3" id="campo_convenio">
+                                                <label class="form-label">Convênios</label>
+                                                <select class="form-control select2" id="convenio_id" name="convenio_id[]" multiple style="width: 100%;">
+                                                    @foreach ($convenios as $convenio)
+                                                        <option value="{{ $convenio->id }}"
+                                                            {{ in_array($convenio->id, $profissional->convenios->pluck('id')->toArray()) ? 'selected' : '' }}>
+                                                            {{ $convenio->nome }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="invalid-feedback">Por favor, selecione ao menos um convênio.</div>
+                                            </div>
+
+                                            <!-- Campos dinâmicos de código da operadora para cada convênio selecionado -->
+                                            <div class="col-md-6 d-flex flex-wrap align-items-center" id="codigo_operadora_fields">
+                                                @foreach ($profissional->convenios as $convenio)
+                                                    <div class="mb-3 me-2 d-flex align-items-center">
+                                                        <label class="me-2">{{ $convenio->nome }} - Código Operadora:</label>
+                                                        <input type="text" name="codigo_operadora[{{ $convenio->id }}]"
+                                                            class="form-control" value="{{ $convenio->pivot->codigo_operadora ?? '' }}">
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="tile tab-pane" id="honorario">
                                     <h3 class="tile-title">Honorário Médico</h3>
@@ -499,5 +532,24 @@ function pesquisacep(valor) {
             $('.campo-conselho-dinamico').remove(); // Remove campos dinâmicos de conselho e UF
         }
     }
+
+    $(document).ready(function() {
+    $('#convenio_id').select2();
+
+    $('#convenio_id').on('change', function() {
+        $('#codigo_operadora_fields').empty(); // Limpa os campos atuais
+
+        $(this).val().forEach(function(convenioId) {
+            var convenioNome = $('#convenio_id option[value="' + convenioId + '"]').text();
+            var campoHtml = `
+                <div class="mb-3 me-2 d-flex align-items-center">
+                    <label class="me-2">${convenioNome} - Código Operadora:</label>
+                    <input type="text" name="codigo_operadora[${convenioId}]" class="form-control">
+                </div>`;
+            $('#codigo_operadora_fields').append(campoHtml);
+        });
+    });
+});
+
 </script>
 @endsection
