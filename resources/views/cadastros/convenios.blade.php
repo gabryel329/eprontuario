@@ -128,6 +128,21 @@
                                                 <input class="form-control" id="ir" name="ir"
                                                     type="text">
                                             </div>
+                                            <div class="mb-3 col-md-3">
+                                                <label class="form-label">PIS</label>
+                                                <input class="form-control" id="pis" name="pis"
+                                                    type="text">
+                                          </div>
+                                            <div class="mb-3 col-md-3">
+                                                <label class="form-label">COFINS</label>
+                                                <input class="form-control" id="cofins" name="cofins"
+                                                    type="text">
+                                            </div>
+                                            <div class="mb-3 col-md-3">
+                                                <label class="form-label">CSL</label>
+                                                <input class="form-control" id="csl" name="csl"
+                                                    type="text">
+                                            </div>
                                         </div>
                                         <hr>
                                         <h4>Informação de cobrança</h4>
@@ -182,7 +197,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            
+
                                             <div class="mb-3 col-md-2" id="porte-container" style="display: none;">
                                                 <label class="form-label">Porte <span style="color: red">*</span></label>
                                                 <select class="form-control" id="tab_cota_porte" name="tab_cota_porte" title="Selecione caso esteja usando a tabela CBHPM">
@@ -192,12 +207,12 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            
+
                                             <div class="mb-3 col-md-2" id="ch-container" style="display: none;">
                                                 <label class="form-label">CH <span style="color: red">*</span></label>
                                                 <input type="text" class="form-control" id="tab_cota_ch" name="tab_cota_ch" title="Selecione caso esteja usando a tabela AMB">
                                             </div>
-                                            
+
                                             <div class="mb-3 col-md-2">
                                                 <label class="form-label">Medicamentos</label>
                                                 <select class="form-control" id="tab_med_id" name="tab_med_id">
@@ -207,7 +222,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            
+
                                             <div class="mb-3 col-md-2">
                                                 <label class="form-label">Material</label>
                                                 <select class="form-control" id="tab_mat_id" name="tab_mat_id">
@@ -217,12 +232,12 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            
+
                                             <div class="mb-3 col-md-2">
                                                 <label class="form-label">Taxa</label>
                                                 <select class="form-control" id="tab_taxa_id" name="tab_taxa_id">
                                                     <option value="">Selecione uma Taxa</option>
-                                                    @foreach ($materiais as $taxa) 
+                                                    @foreach ($materiais as $taxa)
                                                         <option value="{{ $taxa->table_name }}">{{ $taxa->table_name }}</option>
                                                     @endforeach
                                                 </select>
