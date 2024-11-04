@@ -109,36 +109,31 @@
                                     <h3 class="tile-title">Imposto</h3>
                                     <div class="tile-body">
                                         <div class="row">
-                                            <div class="mb-3 col-md-3">
-                                                <label class="form-label">%Imp Médico </label>
-                                                <input class="form-control" id="impmedico" name="impmedico"
-                                                    placeholder="%" type="text">
-                                            </div>
-                                            <div class="mb-3 col-md-3">
+                                            <div class="mb-3 col-md-2">
                                                 <label class="form-label">INSS</label>
                                                 <input class="form-control" id="inss" name="inss" type="text">
                                             </div>
-                                            <div class="mb-3 col-md-3">
+                                            <div class="mb-3 col-md-2">
                                                 <label class="form-label">ISS</label>
                                                 <input class="form-control" id="iss" name="iss"
                                                     type="text">
                                             </div>
-                                            <div class="mb-3 col-md-3">
+                                            <div class="mb-3 col-md-2">
                                                 <label class="form-label">IR</label>
                                                 <input class="form-control" id="ir" name="ir"
                                                     type="text">
                                             </div>
-                                            <div class="mb-3 col-md-3">
+                                            <div class="mb-3 col-md-2">
                                                 <label class="form-label">PIS</label>
                                                 <input class="form-control" id="pis" name="pis"
                                                     type="text">
                                           </div>
-                                            <div class="mb-3 col-md-3">
+                                            <div class="mb-3 col-md-2">
                                                 <label class="form-label">COFINS</label>
                                                 <input class="form-control" id="cofins" name="cofins"
                                                     type="text">
                                             </div>
-                                            <div class="mb-3 col-md-3">
+                                            <div class="mb-3 col-md-2">
                                                 <label class="form-label">CSL</label>
                                                 <input class="form-control" id="csl" name="csl"
                                                     type="text">

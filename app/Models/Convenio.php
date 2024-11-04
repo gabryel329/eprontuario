@@ -11,7 +11,7 @@ class Convenio extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'convenios';
-    protected $fillable = ['nome', 'cnpj', 'ans', 'cep', 'rua', 'bairro', 'cidade', 'uf', 'numero', 'complemento', 
+    protected $fillable = ['nome', 'cnpj', 'ans', 'cep', 'rua', 'bairro', 'cidade', 'uf', 'numero', 'complemento',
     'telefone', 'celular', 'operadora', 'multa', 'jutos', 'dias_desc', 'desconto', 'agfaturamento', 'pagamento',
     'impmedico', 'inss', 'iss', 'ir','pis','cofins','csl','tab_cota_id', 'tab_taxa_id',
     'tab_mat_id', 'tab_med_id', 'tab_proc_id', 'tab_cota_porte', 'tab_cota_ch'];
@@ -50,6 +50,11 @@ class Convenio extends Model
         return $this->hasMany(Pacientes::class, 'convenio_id');
     }
 
+    public function profissionais()
+    {
+        return $this->belongsToMany(Profissional::class, 'convenio_profissional')
+                    ->withPivot('codigo_operadora'); // Inclui o campo `codigo_operadora`
+    }
     public function agenda()
     {
         return $this->hasMany(Agenda::class, 'convenio_id');

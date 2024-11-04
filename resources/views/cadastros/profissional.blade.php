@@ -96,6 +96,8 @@
                                     Pessoais</a></li>
                             <li class="nav-item"><a class="nav-link" href="#honorario" data-bs-toggle="tab">Honorário</a>
                             </li>
+                            <li class="nav-item"><a class="nav-link" href="#convenio" data-bs-toggle="tab">Convênio</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="tile">
@@ -275,6 +277,23 @@
                                                 <label class="form-label">Estado</label>
                                                 <input class="form-control" name="uf" type="text" id="uf"
                                                     size="2">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tile tab-pane" id="convenio">
+                                    <h3 class="tile-title">Convênio</h3>
+                                    <div class="tile-body">
+                                        <div class="row">
+                                            <div class="mb-3 col-md-3" id="campo_convenio">
+                                                <label class="form-label">Convênios</label>
+                                                <select class="form-control" id="convenio_id" name="convenio_id[]" multiple style="width: 100%;">
+                                                    <option value="">Selecione um convênio</option>
+                                                    @foreach ($convenios as $convenio)
+                                                        <option value="{{ $convenio->id }}">{{ $convenio->nome }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="invalid-feedback">Por favor, selecione ao menos um convênio.</div>
                                             </div>
                                         </div>
                                     </div>
@@ -511,96 +530,89 @@
             }
         }
         $(document).ready(function() {
-            $('#especialidade_id').select2({
-                maximumSelectionLength: 2 // Limitar a seleção a 2 especialidades
-            });
+    $('#especialidade_id').select2({
+        maximumSelectionLength: 2 // Limitar a seleção a 2 especialidades
+    });
 
-            // Evento de mudança no Select2
-            $('#especialidade_id').on('change', function() {
-                var especialidadeSelect = document.getElementById('especialidade_id');
-                var campoConselho = document.getElementById('campo_conselho');
-                var campoUfConselho = document.getElementById('campo_uf_conselho');
-                var inputConselho = document.getElementById('input_conselho');
-                var ufConselho = document.getElementById('uf_conselho');
-                var labelConselho = document.getElementById('label_conselho');
+    // Executa ao carregar a página
+    mostrarCamposEspecificos();
 
-                var campoConselho1 = document.getElementById('campo_conselho1');
-                var campoUfConselho1 = document.getElementById('campo_uf_conselho1');
-                var inputConselho1 = document.getElementById('input_conselho1');
-                var ufConselho1 = document.getElementById('uf_conselho1');
-                var labelConselho1 = document.getElementById('label_conselho1');
+    // Chama a função ao selecionar o tipo de profissional
+    $('#tipo_profissional').on('change', function() {
+        mostrarCamposEspecificos();
+    });
 
-                var selectedOptions = especialidadeSelect.selectedOptions;
+    // Evento de mudança no Select2 para especialidade
+    $('#especialidade_id').on('change', function() {
+        atualizarCamposConselho();
+    });
+});
 
-                // Mostrar ou esconder campos baseados no número de especialidades selecionadas
-                if (selectedOptions.length >= 1) {
-                    var especialidade1 = selectedOptions[0].textContent.trim();
-                    var conselho1 = selectedOptions[0].getAttribute('data-conselho');
-                    labelConselho.textContent = `${especialidade1} - ${conselho1}`;
-                    campoConselho.classList.remove('hidden');
-                    campoUfConselho.classList.remove('hidden');
-                    inputConselho.setAttribute('required', true);
-                    ufConselho.setAttribute('required', true);
-                } else {
-                    campoConselho.classList.add('hidden');
-                    campoUfConselho.classList.add('hidden');
-                    inputConselho.removeAttribute('required');
-                    ufConselho.removeAttribute('required');
-                }
+function mostrarCamposEspecificos() {
+    var selectedTipoProfissional = $('#tipo_profissional').val();
+    var campoEspecialidade = $('#campo_especialidade');
+    var especialidadeSelect = $('#especialidade_id');
+    var camposConselho = $('#campo_conselho, #campo_uf_conselho, #campo_conselho1, #campo_uf_conselho1');
 
-                if (selectedOptions.length === 2) {
-                    var especialidade2 = selectedOptions[1].textContent.trim();
-                    var conselho2 = selectedOptions[1].getAttribute('data-conselho');
-                    labelConselho1.textContent = `${especialidade2} - ${conselho2}`;
-                    campoConselho1.classList.remove('hidden');
-                    campoUfConselho1.classList.remove('hidden');
-                    inputConselho1.setAttribute('required', true);
-                    ufConselho1.setAttribute('required', true);
-                } else {
-                    campoConselho1.classList.add('hidden');
-                    campoUfConselho1.classList.add('hidden');
-                    inputConselho1.removeAttribute('required');
-                    ufConselho1.removeAttribute('required');
-                }
-            });
-        });
+    if (selectedTipoProfissional === '1') {
+        // Mostra o campo de especialidade e aplica 'required' ao selecionar o tipo 1
+        campoEspecialidade.removeClass('hidden');
+        especialidadeSelect.prop('required', true);
+    } else {
+        // Esconde campos de especialidade e conselhos ao selecionar tipos diferentes de 1
+        campoEspecialidade.addClass('hidden');
+        especialidadeSelect.prop('required', false);
+        camposConselho.addClass('hidden');
+        $('#input_conselho, #uf_conselho, #input_conselho1, #uf_conselho1').prop('required', false);
+    }
+}
 
-        function mostrarCamposEspecificos() {
-            var selectTipoProfissional = document.getElementById('tipo_profissional');
-            var selectedTipoProfissional = selectTipoProfissional.value;
+function atualizarCamposConselho() {
+    var selectedOptions = $('#especialidade_id').find(':selected');
+    var campoConselho = $('#campo_conselho');
+    var campoUfConselho = $('#campo_uf_conselho');
+    var inputConselho = $('#input_conselho');
+    var ufConselho = $('#uf_conselho');
+    var labelConselho = $('#label_conselho');
 
-            var campoEspecialidade = document.getElementById('campo_especialidade');
-            var especialidadeSelect = document.getElementById('especialidade_id');
+    var campoConselho1 = $('#campo_conselho1');
+    var campoUfConselho1 = $('#campo_uf_conselho1');
+    var inputConselho1 = $('#input_conselho1');
+    var ufConselho1 = $('#uf_conselho1');
+    var labelConselho1 = $('#label_conselho1');
 
-            var campoConselho = document.getElementById('campo_conselho');
-            var campoUfConselho = document.getElementById('campo_uf_conselho');
-            var inputConselho = document.getElementById('input_conselho');
-            var ufConselho = document.getElementById('uf_conselho');
-            var campoConselho1 = document.getElementById('campo_conselho1');
-            var campoUfConselho1 = document.getElementById('campo_uf_conselho1');
-            var inputConselho1 = document.getElementById('input_conselho1');
-            var ufConselho1 = document.getElementById('uf_conselho1');
+    // Lógica para exibir campos com base nas especialidades selecionadas
+    if (selectedOptions.length >= 1) {
+        var especialidade1 = selectedOptions.eq(0).text().trim();
+        var conselho1 = selectedOptions.eq(0).data('conselho');
+        labelConselho.text(`${especialidade1} - ${conselho1}`);
+        campoConselho.removeClass('hidden');
+        campoUfConselho.removeClass('hidden');
+        inputConselho.prop('required', true);
+        ufConselho.prop('required', true);
+    } else {
+        campoConselho.addClass('hidden');
+        campoUfConselho.addClass('hidden');
+        inputConselho.prop('required', false);
+        ufConselho.prop('required', false);
+    }
 
-            // Mostrar campo de especialidades e conselhos somente quando o tipo de profissional com ID 1 for selecionado
-            if (selectedTipoProfissional === '1') {
-                campoEspecialidade.classList.remove('hidden');
-                especialidadeSelect.setAttribute('required', true);
-            } else {
-                // Esconder campos de especialidade e conselhos quando o tipo de profissional for diferente de 1
-                campoEspecialidade.classList.add('hidden');
-                especialidadeSelect.removeAttribute('required');
+    if (selectedOptions.length === 2) {
+        var especialidade2 = selectedOptions.eq(1).text().trim();
+        var conselho2 = selectedOptions.eq(1).data('conselho');
+        labelConselho1.text(`${especialidade2} - ${conselho2}`);
+        campoConselho1.removeClass('hidden');
+        campoUfConselho1.removeClass('hidden');
+        inputConselho1.prop('required', true);
+        ufConselho1.prop('required', true);
+    } else {
+        campoConselho1.addClass('hidden');
+        campoUfConselho1.addClass('hidden');
+        inputConselho1.prop('required', false);
+        ufConselho1.prop('required', false);
+    }
+}
 
-                // Esconder os campos de conselhos e UF
-                campoConselho.classList.add('hidden');
-                campoUfConselho.classList.add('hidden');
-                inputConselho.removeAttribute('required');
-                ufConselho.removeAttribute('required');
 
-                campoConselho1.classList.add('hidden');
-                campoUfConselho1.classList.add('hidden');
-                inputConselho1.removeAttribute('required');
-                ufConselho1.removeAttribute('required');
-            }
-        }
     </script>
 @endsection

@@ -107,6 +107,12 @@ class Profissional extends Model
     {
         return $this->hasMany(Agenda::class, 'profissional_id');
     }
+
+    public function convenios()
+    {
+        return $this->belongsToMany(Convenio::class, 'convenio_profissional')
+                    ->withPivot('codigo_operadora');
+    }
     public function atendimento()
     {
         return $this->hasMany(Atendimentos::class, 'profissional_id');

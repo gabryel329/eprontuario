@@ -336,10 +336,11 @@ $(document).ready(function() {
                             html += '<td>' + guia.registro_ans + '</td>';
                             html += '<td>' + dataFormatada + '</td>';
                             html += '<td>';
-                            html += '<button type="button" class="btn btn-info btnVisualizarGuia" data-id="' + guia.id + '">Visualizar</button> ';
-                            html += '<a href="/guia/sp/' + guia.id + '" class="btn btn-primary" target="_blank">';
-                            html += '<i class="bi bi-printer"></i> Imprimir';
-                            html += '</a>';
+                            html += '<button type="button" class="btn btn-info btnGerarGuiaSADT" data-id="' + guia.id + '" title="Visualizar e Imprimir">';
+                            html += '<i class="bi bi-eye"></i> <i class="bi bi-printer"></i>';
+                            html += '</button>';
+                            html += '<a href="javascript:void(0);" class="btn btn-danger" title="Gerar XML e ZIP" onclick="baixarArquivos(' + guia.id + ')">';
+                            html += '<i class="bi bi-filetype-xml"></i>';
                             html += '</td>';
                             html += '</tr>';
                         });
@@ -363,7 +364,7 @@ $(document).ready(function() {
 
     $(document).on('click', '.btnVisualizarGuia', function() {
     var guiaId = $(this).data('id');
-    
+
     // Fazer a requisição AJAX para buscar os detalhes da guia
     $.ajax({
         url: '/guia-sp/detalhes/' + guiaId,  // Atualize para a rota correta
@@ -390,7 +391,7 @@ $(document).ready(function() {
             $('#cbo').val(response.cbo);
             $('#observacao').val(response.observacao);
             $('#hash').val(response.hash);
-            
+
             // Abrir o modal
             $('#visualizarGuiaModal').modal('show');
         },
@@ -400,5 +401,35 @@ $(document).ready(function() {
     });
 });
 });
+
+function baixarArquivos(guiaId) {
+    // Disparar o download do XML para GuiaSp
+    var downloadXml = document.createElement('a');
+    downloadXml.href = '/gerar-xml-guia-sp/' + guiaId;  // Ajuste para a rota correta de GuiaSp
+    downloadXml.setAttribute('download', '');
+    document.body.appendChild(downloadXml);
+    downloadXml.click();
+    document.body.removeChild(downloadXml);
+
+    // Disparar o download do ZIP para GuiaSp
+    var downloadZip = document.createElement('a');
+    downloadZip.href = '/gerar-zip-guia-sp/' + guiaId;  // Ajuste para a rota correta de GuiaSp
+    downloadZip.setAttribute('download', '');
+    document.body.appendChild(downloadZip);
+    downloadZip.click();
+    document.body.removeChild(downloadZip);
+}
+
+
+$(document).on('click', '.btnGerarGuiaSADT', function() {
+    var guiaId = $(this).data('id');
+
+    // Substituir ':id' na rota com o ID da agenda
+    var url = "{{ route('guia.sadt', ':id') }}".replace(':id', guiaId);
+
+    // Abrir a URL em uma nova janela popup
+    window.open(url, '_blank', 'toolbar=no,scrollbars=yes,resizable=yes,width=1000,height=800');
+});
+
 </script>
 @endsection

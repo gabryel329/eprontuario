@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guia de SADT</title>
+    <title>Guia de Impressão</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -50,14 +50,6 @@
             margin-right: 10px;
         }
 
-        .header-section .empresa-info .name {
-            margin: 0;
-        }
-
-        .header-section .address {
-            text-align: right;
-        }
-
         .section-title {
             background-color: #eae7d3;
             font-weight: bold;
@@ -86,24 +78,11 @@
             margin-right: 0;
         }
 
-        .container {
-            width: 100%;
-            margin: 0 auto;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-
-        .procedimento-table {
+        .procedimento-table, .despesas-table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 10px;
             font-size: 10px;
-        }
-
-        .procedimento-table th, .procedimento-table td {
-            padding: 5px;
-            text-align: left;
-            border-bottom: 1px solid #000;
         }
 
         .line {
@@ -111,10 +90,6 @@
             align-items: center;
             justify-content: space-between;
             font-size: 10px;
-        }
-
-        .line span {
-            padding-right: 5px;
         }
 
         .input-block {
@@ -135,29 +110,33 @@
             width: 500px;
         }
 
+        /* Força a quebra de página */
+        .page-break {
+            page-break-before: always;
+        }
     </style>
 </head>
 
 <body>
+    <!-- Início da Guia SADT -->
     <div class="container">
-        <!-- Cabeçalho -->
+        <!-- Cabeçalho da Guia SADT -->
         <div class="header-section">
             <div class="empresa-info">
-            <img src="{{ asset('images/' . $empresa->imagem) }}" alt="{{ $empresa->nome }}">
+                <img src="{{ asset('images/' . $empresa->imagem) }}" alt="{{ $empresa->nome }}">
                 <div class="name">
-                    <h4>Empresa</h4>
+                    <h4>{{ $empresa->nome }}</h4>
                 </div>
             </div>
-
             <div class="text-center flex-grow">
                 <h3>GUIA DE SERVIÇO PROFISSIONAL / SERVIÇO AUXILIAR</h3>
             </div>
-
             <div class="address">
-                <p>Rua da Empresa</p>
+                <p>{{ $empresa->endereco ?? 'Endereço da Empresa' }}</p>
                 <p>Bairro, CEP</p>
             </div>
         </div>
+
         <!-- Primeira Seção: Registro ANS e Guia -->
         <div class="block">
             <div class="small-field">1 - Registro ANS: <strong>{{ $guia->registro_ans ?? '' }}</strong></div>
@@ -202,25 +181,26 @@
             <div class="small-field">23 - Indicação Clínica: <strong>{{ $guia->indicacao_clinica ?? '' }}</strong></div>
         </div>
 
-    <div class="container">
-        <div class="line">
-            <span>24 - Tabela</span>
-            <span>25 - Código do Procedimento ou Item Assistencial</span>
-            <span>26 - Descrição</span>
-            <span>27 - Qtde. Solic.</span>
-            <span>28 - Qtde. Aut.</span>
-        </div>
+        <!-- Procedimentos -->
+        <div class="container">
+            <div class="line">
+                <span>24 - Tabela</span>
+                <span>25 - Código do Procedimento ou Item Assistencial</span>
+                <span>26 - Descrição</span>
+                <span>27 - Qtde. Solic.</span>
+                <span>28 - Qtde. Aut.</span>
+            </div>
 
-        @for($i = 1; $i <= 5; $i++)
-        <div class="line">
-            <span class="input-block small-field">|__|__|</span>
-            <span class="input-block medium-field">|__|__|__|__|__|__|__|__|</span>
-            <span class="input-block large-field">_________________________________________________________________________________________________________________________</span>
-            <span class="input-block small-field">|__|__|__|</span>
-            <span class="input-block small-field">|__|__|__|</span>
+            @for($i = 1; $i <= 5; $i++)
+            <div class="line">
+                <span class="input-block small-field">|__|__|</span>
+                <span class="input-block medium-field">|__|__|__|__|__|__|__|__|</span>
+                <span class="input-block large-field">_________________________________________________________________________________________________________________________</span>
+                <span class="input-block small-field">|__|__|__|</span>
+                <span class="input-block small-field">|__|__|__|</span>
+            </div>
+            @endfor
         </div>
-        @endfor
-    </div>
 
         <!-- Dados do Executante -->
         <div class="section-title">Dados do Executante</div>
@@ -244,38 +224,38 @@
         <!-- Procedimentos e Exames Realizados -->
         <div class="section-title">Procedimentos e Exames Realizados</div>
         <div class="container">
-        <div class="line">
-            <span>36 - Data</span>
-            <span>37 - Hora Inicial</span>
-            <span>38 - Hora Final</span>
-            <span>39 - Tabela</span>
-            <span>40 - Código do Procedimento</span>
-            <span>41 - Descrição</span>
-            <span>42 - Qtde.</span>
-            <span>43 - Via</span>
-            <span>44 - Téc.</span>
-            <span>45 - Fator Red./Acre.</span>
-            <span>46 - Valor Unitário (R$)</span>
-            <span>47 - Valor Total (R$)</span>
-        </div>
+            <div class="line">
+                <span>36 - Data</span>
+                <span>37 - Hora Inicial</span>
+                <span>38 - Hora Final</span>
+                <span>39 - Tabela</span>
+                <span>40 - Código do Procedimento</span>
+                <span>41 - Descrição</span>
+                <span>42 - Qtde.</span>
+                <span>43 - Via</span>
+                <span>44 - Téc.</span>
+                <span>45 - Fator Red./Acre.</span>
+                <span>46 - Valor Unitário (R$)</span>
+                <span>47 - Valor Total (R$)</span>
+            </div>
 
-        @for($i = 1; $i <= 5; $i++)
-        <div class="line">
-            <span class="input-block small-field">____/____/____</span>
-            <span class="input-block small-field">____:____</span>
-            <span class="input-block small-field">____:____</span>
-            <span class="input-block small-field">|__|__|</span>
-            <span class="input-block large-field">|__|__|__|__|__|__|__|__|</span>
-            <span class="input-block extra-large-field">_________________________________________</span>
-            <span class="input-block small-field">|__|__|__|</span>
-            <span class="input-block small-field">|__|</span>
-            <span class="input-block small-field">|__|</span>
-            <span class="input-block large-field">|__|__|__|,|__|__|</span>
-            <span class="input-block large-field">|__|__|__|__|,|__|__|</span>
-            <span class="input-block large-field">|__|__|__|__|,|__|__|</span>
+            @for($i = 1; $i <= 5; $i++)
+            <div class="line">
+                <span class="input-block small-field">____/____/____</span>
+                <span class="input-block small-field">____:____</span>
+                <span class="input-block small-field">____:____</span>
+                <span class="input-block small-field">|__|__|</span>
+                <span class="input-block large-field">|__|__|__|__|__|__|__|__|</span>
+                <span class="input-block extra-large-field">_________________________________________</span>
+                <span class="input-block small-field">|__|__|__|</span>
+                <span class="input-block small-field">|__|</span>
+                <span class="input-block small-field">|__|</span>
+                <span class="input-block large-field">|__|__|__|,|__|__|</span>
+                <span class="input-block large-field">|__|__|__|__|,|__|__|</span>
+                <span class="input-block large-field">|__|__|__|__|,|__|__|</span>
+            </div>
+            @endfor
         </div>
-        @endfor
-    </div>
 
         <!-- Observação / Justificativa -->
         <div class="section-title">Observação / Justificativa</div>
@@ -290,6 +270,95 @@
         </div>
 
     </div>
-</body>
+    <!-- Fim da Guia SADT -->
 
+    <!-- Quebra de página para a próxima guia -->
+    <div class="page-break"></div>
+
+    <!-- Início da Guia de OD -->
+    <div class="container">
+        <div class="header-section">
+            <div class="empresa-info">
+                <img src="{{ asset('images/' . $empresa->imagem) }}" alt="{{ $empresa->nome }}">
+                <div class="name">
+                    <h4>{{ $empresa->nome }}</h4>
+                </div>
+            </div>
+            <div class="text-center flex-grow">
+                <h3>GUIA DE OUTRAS DESPESAS</h3>
+            </div>
+            <div class="address">
+                <p>{{ $empresa->endereco ?? 'Endereço da Empresa' }}</p>
+                <p>Bairro, CEP</p>
+            </div>
+        </div>
+
+        <!-- Conteúdo da Guia de OD -->
+        <div class="section-title">Informações Básicas</div>
+        <div class="block">
+            <div class="small-field">1 - Registro ANS: <strong>{{ $guia->registro_ans ?? '' }}</strong></div>
+            <div class="medium-field">2 - Nº Guia Referenciada: <strong>{{ $guia->numero_guia_referenciada ?? '' }}</strong></div>
+            <div class="medium-field">3 - Código na Operadora: <strong>{{ $guia->codigo_operadora ?? '' }}</strong></div>
+            <div class="large-field">4 - Nome do Contratado: <strong>{{ $guia->nome_contratado ?? '' }}</strong></div>
+            <div class="medium-field">5 - Código CNES: <strong>{{ $guia->codigo_cnes ?? '' }}</strong></div>
+        </div>
+
+        <div class="section-title">Despesas Realizadas</div>
+        <table class="despesas-table">
+            <thead>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Data</th>
+                    <th>Hora Inicial</th>
+                    <th>Hora Final</th>
+                    <th>Tabela</th>
+                    <th>Código do Item</th>
+                    <th>Qtd</th>
+                    <th>Unidade</th>
+                    <th>Fator Red./Acre.</th>
+                    <th>Valor Unitário (R$)</th>
+                    <th>Valor Total (R$)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Exemplo de despesas -->
+                <tr>
+                    <td>DIPROSPAN</td>
+                    <td>31/07/2024</td>
+                    <td>11:57</td>
+                    <td>11:57</td>
+                    <td>20</td>
+                    <td>90148142</td>
+                    <td>2,000</td>
+                    <td>AMP</td>
+                    <td>2,0002</td>
+                    <td>45,80</td>
+                    <td>22,90</td>
+                </tr>
+                <!-- Outras despesas podem ser adicionadas aqui -->
+            </tbody>
+        </table>
+
+        <!-- Totais da Guia OD -->
+        <div class="section-title">Totais</div>
+        <div class="block">
+            <div>Total Gases Medicinais (R$): <strong>70,35</strong></div>
+            <div>Total Medicamentos (R$): <strong>173,88</strong></div>
+            <div>Total Materiais (R$): <strong>18.124,23</strong></div>
+        </div>
+        <div class="block">
+            <div>Total de OPME (R$): <strong>0,00</strong></div>
+            <div>Total Taxas e Aluguéis (R$): <strong>0,00</strong></div>
+            <div>Total Diárias (R$): <strong>0,00</strong></div>
+            <div>Total Geral (R$): <strong>18.124,23</strong></div>
+        </div>
+
+        <!-- Assinaturas -->
+        <div class="block">
+            <div class="signature">Assinatura do Profissional Executante: __</div>
+            <div class="signature">Assinatura do Beneficiário ou Responsável: __</div>
+        </div>
+    </div>
+    <!-- Fim da Guia OD -->
+</body>
 </html>
