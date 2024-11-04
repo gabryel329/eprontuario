@@ -313,12 +313,11 @@
                             <div class="row">
                                 <div class="mb-3 col-md-12">
                                     <label class="form-label">Procedimento</label>
-                                    <select class="form-control" id="edit-procedimento-id-{{ $item->id }}"
-                                        name="procedimento_id">
-                                        @foreach ($procedimentos as $procedimento)
-                                            <option value="{{ $procedimento->procedimento }}"
-                                                {{ $item->procedimento_id == $procedimento->procedimento ? 'selected' : '' }}>
-                                                {{ $procedimento->procedimento }}
+                                    <select class="form-control" id="edit-procedimento-id-{{ $item->id }}" name="procedimento_id">
+                                        @foreach ($item->procedimento_lista as $procedimento)
+                                            <option value="{{ $procedimento }}"
+                                                {{ $item->procedimento_id == $procedimento ? 'selected' : '' }}>
+                                                {{ $procedimento }}
                                             </option>
                                         @endforeach
                                     </select>

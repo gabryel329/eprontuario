@@ -282,7 +282,7 @@ class AgendaController extends Controller
                         // Verifica se o nome da tabela começa com "tab_amb92" ou "tab_amb96"
                         if (str_starts_with($convenio->tab_proc_id, 'tab_amb92') || str_starts_with($convenio->tab_proc_id, 'tab_amb96')) {
                             $procedimentos = DB::table($convenio->tab_proc_id)->select('id', 'descricao', 'codigo')->get();
-                        } elseif (str_starts_with($convenio->tab_proc_id, 'tab_amb92')) {
+                        } elseif (str_starts_with($convenio->tab_proc_id, 'tab_cbhpm')) {
                             $procedimentos = DB::table($convenio->tab_proc_id)->select('id', 'procedimento', 'codigo_anatomico')->get();
                         }
                     } else {
@@ -728,7 +728,6 @@ class AgendaController extends Controller
 
     public function index1(Request $request)
     {
-        $procedimentos = Procedimentos::all();
         $pacientes = Pacientes::all();
         $profissionals = Profissional::whereNotNull('conselho_1')->get();
         $agendas = collect();
@@ -752,12 +751,77 @@ class AgendaController extends Controller
             }
 
             $agendas = $query->orderBy('hora', 'asc')->get();
+            
+            foreach ($agendas as $agenda) {
+                if ($agenda->paciente && $agenda->paciente->convenio) {
+                    $tabelaProcedimentos = $agenda->paciente->convenio->tab_proc_id;
+            
+                    if ($tabelaProcedimentos && $agenda->procedimento_id) {
+                        // Verifica se a tabela especificada existe antes de consultar
+                        if (Schema::hasTable($tabelaProcedimentos)) {
+                            // Define a coluna correta de acordo com o prefixo do nome da tabela
+                            if (str_starts_with($tabelaProcedimentos, 'tab_amb92') || str_starts_with($tabelaProcedimentos, 'tab_amb96')) {
+                                $procedimento = DB::table($tabelaProcedimentos)
+                                    ->where('descricao', $agenda->procedimento_id)
+                                    ->value('descricao'); // Supondo que a coluna seja 'descricao'
+                            } elseif (str_starts_with($tabelaProcedimentos, 'tab_cbhpm')) {
+                                $procedimento = DB::table($tabelaProcedimentos)
+                                    ->where('procedimento', $agenda->procedimento_id)
+                                    ->value('procedimento'); // Supondo que a coluna seja 'procedimento'
+                            } else {
+                                $procedimento = 'Procedimento não encontrado';
+                            }
+            
+                            $agenda->procedimento_nome = $procedimento ?? 'Procedimento não encontrado';
+                        } else {
+                            $agenda->procedimento_nome = 'Tabela de procedimentos não encontrada';
+                        }
+                    } else {
+                        $agenda->procedimento_nome = 'Procedimento não encontrado';
+                    }
+                } else {
+                    $agenda->procedimento_nome = DB::table('procedimentos')
+                        ->where('procedimento', $agenda->procedimento_id)
+                        ->value('procedimento');
+                }
+            }
+
+            foreach ($agendas as $agenda) {
+                if ($agenda->paciente && $agenda->paciente->convenio) {
+                    $tabelaProcedimentos = $agenda->paciente->convenio->tab_proc_id;
+            
+                    if ($tabelaProcedimentos) {
+                        // Verifica se a tabela especificada existe antes de consultar
+                        if (Schema::hasTable($tabelaProcedimentos)) {
+                            // Define a coluna correta de acordo com o prefixo do nome da tabela
+                            if (str_starts_with($tabelaProcedimentos, 'tab_amb92') || str_starts_with($tabelaProcedimentos, 'tab_amb96')) {
+                                $procedimentos = DB::table($tabelaProcedimentos)->pluck('descricao'); // Obter todos os valores da coluna 'descricao'
+                            } elseif (str_starts_with($tabelaProcedimentos, 'tab_cbhpm')) {
+                                $procedimentos = DB::table($tabelaProcedimentos)->pluck('procedimento'); // Obter todos os valores da coluna 'procedimento'
+                            } else {
+                                $procedimentos = ['Procedimento não encontrado'];
+                            }
+            
+                            $agenda->procedimento_lista = $procedimentos;
+                        } else {
+                            $agenda->procedimento_lista = ['Tabela de procedimentos não encontrada'];
+                        }
+                    } else {
+                        $agenda->procedimento_lista = ['Tabela de procedimentos não especificada'];
+                    }
+                } else {
+                    // Caso o paciente ou convênio não existam, consulta a tabela padrão de procedimentos
+                    $agenda->procedimento_lista = DB::table('procedimentos')->pluck('procedimento');
+                }
+            }
+            
+            
         } else {
             // Clear session data if no filter is applied
             session()->forget(['data', 'profissional_id']);
         }
 
-        return view('agenda.lista', compact('profissionals', 'agendas', 'pacientes', 'procedimentos'));
+        return view('agenda.lista', compact('profissionals', 'agendas', 'pacientes'));
     }
 
 
