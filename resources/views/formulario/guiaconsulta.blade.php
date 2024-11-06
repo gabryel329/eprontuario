@@ -162,7 +162,7 @@
         @else
             <p style="text-align: center;">Nenhuma empresa encontrada.</p>
         @endif
-        <h3 class="right-align">2 - Nº Guia no Prestador: {{ $guia->id }}</h3>
+        <h3 class="right-align">2 - Nº Guia no Prestador: {{ $guia->numero_guia_operadora }}</h3>
 
         <!-- Primeira Parte: Registro ANS e Número da Guia -->
         <div class="block">
@@ -175,7 +175,7 @@
         <div class="block">
             <div>4 - Número da Carteira: <strong>{{ $guia->numero_carteira ?? ''}}</strong></div>
             <div>5 - Validade da Carteira: 
-                <strong>{{ \Carbon\Carbon::parse($guia->validade_carteira ?? '')->format('m/Y') }}</strong>
+                <strong>{{ \Carbon\Carbon::parse($guia->validade_carteira ?? '')->format('d/m/Y') }}</strong>
             </div>
             <div>6 - Atendimento a RN (Sim ou Não):  
                 <strong>
@@ -214,38 +214,22 @@
         <div class="block">
             <div>17 - Indicação de Acidente (acidente ou doença relacionada): 
                 <strong>
-                    @if ($guia->indicacao_acidente == 'S')
-                        Sim
-                    @else
-                        Não
-                    @endif
+                   {{$guia->indicacao_acidente}}
                 </strong>
             </div>
             <div>27 - Indicação de Cobertura Especial
                 <strong>
-                    @if ($guia->indicacao_cobertura_especial == 'S')
-                        Sim
-                    @else
-                        Não
-                    @endif
+                    {{$guia->indicacao_cobertura_especial}}
                 </strong>
             </div>
             <div>28 - Regime de Atendimento 
                 <strong>
-                    @if ($guia->regime_atendimento == '1')
-                        Ambulatórial
-                    @else
-                        Emergência
-                    @endif
+                    {{$guia->regime_atendimento}}
                 </strong>
             </div>
             <div>29 - Saúde Ocupacional 
                 <strong>
-                    @if ($guia->saude_ocupacional == 'S')
-                        Sim
-                    @else
-                        Não
-                    @endif
+                   {{$guia->saude_ocupacional}}
                 </strong>
             </div>
         </div>
@@ -253,13 +237,7 @@
             <div>18 - Data do Atendimento:<strong>{{ \Carbon\Carbon::parse($guia->data_atendimento ?? '')->format('d/m/Y')}}</strong></div>
             <div>19 - Tipo de Consulta 
                 <strong>
-                    @if ($guia->tipo_consulta == '1')
-                        Consulta de rotina
-                    @elseif ($guia->tipo_consulta == '2')
-                        Consulta de urgência
-                    @else
-                        Consulta de especialidade
-                    @endif
+                    {{$guia->tipo_consulta}}
                 </strong>
             </div>
             <div>20 - Tabela <strong>{{$guia->codigo_tabela ?? ''}}</strong></div>

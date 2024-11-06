@@ -243,7 +243,7 @@ class GuiaConsultaController extends Controller
         $cabecalho = $xml->addChild('ans:cabecalho');
         $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
         $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
-        $identificacaoTransacao->addChild('ans:sequencialTransacao', '0000000001');
+        $identificacaoTransacao->addChild('ans:sequencialTransacao', '4131');
         $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
         $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
 
@@ -259,7 +259,7 @@ class GuiaConsultaController extends Controller
         // Lote de Guias
         $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
         $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
-        $loteGuias->addChild('ans:numeroLote', '0001');
+        $loteGuias->addChild('ans:numeroLote', '4131');
         $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
 
         // Guia de Consulta

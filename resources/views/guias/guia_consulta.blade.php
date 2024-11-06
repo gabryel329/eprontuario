@@ -567,7 +567,7 @@
             var guiaId = $(this).data('id');
 
             // Substituir ':id' na rota com o ID da guia
-            var url = "{{ route('guia.consulta2', ':id') }}".replace(':id', guiaId);
+            var url = "{{ route('guia.consulta', '/id') }}".replace('/id', guiaId);
 
             // Abrir a URL em uma nova janela popup e iniciar a impressão
             var newWindow = window.open(url, '_blank', 'toolbar=no,scrollbars=yes,resizable=yes,width=1000,height=800');
