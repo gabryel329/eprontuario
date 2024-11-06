@@ -310,10 +310,10 @@
                                         value="{{ $item->hora }}">
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" {{ $item->paciente_id ? '' : 'hidden' }}>
                                 <div class="mb-3 col-md-12">
                                     <label class="form-label">Procedimento</label>
-                                    <select class="form-control" id="edit-procedimento-id-{{ $item->id }}" name="procedimento_id">
+                                    <select class="form-control" id="edit-procedimento-id-{{ $item->id }}" name="procedimento_id" {{ $item->paciente_id ? '' : 'disabled' }}>
                                         @foreach ($item->procedimento_lista as $procedimento)
                                             <option value="{{ $procedimento }}"
                                                 {{ $item->procedimento_id == $procedimento ? 'selected' : '' }}>

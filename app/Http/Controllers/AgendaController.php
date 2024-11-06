@@ -186,7 +186,7 @@ class AgendaController extends Controller
             $validated = $request->validate([
                 'paciente_id' => 'required|exists:pacientes,id',
                 'agenda_id' => 'required|exists:agendas,id',
-                'procedimento_id.*' => 'required|exists:procedimentos,id',
+                'procedimento_id.*' => 'required',
                 'codigo.*' => 'required|string',
             ]);
 
@@ -230,7 +230,7 @@ class AgendaController extends Controller
             $validated = $request->validate([
                 'paciente_id' => 'required|exists:pacientes,id',
                 'agenda_id' => 'required|exists:agendas,id',
-                'material_id.*' => 'required|exists:produtos,id',
+                'material_id.*' => 'required',
             ]);
 
             // Loop para salvar ou atualizar cada material
@@ -271,7 +271,7 @@ class AgendaController extends Controller
             $validated = $request->validate([
                 'paciente_id' => 'required|exists:pacientes,id',
                 'agenda_id' => 'required|exists:agendas,id',
-                'taxa_id.*' => 'required|exists:produtos,id',
+                'taxa_id.*' => 'required',
             ]);
 
             // Loop para salvar ou atualizar cada material
@@ -1061,8 +1061,8 @@ class AgendaController extends Controller
         $agenda->name = $request->name;
         $agenda->celular = $request->celular;
 
-        // Atualizar o procedimento_id apenas se paciente_id estiver presente
-        if ($request->filled('paciente_id')) {
+        // Verificar se 'procedimento_id' foi enviado na requisição antes de atualizar
+        if ($request->has('procedimento_id')) {
             $agenda->procedimento_id = $request->procedimento_id;
         }
 
@@ -1072,8 +1072,6 @@ class AgendaController extends Controller
         // Redirecionar de volta com uma mensagem de sucesso
         return redirect()->back()->with('success', 'Agenda atualizada com sucesso.');
     }
-
-
 
     /**
      * Remove the specified resource from storage.
