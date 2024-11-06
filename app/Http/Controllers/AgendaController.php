@@ -18,6 +18,7 @@ use App\Models\Produtos;
 use App\Models\Profissional;
 use App\Models\Remedio;
 use App\Models\TaxaAgenda;
+use App\Models\TipoAtendimento;
 use App\Models\User;
 use Carbon\Carbon;
 use DateTime;
@@ -89,10 +90,10 @@ class AgendaController extends Controller
 
         if ($agendas->paciente->convenio) {
             $tabelaMedicamentos = $agendas->paciente->convenio->tab_med_id;
-        
+
             if ($tabelaMedicamentos && Schema::hasTable($tabelaMedicamentos)) {
                 $medicamentos = collect();
-        
+
                 $query = DB::table($tabelaMedicamentos)->select('id', 'medicamento');
                 if (str_starts_with($tabelaMedicamentos, 'tab_brasindice')) {
                     $query->select('id', 'ITEM as medicamento');
@@ -101,13 +102,13 @@ class AgendaController extends Controller
                 } else {
                     $medicamentos = collect([['medicamento' => 'Medicamento não encontrado', 'codigo' => null]]);
                 }
-        
+
                 if ($medicamentos->isEmpty()) {
                     $query->orderBy('id')->chunk(100, function ($rows) use (&$medicamentos) {
                         $medicamentos = $medicamentos->merge($rows);
                     });
                 }
-        
+
                 $agendas->medicamento_lista = $medicamentos;
             } else {
                 $agendas->medicamento_lista = collect([['medicamento' => 'Tabela de medicamentos não encontrada', 'codigo' => null]]);
@@ -122,7 +123,7 @@ class AgendaController extends Controller
                 });
             $agendas->medicamento_lista = $medicamentos;
         }
-        
+
 
         $pacientes = Pacientes::join('agendas', 'pacientes.id', '=', 'agendas.paciente_id')
             ->where('agendas.id', $id) // Filtra pelo ID passado na request
@@ -792,6 +793,7 @@ class AgendaController extends Controller
         $pacientes = Pacientes::all();
         $profissionals = Profissional::whereNotNull('conselho_1')->get();
         $agendas = collect();
+        $tiposConsultas = TipoAtendimento::all();
 
         // Store form values in the session
         if ($request->has('data') || $request->has('profissional_id')) {
@@ -882,7 +884,7 @@ class AgendaController extends Controller
             session()->forget(['data', 'profissional_id']);
         }
 
-        return view('agenda.lista', compact('profissionals', 'agendas', 'pacientes'));
+        return view('agenda.lista', compact('profissionals', 'agendas', 'pacientes','tiposConsultas'));
     }
 
 

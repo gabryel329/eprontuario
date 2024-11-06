@@ -35,7 +35,7 @@ class PacientesController extends Controller
     {
         //
     }
-    
+
     /**
      * Store a newly created resource in storage.
      */
@@ -63,11 +63,11 @@ class PacientesController extends Controller
                 return redirect()->back()->withInput()->with('error', "SUS já cadastrado: <strong> Código: {$existeSUS->id} / Nome: {$existeSUS->name}. </strong> Tente novamente.");
             }
         }
-    
+
         // Capitalize the input where appropriate
         $name = ucfirst($request->input('name'));
         $sobrenome = ucfirst($request->input('sobrenome'));
-    
+
         // Get the other inputs
         $email = $request->input('email');
         $nasc = $request->input('nasc');
@@ -99,9 +99,9 @@ class PacientesController extends Controller
         $produto = $request->input('produto');
         $cor = $request->input('cor');
         $imagem = $request->file('imagem');
-    
+
         $imagem_base64 = $request->input('imagem');
-    
+
         if ($imagem_base64) {
             // Remove o prefixo "data:image/jpeg;base64," ou "data:image/png;base64," da string base64
             $image_parts = explode(";base64,", $imagem_base64);
@@ -115,7 +115,7 @@ class PacientesController extends Controller
 
             // Salva a imagem no diretório 'public/images'
             $result = file_put_contents($filePath, $image_base64);
-            
+
             // Verifica se houve erro ao salvar o arquivo
             if ($result === false) {
                 return redirect()->back()->with('error', 'Erro ao salvar a imagem.');
@@ -123,7 +123,7 @@ class PacientesController extends Controller
         } else {
             $imageName = null;
         }
-    
+
         $paciente = Pacientes::create([
             'name' => $name,
             'sobrenome' => $sobrenome,
@@ -158,7 +158,7 @@ class PacientesController extends Controller
             'cor' => $cor,
             'imagem' => $imageName,
         ]);
-    
+
         return redirect()->route('paciente.index1')->with('success', 'Paciente criado com sucesso')->with('paciente', $paciente);
     }
     /**
@@ -208,10 +208,7 @@ class PacientesController extends Controller
         $matricula = $request->input('matricula');
         $plano = $request->input('plano');
         $titular = $request->input('titular');
-        $validade = $request->input('validade'); // Recebe o valor do input 'validade' (formato YYYY-MM)
-        if ($validade) {
-            $validade = $validade . '-01'; // Adiciona o dia "01" para completar a data
-        }
+        $validade = $request->input('validade');
         $produto = $request->input('produto');
         $cor = $request->input('cor');
         $imagem = $request->file('imagem');
@@ -303,13 +300,13 @@ class PacientesController extends Controller
             $nomeConvenio = $convenio->nome;
         }
     }
-    
+
     // Retorne a view 'ficha' com os dados do paciente, da empresa e do nome do convênio
     return view('formulario.fichapaciente', compact('paciente', 'empresa', 'nomeConvenio'));
 }
 
 
-    
+
 
 
     /**
@@ -342,7 +339,7 @@ class PacientesController extends Controller
         if ($request->has('error')) {
             // Armazena o erro na sessão
             Session::flash('error', $request->error);
-            
+
             // Retorna uma resposta de erro
             return response()->json([
                 'status' => 'error'

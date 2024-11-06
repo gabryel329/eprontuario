@@ -174,10 +174,10 @@
         <div class="section-title">Dados do Beneficiário</div>
         <div class="block">
             <div>4 - Número da Carteira: <strong>{{ $guia->numero_carteira ?? ''}}</strong></div>
-            <div>5 - Validade da Carteira: 
+            <div>5 - Validade da Carteira:
                 <strong>{{ \Carbon\Carbon::parse($guia->validade_carteira ?? '')->format('d/m/Y') }}</strong>
             </div>
-            <div>6 - Atendimento a RN (Sim ou Não):  
+            <div>6 - Atendimento a RN (Sim ou Não):
                 <strong>
                     @if ($guia->atendimento_rn == 'S')
                         Sim
@@ -212,7 +212,7 @@
         <!-- Seção: Dados do Atendimento -->
         <div class="section-title">Dados do Atendimento / Procedimento Realizado</div>
         <div class="block">
-            <div>17 - Indicação de Acidente (acidente ou doença relacionada): 
+            <div>17 - Indicação de Acidente (acidente ou doença relacionada):
                 <strong>
                    {{$guia->indicacao_acidente}}
                 </strong>
@@ -222,12 +222,12 @@
                     {{$guia->indicacao_cobertura_especial}}
                 </strong>
             </div>
-            <div>28 - Regime de Atendimento 
+            <div>28 - Regime de Atendimento
                 <strong>
                     {{$guia->regime_atendimento}}
                 </strong>
             </div>
-            <div>29 - Saúde Ocupacional 
+            <div>29 - Saúde Ocupacional
                 <strong>
                    {{$guia->saude_ocupacional}}
                 </strong>
@@ -235,7 +235,7 @@
         </div>
         <div class="block">
             <div>18 - Data do Atendimento:<strong>{{ \Carbon\Carbon::parse($guia->data_atendimento ?? '')->format('d/m/Y')}}</strong></div>
-            <div>19 - Tipo de Consulta 
+            <div>19 - Tipo de Consulta
                 <strong>
                     {{$guia->tipo_consulta}}
                 </strong>

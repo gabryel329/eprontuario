@@ -128,7 +128,7 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::post('/salvar-guia-consulta', [GuiaConsultaController::class, 'salvarGuiaConsulta'])->name('salvar.guiaConsulta');
         Route::get('/agenda/{id}/guia-consulta', [GuiaConsultaController::class, 'gerarGuiaConsulta'])->name('guia.consulta2');
 
-        Route::get('/gerar-xml-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarXmlGuiaConsulta']);
+        Route::post('/gerar-xml-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarXmlGuiaConsulta']);
         Route::get('/gerar-zip-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarZipGuiaConsulta']);
         Route::get('/gerar-xml-guia-sp/{id}', [GuiaSpController::class, 'gerarXmlGuiaSp']);
         Route::get('/gerar-zip-guia-sp/{id}', [GuiaSpController::class, 'gerarZipGuiaSp']);

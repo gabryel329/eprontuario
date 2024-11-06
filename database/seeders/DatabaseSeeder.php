@@ -393,6 +393,63 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
+        DB::table('tipo_atendimentos')->insert([
+            [
+                'atendimento' => 'Consulta Médica de Rotina',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'atendimento' => 'Consulta Médica de Emergência',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'atendimento' => 'Consulta Ambulatorial',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'atendimento' => 'Consulta em Urgência e Emergência',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'atendimento' => 'Consulta Pré-Natal',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'atendimento' => 'Consulta de Pediatria',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'atendimento' => 'Consulta de Geriatria',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'atendimento' => 'Consulta de Psiquiatria',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'atendimento' => 'Consulta Odontológica',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'atendimento' => 'Consulta em Terapia',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'atendimento' => 'Consulta de Especialidade Médica',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+        ]);
 
         DB::table('medicamentos')->insert([
             ['nome' => 'abatacepte'],

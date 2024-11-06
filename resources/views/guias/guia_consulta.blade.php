@@ -169,8 +169,8 @@
                                 <label for="indicacao_acidente" class="form-label">Indicação de Acidente</label>
                                 <select class="form-select" id="indicacao_acidente" name="indicacao_acidente" readonly>
                                     <option selected disabled>Escolha</option>
-                                    <option value="S">Sim</option>
-                                    <option value="N">Não</option>
+                                    <option value="1">Sim</option>
+                                    <option value="2">Não</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
@@ -179,8 +179,8 @@
                                 <select class="form-select" id="indicacao_cobertura_especial"
                                     name="indicacao_cobertura_especial" readonly>
                                     <option selected disabled>Escolha</option>
-                                    <option value="S">Sim</option>
-                                    <option value="N">Não</option>
+                                    <option value="1">Sim</option>
+                                    <option value="2">Não</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
@@ -195,8 +195,8 @@
                                 <label for="saude_ocupacional" class="form-label">Saúde Ocupacional</label>
                                 <select class="form-select" id="saude_ocupacional" name="saude_ocupacional" readonly>
                                     <option selected disabled>Escolha</option>
-                                    <option value="S">Sim</option>
-                                    <option value="N">Não</option>
+                                    <option value="1">Sim</option>
+                                    <option value="2">Não</option>
                                 </select>
                             </div>
                         </div>
@@ -481,10 +481,10 @@
                                         html += '<td>' + guia.nome_beneficiario + '</td>';
                                         html += '<td>' + dataFormatada + '</td>';
                                         html += '<td>';
-                                        html += '<button type="button" class="btn btn-info btnVisualizarImprimir" data-id="' + guia.id + '" title="Visualizar e Imprimir">';
-                                        html += '<i class="bi bi-eye"></i> <i class="bi bi-printer"></i>';
+                                        html += '<button type="button" class="btn btn-success btnVisualizarImprimir" data-id="' + guia.id + '" title="Visualizar e Imprimir">';
+                                        html += '<i class="bi bi-printer"></i>';
                                         html += '</button>';
-                                        html += '<a href="javascript:void(0);" class="btn btn-danger" title="Gerar XML e ZIP" onclick="baixarArquivos(' + guia.id + ')">';
+                                        html += '<a href="javascript:void(0);" class="btn btn-danger ms-2" title="Gerar XML e ZIP" onclick="baixarArquivos(' + guia.id + ')">';
                                         html += '<i class="bi bi-filetype-xml"></i>';
                                         html += '</a>';
                                         html += '</td>';
@@ -570,22 +570,80 @@
             var url = "{{ route('guia.consulta', '/id') }}".replace('/id', guiaId);
 
             // Abrir a URL em uma nova janela popup e iniciar a impressão
-            var newWindow = window.open(url, '_blank', 'toolbar=no,scrollbars=yes,resizable=yes,width=1000,height=800');
+            var newWindow = window.open(url, '_blank',
+                'toolbar=no,scrollbars=yes,resizable=yes,width=1000,height=800');
 
             newWindow.onload = function() {
                 newWindow.print();
             };
         });
 
-        function baixarArquivos(guiaId) {
-            // Disparar o download do XML
-            var downloadXml = document.createElement('a');
-            downloadXml.href = '/gerar-xml-guia-consulta/' + guiaId;
-            downloadXml.setAttribute('download', '');
-            document.body.appendChild(downloadXml);
-            downloadXml.click();
-            document.body.removeChild(downloadXml);
+        function gerarXmlGuiaConsulta(id) {
+            fetch(`/gerar-xml-guia-consulta/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => {
+                    if (response.status === 422) {
+                        return response.json();
+                    } else if (response.ok) {
+                        return response.blob();
+                    } else {
+                        throw new Error('Erro inesperado');
+                    }
+                })
+                .then(data => {
+                    if (data.error) {
+                        const numeracao = prompt(
+                            "Numeração não encontrada para esta guia. Por favor, insira a numeração:");
+                        if (numeracao) {
+                            fetch(`/gerar-xml-guia-consulta/${id}`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                            .getAttribute('content')
+                                    },
+                                    body: JSON.stringify({
+                                        numeracao: numeracao
+                                    })
+                                })
+                                .then(response => {
+                                    if (response.ok) return response.blob();
+                                    else throw new Error('Erro ao gerar XML.');
+                                })
+                                .then(blob => {
+                                    const url = window.URL.createObjectURL(blob);
+                                    const a = document.createElement('a');
+                                    a.href = url;
+                                    a.download = `guia_consulta_${id}.xml`;
+                                    document.body.appendChild(a);
+                                    a.click();
+                                    a.remove();
+                                })
+                                .catch(error => alert("Erro: " + error.message));
+                        }
+                    } else if (data instanceof Blob) {
+                        const url = window.URL.createObjectURL(data);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `guia_consulta_${id}.xml`;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                    }
+                })
+                .catch(error => alert("Erro ao gerar XML."));
+        }
 
+
+
+        function baixarArquivos(guiaId) {
+            gerarXmlGuiaConsulta(guiaId);
             // Disparar o download do ZIP
             var downloadZip = document.createElement('a');
             downloadZip.href = '/gerar-zip-guia-consulta/' + guiaId;

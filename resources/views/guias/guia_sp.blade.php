@@ -336,10 +336,10 @@ $(document).ready(function() {
                             html += '<td>' + guia.registro_ans + '</td>';
                             html += '<td>' + dataFormatada + '</td>';
                             html += '<td>';
-                            html += '<button type="button" class="btn btn-info btnGerarGuiaSADT" data-id="' + guia.id + '" title="Visualizar e Imprimir">';
-                            html += '<i class="bi bi-eye"></i> <i class="bi bi-printer"></i>';
+                            html += '<button type="button" class="btn btn-success btnGerarGuiaSADT" data-id="' + guia.id + '" title="Visualizar e Imprimir">';
+                            html += '<i class="bi bi-printer"></i>';
                             html += '</button>';
-                            html += '<a href="javascript:void(0);" class="btn btn-danger" title="Gerar XML e ZIP" onclick="baixarArquivos(' + guia.id + ')">';
+                            html += '<a href="javascript:void(0);" class="btn btn-danger ms-2" title="Gerar XML e ZIP" onclick="baixarArquivos(' + guia.id + ')">';
                             html += '<i class="bi bi-filetype-xml"></i>';
                             html += '</td>';
                             html += '</tr>';

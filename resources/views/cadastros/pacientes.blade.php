@@ -120,7 +120,7 @@
                                 </div>
                                 <div class="mb-3 col-md-2" id="convenio-container3" style="display:none;">
                                     <label class="form-label">Validade</label>
-                                    <input class="form-control" id="validade" name="validade" type="month"
+                                    <input class="form-control" id="validade" name="validade" type="date"
                                         value="{{ old('validade') }}">
                                 </div>
                                 <div class="mb-3 col-md-2" id="convenio-container4" style="display:none;">

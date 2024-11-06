@@ -412,8 +412,7 @@
                                 name="paciente_id" type="hidden">
                             <input class="form-control" id="profissional_id" value="{{ $item->profissional_id }}"
                                 name="profissional_id" type="hidden">
-                            <input class="form-control" id="agenda_id" name="agenda_id" value="{{ $item->id }}"
-                                type="hidden">
+                            <input class="form-control" id="agenda_id" name="agenda_id" value="{{ $item->id }}" type="hidden">
                             <div class="row">
                                 <div class="col-md-3">
                                     <label for="registro_ans" class="form-label">Registro ANS</label>
@@ -551,9 +550,9 @@
                                     <label for="tipo_consulta" class="form-label">Tipo de Consulta</label>
                                     <select class="form-select" id="tipo_consulta" name="tipo_consulta">
                                         <option selected disabled>Escolha</option>
-                                        <option value="1">Consulta de rotina</option>
-                                        <option value="2">Consulta de urgência</option>
-                                        <option value="3">Consulta de especialidade</option>
+                                        @foreach ($tiposConsulta as $tipo)
+                                            <option value="{{ $tipo->id }}">{{ $tipo->atendimento }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-2">
@@ -856,6 +855,7 @@
                             }
 
                             // Preencher os inputs no modal com os dados retornados
+                            $('#modalConsulta #agenda_id').val(agendaId);
                             $('#modalConsulta #nome_beneficiario').val(response.paciente ?
                                 response.paciente.name : '');
                             $('#modalConsulta #numero_carteira').val(response.paciente ?
@@ -872,9 +872,9 @@
                                 .profissional ? response.profissional
                                 .conselho_profissional : '');
                             $('#modalConsulta #conselho_1').val(response.profissional ?
-                                response.profissional.conselho : '');
+                                response.profissional.conselho_1 : '');
                             $('#modalConsulta #uf_conselho').val(response.profissional ?
-                                response.profissional.uf_conselho : '');
+                                response.profissional.uf_conselho_1 : '');
                             $('#modalConsulta #registro_ans').val(response.convenio ? response
                                 .convenio.ans : '');
                             $('#modalConsulta #codigo_operadora').val(response.convenio ?
@@ -912,7 +912,6 @@
                                 response.guia.valor_procedimento : '');
                             $('#modalConsulta #observacao').val(response.guia ?
                                 response.guia.observacao : '');
-
 
                             // Abrir o modal após preencher os campos
                             $('#modalConsulta').modal('show');

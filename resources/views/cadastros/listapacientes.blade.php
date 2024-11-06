@@ -220,10 +220,10 @@
                                                                 </div>
                                                                 <div class="mb-3 col-md-2">
                                                                     <label class="form-label">Validade</label>
-                                                                    <input class="form-control" name="validade" type="month"
-                                                                        value="{{ old('validade', \Carbon\Carbon::parse($item->validade)->format('Y-m')) }}">
+                                                                    <input class="form-control" name="validade" type="date"
+                                                                        value="{{ old('validade', \Carbon\Carbon::parse($item->validade)->format('d-Y-m')) }}">
                                                                 </div>
-                                                                
+
                                                                 <div class="mb-3 col-md-2">
                                                                     <label class="form-label">Plano</label>
                                                                     <input class="form-control" name="plano"
@@ -430,7 +430,7 @@
             var modal = new bootstrap.Modal(document.getElementById('editModal' + pacienteId));
             modal.show();
         }
-        
+
         document.getElementById('pacienteSearch').addEventListener('keyup', function() {
     var input = this.value.toLowerCase();
     var rows = document.getElementById('pacienteTable').getElementsByTagName('tbody')[0]
@@ -439,7 +439,7 @@
     for (var i = 0; i < rows.length; i++) {
         var name = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
         var cpf = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
-        
+
         // Verifica se o nome ou CPF contém o valor digitado no input
         if (name.includes(input) || cpf.includes(input)) {
             rows[i].style.display = "";

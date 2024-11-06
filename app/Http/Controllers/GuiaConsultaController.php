@@ -11,6 +11,7 @@ use App\Models\Pacientes;
 use App\Models\Profissional;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class GuiaConsultaController extends Controller
 {
@@ -121,10 +122,10 @@ class GuiaConsultaController extends Controller
         $guia->nome_beneficiario = $request->input('nome_beneficiario');
         $guia->codigo_operadora = $request->input('codigo_operadora');
         $guia->nome_contratado = $request->input('nome_contratado');
-        $guia->codigo_cnes = $request->input('codigo_cnes');
+        $guia->codigo_cnes = $request->input('cnes');
         $guia->nome_profissional_executante = $request->input('nome_profissional_executante');
         $guia->conselho_profissional = $request->input('conselho_profissional');
-        $guia->numero_conselho = $request->input('numero_conselho');
+        $guia->numero_conselho = $request->input('conselho_1');
         $guia->uf_conselho = $request->input('uf_conselho');
         $guia->codigo_cbo = $request->input('codigo_cbo');
         $guia->indicacao_acidente = $request->input('indicacao_acidente');
@@ -171,7 +172,7 @@ class GuiaConsultaController extends Controller
         $valor_procedimento = $request->input('valor_procedimento');
         $nome_profissional = $request->input('nome_profissional');
         $sigla_conselho = $request->input('sigla_conselho');
-        $numero_conselho = $request->input('numero_conselho');
+        $numero_conselho = $request->input('conselho_1');
         $uf_conselho = $request->input('uf_conselho');
         $cbo = $request->input('cbo');
         $observacao = $request->input('observacao');
@@ -194,7 +195,7 @@ class GuiaConsultaController extends Controller
             'valor_procedimento' => $valor_procedimento,
             'nome_profissional' => $nome_profissional,
             'sigla_conselho' => $sigla_conselho,
-            'numero_conselho' => $numero_conselho,
+            'conselho_1' => $numero_conselho,
             'uf_conselho' => $uf_conselho,
             'cbo' => $cbo,
             'observacao' => $observacao,
@@ -231,10 +232,31 @@ class GuiaConsultaController extends Controller
         }
     }
 
-    public function gerarXmlGuiaConsulta($id)
+    public function gerarXmlGuiaConsulta($id, Request $request)
     {
-        // Buscar a guia pelo ID
+        // Verificar se a guia existe
         $guia = GuiaConsulta::findOrFail($id);
+
+        // Verificar se a numeração é fornecida na requisição ou já existe na guia
+        if ($request->has('numeracao')) {
+            $guia->numeracao = $request->input('numeracao');
+        } elseif (is_null($guia->numeracao)) {
+            // Verificar se existe alguma numeração em outra guia
+            $ultimaNumeracao = GuiaConsulta::whereNotNull('numeracao')->max('numeracao');
+
+            if ($ultimaNumeracao) {
+                // Incrementa a numeração automaticamente se existe uma anterior
+                $guia->numeracao = $ultimaNumeracao + 1;
+            } else {
+                // Retorna erro se não há nenhuma numeração existente
+                return response()->json([
+                    'error' => 'Numeração não encontrada. Por favor, insira a numeração para esta guia.'
+                ], 422);
+            }
+        }
+
+        // Salvar a numeração no guia
+        $guia->save();
 
         // Criar o XML utilizando SimpleXMLElement
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas tissV4_01_00.xsd"></ans:mensagemTISS>');
@@ -243,7 +265,7 @@ class GuiaConsultaController extends Controller
         $cabecalho = $xml->addChild('ans:cabecalho');
         $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
         $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
-        $identificacaoTransacao->addChild('ans:sequencialTransacao', '4131');
+        $identificacaoTransacao->addChild('ans:sequencialTransacao', $guia->numeracao);
         $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
         $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
 
@@ -254,17 +276,19 @@ class GuiaConsultaController extends Controller
         $destino = $cabecalho->addChild('ans:destino');
         $destino->addChild('ans:registroANS', $guia->registro_ans);
 
-        $cabecalho->addChild('ans:versaoPadrao', '4.01.00');
+        $cabecalho->addChild('ans:Padrao', '4.01.00'); // Alterado de 'versaoPadrao' para 'Padrao'
 
         // Lote de Guias
         $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
         $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
-        $loteGuias->addChild('ans:numeroLote', '4131');
+        $loteGuias->addChild('ans:numeroLote', $guia->numeracao);
         $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
 
         // Guia de Consulta
         $guiaConsulta = $guiasTISS->addChild('ans:guiaConsulta');
         $cabecalhoConsulta = $guiaConsulta->addChild('ans:cabecalhoConsulta');
+        $cabecalhoConsulta->addChild('ans:registroANS', $guia->registro_ans); // Mover 'registroANS' para o lugar correto no cabecalhoConsulta
+
         $identificacaoGuia = $cabecalhoConsulta->addChild('ans:identificacaoGuia');
         $identificacaoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_operadora);
         $cabecalhoConsulta->addChild('ans:numeroGuiaPrincipal', $guia->numero_guia_operadora);
@@ -272,26 +296,45 @@ class GuiaConsultaController extends Controller
         // Dados do Beneficiário
         $dadosBeneficiario = $guiaConsulta->addChild('ans:dadosBeneficiario');
         $dadosBeneficiario->addChild('ans:numeroCarteira', $guia->numero_carteira);
-        $dadosBeneficiario->addChild('ans:nomeBeneficiario', $guia->nome_beneficiario);
+        $dadosBeneficiario->addChild('ans:validadeCarteira', $guia->validade_carteira);
         $dadosBeneficiario->addChild('ans:atendimentoRN', $guia->atendimento_rn);
+        $dadosBeneficiario->addChild('ans:nomeBeneficiario', $guia->nome_beneficiario);
+        $dadosBeneficiario->addChild('ans:nomeSocial', $guia->nome_social);
 
         // Dados do Contratado Executante
-        $dadosContratadoExecutante = $guiaConsulta->addChild('ans:dadosContratadoExecutante');
+        $dadosContratadoExecutante = $guiaConsulta->addChild('ans:contratadoExecutante');
         $dadosContratadoExecutante->addChild('ans:codigoPrestadorNaOperadora', $guia->codigo_operadora);
         $dadosContratadoExecutante->addChild('ans:nomeContratado', $guia->nome_contratado);
+        $dadosContratadoExecutante->addChild('ans:codigoCNES', $guia->codigo_cnes);
         $conselhoProfissional = $dadosContratadoExecutante->addChild('ans:conselhoProfissional');
-        $conselhoProfissional->addChild('ans:siglaConselho', $guia->conselho_profissional); // Ex: CRM
+        $conselhoProfissional->addChild('ans:siglaConselho', $guia->conselho_profissional);
         $conselhoProfissional->addChild('ans:numeroConselho', $guia->numero_conselho);
         $conselhoProfissional->addChild('ans:UF', $guia->uf_conselho);
+        $dadosContratadoExecutante->addChild('ans:codigoCBO', $guia->codigo_cbo);
 
         // Dados do Atendimento
         $dadosAtendimento = $guiaConsulta->addChild('ans:dadosAtendimento');
-        $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta); // Ex: 1 (Consulta de rotina)
+        $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta);
         $dadosAtendimento->addChild('ans:dataAtendimento', $guia->data_atendimento);
+        $dadosAtendimento->addChild('ans:indicacaoAcidente', $guia->indicacao_acidente);
+        $dadosAtendimento->addChild('ans:indicacaoCoberturaEspecial', $guia->indicacao_cobertura_especial);
+        $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento);
+        $dadosAtendimento->addChild('ans:saudeOcupacional', $guia->saude_ocupacional);
+        $dadosAtendimento->addChild('ans:codigoTabela', $guia->codigo_tabela);
+        $dadosAtendimento->addChild('ans:codigoProcedimento', $guia->codigo_procedimento);
+        $dadosAtendimento->addChild('ans:valorProcedimento', $guia->valor_procedimento);
+
+        // Assinaturas
+        $assinatura = $guiaConsulta->addChild('ans:assinatura');
+        $assinatura->addChild('ans:assinaturaProfissionalExecutante', $guia->assinatura_profissional_executante);
+        $assinatura->addChild('ans:assinaturaBeneficiario', $guia->assinatura_beneficiario);
+
+        // Observação
+        $guiaConsulta->addChild('ans:observacao', $guia->observacao);
 
         // Epílogo
         $epilogo = $xml->addChild('ans:epilogo');
-        $epilogo->addChild('ans:hash', $guia->hash); // Utiliza o hash do banco de dados
+        $epilogo->addChild('ans:hash', $guia->hash);
 
         // Retornar o XML como download
         return response($xml->asXML(), 200)
@@ -304,6 +347,9 @@ class GuiaConsultaController extends Controller
         // Buscar a guia pelo ID
         $guia = GuiaConsulta::findOrFail($id);
 
+        // Use a numeração da guia para o XML
+        $numSequencial = $guia->numeracao;
+
         // Criar o XML utilizando SimpleXMLElement
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas tissV4_01_00.xsd"></ans:mensagemTISS>');
 
@@ -311,7 +357,7 @@ class GuiaConsultaController extends Controller
         $cabecalho = $xml->addChild('ans:cabecalho');
         $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
         $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
-        $identificacaoTransacao->addChild('ans:sequencialTransacao', '0000000001');
+        $identificacaoTransacao->addChild('ans:sequencialTransacao', $numSequencial);
         $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
         $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
 
@@ -322,17 +368,19 @@ class GuiaConsultaController extends Controller
         $destino = $cabecalho->addChild('ans:destino');
         $destino->addChild('ans:registroANS', $guia->registro_ans);
 
-        $cabecalho->addChild('ans:versaoPadrao', '4.01.00');
+        $cabecalho->addChild('ans:Padrao', '4.01.00'); // Alterado de 'versaoPadrao' para 'Padrao'
 
         // Lote de Guias
         $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
         $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
-        $loteGuias->addChild('ans:numeroLote', '0001');
+        $loteGuias->addChild('ans:numeroLote', $numSequencial);
         $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
 
         // Guia de Consulta
         $guiaConsulta = $guiasTISS->addChild('ans:guiaConsulta');
         $cabecalhoConsulta = $guiaConsulta->addChild('ans:cabecalhoConsulta');
+        $cabecalhoConsulta->addChild('ans:registroANS', $guia->registro_ans); // Inserido 'registroANS' no local correto
+
         $identificacaoGuia = $cabecalhoConsulta->addChild('ans:identificacaoGuia');
         $identificacaoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_operadora);
         $cabecalhoConsulta->addChild('ans:numeroGuiaPrincipal', $guia->numero_guia_operadora);
@@ -344,22 +392,22 @@ class GuiaConsultaController extends Controller
         $dadosBeneficiario->addChild('ans:atendimentoRN', $guia->atendimento_rn);
 
         // Dados do Contratado Executante
-        $dadosContratadoExecutante = $guiaConsulta->addChild('ans:dadosContratadoExecutante');
+        $dadosContratadoExecutante = $guiaConsulta->addChild('ans:contratadoExecutante');
         $dadosContratadoExecutante->addChild('ans:codigoPrestadorNaOperadora', $guia->codigo_operadora);
         $dadosContratadoExecutante->addChild('ans:nomeContratado', $guia->nome_contratado);
         $conselhoProfissional = $dadosContratadoExecutante->addChild('ans:conselhoProfissional');
-        $conselhoProfissional->addChild('ans:siglaConselho', $guia->conselho_profissional); // Ex: CRM
+        $conselhoProfissional->addChild('ans:siglaConselho', $guia->conselho_profissional);
         $conselhoProfissional->addChild('ans:numeroConselho', $guia->numero_conselho);
         $conselhoProfissional->addChild('ans:UF', $guia->uf_conselho);
 
         // Dados do Atendimento
         $dadosAtendimento = $guiaConsulta->addChild('ans:dadosAtendimento');
-        $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta); // Ex: 1 (Consulta de rotina)
+        $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta);
         $dadosAtendimento->addChild('ans:dataAtendimento', $guia->data_atendimento);
 
         // Epílogo
         $epilogo = $xml->addChild('ans:epilogo');
-        $epilogo->addChild('ans:hash', $guia->hash); // Utiliza o hash do banco de dados
+        $epilogo->addChild('ans:hash', $guia->hash);
 
         // Salvar o XML temporariamente no servidor
         $fileName = 'guia_consulta_' . $guia->id . '.xml';
@@ -372,7 +420,7 @@ class GuiaConsultaController extends Controller
 
         $zip = new \ZipArchive;
         if ($zip->open($zipFilePath, \ZipArchive::CREATE) === TRUE) {
-            $zip->addFile($filePath, $fileName);  // Adiciona o XML ao ZIP
+            $zip->addFile($filePath, $fileName);
             $zip->close();
         }
 
@@ -409,7 +457,7 @@ class GuiaConsultaController extends Controller
             'valor_procedimento' => 'required|numeric|min:0',
             'nome_profissional' => 'required|string|max:255',
             'sigla_conselho' => 'required|string|max:10',
-            'numero_conselho' => 'required|string|max:255',
+            'conselho_1' => 'required|string|max:255',
             'uf_conselho' => 'required|string|max:2',
             'cbo' => 'required|string|max:255',
             'observacao' => 'nullable|string',
