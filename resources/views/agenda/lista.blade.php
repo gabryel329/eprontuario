@@ -256,14 +256,14 @@
                             @csrf
                             @method('PUT')
                             <div class="row">
-                                <div class="mb-3 col-md-12" id="selecionarPaciente">
+                                <div class="mb-3 col-md-6" id="selecionarPaciente">
                                     <label class="form-label">Selecione o Paciente</label>
                                     <button type="button" class="btn btn-primary form-control" data-bs-toggle="modal"
                                         data-bs-target="#pacienteModal-{{ $item->id }}">
                                         <i class="bi bi-list"></i>
                                     </button>
                                 </div>
-                                <div class="mb-3 col-md-6" id="novoPaciente" style="display:none;">
+                                <div class="mb-3 col-md-6">
                                     <label class="form-label">Novo Paciente</label>
                                     <a href="{{ route('paciente.index') }}" class="btn btn-primary form-control"><i
                                             class="bi bi-person-add"></i></a>
@@ -820,20 +820,20 @@
             window.open('/detalhesConsulta/' + id, '_blank',
                 'toolbar=no,scrollbars=yes,resizable=yes,width=1000,height=800');
         }
-        $(document).ready(function() {
-            var pacienteId = $('#paciente_id{{ $item->id }}').val(); // Obtém o valor do paciente_id
+        // $(document).ready(function() {
+        //     var pacienteId = $('#paciente_id{{ $item->id }}').val(); // Obtém o valor do paciente_id
 
-            if (!pacienteId) { // Verifica se o paciente_id está nulo ou vazio
-                // Ajusta o tamanho da div "Selecionar Paciente"
-                $('#selecionarPaciente').removeClass('col-md-12').addClass('col-md-6');
+        //     if (!pacienteId) { // Verifica se o paciente_id está nulo ou vazio
+        //         // Ajusta o tamanho da div "Selecionar Paciente"
+        //         $('#selecionarPaciente').removeClass('col-md-12').addClass('col-md-6');
 
-                // Exibe o botão "Novo Paciente"
-                $('#novoPaciente').show();
-            } else {
-                // Garante que o botão "Novo Paciente" esteja escondido se o paciente_id não estiver nulo
-                $('#novoPaciente').hide();
-            }
-        });
+        //         // Exibe o botão "Novo Paciente"
+        //         $('#novoPaciente').show();
+        //     } else {
+        //         // Garante que o botão "Novo Paciente" esteja escondido se o paciente_id não estiver nulo
+        //         $('#novoPaciente').hide();
+        //     }
+        // });
 
 
         $(document).ready(function() {

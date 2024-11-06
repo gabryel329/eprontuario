@@ -213,38 +213,31 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody id="exame-table-body">
-                                                    {{-- Gera Exame --}}
-                                                </tbody>
-                                                <tbody id="exame-table-body">
                                                     <tr class="exame-row">
                                                         <td>
-                                                            <select name="procedimento_id[]" id="procedimento_id"
-                                                                required>
-                                                                <option value="" data-codigo="">Selecione o
-                                                                    Procedimento</option>
-                                                                @foreach ($procedimento as $item)
-                                                                    <option value="{{ $item->id }}"
-                                                                        data-codigo="{{ $item->codigo }}">
-                                                                        {{ $item->procedimento }}
+                                                            <select name="procedimento_id[]" class="select2 form-control procedimento_id" required>
+                                                                <option value="" data-codigo="">Selecione o Procedimento</option>
+                                                                @foreach ($agendas->procedimento_lista as $procedimento)
+                                                                    <option value="{{ $procedimento->id }}"
+                                                                        data-codigo="{{ $procedimento->codigo }}">
+                                                                        {{ $procedimento->procedimento }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
                                                         </td>
                                                         <td>
-                                                            <input type="text" class="form-control codigo"
-                                                                name="codigo[]" placeholder="Código" readonly>
+                                                            <input type="text" class="form-control codigo" name="codigo[]" placeholder="Código" readonly>
                                                         </td>
-                                                        <td class="actions col-md-2">
-                                                            <button type="button"
-                                                                class="btn btn-success plus-row">+</button>
-                                                            <button type="button"
-                                                                class="btn btn-danger delete-row">-</button>
+                                                        <td class="actions">
+                                                            <button type="button" class="btn btn-success plus-row">+</button>
+                                                            <button type="button" class="btn btn-danger delete-row">-</button>
                                                         </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
+                                    
                                     <div class="tile-footer text-center">
                                         <button {{ $agendas->status == 'FINALIZADO' ? 'disabled' : '' }}
                                             class="btn btn-danger" id="saveExameButton" type="button">
@@ -280,10 +273,11 @@
                                                         <select class="form-control medicamento_id"
                                                             name="medicamento_id[]">
                                                             <option value="">Selecione o remédio</option>
-                                                            @foreach ($medicamento as $item)
-                                                                <option value="{{ $item->id }}">
-                                                                    {{ $item->nome }}</option>
-                                                            @endforeach
+                                                                @foreach ($agendas->medicamento_lista as $medicamento)
+                                                                    <option value="{{ $medicamento->id }}">
+                                                                        {{ $medicamento->medicamento }}
+                                                                    </option>
+                                                                @endforeach
                                                         </select>
                                                     </td>
                                                     <td>
@@ -458,9 +452,9 @@
                 <td>
                     <select class="form-control medicamento_id" name="medicamento_id[]">
                         <option value="">Selecione o remédio</option>
-                        @foreach ($medicamento as $item)
-                            <option value="{{ $item->id }}">{{ $item->nome }}</option>
-                        @endforeach
+                            @foreach ($agendas->medicamento_lista as $medicamento)
+                                <option value="{{ $medicamento->id }}">{{ $medicamento->medicamento }}</option>
+                            @endforeach
                     </select>
                 </td>
                 <td><input type="number" class="form-control dose" name="dose[]" placeholder="Dose"></td>
@@ -529,9 +523,8 @@
             applySelect2($('select'));
         });
 
-
         $(document).ready(function() {
-            applySelect2($('select')); // Aplica Select2 aos selects existentes
+            applySelect2($('select.select2'));
 
             function addExameRow() {
                 var newRow = `
@@ -539,9 +532,10 @@
                         <td>
                             <select class="select2 form-control procedimento_id" name="procedimento_id[]" required>
                                 <option value="" data-codigo="">Selecione o Procedimento</option>
-                                @foreach ($procedimento as $item)
-                                    <option value="{{ $item->id }}" data-codigo="{{ $item->codigo }}">
-                                        {{ $item->procedimento }}
+                                @foreach ($agendas->procedimento_lista as $procedimento)
+                                    <option value="{{ $procedimento->id }}"
+                                        data-codigo="{{ $procedimento->codigo }}">
+                                        {{ $procedimento->procedimento }}
                                     </option>
                                 @endforeach
                             </select>
@@ -555,7 +549,13 @@
                         </td>
                     </tr>`;
                 $('#exame-table-body').append(newRow);
-                applySelect2($('#exame-table-body select:last')); // Aplica Select2 ao novo select
+                applySelect2($('#exame-table-body select.select2:last'));
+
+                // Adiciona o evento change para atualizar o campo de código
+                $('#exame-table-body .procedimento_id:last').on('change', function() {
+                    var codigo = $(this).find('option:selected').data('codigo');
+                    $(this).closest('.exame-row').find('.codigo').val(codigo);
+                });
             }
 
             $(document).on('click', '.plus-row', function() {
@@ -566,6 +566,13 @@
                 $(this).closest('.exame-row').remove();
             });
 
+            // Evento change para selects existentes
+            $(document).on('change', '.procedimento_id', function() {
+                var codigo = $(this).find('option:selected').data('codigo');
+                $(this).closest('.exame-row').find('.codigo').val(codigo);
+            });
+
+            // Código para carregar procedimentos do backend
             var agenda_id = "{{ $agendas->id }}";
             var paciente_id = "{{ $pacientes->id }}";
 
@@ -577,13 +584,12 @@
                         response.data.forEach(function(item) {
                             addExameRow();
                             const lastRow = $('#exame-table-body').find('.exame-row:last');
-                            lastRow.find('.procedimento_id').val(item.procedimento_id).trigger(
-                                'change'); // Dispara 'change'
+                            lastRow.find('.procedimento_id').val(item.procedimento_id).trigger('change');
                             lastRow.find('.codigo').val(item.codigo);
                         });
                     }
                 },
-                error: function(response) {
+                error: function() {
                     console.log('Erro ao carregar dados do banco.');
                 }
             });
@@ -599,7 +605,7 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function(response) {
+                    success: function() {
                         alert('Procedimentos cadastrados/atualizados com sucesso');
                     },
                     error: function(xhr) {
@@ -608,6 +614,14 @@
                 });
             });
         });
+
+        function applySelect2(element) {
+            element.select2({
+                width: '100%'
+            });
+        }
+
+
 
 
         $(document).ready(function() {

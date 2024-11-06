@@ -389,6 +389,11 @@
                 return;
             }
 
+            if (file.type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                alert('Por favor, selecione um arquivo .xlsx.');
+                return;
+            }
+
             const tabelaSelecionada = document.querySelector('input[name="tabela"]:checked');
             if (!tabelaSelecionada) {
                 alert('Por favor, selecione uma tabela.');

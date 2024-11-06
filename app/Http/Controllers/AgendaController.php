@@ -60,16 +60,77 @@ class AgendaController extends Controller
 
     public function detalhesConsulta($id)
     {
+        ini_set('memory_limit', '512M');
+
         $agendas = Agenda::find($id);
+
+        if (!$agendas) {
+            return redirect()->back()->withErrors('Agenda não encontrada');
+        }
+
+        if ($agendas && $agendas->paciente && $agendas->paciente->convenio) {
+            $tabelaProcedimentos = $agendas->paciente->convenio->tab_proc_id;
+
+            if ($tabelaProcedimentos && Schema::hasTable($tabelaProcedimentos)) {
+                if (str_starts_with($tabelaProcedimentos, 'tab_amb92') || str_starts_with($tabelaProcedimentos, 'tab_amb96')) {
+                    $procedimentos = DB::table($tabelaProcedimentos)->select('id', 'descricao as procedimento', 'codigo')->get();
+                } elseif (str_starts_with($tabelaProcedimentos, 'tab_cbhpm')) {
+                    $procedimentos = DB::table($tabelaProcedimentos)->select('id', 'procedimento', 'codigo_anatomico as codigo')->get();
+                } else {
+                    $procedimentos = collect([['procedimento' => 'Procedimento não encontrado', 'codigo' => null]]);
+                }
+                $agendas->procedimento_lista = $procedimentos;
+            } else {
+                $agendas->procedimento_lista = collect([['procedimento' => 'Tabela de procedimentos não encontrada', 'codigo' => null]]);
+            }
+        } else {
+            $agendas->procedimento_lista = DB::table('procedimentos')->select('id', 'procedimento', 'codigo')->get();
+        }
+
+        if ($agendas->paciente->convenio) {
+            $tabelaMedicamentos = $agendas->paciente->convenio->tab_med_id;
+        
+            if ($tabelaMedicamentos && Schema::hasTable($tabelaMedicamentos)) {
+                $medicamentos = collect();
+        
+                $query = DB::table($tabelaMedicamentos)->select('id', 'medicamento');
+                if (str_starts_with($tabelaMedicamentos, 'tab_brasindice')) {
+                    $query->select('id', 'ITEM as medicamento');
+                } elseif (str_starts_with($tabelaMedicamentos, 'tab_simpro')) {
+                    $query->select('id', 'DESCRICAO as medicamento');
+                } else {
+                    $medicamentos = collect([['medicamento' => 'Medicamento não encontrado', 'codigo' => null]]);
+                }
+        
+                if ($medicamentos->isEmpty()) {
+                    $query->orderBy('id')->chunk(100, function ($rows) use (&$medicamentos) {
+                        $medicamentos = $medicamentos->merge($rows);
+                    });
+                }
+        
+                $agendas->medicamento_lista = $medicamentos;
+            } else {
+                $agendas->medicamento_lista = collect([['medicamento' => 'Tabela de medicamentos não encontrada', 'codigo' => null]]);
+            }
+        } else {
+            $medicamentos = collect();
+            DB::table('medicamentos')
+                ->select('id', 'nome')
+                ->orderBy('id')
+                ->chunk(100, function ($rows) use (&$medicamentos) {
+                    $medicamentos = $medicamentos->merge($rows);
+                });
+            $agendas->medicamento_lista = $medicamentos;
+        }
+        
+
         $pacientes = Pacientes::join('agendas', 'pacientes.id', '=', 'agendas.paciente_id')
             ->where('agendas.id', $id) // Filtra pelo ID passado na request
             ->select('pacientes.*', 'agendas.data', 'agendas.hora') // Selecione os campos desejados
             ->first(); // Retorna um único resultado (opcional)
-        $medicamento = Medicamento::all();
-        $procedimento = Procedimentos::all();
         $produto = Produtos::all();
 
-        return view('agenda.detalhesconsulta', compact('agendas', 'pacientes', 'medicamento', 'procedimento', 'produto'));
+        return view('agenda.detalhesconsulta', compact('agendas', 'pacientes', 'produto'));
     }
 
     public function storeMedicamento(Request $request)
@@ -78,7 +139,7 @@ class AgendaController extends Controller
             $validated = $request->validate([
                 'paciente_id' => 'required|exists:pacientes,id',
                 'agenda_id' => 'required|exists:agendas,id',
-                'medicamento_id.*' => 'required|exists:medicamentos,id',
+                'medicamento_id.*' => 'required',
                 'dose.*' => 'required|numeric|min:1',
                 'hora.*' => 'required|numeric|min:1',
             ]);
@@ -292,7 +353,7 @@ class AgendaController extends Controller
                     // Caso tab_proc_id seja null, usa a tabela padrão 'procedimentos'
                     $procedimentos = DB::table('procedimentos')->select('id', 'procedimento', 'codigo')->get();
                 }
-            
+
                 return response()->json($procedimentos);
             }
             return response()->json([]);
@@ -751,11 +812,11 @@ class AgendaController extends Controller
             }
 
             $agendas = $query->orderBy('hora', 'asc')->get();
-            
+
             foreach ($agendas as $agenda) {
                 if ($agenda->paciente && $agenda->paciente->convenio) {
                     $tabelaProcedimentos = $agenda->paciente->convenio->tab_proc_id;
-            
+
                     if ($tabelaProcedimentos && $agenda->procedimento_id) {
                         // Verifica se a tabela especificada existe antes de consultar
                         if (Schema::hasTable($tabelaProcedimentos)) {
@@ -771,7 +832,7 @@ class AgendaController extends Controller
                             } else {
                                 $procedimento = 'Procedimento não encontrado';
                             }
-            
+
                             $agenda->procedimento_nome = $procedimento ?? 'Procedimento não encontrado';
                         } else {
                             $agenda->procedimento_nome = 'Tabela de procedimentos não encontrada';
@@ -789,7 +850,7 @@ class AgendaController extends Controller
             foreach ($agendas as $agenda) {
                 if ($agenda->paciente && $agenda->paciente->convenio) {
                     $tabelaProcedimentos = $agenda->paciente->convenio->tab_proc_id;
-            
+
                     if ($tabelaProcedimentos) {
                         // Verifica se a tabela especificada existe antes de consultar
                         if (Schema::hasTable($tabelaProcedimentos)) {
@@ -801,7 +862,7 @@ class AgendaController extends Controller
                             } else {
                                 $procedimentos = ['Procedimento não encontrado'];
                             }
-            
+
                             $agenda->procedimento_lista = $procedimentos;
                         } else {
                             $agenda->procedimento_lista = ['Tabela de procedimentos não encontrada'];
@@ -814,8 +875,8 @@ class AgendaController extends Controller
                     $agenda->procedimento_lista = DB::table('procedimentos')->pluck('procedimento');
                 }
             }
-            
-            
+
+
         } else {
             // Clear session data if no filter is applied
             session()->forget(['data', 'profissional_id']);
@@ -999,14 +1060,19 @@ class AgendaController extends Controller
         $agenda->matricula = $request->matricula;
         $agenda->name = $request->name;
         $agenda->celular = $request->celular;
-        $agenda->procedimento_id = $request->procedimento_id;
 
-        // Salvar as mudanÃÂ§as
+        // Atualizar o procedimento_id apenas se paciente_id estiver presente
+        if ($request->filled('paciente_id')) {
+            $agenda->procedimento_id = $request->procedimento_id;
+        }
+
+        // Salvar as mudanças
         $agenda->save();
 
         // Redirecionar de volta com uma mensagem de sucesso
         return redirect()->back()->with('success', 'Agenda atualizada com sucesso.');
     }
+
 
 
     /**

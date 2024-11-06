@@ -98,8 +98,8 @@ class TabelaController extends Controller
 
     public function importarExcel(Request $request)
     {
+        ini_set('memory_limit', '512M');
         \Log::info('Entrou no método importarExcel'); 
-    
         try {
             $request->validate([
                 'tabela' => 'required|in:brasindice,amb92,simpro,amb96,cbhpm',
@@ -124,9 +124,16 @@ class TabelaController extends Controller
                 return response()->json(['error' => 'Nenhum dado válido encontrado no Excel.'], 400);
             }
     
-            // Percorre cada linha da planilha e insere no banco de dados
-            foreach ($rows as $row) {
-                DB::table($tableName)->insert($this->formatarDados($prefixoTabela, $row));
+            $batchSize = 1000; // Tamanho do lote
+            $dataBatch = [];
+
+            foreach ($rows as $index => $row) {
+                $dataBatch[] = $this->formatarDados($prefixoTabela, $row);
+
+                if (count($dataBatch) === $batchSize || $index === array_key_last($rows)) {
+                    DB::table($tableName)->insert($dataBatch);
+                    $dataBatch = []; // Limpa o lote
+                }
             }
     
             return response()->json(['message' => "Importação concluída com sucesso!"]);
@@ -134,17 +141,6 @@ class TabelaController extends Controller
             \Log::error($e->getMessage());
             return response()->json(['error' => 'Ocorreu um erro no servidor.'], 500);
         }
-    }
-    
-    
-    // Função para incrementar o nome da tabela
-    private function incrementarNomeTabela($tableName)
-    {
-        if (preg_match('/\d+$/', $tableName, $matches)) {
-            $number = (int) $matches[0] + 1;
-            return preg_replace('/\d+$/', $number, $tableName);
-        }
-        return $tableName . '2';
     }
 
     // Função para criar a tabela de acordo com o tipo selecionado
@@ -154,22 +150,22 @@ class TabelaController extends Controller
             $table->id();
             switch ($prefixoTabela) {
                 case 'brasindice':
-                    $table->string('COD_LAB');
-                    $table->string('LABORATORIO');
-                    $table->string('COD_ITEM');
-                    $table->string('ITEM');
-                    $table->string('COD_APR');
-                    $table->string('APRESENTACAO');
-                    $table->string('PRECO');
-                    $table->string('QTDE_FRACIONAMENTO');
-                    $table->string('PMC_PFB');
-                    $table->string('PRECO_FRACAO');
-                    $table->string('EDICAO');
-                    $table->string('IPI');
-                    $table->string('PORTARIA_PIS_COFINS');
-                    $table->string('EAN');
-                    $table->string('TISS');
-                    $table->string('GENERICO');
+                    $table->string('COD_LAB')->nullable();
+                    $table->string('LABORATORIO')->nullable();
+                    $table->string('COD_ITEM')->nullable();
+                    $table->string('ITEM')->nullable();
+                    $table->string('COD_APR')->nullable();
+                    $table->string('APRESENTACAO')->nullable();
+                    $table->string('PRECO')->nullable();
+                    $table->string('QTDE_FRACIONAMENTO')->nullable();
+                    $table->string('PMC_PFB')->nullable();
+                    $table->string('PRECO_FRACAO')->nullable();
+                    $table->string('EDICAO')->nullable();
+                    $table->string('IPI')->nullable();
+                    $table->string('PORTARIA_PIS_COFINS')->nullable();
+                    $table->string('EAN')->nullable();
+                    $table->string('TISS')->nullable();
+                    $table->string('GENERICO')->nullable();
                     $table->string('TUSS')->nullable();
                     break;
                 case 'simpro':
