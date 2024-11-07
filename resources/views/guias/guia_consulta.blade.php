@@ -32,16 +32,16 @@
                 <div class="tile">
                     <div class="tile-title d-flex justify-content-between align-items-center">
                         <label class="form-label">Lista de Guias</label>
-                        <button type="button" class="btn btn-primary" id="btnNovoGuia" data-bs-toggle="modal"
-                            data-bs-target="#novoGuiaModal" disabled>
-                            <i class="bi bi-plus-circle"></i> Novo
+                        <!-- Botão para gerar guias em massa -->
+                        <button type="button" class="btn btn-success" id="btnGerarGuias" disabled>
+                            <i class="bi bi-file-earmark-zip"></i> Gerar Guias Selecionadas
                         </button>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered text-center">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th><input type="checkbox" id="selectAll" /></th>
                                     <th>Registro ANS</th>
                                     <th>Data</th>
                                     <th>Ações</th>
@@ -451,6 +451,95 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Selecionar todas as guias
+            $('#selectAll').on('change', function() {
+                $('input[name="guiaCheckbox"]').prop('checked', $(this).is(':checked'));
+                toggleMassActionButton();
+            });
+
+            // Atualizar botão de ação em massa quando um checkbox individual é clicado
+            $(document).on('change', 'input[name="guiaCheckbox"]', function() {
+                toggleMassActionButton();
+            });
+
+            // Habilitar/desabilitar o botão de gerar guias em massa
+            function toggleMassActionButton() {
+                const anyChecked = $('input[name="guiaCheckbox"]:checked').length > 0;
+                $('#btnGerarGuias').prop('disabled', !anyChecked);
+            }
+
+            // Função para gerar guias em massa
+            $('#btnGerarGuias').on('click', function() {
+                const selectedIds = $('input[name="guiaCheckbox"]:checked').map(function() {
+                    return $(this).val();
+                }).get();
+
+                if (selectedIds.length > 0) {
+                    gerarLote(selectedIds);
+                } else {
+                    alert('Nenhuma guia selecionada.');
+                }
+            });
+
+            function gerarLote(ids, numeracao = null) {
+            // Solicita numeração apenas se não houver
+            if (!numeracao) {
+                numeracao = prompt("Numeração não encontrada. Por favor, insira a numeração para o lote:");
+                if (!numeracao) {
+                    alert('A numeração é necessária para gerar o lote.');
+                    return;
+                }
+            }
+
+            // Gera XML em lote
+            fetch("{{ route('guias.gerarXmlEmLote') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ guia_ids: ids, numeracao: numeracao })
+            })
+            .then(response => {
+                if (response.ok) return response.blob();
+                else throw new Error('Erro ao gerar XML.');
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `lote_guias_consulta.xml`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            })
+            .catch(error => alert("Erro ao gerar XML em lote: " + error.message));
+
+            // Gera ZIP em lote
+            fetch("{{ route('guias.gerarZipEmLote') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ guia_ids: ids, numeracao: numeracao })
+            })
+            .then(response => {
+                if (response.ok) return response.blob();
+                else throw new Error('Erro ao gerar ZIP.');
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `lote_guias_consulta.zip`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            })
+            .catch(error => alert("Erro ao gerar ZIP em lote: " + error.message));
+        }
+
             // Aplicar a máscara no campo de hora
             $('#hora_inicio_atendimento').mask('00:00');
 
@@ -461,41 +550,36 @@
                     $.ajax({
                         url: '/guia-consulta/listar',
                         type: 'GET',
-                        data: {
-                            convenio_id: convenio_id
-                        },
+                        data: { convenio_id: convenio_id },
                         success: function(response) {
                             if (response.guias && response.guias.length > 0) {
                                 var html = '';
                                 $.each(response.guias, function(index, guia) {
                                     var data = new Date(guia.created_at);
-                                    var dataFormatada = data.toLocaleDateString(
-                                        'pt-BR', {
-                                            day: '2-digit',
-                                            month: '2-digit',
-                                            year: 'numeric'
-                                        });
+                                    var dataFormatada = data.toLocaleDateString('pt-BR', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric'
+                                    });
 
-                                        html += '<tr>';
-                                        html += '<td>' + guia.id + '</td>';
-                                        html += '<td>' + guia.nome_beneficiario + '</td>';
-                                        html += '<td>' + dataFormatada + '</td>';
-                                        html += '<td>';
-                                        html += '<button type="button" class="btn btn-success btnVisualizarImprimir" data-id="' + guia.id + '" title="Visualizar e Imprimir">';
-                                        html += '<i class="bi bi-printer"></i>';
-                                        html += '</button>';
-                                        html += '<a href="javascript:void(0);" class="btn btn-danger ms-2" title="Gerar XML e ZIP" onclick="baixarArquivos(' + guia.id + ')">';
-                                        html += '<i class="bi bi-filetype-xml"></i>';
-                                        html += '</a>';
-                                        html += '</td>';
-                                        html += '</tr>';
+                                    html += '<tr>';
+                                    html += '<td><input type="checkbox" name="guiaCheckbox" value="' + guia.id + '"></td>';
+                                    html += '<td>' + guia.nome_beneficiario + '</td>';
+                                    html += '<td>' + dataFormatada + '</td>';
+                                    html += '<td>';
+                                    html += '<button type="button" class="btn btn-success btnVisualizarImprimir" data-id="' + guia.id + '" title="Visualizar e Imprimir">';
+                                    html += '<i class="bi bi-printer"></i>';
+                                    html += '</button>';
+                                    html += '<a href="javascript:void(0);" class="btn btn-danger ms-2" title="Gerar XML e ZIP" onclick="baixarArquivos(' + guia.id + ')">';
+                                    html += '<i class="bi bi-filetype-xml"></i>';
+                                    html += '</a>';
+                                    html += '</td>';
+                                    html += '</tr>';
                                 });
 
                                 $('#listaGuias').html(html);
                             } else {
-                                $('#listaGuias').html(
-                                    '<tr><td colspan="4">Nenhuma guia encontrada para este convênio.</td></tr>'
-                                );
+                                $('#listaGuias').html('<tr><td colspan="4">Nenhuma guia encontrada para este convênio.</td></tr>');
                             }
                             $('#btnNovoGuia').prop('disabled', false);
                             $('#convenio_id_hidden').val(convenio_id);
