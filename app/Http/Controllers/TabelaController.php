@@ -99,31 +99,31 @@ class TabelaController extends Controller
     public function importarExcel(Request $request)
     {
         ini_set('memory_limit', '512M');
-        \Log::info('Entrou no método importarExcel'); 
+        \Log::info('Entrou no método importarExcel');
         try {
             $request->validate([
                 'tabela' => 'required|in:brasindice,amb92,simpro,amb96,cbhpm',
                 'excel_data' => 'required|array',
                 'descricao' => 'required|string|max:255'
             ]);
-    
+
             $prefixoTabela = strtolower($request->input('tabela'));
-            
+
             // Formatar a descrição para uso no nome da tabela (substitui espaços por underscores)
             $descricao = str_replace(' ', '_', $request->input('descricao'));
-    
+
             // Concatenar o prefixo da tabela com a descrição formatada
             $tableName = "tab_{$prefixoTabela}_{$descricao}";
-    
+
             // Criar a tabela com o nome final
             $this->criarTabela($prefixoTabela, $tableName);
-    
+
             $rows = $request->input('excel_data');
-    
+
             if (empty($rows)) {
                 return response()->json(['error' => 'Nenhum dado válido encontrado no Excel.'], 400);
             }
-    
+
             $batchSize = 1000; // Tamanho do lote
             $dataBatch = [];
 
@@ -135,7 +135,7 @@ class TabelaController extends Controller
                     $dataBatch = []; // Limpa o lote
                 }
             }
-    
+
             return response()->json(['message' => "Importação concluída com sucesso!"]);
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
@@ -150,68 +150,69 @@ class TabelaController extends Controller
             $table->id();
             switch ($prefixoTabela) {
                 case 'brasindice':
-                    $table->string('COD_LAB')->nullable();
-                    $table->string('LABORATORIO')->nullable();
-                    $table->string('COD_ITEM')->nullable();
-                    $table->string('ITEM')->nullable();
-                    $table->string('COD_APR')->nullable();
-                    $table->string('APRESENTACAO')->nullable();
-                    $table->string('PRECO')->nullable();
-                    $table->string('QTDE_FRACIONAMENTO')->nullable();
-                    $table->string('PMC_PFB')->nullable();
-                    $table->string('PRECO_FRACAO')->nullable();
-                    $table->string('EDICAO')->nullable();
-                    $table->string('IPI')->nullable();
-                    $table->string('PORTARIA_PIS_COFINS')->nullable();
-                    $table->string('EAN')->nullable();
-                    $table->string('TISS')->nullable();
-                    $table->string('GENERICO')->nullable();
-                    $table->string('TUSS')->nullable();
+                    $table->string('COD_LAB', 500)->nullable();
+                    $table->string('LABORATORIO', 500)->nullable();
+                    $table->string('COD_ITEM', 500)->nullable();
+                    $table->string('ITEM', 500)->nullable();
+                    $table->string('COD_APR', 500)->nullable();
+                    $table->string('APRESENTACAO', 500)->nullable();
+                    $table->string('PRECO', 500)->nullable();
+                    $table->string('QTDE_FRACIONAMENTO', 500)->nullable();
+                    $table->string('PMC_PFB', 500)->nullable();
+                    $table->string('PRECO_FRACAO', 500)->nullable();
+                    $table->string('EDICAO', 500)->nullable();
+                    $table->string('IPI', 500)->nullable();
+                    $table->string('PORTARIA_PIS_COFINS', 500)->nullable();
+                    $table->string('EAN', 500)->nullable();
+                    $table->string('TISS', 500)->nullable();
+                    $table->string('GENERICO', 500)->nullable();
+                    $table->string('TUSS', 500)->nullable();
                     break;
                 case 'simpro':
                     $table->string('SEQUENCIA')->notNullable();
-                    $table->string('CD_SIMPRO')->nullable();
+                    $table->string('CD_SIMPRO', 500)->nullable();
                     $table->string('DESCRICAO')->notNullable();
-                    $table->string('VIGENCIA')->nullable();
-                    $table->string('PC_FR_FAB')->nullable();
-                    $table->string('TP_EMBAL')->nullable();
-                    $table->string('TP_FRACAO')->nullable();
-                    $table->string('CD_MERCACAO')->nullable();
-                    $table->string('FABRICA')->nullable();
-                    $table->string('PC_FR_VEND')->nullable();
-                    $table->string('PAGINA')->nullable();
-                    $table->string('DATA2')->nullable();
-                    $table->string('DATASINC')->nullable();
-                    $table->string('TUSS')->nullable();
-                    $table->string('ANVISA')->nullable();
+                    $table->string('VIGENCIA', 500)->nullable();
+                    $table->string('PC_FR_FAB', 500)->nullable();
+                    $table->string('TP_EMBAL', 500)->nullable();
+                    $table->string('TP_FRACAO', 500)->nullable();
+                    $table->string('CD_MERCACAO', 500)->nullable();
+                    $table->string('FABRICA', 500)->nullable();
+                    $table->string('PC_FR_VEND', 500)->nullable();
+                    $table->string('PAGINA', 500)->nullable();
+                    $table->string('DATA2', 500)->nullable();
+                    $table->string('DATASINC', 500)->nullable();
+                    $table->string('TUSS', 500)->nullable();
+                    $table->string('ANVISA', 500)->nullable();
                     break;
                 case 'amb92':
                 case 'amb96':
-                    $table->string('codigo')->nullable();
-                    $table->string('descricao')->nullable();
-                    $table->string('m_filme')->nullable();
-                    $table->string('auxiliares')->nullable();
-                    $table->string('incidencia')->nullable();
-                    $table->string('porte_anestesico')->nullable();
-                    $table->string('tabela')->nullable();
-                    $table->string('valor')->nullable();
-                    $table->string('co')->nullable();
-                    $table->string('valor_total')->nullable();
+                    $table->string('codigo', 500)->nullable();
+                    $table->string('descricao', 500)->nullable();
+                    $table->string('m_filme', 500)->nullable();
+                    $table->string('auxiliares', 500)->nullable();
+                    $table->string('incidencia', 500)->nullable();
+                    $table->string('porte_anestesico', 500)->nullable();
+                    $table->string('tabela', 500)->nullable();
+                    $table->string('valor', 500)->nullable();
+                    $table->string('co', 500)->nullable();
+                    $table->string('valor_total', 500)->nullable();
                     break;
                 case 'cbhpm':
-                    $table->string('id_grupo')->nullable();
-                    $table->string('descricao_grupo')->nullable();
-                    $table->string('id_subgrupo')->nullable();
-                    $table->string('descricao_subgrupo')->nullable();
-                    $table->string('codigo_anatomico')->nullable();
-                    $table->string('procedimento')->nullable();
-                    $table->string('porte')->nullable();
-                    $table->string('custo_operacional')->nullable();
-                    $table->string('auxiliares')->nullable();
-                    $table->string('porte_anestesico')->nullable();
-                    $table->string('filmes')->nullable();
-                    $table->string('incidencia')->nullable();
-                    $table->string('unidade_radiof')->nullable();
+                    $table->string('id_grupo', 500)->nullable();
+                    $table->string('descricao_grupo', 500)->nullable();
+                    $table->string('id_subgrupo', 500)->nullable();
+                    $table->string('descricao_subgrupo', 500)->nullable();
+                    $table->string('codigo_anatomico', 500)->nullable();
+                    $table->string('procedimento', 500)->nullable();
+                    $table->string('porte', 500)->nullable();
+                    $table->string('custo_operacional', 500)->nullable();
+                    $table->string('auxiliares', 500)->nullable();
+                    $table->string('porte_anestesico', 500)->nullable();
+                    $table->string('filmes', 500)->nullable();
+                    $table->string('incidencia', 500)->nullable();
+                    $table->string('unidade_radiof', 500)->nullable();
+
                     break;
             }
             $table->timestamps();
@@ -281,7 +282,7 @@ class TabelaController extends Controller
                     'id_subgrupo' => $row[2] ?? null,
                     'descricao_subgrupo' => $row[3] ?? null,
                     'codigo_anatomico' => $row[4] ?? null,
-                    'procedimento' => isset($row[5]) ? substr($row[5], 0, 255) : null, // Truncar para 255 caracteres
+                    'procedimento' => isset($row[5]) ? substr($row[5], 0, 1000) : null, // Truncar para 255 caracteres
                     'porte' => $row[6] ?? null,
                     'custo_operacional' => $row[7] ?? null,
                     'auxiliares' => $row[8] ?? null,

@@ -35,6 +35,8 @@
                             </li>
                             <li class="nav-item"><a class="nav-link" href="#impostos" data-bs-toggle="tab">Imposto</a>
                             </li>
+                            <li class="nav-item"><a class="nav-link" href="#tabelas" data-bs-toggle="tab">Tabelas</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="tile">
@@ -193,7 +195,67 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="tab-pane" id="tabelas">
+                                    <h3 class="tile-title">Tabelas</h3>
+                                    <div class="tile-body">
+                                        <div class="row">
+                                            <div class="mb-3 col-md-4">
+                                                <label class="form-label">Procedimentos</label>
+                                                <select class="form-control" id="tab_proc_id" name="tab_proc_id">
+                                                    <option value="">{{ old('tab_proc_id', $convenios->tab_proc_id ?? '') }}</option>
+                                                    @foreach ($procedimentos as $proc)
+                                                        <option value="{{ $proc->table_name }}">{{ $proc->table_name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
 
+                                            <div class="mb-3 col-md-2" id="porte-container" style="display: none;">
+                                                <label class="form-label">Porte <span style="color: red">*</span></label>
+                                                <select class="form-control" id="tab_cota_porte" name="tab_cota_porte" title="Selecione caso esteja usando a tabela CBHPM">
+                                                    <option value="">{{ old('tab_cota_porte', $convenios->tab_cota_porte ?? '') }}</option>
+                                                    @foreach ($portes as $porte)
+                                                        <option value="{{ $porte->table_name }}">{{ $porte->table_name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-3 col-md-2" id="ch-container" style="display: none;">
+                                                <label class="form-label">CH <span style="color: red">*</span></label>
+                                                <input type="text" value="{{ old('tab_cota_ch', $convenios->tab_cota_ch ?? '') }}" class="form-control" id="tab_cota_ch" name="tab_cota_ch" title="Selecione caso esteja usando a tabela AMB">
+                                            </div>
+
+                                            <div class="mb-3 col-md-2">
+                                                <label class="form-label">Medicamentos</label>
+                                                <select class="form-control" id="tab_med_id" name="tab_med_id">
+                                                    <option value="">{{ old('tab_med_id', $convenios->tab_med_id ?? '') }}</option>
+                                                    @foreach ($medicamentos as $med)
+                                                        <option value="{{ $med->table_name }}">{{ $med->table_name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-3 col-md-2">
+                                                <label class="form-label">Material</label>
+                                                <select class="form-control" id="tab_mat_id" name="tab_mat_id">
+                                                    <option value="">{{ old('tab_mat_id', $convenios->tab_mat_id ?? '') }}</option>
+                                                    @foreach ($materiais as $mat)
+                                                        <option value="{{ $mat->table_name }}">{{ $mat->table_name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-3 col-md-2">
+                                                <label class="form-label">Taxa</label>
+                                                <select class="form-control" id="tab_taxa_id" name="tab_taxa_id">
+                                                    <option value="">{{ old('tab_taxa_id', $convenios->tab_taxa_id ?? '') }}</option>
+                                                    @foreach ($materiais as $taxa)
+                                                        <option value="{{ $taxa->table_name }}">{{ $taxa->table_name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-12 d-flex justify-content-end">
                                         <button class="btn btn-primary" type="submit">
@@ -308,5 +370,61 @@
                 limpa_formulário_cep();
             }
         }
+
+        document.getElementById('tab_proc_id').addEventListener('change', function() {
+        var selectedTable = this.value;
+        var porteContainer = document.getElementById('porte-container');
+        var chContainer = document.getElementById('ch-container');
+
+        // Oculta ambos os campos por padrão
+        porteContainer.style.display = 'none';
+        chContainer.style.display = 'none';
+
+        // Exibe o campo adequado com base no valor selecionado
+        if (selectedTable.startsWith('tab_cbhpm')) {
+            porteContainer.style.display = 'block';
+        } else if (selectedTable.startsWith('tab_amb')) {
+            chContainer.style.display = 'block';
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const porteContainer = document.getElementById('porte-container');
+        const tabCotaPorte = document.getElementById('tab_cota_porte');
+        const chContainer = document.getElementById('ch-container');
+        const tabCotaCH = document.getElementById('tab_cota_ch');
+
+        // Verifica o valor inicial ao carregar a página
+        if (tabCotaPorte.value) {
+            porteContainer.style.display = 'block';
+        } else {
+            porteContainer.style.display = 'none';
+        }
+
+        // Escuta mudanças no campo
+        tabCotaPorte.addEventListener('change', function () {
+            if (this.value) {
+                porteContainer.style.display = 'block';
+            } else {
+                porteContainer.style.display = 'none';
+            }
+        });
+
+        // Verifica o valor inicial ao carregar a página
+        if (tabCotaCH.value) {
+            chContainer.style.display = 'block';
+        } else {
+            chContainer.style.display = 'none';
+        }
+
+        // Escuta mudanças no campo
+        tabCotaCH.addEventListener('change', function () {
+            if (this.value) {
+                chContainer.style.display = 'block';
+            } else {
+                chContainer.style.display = 'none';
+            }
+        });
+    });
     </script>
 @endsection
