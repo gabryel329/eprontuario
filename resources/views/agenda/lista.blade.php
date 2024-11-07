@@ -509,8 +509,8 @@
                                     <label for="indicacao_acidente" class="form-label">Indicação de Acidente</label>
                                     <select class="form-select" id="indicacao_acidente" name="indicacao_acidente">
                                         <option selected disabled>Escolha</option>
-                                        <option value="S">Sim</option>
-                                        <option value="N">Não</option>
+                                        <option value="1">Sim</option>
+                                        <option value="2">Não</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
@@ -519,8 +519,8 @@
                                     <select class="form-select" id="indicacao_cobertura_especial"
                                         name="indicacao_cobertura_especial">
                                         <option selected disabled>Escolha</option>
-                                        <option value="S">Sim</option>
-                                        <option value="N">Não</option>
+                                        <option value="1">Sim</option>
+                                        <option value="2">Não</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
@@ -535,8 +535,8 @@
                                     <label for="saude_ocupacional" class="form-label">Saúde Ocupacional</label>
                                     <select class="form-select" id="saude_ocupacional" name="saude_ocupacional">
                                         <option selected disabled>Escolha</option>
-                                        <option value="S">Sim</option>
-                                        <option value="N">Não</option>
+                                        <option value="1">Sim</option>
+                                        <option value="2">Não</option>
                                     </select>
                                 </div>
                             </div>
@@ -550,7 +550,7 @@
                                     <label for="tipo_consulta" class="form-label">Tipo de Consulta</label>
                                     <select class="form-select" id="tipo_consulta" name="tipo_consulta">
                                         <option selected disabled>Escolha</option>
-                                        @foreach ($tiposConsulta as $tipo)
+                                        @foreach ($tiposConsultas as $tipo)
                                             <option value="{{ $tipo->id }}">{{ $tipo->atendimento }}</option>
                                         @endforeach
                                     </select>

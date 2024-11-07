@@ -369,8 +369,8 @@
                                         Acidente</strong></label>
                                 <select class="form-select" id="indicacao_acidente" name="indicacao_acidente" readonly>
                                     <option selected disabled>Escolha</option>
-                                    <option value="S">Sim</option>
-                                    <option value="N">Não</option>
+                                    <option value="1">Sim</option>
+                                    <option value="2">Não</option>
                                 </select>
                             </div>
                             <div class="mb-3 col-md-3">
@@ -379,8 +379,8 @@
                                 <select class="form-select" id="indicacao_cobertura_especial"
                                     name="indicacao_cobertura_especial" readonly>
                                     <option selected disabled>Escolha</option>
-                                    <option value="S">Sim</option>
-                                    <option value="N">Não</option>
+                                    <option value="1">Sim</option>
+                                    <option value="2">Não</option>
                                 </select>
                             </div>
                             <div class="mb-3 col-md-3">
@@ -394,8 +394,8 @@
                                         Ocupacional</strong></label>
                                 <select class="form-select" id="saude_ocupacional" name="saude_ocupacional" readonly>
                                     <option selected disabled>Escolha</option>
-                                    <option value="S">Sim</option>
-                                    <option value="N">Não</option>
+                                    <option value="1">Sim</option>
+                                    <option value="2">Não</option>
                                 </select>
                             </div>
                             <div class="mb-3 col-md-3">

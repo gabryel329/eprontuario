@@ -42,14 +42,14 @@ class AgendaController extends Controller
 
             return response()->json(['agendas' => $agendas]);
         }
-
+        $tiposConsultas = TipoAtendimento::all();
         $agendas = Agenda::all();
         $pacientes = Pacientes::all();
         $profissional = Profissional::whereNotNull('conselho_1')->get();
         $procedimentos = Procedimentos::all();
         $feriado = Feriado::all();
 
-        return view('agenda.criar', compact(['agendas', 'pacientes', 'profissional', 'procedimentos', 'feriado']));
+        return view('agenda.criar', compact(['agendas', 'pacientes', 'profissional', 'procedimentos', 'feriado', 'tiposConsultas']));
     }
 
     public function geraAgenda(Request $request)
