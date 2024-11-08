@@ -549,7 +549,7 @@ class GuiaConsultaController extends Controller
         $assinatura->addChild('ans:assinaturaBeneficiario', $guia->assinatura_beneficiario);
 
         // Observação
-        $guiaConsulta->addChild('ans:observacao', $guia->observacao);
+        $guiaConsulta->addChild('ans:observacao', !empty($guia->observacao) ? $guia->observacao : 'N/A');
 
         // Epílogo
         $epilogo = $xml->addChild('ans:epilogo');
@@ -631,7 +631,7 @@ class GuiaConsultaController extends Controller
         $procedimento->addChild('ans:valorProcedimento', $guia->valor_procedimento);
 
         // Observação
-        $guiaConsulta->addChild('ans:observacao', $guia->observacao);
+        $guiaConsulta->addChild('ans:observacao', !empty($guia->observacao) ? $guia->observacao : 'N/A');
 
         // Concatene os dados críticos da guia em uma string
         $dadosParaHash = $guia->numero_guia_operadora . $guia->data_atendimento . $guia->numero_carteira . $guia->nome_beneficiario;
