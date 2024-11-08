@@ -140,7 +140,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="uco">UCO</label>
-                                                <input type="text" name="uco" id="uco" class="form-control"
+                                                <input type="text" name="uco" id="uco" class="form-control moeda"
                                                     required>
                                             </div>
                                         </div>
@@ -151,184 +151,184 @@
                                                     style="border-collapse: collapse; text-align: center;">
                                                     <tr>
                                                         <td>1A</td>
-                                                        <td><input type="text" id="1a" name="1a"
+                                                        <td><input type="text" id="1a" class="moeda" name="1a"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>5C</td>
-                                                        <td><input type="text" id="5c" name="5c"
+                                                        <td><input type="text" id="5c" class="moeda" name="5c"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>10B</td>
-                                                        <td><input type="text" id="10b" name="10b"
+                                                        <td><input type="text" id="10b" class="moeda" name="10b"
                                                                 style="width: 80px; text-align: right;"></td>
                                                     </tr>
                                                     <tr>
                                                         <td>1B</td>
-                                                        <td><input type="text" id="1b" name="1b"
+                                                        <td><input type="text" id="1b" class="moeda" name="1b"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>6A</td>
-                                                        <td><input type="text" id="6a" name="6a"
+                                                        <td><input type="text" id="6a" class="moeda" name="6a"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>10C</td>
-                                                        <td><input type="text" id="10c" name="10c"
+                                                        <td><input type="text" id="10c" class="moeda" name="10c"
                                                                 style="width: 80px; text-align: right;"></td>
                                                     </tr>
                                                     <tr>
                                                         <td>1C</td>
-                                                        <td><input type="text" id="1c" name="1c"
+                                                        <td><input type="text" id="1c" class="moeda" name="1c"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>6B</td>
-                                                        <td><input type="text" id="6b" name="6b"
+                                                        <td><input type="text" id="6b" class="moeda" name="6b"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>11A</td>
-                                                        <td><input type="text" id="11a" name="11a"
+                                                        <td><input type="text" id="11a" class="moeda" name="11a"
                                                                 style="width: 80px; text-align: right;"></td>
                                                     </tr>
                                                     <tr>
                                                         <td>2A</td>
-                                                        <td><input type="text" id="2a" name="2a"
+                                                        <td><input type="text" id="2a" class="moeda" name="2a"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>6C</td>
-                                                        <td><input type="text" id="6c" name="6c"
+                                                        <td><input type="text" id="6c" class="moeda" name="6c"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>11B</td>
-                                                        <td><input type="text" id="11b" name="11b"
+                                                        <td><input type="text" id="11b" class="moeda" name="11b"
                                                                 style="width: 80px; text-align: right;"></td>
                                                     </tr>
                                                     <tr>
                                                         <td>2B</td>
-                                                        <td><input type="text" id="2b" name="2b"
+                                                        <td><input type="text" id="2b" class="moeda" name="2b"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>7A</td>
-                                                        <td><input type="text" id="7a" name="7a"
+                                                        <td><input type="text" id="7a" class="moeda" name="7a"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>11C</td>
-                                                        <td><input type="text" id="11c" name="11c"
+                                                        <td><input type="text" id="11c" class="moeda" name="11c"
                                                                 style="width: 80px; text-align: right;"></td>
                                                     </tr>
                                                     <tr>
                                                         <td>2C</td>
-                                                        <td><input type="text" id="2c" name="2c"
+                                                        <td><input type="text" id="2c" class="moeda" name="2c"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>7B</td>
-                                                        <td><input type="text" id="7b" name="7b"
+                                                        <td><input type="text" id="7b" class="moeda" name="7b"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>12A</td>
-                                                        <td><input type="text" id="12a" name="12a"
+                                                        <td><input type="text" id="12a" class="moeda" name="12a"
                                                                 style="width: 80px; text-align: right;"></td>
                                                     </tr>
                                                     <tr>
                                                         <td>3A</td>
-                                                        <td><input type="text" id="3a" name="3a"
+                                                        <td><input type="text" id="3a" class="moeda" name="3a"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>7C</td>
-                                                        <td><input type="text" id="7c" name="7c"
+                                                        <td><input type="text" id="7c" class="moeda" name="7c"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>12B</td>
-                                                        <td><input type="text" id="12b" name="12b"
+                                                        <td><input type="text" id="12b" class="moeda" name="12b"
                                                                 style="width: 80px; text-align: right;"></td>
                                                     </tr>
                                                     <tr>
                                                         <td>3B</td>
-                                                        <td><input type="text" id="3b" name="3b"
+                                                        <td><input type="text" id="3b" class="moeda" name="3b"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>8A</td>
-                                                        <td><input type="text" id="8a" name="8a"
+                                                        <td><input type="text" id="8a" class="moeda" name="8a"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>12C</td>
-                                                        <td><input type="text" id="12c" name="12c"
+                                                        <td><input type="text" id="12c" class="moeda" name="12c"
                                                                 style="width: 80px; text-align: right;"></td>
                                                     </tr>
                                                     <tr>
                                                         <td>3C</td>
-                                                        <td><input type="text" id="3c" name="3c"
+                                                        <td><input type="text" id="3c" class="moeda" name="3c"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>8B</td>
-                                                        <td><input type="text" id="8b" name="8b"
+                                                        <td><input type="text" id="8b" class="moeda" name="8b"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>13A</td>
-                                                        <td><input type="text" id="13a" name="13a"
+                                                        <td><input type="text" id="13a" class="moeda" name="13a"
                                                                 style="width: 80px; text-align: right;"></td>
                                                     </tr>
                                                     <tr>
                                                         <td>4A</td>
-                                                        <td><input type="text" id="4a" name="4a"
+                                                        <td><input type="text" id="4a" class="moeda" name="4a"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>8C</td>
-                                                        <td><input type="text" id="8c" name="8c"
+                                                        <td><input type="text" id="8c" class="moeda" name="8c"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>13B</td>
-                                                        <td><input type="text" id="13b" name="13b"
+                                                        <td><input type="text" id="13b" class="moeda" name="13b"
                                                                 style="width: 80px; text-align: right;"></td>
                                                     </tr>
                                                     <tr>
                                                         <td>4B</td>
-                                                        <td><input type="text" id="4b" name="4b"
+                                                        <td><input type="text" id="4b" class="moeda" name="4b"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>9A</td>
-                                                        <td><input type="text" id="9a" name="9a"
+                                                        <td><input type="text" id="9a" class="moeda" name="9a"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>13C</td>
-                                                        <td><input type="text" id="13c" name="13c"
+                                                        <td><input type="text" id="13c" class="moeda" name="13c"
                                                                 style="width: 80px; text-align: right;"></td>
                                                     </tr>
                                                     <tr>
                                                         <td>4C</td>
-                                                        <td><input type="text" id="4c" name="4c"
+                                                        <td><input type="text" id="4c" class="moeda" name="4c"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>9B</td>
-                                                        <td><input type="text" id="9b" name="9b"
+                                                        <td><input type="text" id="9b" class="moeda" name="9b"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>14A</td>
-                                                        <td><input type="text" id="14a" name="14a"
+                                                        <td><input type="text" id="14a" class="moeda" name="14a"
                                                                 style="width: 80px; text-align: right;"></td>
                                                     </tr>
                                                     <tr>
                                                         <td>5A</td>
-                                                        <td><input type="text" id="5a" name="5a"
+                                                        <td><input type="text" id="5a" class="moeda" name="5a"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>9C</td>
-                                                        <td><input type="text" id="9c" name="9c"
+                                                        <td><input type="text" id="9c" class="moeda" name="9c"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>14B</td>
-                                                        <td><input type="text" id="14b" name="14b"
+                                                        <td><input type="text" id="14b" class="moeda" name="14b"
                                                                 style="width: 80px; text-align: right;"></td>
                                                     </tr>
                                                     <tr>
                                                         <td>5B</td>
-                                                        <td><input type="text" id="5b" name="5b"
+                                                        <td><input type="text" id="5b" class="moeda" name="5b"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>10A</td>
-                                                        <td><input type="text" id="10a" name="10a"
+                                                        <td><input type="text" id="10a" class="moeda" name="10a"
                                                                 style="width: 80px; text-align: right;"></td>
                                                         <td></td>
                                                         <td>14C</td>
-                                                        <td><input type="text" id="14c" name="14c"
+                                                        <td><input type="text" id="14c" class="moeda" name="14c"
                                                                 style="width: 80px; text-align: right;"></td>
                                                     </tr>
                                                 </table>
@@ -468,8 +468,32 @@
                         location.reload();
                     }
                 })
-                .catch(error => console.error('Erro:', error));
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao importar. Verifique a inconsistência.');
+                });
         }
+
+        // Função para aplicar máscara de moeda
+        function aplicarMascaraMoeda(event) {
+            let elemento = event.target;
+            let valor = elemento.value;
+
+            // Remove qualquer caractere que não seja dígito
+            valor = valor.replace(/\D/g, "");
+
+            // Formata o valor para moeda (2 casas decimais)
+            valor = (valor / 100).toFixed(2) + "";
+            valor = valor.replace(".", ",");
+            valor = valor.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+
+            elemento.value = valor;
+        }
+
+        // Seleciona todos os campos com a classe 'moeda' e aplica o evento
+        document.querySelectorAll('.moeda').forEach(function(input) {
+            input.addEventListener('input', aplicarMascaraMoeda);
+        });
     </script>
 
 @endsection

@@ -123,6 +123,7 @@
                                     <th>ID</th>
                                     <th>Nome</th>
                                     <th>Código</th>
+                                    <th>Valor</th>
                                     <th>Ação</th>
                                 </tr>
                             </thead>
@@ -299,6 +300,7 @@
                         <th>Matricula</th>
                         <th>Consulta</th>
                         <th>Código</th>
+                        <th>Valor</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -331,6 +333,7 @@
             <td><input type="text" name="matricula[${horario}]" value="${horario.matricula ?? ''}" class="form-control" ${isDisabled}></td>
             <td>${renderProcedimentoInput(horario, procedimentos, isDisabled)}</td>
             <td><input type="text"name="codigo[${horario.hora}]" id="codigo${horario.hora}" value="${horario.codigo ?? ''}" class="form-control" readonly ${isDisabled}></td>
+            <td><input type="text"name="valor_proc[${horario.hora}]" id="valor_proc${horario.hora}" value="${horario.valor_proc ?? ''}" class="form-control" readonly ${isDisabled}></td>
 
         </tr>
     `;
@@ -365,11 +368,12 @@
         }
 
 
-        function selectProcedimento(id, procedimento, codigo) {
+        function selectProcedimento(id, procedimento, codigo, valor_proc) {
             const horario = $('#procedimentoModal').data('horario');
             document.getElementById(`procedimento_id${horario}`).value = id;
             document.getElementById(`procedimento_nome${horario}`).value = procedimento;
             document.getElementById(`codigo${horario}`).value = codigo;
+            document.getElementById(`valor_proc${horario}`).value = valor_proc;
 
             $('#procedimentoModal').modal('hide');
         }
@@ -422,9 +426,10 @@
                                 <td>${procedimento.id}</td>
                                 <td>${procedimento.descricao || procedimento.procedimento}</td>
                                 <td>${procedimento.codigo || procedimento.codigo_anatomico}</td>
+                                <td>${procedimento.valor_proc}</td>
                                 <td>
                                     <button class="btn btn-primary" type="button"
-                                        onclick="selectProcedimento('${procedimento.id}', '${procedimento.descricao || procedimento.procedimento}', '${procedimento.codigo || procedimento.codigo_anatomico}')">
+                                        onclick="selectProcedimento('${procedimento.id}', '${procedimento.descricao || procedimento.procedimento}', '${procedimento.codigo || procedimento.codigo_anatomico}','${procedimento.valor_proc}')">
                                         Selecionar
                                     </button>
                                 </td>
@@ -477,6 +482,7 @@
                 var convenio = row.querySelector('select[name^="convenio"]')?.value || '';
                 var procedimento = row.querySelector('input[name^="procedimento_nome"]')?.value || '';
                 var codigo = row.querySelector('input[name^="codigo"]')?.value || '';
+                var valor_proc = row.querySelector('input[name^="valor_proc"]')?.value || '';
 
                 var selectedDate = document.getElementById('displaySelectedData').textContent;
                 var profissionalId = document.getElementById('profissionais').value;
@@ -492,6 +498,7 @@
                         matricula: matricula,
                         procedimento: procedimento,
                         codigo: codigo,
+                        valor_proc: valor_proc,
                         horario: hora,
                         data: selectedDate,
                         profissionalId: profissionalId,

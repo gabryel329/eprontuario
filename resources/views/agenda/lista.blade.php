@@ -908,8 +908,8 @@
                                 response.guia.tipo_consulta : '');
                             $('#modalConsulta #codigo_tabela').val(response.guia ?
                                 response.guia.codigo_tabela : '');
-                            $('#modalConsulta #valor_procedimento').val(response.guia ?
-                                response.guia.valor_procedimento : '');
+                            $('#modalConsulta #valor_procedimento').val(response.agenda ?
+                                response.agenda.valor_proc : '');
                             $('#modalConsulta #observacao').val(response.guia ?
                                 response.guia.observacao : '');
 
