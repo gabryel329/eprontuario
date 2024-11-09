@@ -1145,17 +1145,18 @@
         $(document).ready(function() {
             // Escutar o evento de clique no botão de gerar guia de consulta
             $('.guia-consulta').on('click', function() {
-                // Capturar o ID da agenda a partir do botão
-                var agendaId = $(this).data('id');
+                // Capturar o ID da agenda a partir do input com id 'agenda_id'
+                var agendaId = $('#agenda_id').val();
 
                 // Substituir ':id' na rota com o ID da agenda
-                var url = "{{ route('guia.consulta2', ':id') }}".replace(':id', agendaId);
+                var url = "{{ route('guia.consulta2', '/id') }}".replace('/id', agendaId);
 
                 // Abrir a URL em uma nova janela popup
                 window.open(url, '_blank',
                     'toolbar=no,scrollbars=yes,resizable=yes,width=1000,height=800');
             });
         });
+
 
 
 

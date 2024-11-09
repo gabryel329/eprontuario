@@ -124,6 +124,7 @@ class AgendaController extends Controller
             $agendas->medicamento_lista = $medicamentos;
         }
 
+        $medicamento = Produtos::all();
 
         $pacientes = Pacientes::join('agendas', 'pacientes.id', '=', 'agendas.paciente_id')
             ->where('agendas.id', $id) // Filtra pelo ID passado na request
@@ -131,7 +132,7 @@ class AgendaController extends Controller
             ->first(); // Retorna um único resultado (opcional)
         $produto = Produtos::all();
 
-        return view('agenda.detalhesconsulta', compact('agendas', 'pacientes', 'produto'));
+        return view('agenda.detalhesconsulta', compact('agendas', 'pacientes', 'produto', 'medicamento'));
     }
 
     public function storeMedicamento(Request $request)

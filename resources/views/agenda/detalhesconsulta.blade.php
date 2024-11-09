@@ -273,11 +273,10 @@
                                                         <select class="form-control medicamento_id"
                                                             name="medicamento_id[]">
                                                             <option value="">Selecione o remédio</option>
-                                                                @foreach ($agendas->medicamento_lista as $medicamento)
-                                                                    <option value="{{ $medicamento->id }}">
-                                                                        {{ $medicamento->medicamento }}
-                                                                    </option>
-                                                                @endforeach
+                                                            @foreach ($medicamento as $item)
+                                                                <option value="{{ $item->id }}">
+                                                                    {{ $item->nome }}</option>
+                                                            @endforeach
                                                         </select>
                                                     </td>
                                                     <td>
@@ -451,11 +450,11 @@
             <tr class="prescricao-row">
                 <td>
                     <select class="form-control medicamento_id" name="medicamento_id[]">
-                        <option value="">Selecione o remédio</option>
-                            @foreach ($agendas->medicamento_lista as $medicamento)
-                                <option value="{{ $medicamento->id }}">{{ $medicamento->medicamento }}</option>
+                            <option value="">Selecione o remédio</option>
+                            @foreach ($medicamento as $item)
+                                <option value="{{ $item->id }}">{{ $item->nome }}</option>
                             @endforeach
-                    </select>
+                        </select>
                 </td>
                 <td><input type="number" class="form-control dose" name="dose[]" placeholder="Dose"></td>
                 <td><input type="number" class="form-control hora" name="hora[]" placeholder="Horas"></td>
