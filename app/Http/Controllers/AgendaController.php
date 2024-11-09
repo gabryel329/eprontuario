@@ -74,9 +74,9 @@ class AgendaController extends Controller
 
             if ($tabelaProcedimentos && Schema::hasTable($tabelaProcedimentos)) {
                 if (str_starts_with($tabelaProcedimentos, 'tab_amb92') || str_starts_with($tabelaProcedimentos, 'tab_amb96')) {
-                    $procedimentos = DB::table($tabelaProcedimentos)->select('id', 'descricao as procedimento', 'codigo')->get();
+                    $procedimentos = DB::table($tabelaProcedimentos)->select('id', 'descricao as procedimento', 'codigo', 'valor_proc')->orderBy('id', 'asc')->get();
                 } elseif (str_starts_with($tabelaProcedimentos, 'tab_cbhpm')) {
-                    $procedimentos = DB::table($tabelaProcedimentos)->select('id', 'procedimento', 'codigo_anatomico as codigo')->get();
+                    $procedimentos = DB::table($tabelaProcedimentos)->select('id', 'procedimento', 'codigo_anatomico as codigo', 'valor_proc')->orderBy('id', 'asc')->get();
                 } else {
                     $procedimentos = collect([['procedimento' => 'Procedimento não encontrado', 'codigo' => null]]);
                 }
@@ -343,9 +343,9 @@ class AgendaController extends Controller
                     if (Schema::hasTable($convenio->tab_proc_id)) {
                         // Verifica se o nome da tabela começa com "tab_amb92" ou "tab_amb96"
                         if (str_starts_with($convenio->tab_proc_id, 'tab_amb92') || str_starts_with($convenio->tab_proc_id, 'tab_amb96')) {
-                            $procedimentos = DB::table($convenio->tab_proc_id)->select('id', 'descricao', 'codigo')->get();
+                            $procedimentos = DB::table($convenio->tab_proc_id)->select('id', 'descricao', 'codigo', 'valor_proc')->orderBy('id', 'asc')->get();
                         } elseif (str_starts_with($convenio->tab_proc_id, 'tab_cbhpm')) {
-                            $procedimentos = DB::table($convenio->tab_proc_id)->select('id', 'procedimento', 'codigo_anatomico')->get();
+                            $procedimentos = DB::table($convenio->tab_proc_id)->select('id', 'procedimento', 'codigo_anatomico', 'valor_proc')->orderBy('id', 'asc')->get();
                         }
                     } else {
                         return response()->json(['error' => 'Tabela de procedimentos não encontrada.'], 404);
@@ -500,6 +500,7 @@ class AgendaController extends Controller
             $celular = $agendamentoData['celular'];
             $matricula = $agendamentoData['matricula'];
             $codigo = $agendamentoData['codigo'];
+            $valor_proc = $agendamentoData['valor_proc'];
             $convenioId = $agendamentoData['convenio'];
 
             // Verifica se já existe uma agenda com a mesma data, hora, profissional e especialidade
@@ -517,6 +518,7 @@ class AgendaController extends Controller
                 $existeAgenda->matricula = $matricula;
                 $existeAgenda->convenio_id = $convenioId;
                 $existeAgenda->codigo = $codigo;
+                $existeAgenda->valor_proc = $valor_proc;
                 $existeAgenda->especialidade_id = $especialidadeId;
                 $existeAgenda->save();
             } else {
@@ -533,6 +535,7 @@ class AgendaController extends Controller
                 $novoAgendamento->convenio_id = $convenioId;
                 $novoAgendamento->especialidade_id = $especialidadeId;
                 $novoAgendamento->codigo = $codigo;
+                $novoAgendamento->valor_proc = $valor_proc;
                 $novoAgendamento->save();
             }
 
@@ -584,6 +587,7 @@ class AgendaController extends Controller
                         'celular' => $celular,
                         'matricula' => $matricula,
                         'codigo' => $codigo,
+                        'valor_proc' => $valor_proc,
                         'convenio_id' => $convenioId,
                     ]);
             } else {
@@ -858,9 +862,11 @@ class AgendaController extends Controller
                         if (Schema::hasTable($tabelaProcedimentos)) {
                             // Define a coluna correta de acordo com o prefixo do nome da tabela
                             if (str_starts_with($tabelaProcedimentos, 'tab_amb92') || str_starts_with($tabelaProcedimentos, 'tab_amb96')) {
-                                $procedimentos = DB::table($tabelaProcedimentos)->pluck('descricao'); // Obter todos os valores da coluna 'descricao'
+                                $procedimentos = DB::table($tabelaProcedimentos)->orderBy('id', 'asc')
+                                ->pluck('descricao'); // Obter todos os valores da coluna 'descricao'
                             } elseif (str_starts_with($tabelaProcedimentos, 'tab_cbhpm')) {
-                                $procedimentos = DB::table($tabelaProcedimentos)->pluck('procedimento'); // Obter todos os valores da coluna 'procedimento'
+                                $procedimentos = DB::table($tabelaProcedimentos)->orderBy('id', 'asc')
+                                ->pluck('procedimento'); // Obter todos os valores da coluna 'procedimento'
                             } else {
                                 $procedimentos = ['Procedimento não encontrado'];
                             }
@@ -1038,42 +1044,61 @@ class AgendaController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        // Validar os dados do request (opcional, mas recomendado)
-        $request->validate([
-            'profissional_id' => 'required|exists:profissionals,id',
-            'data' => 'required|date',
-            'hora' => 'required|date_format:H:i',
-            'paciente_id' => 'required|integer',
-            'convenio_id' => 'required|integer',
-            'name' => 'required|string|max:255',
-            'matricula' => 'required|string|max:255',
-        ]);
+{
+    // Validar os dados do request
+    $request->validate([
+        'profissional_id' => 'required|exists:profissionals,id',
+        'data' => 'required|date',
+        'hora' => 'required|date_format:H:i',
+        'paciente_id' => 'required|integer',
+        'convenio_id' => 'required|integer|exists:convenios,id',
+        'name' => 'required|string|max:255',
+        'matricula' => 'required|string|max:255',
+    ]);
 
-        // Encontrar a agenda pelo ID
-        $agenda = Agenda::findOrFail($id);
+    // Encontrar a agenda pelo ID
+    $agenda = Agenda::findOrFail($id);
 
-        // Atualizar os dados da agenda
-        $agenda->profissional_id = $request->profissional_id;
-        $agenda->data = $request->data;
-        $agenda->hora = $request->hora;
-        $agenda->paciente_id = $request->paciente_id;
-        $agenda->convenio_id = $request->convenio_id;
-        $agenda->matricula = $request->matricula;
-        $agenda->name = $request->name;
-        $agenda->celular = $request->celular;
+    // Atualizar os dados da agenda
+    $agenda->profissional_id = $request->profissional_id;
+    $agenda->data = $request->data;
+    $agenda->hora = $request->hora;
+    $agenda->paciente_id = $request->paciente_id;
+    $agenda->convenio_id = $request->convenio_id;
+    $agenda->matricula = $request->matricula;
+    $agenda->name = $request->name;
+    $agenda->celular = $request->celular;
 
-        // Verificar se 'procedimento_id' foi enviado na requisição antes de atualizar
-        if ($request->has('procedimento_id')) {
-            $agenda->procedimento_id = $request->procedimento_id;
+    // Verificar e atualizar o procedimento, código e valor_proc
+    if ($request->has('procedimento_id')) {
+        $agenda->procedimento_id = $request->procedimento_id;
+
+        // Obter o convênio
+        $convenio = Convenio::find($request->convenio_id);
+        $tabelaProcedimentos = $convenio->tab_proc_id;
+
+        // Verificar se a tabela existe e buscar o procedimento
+        if ($tabelaProcedimentos && Schema::hasTable($tabelaProcedimentos)) {
+            $procedimento = DB::table($tabelaProcedimentos)
+                ->where('procedimento', $request->procedimento_id)
+                ->select('codigo_anatomico as codigo', 'valor_proc')
+                ->first();
+
+            // Atualizar o código e o valor_proc, se o procedimento for encontrado
+            if ($procedimento) {
+                $agenda->codigo = $procedimento->codigo;
+                $agenda->valor_proc = $procedimento->valor_proc;
+            }
         }
-
-        // Salvar as mudanças
-        $agenda->save();
-
-        // Redirecionar de volta com uma mensagem de sucesso
-        return redirect()->back()->with('success', 'Agenda atualizada com sucesso.');
     }
+
+    // Salvar as mudanças
+    $agenda->save();
+
+    // Redirecionar de volta com uma mensagem de sucesso
+    return redirect()->back()->with('success', 'Agenda atualizada com sucesso.');
+}
+
 
     /**
      * Remove the specified resource from storage.

@@ -136,7 +136,9 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::get('/gerar-xml-guia-sp/{id}', [GuiaSpController::class, 'gerarXmlGuiaSp']);
         Route::get('/gerar-zip-guia-sp/{id}', [GuiaSpController::class, 'gerarZipGuiaSp']);
 
-
+        Route::get('/convenios/procedures', [ConvenioController::class, 'getProceduresIndex'])->name('convenios.index');
+        Route::get('/convenios/procedures/{id}', [ConvenioController::class, 'getProcedures'])->name('convenios.getProcedures');
+        Route::post('/convenios/update-procedures-values/{id}', [ConvenioController::class, 'updateProceduresValues']);
 
         Route::get('/medicamentos', [ProdutosController::class, 'listaMedicamentos'])->name('medicamentos.index');
         Route::get('/listaprodutos', [ProdutosController::class, 'listaProdutos'])->name('listaprodutos.index');

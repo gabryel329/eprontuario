@@ -205,6 +205,8 @@ class TabelaController extends Controller
                     $table->string('descricao_subgrupo', 500)->nullable();
                     $table->string('codigo_anatomico', 500)->nullable();
                     $table->string('procedimento', 500)->nullable();
+                    $table->string('porcentagem', 500)->nullable();
+                    $table->string('de', 500)->nullable();
                     $table->string('porte', 500)->nullable();
                     $table->string('custo_operacional', 500)->nullable();
                     $table->string('auxiliares', 500)->nullable();
@@ -212,6 +214,7 @@ class TabelaController extends Controller
                     $table->string('filmes', 500)->nullable();
                     $table->string('incidencia', 500)->nullable();
                     $table->string('unidade_radiof', 500)->nullable();
+                    $table->string('valor_proc', 500)->nullable();
 
                     break;
             }
@@ -283,13 +286,16 @@ class TabelaController extends Controller
                     'descricao_subgrupo' => $row[3] ?? null,
                     'codigo_anatomico' => $row[4] ?? null,
                     'procedimento' => isset($row[5]) ? substr($row[5], 0, 1000) : null, // Truncar para 255 caracteres
-                    'porte' => $row[6] ?? null,
-                    'custo_operacional' => $row[7] ?? null,
-                    'auxiliares' => $row[8] ?? null,
-                    'porte_anestesico' => $row[9] ?? null,
-                    'filmes' => $row[10] ?? null,
-                    'incidencia' => $row[11] ?? null,
-                    'unidade_radiof' => $row[12] ?? null,
+                    'porcentagem' => $row[6] ?? null,
+                    'de' => $row[7] ?? null,
+                    'porte' => $row[8] ?? null,
+                    'custo_operacional' => $row[9] ?? null,
+                    'auxiliares' => $row[10] ?? null,
+                    'porte_anestesico' => $row[11] ?? null,
+                    'filmes' => $row[12] ?? null,
+                    'incidencia' => $row[13] ?? null,
+                    'unidade_radiof' => $row[14] ?? null,
+                    'valor_proc' => $row[15] ?? null,
                 ];
             default:
                 return [];
