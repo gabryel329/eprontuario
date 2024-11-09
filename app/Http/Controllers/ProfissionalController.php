@@ -139,7 +139,6 @@ class ProfissionalController extends Controller
         $extension = $imagem->getClientOriginalExtension();
         $imageName = $filename . '.' . $extension;
         $imagem->move(public_path('images/'), $imageName);
-    }
 
     // Create the professional
     $profissional = Profissional::create([
@@ -212,6 +211,76 @@ class ProfissionalController extends Controller
 
     // Attach especialidades
     $profissional->especialidades()->attach($especialidade_ids);
+
+} else {
+        // Se nenhuma imagem foi enviada, crie o produto sem o campo de imagem
+        $profissional = Profissional::create([
+            'name' => $nome,
+            'sobrenome' => $sobrenome,
+            'email' => $email,
+            'nasc' => $nasc,
+            'cpf' => $cpf,
+            'genero' => $genero,
+            'rg' => $rg,
+            'cor' => $cor,
+            'cbo' => $cbo,
+            'permisoes_id' => $permisoes_id,
+            'uf_conselho' => $ufconselho2,
+            'conselho_2' => $conselho2,
+            'conselho_1' => $conselho1,
+            'uf_conselho1' => $ufconselho1,
+            'tipoprof_id' => $tipoprof_id,
+            'cep' => $cep,
+            'rua' => $rua,
+            'bairro' => $bairro,
+            'cidade' => $cidade,
+            'uf' => $uf,
+            'numero' => $numero,
+            'complemento' => $complemento,
+            'telefone' => $telefone,
+            'celular' => $celular,
+            'material' => $material,
+            'medicamento' => $medicamento,
+            'valor' => $valor,
+            'porcentagem' => $porcentagem,
+
+            // Manhã
+            'manha_dom' => $manha_dom,
+            'manha_seg' => $manha_seg,
+            'manha_ter' => $manha_ter,
+            'manha_qua' => $manha_qua,
+            'manha_qui' => $manha_qui,
+            'manha_sex' => $manha_sex,
+            'manha_sab' => $manha_sab,
+            'inihonorariomanha' => $inihonorariomanha,
+            'interhonorariomanha' => $interhonorariomanha,
+            'fimhonorariomanha' => $fimhonorariomanha,
+
+            // Tarde
+            'tarde_dom' => $tarde_dom,
+            'tarde_seg' => $tarde_seg,
+            'tarde_ter' => $tarde_ter,
+            'tarde_qua' => $tarde_qua,
+            'tarde_qui' => $tarde_qui,
+            'tarde_sex' => $tarde_sex,
+            'tarde_sab' => $tarde_sab,
+            'inihonorariotarde' => $inihonorariotarde,
+            'interhonorariotarde' => $interhonorariotarde,
+            'fimhonorariotarde' => $fimhonorariotarde,
+
+            // Noite
+            'noite_dom' => $noite_dom,
+            'noite_seg' => $noite_seg,
+            'noite_ter' => $noite_ter,
+            'noite_qua' => $noite_qua,
+            'noite_qui' => $noite_qui,
+            'noite_sex' => $noite_sex,
+            'noite_sab' => $noite_sab,
+            'inihonorarionoite' => $inihonorarionoite,
+            'interhonorarionoite' => $interhonorarionoite,
+            'fimhonorarionoite' => $fimhonorarionoite,
+        ]);
+    }
 
     // Attach convenios with codigo_operadora
     if ($convenios) {

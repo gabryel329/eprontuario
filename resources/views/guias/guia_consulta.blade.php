@@ -481,18 +481,38 @@
                 }
             });
 
-            function gerarLote(ids, numeracao = null) {
-            // Solicita numeração apenas se não houver
-            if (!numeracao) {
-                numeracao = prompt("Numeração não encontrada. Por favor, insira a numeração para o lote:");
-                if (!numeracao) {
-                    alert('A numeração é necessária para gerar o lote.');
-                    return;
-                }
-            }
+            function gerarLote(ids) {
+        let numeracao = null;
 
-            // Gera XML em lote
-            fetch("{{ route('guias.gerarXmlEmLote') }}", {
+        // Função para verificar e solicitar numeração apenas se necessário
+        function verificarNumeracao() {
+            return fetch(`/verificar-numeracao`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ guia_ids: ids })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.numeracao) {
+                    numeracao = data.numeracao;
+                    return true;
+                } else {
+                    numeracao = prompt("Numeração não encontrada. Por favor, insira a numeração para o lote:");
+                    return numeracao ? true : false;
+                }
+            })
+            .catch(error => {
+                alert("Erro ao verificar a numeração: " + error.message);
+                return false;
+            });
+        }
+
+        // Função para gerar o XML em lote
+        function gerarXml() {
+            return fetch("{{ route('guias.gerarXmlEmLote') }}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -501,22 +521,31 @@
                 body: JSON.stringify({ guia_ids: ids, numeracao: numeracao })
             })
             .then(response => {
-                if (response.ok) return response.blob();
+                if (response.status === 422) return response.json();
+                else if (response.ok) return response.blob();
                 else throw new Error('Erro ao gerar XML.');
             })
-            .then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `lote_guias_consulta.xml`;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
+            .then(data => {
+                if (data && data.error) {
+                    alert("Erro: " + data.error);
+                    return false;
+                } else if (data instanceof Blob) {
+                    const url = window.URL.createObjectURL(data);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `lote_guias_consulta.xml`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    return true;
+                }
             })
             .catch(error => alert("Erro ao gerar XML em lote: " + error.message));
+        }
 
-            // Gera ZIP em lote
-            fetch("{{ route('guias.gerarZipEmLote') }}", {
+        // Função para gerar o ZIP em lote
+        function gerarZip() {
+            return fetch("{{ route('guias.gerarZipEmLote') }}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -525,20 +554,39 @@
                 body: JSON.stringify({ guia_ids: ids, numeracao: numeracao })
             })
             .then(response => {
-                if (response.ok) return response.blob();
+                if (response.status === 422) return response.json();
+                else if (response.ok) return response.blob();
                 else throw new Error('Erro ao gerar ZIP.');
             })
-            .then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `lote_guias_consulta.zip`;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
+            .then(data => {
+                if (data && data.error) {
+                    alert("Erro: " + data.error);
+                    return false;
+                } else if (data instanceof Blob) {
+                    const url = window.URL.createObjectURL(data);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `lote_guias_consulta.zip`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    return true;
+                }
             })
             .catch(error => alert("Erro ao gerar ZIP em lote: " + error.message));
         }
+
+        // Executa as funções para gerar XML e ZIP em sequência após verificar numeração
+        verificarNumeracao().then(result => {
+            if (result) {
+                gerarXml().then(result => {
+                    if (result !== false) {
+                        return gerarZip();
+                    }
+                });
+            }
+        });
+    }
 
             // Aplicar a máscara no campo de hora
             $('#hora_inicio_atendimento').mask('00:00');
@@ -662,79 +710,92 @@
             };
         });
 
-        function gerarXmlGuiaConsulta(id) {
-            fetch(`/gerar-xml-guia-consulta/${id}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({})
-                })
-                .then(response => {
-                    if (response.status === 422) {
-                        return response.json();
-                    } else if (response.ok) {
-                        return response.blob();
-                    } else {
-                        throw new Error('Erro inesperado');
-                    }
-                })
-                .then(data => {
-                    if (data.error) {
-                        const numeracao = prompt(
-                            "Numeração não encontrada para esta guia. Por favor, insira a numeração:");
-                        if (numeracao) {
-                            fetch(`/gerar-xml-guia-consulta/${id}`, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                            .getAttribute('content')
-                                    },
-                                    body: JSON.stringify({
-                                        numeracao: numeracao
-                                    })
-                                })
-                                .then(response => {
-                                    if (response.ok) return response.blob();
-                                    else throw new Error('Erro ao gerar XML.');
-                                })
-                                .then(blob => {
-                                    const url = window.URL.createObjectURL(blob);
-                                    const a = document.createElement('a');
-                                    a.href = url;
-                                    a.download = `guia_consulta_${id}.xml`;
-                                    document.body.appendChild(a);
-                                    a.click();
-                                    a.remove();
-                                })
-                                .catch(error => alert("Erro: " + error.message));
-                        }
-                    } else if (data instanceof Blob) {
-                        const url = window.URL.createObjectURL(data);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = `guia_consulta_${id}.xml`;
-                        document.body.appendChild(a);
-                        a.click();
-                        a.remove();
-                    }
-                })
-                .catch(error => alert("Erro ao gerar XML."));
+// Função para verificar numeração no backend
+function verificarNumeracao(id) {
+    return fetch(`/verificar-numeracao`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ guia_ids: [id] })
+    })
+    .then(response => response.json())
+    .then(data => data.numeracao);
+}
+
+// Função para gerar o XML com verificação de numeração
+function gerarXmlGuiaConsulta(id) {
+    if (!numGuia) {
+        numGuia = prompt("Numeração não encontrada para esta guia. Por favor, insira a numeração:");
+        if (!numGuia) {
+            alert("A numeração é necessária para gerar o XML.");
+            return;
+        }
+    }
+
+    fetch(`/gerar-xml-guia-consulta/${id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ numeracao: numGuia })
+    })
+    .then(response => response.blob())
+    .then(blob => downloadBlob(blob, `guia_consulta_${id}.xml`))
+    .catch(error => alert("Erro ao gerar XML: " + error.message));
+}
+
+// Função para gerar o ZIP com a mesma numeração
+function gerarZipGuiaConsulta(id) {
+    if (!numGuia) {
+        alert("Por favor, gere o XML primeiro para definir a numeração.");
+        return;
+    }
+
+    fetch(`/gerar-zip-guia-consulta/${id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ numeracao: numGuia })
+    })
+    .then(response => response.blob())
+    .then(blob => downloadBlob(blob, `guia_consulta_${id}.zip`))
+    .catch(error => alert("Erro ao gerar ZIP: " + error.message));
+}
+
+// Função para baixar arquivos XML e ZIP com verificação de numeração
+function baixarArquivos(guiaId) {
+    verificarNumeracao(guiaId).then(numeracao => {
+        if (numeracao) {
+            numGuia = numeracao; // Usa a numeração existente
+        } else {
+            // Solicita a numeração se não estiver definida
+            numGuia = prompt("Numeração não encontrada para esta guia. Por favor, insira a numeração:");
+            if (!numGuia) {
+                alert("A numeração é necessária para gerar os arquivos.");
+                return;
+            }
         }
 
+        // Gera o XML e ZIP usando a numeração confirmada ou nova
+        gerarXmlGuiaConsulta(guiaId);
+        gerarZipGuiaConsulta(guiaId);
+    }).catch(error => alert("Erro ao verificar a numeração: " + error.message));
+}
 
-
-        function baixarArquivos(guiaId) {
-            gerarXmlGuiaConsulta(guiaId);
-            // Disparar o download do ZIP
-            var downloadZip = document.createElement('a');
-            downloadZip.href = '/gerar-zip-guia-consulta/' + guiaId;
-            downloadZip.setAttribute('download', '');
-            document.body.appendChild(downloadZip);
-            downloadZip.click();
-            document.body.removeChild(downloadZip);
-        }
+// Função de download de blobs
+function downloadBlob(blob, filename) {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+}
     </script>
 @endsection

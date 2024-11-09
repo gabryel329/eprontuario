@@ -95,16 +95,57 @@ class GuiaConsultaController extends Controller
 
     public function salvarGuiaConsulta(Request $request)
     {
-        // Verifica se já existe uma guia para o mesmo agenda_id
         $guiaExistente = GuiaConsulta::where('agenda_id', $request->input('agenda_id'))->exists();
 
         if ($guiaExistente) {
-            // Se já existe, retorna uma mensagem de sucesso sem salvar uma nova guia
             return response()->json([
                 'success' => true,
                 'message' => 'Guia Consulta já existente.'
             ]);
         }
+
+        $conselhos = [
+            'CRAS' => '01',
+            'COREN' => '02',
+            'CRF' => '03',
+            'CRFA' => '04',
+            'CREFITO' => '05',
+            'CRM' => '06',
+            'CRN' => '07',
+            'CRO' => '08',
+            'CRP' => '09',
+            'OUTROS' => '10'
+        ];
+
+        $ufs = [
+            'AC' => '12',
+            'AL' => '27',
+            'AP' => '16',
+            'AM' => '13',
+            'BA' => '29',
+            'CE' => '23',
+            'DF' => '53',
+            'ES' => '32',
+            'GO' => '52',
+            'MA' => '21',
+            'MT' => '51',
+            'MS' => '50',
+            'MG' => '31',
+            'PA' => '15',
+            'PB' => '25',
+            'PR' => '41',
+            'PE' => '26',
+            'PI' => '22',
+            'RJ' => '33',
+            'RN' => '24',
+            'RS' => '43',
+            'RO' => '11',
+            'RR' => '14',
+            'SC' => '42',
+            'SP' => '35',
+            'SE' => '28',
+            'TO' => '17'
+        ];
 
         // Se não existe, cria uma nova guia
         $guia = new GuiaConsulta();
@@ -124,13 +165,11 @@ class GuiaConsultaController extends Controller
         $guia->nome_contratado = $request->input('nome_contratado');
         $guia->codigo_cnes = $request->input('cnes');
         $guia->nome_profissional_executante = $request->input('nome_profissional_executante');
-        $guia->conselho_profissional = $request->input('conselho_profissional');
         $guia->numero_conselho = $request->input('conselho_1');
-        $guia->uf_conselho = $request->input('uf_conselho');
         $guia->codigo_cbo = $request->input('codigo_cbo');
         $guia->indicacao_acidente = $request->input('indicacao_acidente');
         $guia->indicacao_cobertura_especial = $request->input('indicacao_cobertura_especial');
-        $guia->regime_atendimento = $request->input('regime_atendimento');
+        $guia->regime_atendimento = $request->input('regime_atendimento') ?? '01';
         $guia->saude_ocupacional = $request->input('saude_ocupacional');
         $guia->data_atendimento = $request->input('data_atendimento');
         $guia->tipo_consulta = $request->input('tipo_consulta');
@@ -139,13 +178,29 @@ class GuiaConsultaController extends Controller
         $guia->valor_procedimento = $request->input('valor_procedimento');
         $guia->observacao = $request->input('observacao');
 
+        // Verifica se o conselho_profissional está no mapeamento e substitui pelo código numérico
+        $conselhoProfissional = $request->input('conselho_profissional');
+        if (array_key_exists($conselhoProfissional, $conselhos)) {
+            $guia->conselho_profissional = $conselhos[$conselhoProfissional];
+        } else {
+            $guia->conselho_profissional = $conselhoProfissional; // Mantém o valor original se não estiver no mapeamento
+        }
+
+        // Verifica se o uf_conselho está no mapeamento e substitui pelo código numérico
+        $ufConselho = $request->input('uf_conselho');
+        if (array_key_exists($ufConselho, $ufs)) {
+            $guia->uf_conselho = $ufs[$ufConselho];
+        } else {
+            $guia->uf_conselho = $ufConselho; // Mantém o valor original se não estiver no mapeamento
+        }
+
         // Salva a nova guia no banco de dados
         $guia->save();
 
         // Retorna uma resposta de sucesso após salvar
         return response()->json([
             'success' => true,
-            'message' => 'Guia Consulta criada no sucesso!.'
+            'message' => 'Guia Consulta criada com sucesso!'
         ]);
     }
 
@@ -660,6 +715,25 @@ class GuiaConsultaController extends Controller
 
         return response()->download($zipFilePath)->deleteFileAfterSend(true);
     }
+
+    public function verificarNumeracao(Request $request)
+    {
+        $guiaIds = $request->input('guia_ids');
+
+        // Busca a primeira guia com numeração entre as IDs fornecidas
+        $guiaComNumeracao = GuiaConsulta::whereIn('id', $guiaIds)
+            ->whereNotNull('numeracao')
+            ->first();
+
+        if ($guiaComNumeracao) {
+            // Retorna a numeração encontrada
+            return response()->json(['numeracao' => $guiaComNumeracao->numeracao]);
+        } else {
+            // Indica ao frontend que deve solicitar uma numeração
+            return response()->json(['numeracao' => null]);
+        }
+    }
+
 
     /**
      * Show the form for editing the specified resource.

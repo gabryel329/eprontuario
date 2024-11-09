@@ -72,25 +72,28 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('especialidades')->insert([
-            ['especialidade' => 'Clínico Geral', 'conselho' => 'CRM'],
-            ['especialidade' => 'Fisioterapia', 'conselho' => 'CREFITO'],
-            ['especialidade' => 'Cardiologia', 'conselho' => 'CRM'],
-            ['especialidade' => 'Dermatologia', 'conselho' => 'CRM'],
-            ['especialidade' => 'Pediatria', 'conselho' => 'CRM'],
-            ['especialidade' => 'Ortopedia', 'conselho' => 'CRM'],
-            ['especialidade' => 'Oftalmologia', 'conselho' => 'CRM'],
-            ['especialidade' => 'Odontologia', 'conselho' => 'CRO'],
-            ['especialidade' => 'Nutrição', 'conselho' => 'CRN'],
-            ['especialidade' => 'Psicologia', 'conselho' => 'CRP'],
-            ['especialidade' => 'Enfermagem', 'conselho' => 'COREN'],
-            ['especialidade' => 'Fonoaudiologia', 'conselho' => 'CREFONO'],
-            ['especialidade' => 'Ginecologia', 'conselho' => 'CRM'],
-            ['especialidade' => 'Psiquiatria', 'conselho' => 'CRM'],
-            ['especialidade' => 'Neurologia', 'conselho' => 'CRM'],
-            ['especialidade' => 'Geriatria', 'conselho' => 'CRM'],
-            ['especialidade' => 'Radiologia', 'conselho' => 'CRM'],
-            ['especialidade' => 'Urologia', 'conselho' => 'CRM'],
+            ['especialidade' => 'Clínico Geral', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
+            ['especialidade' => 'Ginecologia', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
+            ['especialidade' => 'Pediatria', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
+            ['especialidade' => 'Ortopedia', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
+            ['especialidade' => 'Cardiologia', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
+            ['especialidade' => 'Dermatologia', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
+            ['especialidade' => 'Oftalmologia', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
+            ['especialidade' => 'Psiquiatria', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
+            ['especialidade' => 'Neurologia', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
+            ['especialidade' => 'Radiologia', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
+            ['especialidade' => 'Urologia', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
+            ['especialidade' => 'Geriatria', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
+            ['especialidade' => 'Fisioterapia', 'conselho' => 'Conselho Regional de Fisioterapia e Terapia Ocupacional (CREFITO)'], // Código 05
+            ['especialidade' => 'Odontologia', 'conselho' => 'Conselho Regional de Odontologia (CRO)'], // Código 08
+            ['especialidade' => 'Nutrição', 'conselho' => 'Conselho Regional de Nutrição (CRN)'], // Código 07
+            ['especialidade' => 'Psicologia', 'conselho' => 'Conselho Regional de Psicologia (CRP)'], // Código 09
+            ['especialidade' => 'Enfermagem', 'conselho' => 'Conselho Regional de Enfermagem (COREN)'], // Código 02
+            ['especialidade' => 'Fonoaudiologia', 'conselho' => 'Conselho Regional de Fonoaudiologia (CRFA)'], // Código 04
+            ['especialidade' => 'Assistência Social', 'conselho' => 'Conselho Regional de Assistência Social (CRAS)'], // Código 01
+            ['especialidade' => 'Farmácia', 'conselho' => 'Conselho Regional de Farmácia (CRF)'], // Código 03
         ]);
+
 
         DB::table('profissionals')->insert([
             [
@@ -118,7 +121,6 @@ class DatabaseSeeder extends Seeder
                 'conselho_2' => 123,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
-                // Definir como null os campos que não possuem valores para todos os registros
                 'cbo' => '123',
                 'imagem' => null,
                 'permisoes_id' => null,
