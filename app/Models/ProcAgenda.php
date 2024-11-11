@@ -17,6 +17,7 @@ class ProcAgenda extends Model
         'paciente_id',
         'procedimento_id',
         'codigo',
+        'valor',
     ];
 
     // Relacionamento com o model Agenda

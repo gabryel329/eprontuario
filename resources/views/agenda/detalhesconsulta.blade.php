@@ -219,7 +219,7 @@
                                                                 <option value="" data-codigo="">Selecione o Procedimento</option>
                                                                 @foreach ($agendas->procedimento_lista as $procedimento)
                                                                     <option value="{{ $procedimento->id }}"
-                                                                        data-codigo="{{ $procedimento->codigo }}">
+                                                                        data-codigo="{{ $procedimento->codigo }}"  data-valor="{{ $procedimento->valor_proc }}">
                                                                         {{ $procedimento->procedimento }}
                                                                     </option>
                                                                 @endforeach
@@ -227,6 +227,7 @@
                                                         </td>
                                                         <td>
                                                             <input type="text" class="form-control codigo" name="codigo[]" placeholder="Código" readonly>
+                                                            <input type="hidden" class="form-control valor" name="valor[]" placeholder="Código" readonly>
                                                         </td>
                                                         <td class="actions">
                                                             <button type="button" class="btn btn-success plus-row">+</button>
@@ -437,8 +438,10 @@
         function updateCodigo(selectElement) {
             const row = selectElement.closest('.exame-row'); // Encontra a linha mais próxima
             const codigoInput = row.querySelector('input[name="codigo[]"]'); // Campo de código
+            const valorInput = row.querySelector('input[name="valor[]"]'); // Campo de código
             const selectedOption = selectElement.options[selectElement.selectedIndex]; // Opção selecionada
             codigoInput.value = selectedOption.getAttribute('data-codigo'); // Define o código
+            valorInput.value = selectedOption.getAttribute('data-valor'); // Define o código
         }
 
         $(document).ready(function() {
@@ -533,7 +536,7 @@
                                 <option value="" data-codigo="">Selecione o Procedimento</option>
                                 @foreach ($agendas->procedimento_lista as $procedimento)
                                     <option value="{{ $procedimento->id }}"
-                                        data-codigo="{{ $procedimento->codigo }}">
+                                        data-codigo="{{ $procedimento->codigo }}" data-valor="{{ $procedimento->valor_proc }}">
                                         {{ $procedimento->procedimento }}
                                     </option>
                                 @endforeach
@@ -541,6 +544,7 @@
                         </td>
                         <td>
                             <input type="text" class="form-control codigo" name="codigo[]" placeholder="Código" readonly>
+                            <input type="hidden" class="form-control valor" name="valor[]" placeholder="Código" readonly>
                         </td>
                         <td class="actions">
                             <button type="button" class="btn btn-success plus-row">+</button>
@@ -553,6 +557,8 @@
                 // Adiciona o evento change para atualizar o campo de código
                 $('#exame-table-body .procedimento_id:last').on('change', function() {
                     var codigo = $(this).find('option:selected').data('codigo');
+                    var valor = $(this).find('option:selected').data('valor');
+                    $(this).closest('.exame-row').find('.valor').val(valor);
                     $(this).closest('.exame-row').find('.codigo').val(codigo);
                 });
             }
@@ -569,6 +575,8 @@
             $(document).on('change', '.procedimento_id', function() {
                 var codigo = $(this).find('option:selected').data('codigo');
                 $(this).closest('.exame-row').find('.codigo').val(codigo);
+                var valor = $(this).find('option:selected').data('valor');
+                $(this).closest('.exame-row').find('.valor').val(valor);
             });
 
             // Código para carregar procedimentos do backend
@@ -585,6 +593,7 @@
                             const lastRow = $('#exame-table-body').find('.exame-row:last');
                             lastRow.find('.procedimento_id').val(item.procedimento_id).trigger('change');
                             lastRow.find('.codigo').val(item.codigo);
+                            lastRow.find('.valor').val(item.valor);
                         });
                     }
                 },
@@ -594,24 +603,29 @@
             });
 
             $('#saveExameButton').on('click', function(event) {
-                event.preventDefault();
-                var url = '/procedimentos/store';
+    event.preventDefault();
+    var url = '/procedimentos/store';
 
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: $('#exameForm').serialize(),
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function() {
-                        alert('Procedimentos cadastrados/atualizados com sucesso');
-                    },
-                    error: function(xhr) {
-                        alert('Erro: ' + xhr.responseText);
-                    }
-                });
-            });
+    // Serializa os dados do formulário e exibe no console
+    var formData = $('#exameForm').serialize();
+    console.log('Dados enviados:', formData);
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: formData,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function() {
+            alert('Procedimentos cadastrados/atualizados com sucesso');
+        },
+        error: function(xhr) {
+            alert('Erro: ' + xhr.responseText);
+        }
+    });
+});
+
         });
 
         function applySelect2(element) {

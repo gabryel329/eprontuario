@@ -181,18 +181,27 @@ class AgendaController extends Controller
         return response()->json(['data' => $remedios]);
     }
 
-
     public function storeProcedimento(Request $request)
     {
         try {
+            // Registra os dados recebidos no log
+            Log::info('Dados recebidos:', $request->all());
+    
             $validated = $request->validate([
                 'paciente_id' => 'required|exists:pacientes,id',
                 'agenda_id' => 'required|exists:agendas,id',
                 'procedimento_id.*' => 'required',
                 'codigo.*' => 'required|string',
+                'valor.*' => 'required|string',
             ]);
-
+    
             foreach ($validated['procedimento_id'] as $index => $procedimento_id) {
+                $codigo = $validated['codigo'][$index];
+                $valor = $validated['valor'][$index];
+    
+                // Log para verificar o valor antes de salvar
+                Log::info("Salvando procedimento_id: $procedimento_id, código: $codigo, valor: $valor");
+    
                 ProcAgenda::updateOrCreate(
                     [
                         'agenda_id' => $validated['agenda_id'],
@@ -200,17 +209,21 @@ class AgendaController extends Controller
                         'procedimento_id' => $procedimento_id,
                     ],
                     [
-                        'codigo' => $validated['codigo'][$index],
+                        'codigo' => $codigo,
+                        'valor' => $valor,
                     ]
                 );
             }
-
+    
             return response()->json(['message' => 'Procedimentos salvos com sucesso!']);
         } catch (\Exception $e) {
-            Log::error($e->getMessage()); // Registra o erro no log
+            Log::error('Erro ao salvar os procedimentos: ' . $e->getMessage()); // Registra o erro no log
             return response()->json(['error' => 'Erro ao salvar os procedimentos.'], 500);
         }
     }
+    
+    
+
 
     public function verificarProcedimento($agenda_id, $paciente_id)
     {
