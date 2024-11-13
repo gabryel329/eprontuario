@@ -601,65 +601,71 @@
                         <form id="guiaForm2">
                             @csrf
                             <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
-                            <input type="hidden" id="convenio_id" name="convenio_id"
-                                value="{{ $item->convenio_id ?? '' }}">
+                            <input type="hidden" id="convenio_id" name="convenio_id" value="{{ $item->convenio_id ?? '' }}">
                             <input type="hidden" id="agenda_id" name="agenda_id" value="{{ $item->id }}">
                             <input type="hidden" id="paciente_id" name="paciente_id" value="{{ $item->paciente_id }}">
-                            <input type="hidden" id="profissional_id" name="profissional_id"
-                                value="{{ $item->profissional_id }}">
+                            <input type="hidden" id="profissional_id" name="profissional_id" value="{{ $item->profissional_id }}">
 
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="registro_ans" class="form-label"><strong>1- Registro ANS</strong></label>
                                     <input class="form-control" id="registro_ans" name="registro_ans" type="text"
                                         value="{{ old('registro_ans') }}">
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="numero_guia_prestador" class="form-label">3- Nº da Guia do
-                                        Prestador</label>
+                                <div class="col-md-3">
+                                    <label for="numero_guia_prestador" class="form-label">3- Nº Guia Principal</label>
                                     <input class="form-control" id="numero_guia_prestador" name="numero_guia_prestador"
                                         type="text" value="{{ old('numero_guia_prestador') }}">
                                 </div>
-                                <div class="col-md-4">
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-3">
                                     <label for="data_autorizacao" class="form-label">4- Data da Autorização</label>
                                     <input class="form-control" id="data_autorizacao" name="data_autorizacao"
                                         type="date" value="{{ old('data_autorizacao') }}">
                                 </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="senha" class="form-label">5- Senha</label>
                                     <input class="form-control" id="senha" name="senha" type="text"
                                         value="{{ old('senha') }}">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="validade_senha" class="form-label">6- Data de Validade da Senha</label>
                                     <input class="form-control" id="validade_senha" name="validade_senha" type="date"
                                         value="{{ old('validade_senha') }}">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="numero_guia_op" class="form-label">7- Nº da Guia Atribuído pela
                                         Operadora</label>
                                     <input class="form-control" id="numero_guia_op" name="numero_guia_op" type="text"
                                         value="{{ old('numero_guia_op') }}">
                                 </div>
                             </div>
-
                             <hr>
                             <h5>Dados do Beneficiário</h5>
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-2">
                                     <label for="numero_carteira" class="form-label">8 - Nº da Carteira</label>
                                     <input class="form-control" id="numero_carteira" name="numero_carteira"
                                         type="text" value="{{ old('numero_carteira') }}">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-2">
                                     <label for="validade_carteira" class="form-label">9 - Validade da Carteira</label>
                                     <input class="form-control" id="validade_carteira" name="validade_carteira"
                                         type="date" value="{{ old('validade_carteira') }}">
                                 </div>
                                 <div class="col-md-4">
+                                    <label for="nome_beneficiario" class="form-label">10 - Nome</label>
+                                    <input class="form-control" id="nome_beneficiario" name="nome_beneficiario"
+                                        type="text" value="{{ old('nome_beneficiario') }}">
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="nome_social" class="form-label">11 - CNS</label>
+                                    <input class="form-control" id="cns" name="cns" type="text"
+                                        value="{{ old('cns') }}">
+                                </div>
+                                <div class="col-md-2">
                                     <label for="atendimento_rn" class="form-label">12 - Atendimento RN</label>
                                     <select class="form-select" id="atendimento_rn" name="atendimento_rn">
                                         <option value="0" {{ old('atendimento_rn') == '0' ? 'selected' : '' }}>Não
@@ -668,29 +674,23 @@
                                         </option>
                                     </select>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <label for="nome_beneficiario" class="form-label">10 - Nome do
-                                            Beneficiário</label>
-                                        <input class="form-control" id="nome_beneficiario" name="nome_beneficiario"
-                                            type="text" value="{{ old('nome_beneficiario') }}">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="nome_social" class="form-label">11 - Nome Social</label>
-                                        <input class="form-control" id="nome_social" name="nome_social" type="text"
-                                            value="{{ old('nome_social') }}">
-                                    </div>
-                                </div>
                             </div>
                             <hr>
                             <h5>Dados do Solicitante</h5>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label for="nome_profissional_solicitante" class="form-label">15- Nome do Profissional
-                                        Solicitante</label>
-                                    <input class="form-control" id="nome_profissional_solicitante"
-                                        name="nome_profissional_solicitante" type="text"
-                                        value="{{ old('nome_profissional_solicitante') }}">
+                            <div class="row md-3">
+                                <div class="col-md-3">
+                                    <label for="codigo_operadora" class="form-label">13 - Código Operadora</label>
+                                    <input class="form-control" id="codigo_operadora" name="codigo_operadora" type="text" value="{{ old('codigo_operadora') }}">
+                                </div>
+                                <div class="col-md-9">
+                                    <label for="nome_contratado" class="form-label">14 - Nome Contratado</label>
+                                    <input class="form-control" id="nome_contratado" name="nome_contratado" type="text" value="{{ old('nome_contratado') }}">
+                                </div>
+                            </div>
+                            <div class="row md-3">
+                                <div class="col-md-5">
+                                    <label for="nome_profissional_solicitante" class="form-label">15- Nome do Profissional Solicitante</label>
+                                    <input class="form-control" id="nome_profissional_solicitante" name="nome_profissional_solicitante" type="text" value="{{ old('nome_profissional_solicitante') }}">
                                 </div>
                                 <div class="col-md-2">
                                     <label for="conselho_profissional" class="form-label">16- Conselho</label>
@@ -698,11 +698,11 @@
                                         type="text" value="{{ old('conselho_profissional') }}">
                                 </div>
                                 <div class="col-md-2">
-                                    <label for="conselho_1" class="form-label">17- Nº Conselho</label>
-                                    <input class="form-control" id="conselho_1" name="conselho_1"
-                                        type="text" value="{{ old('conselho_1') }}">
+                                    <label for="numero_conselho" class="form-label">17- Nº Conselho</label>
+                                    <input class="form-control" id="numero_conselho" name="numero_conselho"
+                                        type="text" value="{{ old('numero_conselho') }}">
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-1">
                                     <label for="uf_conselho" class="form-label">18- UF</label>
                                     <input class="form-control" id="uf_conselho" name="uf_conselho" type="text"
                                         value="{{ old('uf_conselho') }}">
@@ -714,82 +714,176 @@
                                 </div>
                             </div>
                             <hr>
-                            <h5>Procedimentos e Observações</h5>
+                            <h5>Dados da Solicitação / Procedimentos e Exames Solicitados</h5>
                             <div class="row">
-                                <div class="col-md-4">
-                                    <label for="carater_atendimento" class="form-label">20 - Caráter de
-                                        Atendimento</label>
-                                    <input class="form-control" id="carater_atendimento" name="carater_atendimento"
-                                        type="text" value="{{ old('carater_atendimento') }}">
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="data_solicitacao" class="form-label">22 - Data da Solicitação:</label>
-                                    <input class="form-control" id="data_solicitacao" name="data_solicitacao"
-                                        type="date" value="{{ old('data_solicitacao') }}">
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="indicacao_clinica" class="form-label">23 - Indicação Clínica:</label>
-                                    <input class="form-control" id="indicacao_clinica" name="indicacao_clinica"
-                                        type="text" value="{{ old('indicacao_clinica') }}">
-                                </div>
-                            </div>
-                            <h5>Dados do Executante</h5>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <label for="nome_contratado" class="form-label">23 - Nome
-                                        Contratado:</label>
-                                    <input class="form-control" id="nome_contratado"
-                                        name="nome_contratado" type="text"
-                                        value="{{ old('nome_contratado') }}">
+                                <div class="col-md-3">
+                                    <label for="carater_atendimento" class="form-label">21 - Caráter de Atendimento</label>
+                                    <input class="form-control" id="carater_atendimento" name="carater_atendimento" type="text" value="{{ old('carater_atendimento') }}">
                                 </div>
                                 <div class="col-md-2">
-                                    <label for="codigo_operadora" class="form-label">24 - Código
-                                        Operadora:</label>
-                                    <input class="form-control" id="codigo_operadora"
-                                        name="codigo_operadora" type="text"
-                                        value="{{ old('codigo_operadora') }}">
+                                    <label for="data_solicitacao" class="form-label">22 - Data/Hora Solicitação</label>
+                                    <input class="form-control" id="data_solicitacao" name="data_solicitacao" type="date" value="{{ old('data_solicitacao') }}">
                                 </div>
-                                <div class="col-md-2">
-                                    <label for="cnes" class="form-label">25 - Código CNES:</label>
-                                    <input class="form-control" id="cnes" name="cnes" type="text"
-                                        value="{{ old('cnes') }}">
+                                <div class="col-md-4">
+                                    <label for="indicacao_clinica" class="form-label">23 - Indicação Clínica</label>
+                                    <input class="form-control" id="indicacao_clinica" name="indicacao_clinica" type="text" value="{{ old('indicacao_clinica') }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="indicacao_cob_especial" class="form-label">90 - Indicação de Cobertura Especial</label>
+                                    <input class="form-control" id="indicacao_cob_especial" name="indicacao_cob_especial" type="text" value="{{ old('indicacao_cob_especial') }}">
                                 </div>
                             </div>
+                            <hr>
+                            <div class="row">
+                                <div class="space">
+                                    <table class="table table-striped">
+                                        <thead>
+                                          <tr>
+                                            <th>24 - Tabela</th>
+                                            <th>25 - Código</th>
+                                            <th>26 - Descrição</th>
+                                            <th>27 - Qtde Sol.</th>
+                                            <th>28 - Qtde Aut.</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td></td>
+                                                <td>{{ $item->codigo }}</td>
+                                                <td>{{ $item->procedimento_id }}</td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <hr>
+                            <h5>Dados do Contratado Executante</h5>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="codigo_operadora_executante" class="form-label">29 - Código na Operadora</label>
+                                    <input class="form-control" id="codigo_operadora_executante" name="codigo_operadora_executante"
+                                        type="text" value="{{ old('codigo_operadora_executante') }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="nome_contratado_executante" class="form-label">30 - Nome do Contratado</label>
+                                    <input class="form-control" id="nome_contratado_executante" name="nome_contratado_executante"
+                                    type="text" value="{{ old('nome_contratado_executante') }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="codigo_cnes" class="form-label">31 - Código CNES</label>
+                                    <input class="form-control" id="codigo_cnes" name="codigo_cnes"
+                                    type="text" value="{{ old('codigo_cnes') }}">
+                                </div>
+                            </div>
+                            <hr>
                             <h5>Dados do Atendimento</h5>
                             <div class="row">
-                                <div class="col-md-4">
-                                    <label for="tipo_atendimento" class="form-label">26 - Tipo de Atendimento:</label>
+                                <div class="col-md-2">
+                                    <label for="tipo_atendimento" class="form-label">32 - Tipo de Atendimento</label>
                                     <input class="form-control" id="tipo_atendimento" name="tipo_atendimento"
                                         type="text" value="{{ old('tipo_atendimento') }}">
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="motivo_encerramento" class="form-label">29 - Encerramento:</label>
-                                    <input class="form-control" id="motivo_encerramento" name="motivo_encerramento"
-                                    type="text" value="{{ old('motivo_encerramento') }}">
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="regime_atendimento" class="form-label">30 - Regime Atendimento:</label>
-                                    <input class="form-control" id="regime_atendimento" name="regime_atendimento"
-                                    type="text" value="{{ old('regime_atendimento') }}">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label for="indicacao_acidente" class="form-label">27 - Indicação de Acidente:</label>
+                                <div class="col-md-2">
+                                    <label for="indicacao_acidente" class="form-label">33 - Indicação de Acidente</label>
                                     <input class="form-control" id="indicacao_acidente" name="indicacao_acidente"
                                         type="text" value="{{ old('indicacao_acidente') }}">
                                 </div>
-                                <div class="col-md-3">
-                                    <label for="tipo_consulta" class="form-label">28 - Tipo de Consulta:</label>
+                                <div class="col-md-2">
+                                    <label for="tipo_consulta" class="form-label">34 - Tipo de Consulta</label>
                                     <input class="form-control" id="tipo_consulta" name="tipo_consulta" type="text"
                                         value="{{ old('tipo_consulta') }}">
                                 </div>
-                                <div class="col-md-3">
-                                    <label for="saude_ocupacional" class="form-label">31 - Saúde Ocupacional:</label>
+                                <div class="col-md-2">
+                                    <label for="motivo_encerramento" class="form-label">35 - Encerramento Atend.</label>
+                                    <input class="form-control" id="motivo_encerramento" name="motivo_encerramento"
+                                        type="text" value="{{ old('motivo_encerramento') }}">
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="regime_atendimento" class="form-label">91 - Regime Atendimento</label>
+                                    <input class="form-control" id="regime_atendimento" name="regime_atendimento"
+                                        type="text" value="{{ old('regime_atendimento') }}">
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="saude_ocupacional" class="form-label">92 - Saúde Ocupacional</label>
                                     <input class="form-control" id="saude_ocupacional" name="saude_ocupacional"
                                         type="text" value="{{ old('saude_ocupacional') }}">
                                 </div>
                             </div>
+                            <hr>
+                            <h5>Dados da Execução/Procedimentos e Exames Realizados</h5>
+                            <div class="row">
+                                <div class="space">
+                                    <table class="table table-striped">
+                                        <thead>
+                                          <tr>
+                                            <th>36 - Data</th>
+                                            <th>37 - Hora Inicial</th>
+                                            <th>38 - Hora Final</th>
+                                            <th>39 - Tab.</th>
+                                            <th>40 - Código</th>
+                                            <th>41 - Descrição</th>
+                                            <th>42 - Qtd.</th>
+                                            <th>43 - Via</th>
+                                            <th>44 - Tec.</th>
+                                            <th>45 - Fator Red./ Acrés</th>
+                                            <th>46 - Valor Unit.</th>
+                                            <th>47 - Valor Total</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <hr>
+                            <h5>Identificação do(s) profissional(is) Executante(s)</h5>
+                            <div class="row">
+                                <div class="space">
+                                    <table class="table table-striped">
+                                        <thead>
+                                          <tr>
+                                            <th>48 - Seq. Ref</th>
+                                            <th>49 - Grau Part</th>
+                                            <th>50 - Cód. Operadora/CPF</th>
+                                            <th>51 - Profissional</th>
+                                            <th>52 - Conselho</th>
+                                            <th>53 - Nº Conselho</th>
+                                            <th>54 - UF</th>
+                                            <th>55 - CBO</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <hr>
                             <div class="row">
                                 <div class="col-md-12">
                                     <label for="observacao" class="form-label">58- Observação / Justificativa</label>

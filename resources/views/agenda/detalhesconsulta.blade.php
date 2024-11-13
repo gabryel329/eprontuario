@@ -219,10 +219,11 @@
                                                                 <option value="" data-codigo="">Selecione o Procedimento</option>
                                                                 @foreach ($agendas->procedimento_lista as $procedimento)
                                                                     <option value="{{ $procedimento->id }}"
-                                                                        data-codigo="{{ $procedimento->codigo }}"  data-valor="{{ $procedimento->valor_proc }}">
+                                                                        data-codigo="{{ $procedimento->codigo }}" data-valor="{{ $procedimento->valor_proc }}">
                                                                         {{ $procedimento->procedimento }}
                                                                     </option>
                                                                 @endforeach
+                                                            
                                                             </select>
                                                         </td>
                                                         <td>
