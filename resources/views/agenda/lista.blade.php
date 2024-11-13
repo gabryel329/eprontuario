@@ -313,7 +313,8 @@
                             <div class="row" {{ $item->paciente_id ? '' : 'hidden' }}>
                                 <div class="mb-3 col-md-12">
                                     <label class="form-label">Procedimento</label>
-                                    <select class="form-control" id="edit-procedimento-id-{{ $item->id }}" name="procedimento_id" {{ $item->paciente_id ? '' : 'disabled' }}>
+                                    <select class="form-control" id="edit-procedimento-id-{{ $item->id }}"
+                                        name="procedimento_id" {{ $item->paciente_id ? '' : 'disabled' }}>
                                         @foreach ($item->procedimento_lista as $procedimento)
                                             <option value="{{ $procedimento }}"
                                                 {{ $item->procedimento_id == $procedimento ? 'selected' : '' }}>
@@ -412,7 +413,8 @@
                                 name="paciente_id" type="hidden">
                             <input class="form-control" id="profissional_id" value="{{ $item->profissional_id }}"
                                 name="profissional_id" type="hidden">
-                            <input class="form-control" id="agenda_id" name="agenda_id" value="{{ $item->id }}" type="hidden">
+                            <input class="form-control" id="agenda_id" name="agenda_id" value="{{ $item->id }}"
+                                type="hidden">
                             <div class="row">
                                 <div class="col-md-3">
                                     <label for="registro_ans" class="form-label">Registro ANS</label>
@@ -490,8 +492,7 @@
                                 </div>
                                 <div class="col-md-2">
                                     <label for="conselho_1" class="form-label">Nº Conselho</label>
-                                    <input class="form-control" id="conselho_1" name="conselho_1"
-                                        type="text">
+                                    <input class="form-control" id="conselho_1" name="conselho_1" type="text">
                                 </div>
                                 <div class="col-md-1">
                                     <label for="uf_conselho" class="form-label">UF</label>
@@ -601,10 +602,12 @@
                         <form id="guiaForm2">
                             @csrf
                             <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
-                            <input type="hidden" id="convenio_id" name="convenio_id" value="{{ $item->convenio_id ?? '' }}">
+                            <input type="hidden" id="convenio_id" name="convenio_id"
+                                value="{{ $item->convenio_id ?? '' }}">
                             <input type="hidden" id="agenda_id" name="agenda_id" value="{{ $item->id }}">
                             <input type="hidden" id="paciente_id" name="paciente_id" value="{{ $item->paciente_id }}">
-                            <input type="hidden" id="profissional_id" name="profissional_id" value="{{ $item->profissional_id }}">
+                            <input type="hidden" id="profissional_id" name="profissional_id"
+                                value="{{ $item->profissional_id }}">
 
                             <div class="row">
                                 <div class="col-md-3">
@@ -618,7 +621,7 @@
                                         type="text" value="{{ old('numero_guia_prestador') }}">
                                 </div>
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-md-3">
                                     <label for="data_autorizacao" class="form-label">4- Data da Autorização</label>
@@ -680,17 +683,22 @@
                             <div class="row md-3">
                                 <div class="col-md-3">
                                     <label for="codigo_operadora" class="form-label">13 - Código Operadora</label>
-                                    <input class="form-control" id="codigo_operadora" name="codigo_operadora" type="text" value="{{ old('codigo_operadora') }}">
+                                    <input class="form-control" id="codigo_operadora" name="codigo_operadora"
+                                        type="text" value="{{ old('codigo_operadora') }}">
                                 </div>
                                 <div class="col-md-9">
                                     <label for="nome_contratado" class="form-label">14 - Nome Contratado</label>
-                                    <input class="form-control" id="nome_contratado" name="nome_contratado" type="text" value="{{ old('nome_contratado') }}">
+                                    <input class="form-control" id="nome_contratado" name="nome_contratado"
+                                        type="text" value="{{ old('nome_contratado') }}">
                                 </div>
                             </div>
                             <div class="row md-3">
                                 <div class="col-md-5">
-                                    <label for="nome_profissional_solicitante" class="form-label">15- Nome do Profissional Solicitante</label>
-                                    <input class="form-control" id="nome_profissional_solicitante" name="nome_profissional_solicitante" type="text" value="{{ old('nome_profissional_solicitante') }}">
+                                    <label for="nome_profissional_solicitante" class="form-label">15- Nome do Profissional
+                                        Solicitante</label>
+                                    <input class="form-control" id="nome_profissional_solicitante"
+                                        name="nome_profissional_solicitante" type="text"
+                                        value="{{ old('nome_profissional_solicitante') }}">
                                 </div>
                                 <div class="col-md-2">
                                     <label for="conselho_profissional" class="form-label">16- Conselho</label>
@@ -717,20 +725,58 @@
                             <h5>Dados da Solicitação / Procedimentos e Exames Solicitados</h5>
                             <div class="row">
                                 <div class="col-md-3">
-                                    <label for="carater_atendimento" class="form-label">21 - Caráter de Atendimento</label>
-                                    <input class="form-control" id="carater_atendimento" name="carater_atendimento" type="text" value="{{ old('carater_atendimento') }}">
+                                    <label for="carater_atendimento" class="form-label">21 - Caráter de
+                                        Atendimento</label>
+                                    <select class="form-select" id="carater_atendimento" name="carater_atendimento">
+                                        <option value="">Selecione</option>
+                                        <option value="1" {{ old('carater_atendimento') == '1' ? 'selected' : '' }}>
+                                            Eletivo
+                                        </option>
+                                        <option value="2" {{ old('carater_atendimento') == '2' ? 'selected' : '' }}>
+                                            Urgência/Emergência
+                                        </option>
+                                    </select>
                                 </div>
                                 <div class="col-md-2">
                                     <label for="data_solicitacao" class="form-label">22 - Data/Hora Solicitação</label>
-                                    <input class="form-control" id="data_solicitacao" name="data_solicitacao" type="date" value="{{ old('data_solicitacao') }}">
+                                    <input class="form-control" id="data_solicitacao" name="data_solicitacao"
+                                        type="date" value="{{ old('data_solicitacao') }}">
                                 </div>
                                 <div class="col-md-4">
                                     <label for="indicacao_clinica" class="form-label">23 - Indicação Clínica</label>
-                                    <input class="form-control" id="indicacao_clinica" name="indicacao_clinica" type="text" value="{{ old('indicacao_clinica') }}">
+                                    <select class="form-select" id="indicacao_clinica" name="indicacao_clinica">
+                                        <option value="">{{ old('indicacao_clinica') ? 'selected' : 'Selecione' }}
+                                        </option>
+                                        <option value="DOR ABDOMINAL">Dor Abdominal</option>
+                                        <option value="DOR DE CABEÇA FREQUENTE">Dor de Cabeça Frequente</option>
+                                        <option value="FADIGA">Fadiga</option>
+                                        <option value="SINTOMAS RESPIRATORIOS">Sintomas Respiratórios</option>
+                                        <option value="HIPERTENSÃO">Hipertensão</option>
+                                        <option value="DIABETES">Diabetes</option>
+                                        <option value="SUSPEITA DE FRATURA">Suspeita de Fratura</option>
+                                        <option value="AVALIAÇÃO DE FUNÇÃO HEPÁTICA">Avaliação de Função Hepática</option>
+                                        <option value="ANEMIA">Anemia</option>
+                                        <option value="PERDA DE PESO INEXPLICADA">Perda de Peso Inexplicada</option>
+                                        <option value="INFECÇÕES RECORRENTES">Infecções Recorrentes</option>
+                                        <option value="SINTOMAS GASTROINTESTINAIS">Sintomas Gastrointestinais</option>
+                                        <option value="SINTOMAS CARDIOVASCULARES">Sintomas Cardiovasculares</option>
+                                        <option value="DOR ARTICULAR">Dor Articular</option>
+                                        <option value="OUTROS">Outros</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="indicacao_cob_especial" class="form-label">90 - Indicação de Cobertura Especial</label>
-                                    <input class="form-control" id="indicacao_cob_especial" name="indicacao_cob_especial" type="text" value="{{ old('indicacao_cob_especial') }}">
+                                    <label for="indicacao_cob_especial" class="form-label">90 - Indicação de Cobertura
+                                        Especial</label>
+                                    <select class="form-select" id="indicacao_cob_especial"
+                                        name="indicacao_cob_especial">
+                                        <option value="">Selecione</option>
+                                        <option value="0"
+                                            {{ old('indicacao_cob_especial') == '0' ? 'selected' : '' }}>Não
+                                        </option>
+                                        <option value="1"
+                                            {{ old('indicacao_cob_especial') == '1' ? 'selected' : '' }}>Sim
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
                             <hr>
@@ -738,22 +784,16 @@
                                 <div class="space">
                                     <table class="table table-striped">
                                         <thead>
-                                          <tr>
-                                            <th>24 - Tabela</th>
-                                            <th>25 - Código</th>
-                                            <th>26 - Descrição</th>
-                                            <th>27 - Qtde Sol.</th>
-                                            <th>28 - Qtde Aut.</th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
                                             <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                <th>24 - Tabela</th>
+                                                <th>25 - Código</th>
+                                                <th>26 - Descrição</th>
+                                                <th>27 - Qtde Sol.</th>
+                                                <th>28 - Qtde Aut.</th>
+                                                <th>Excluir</th>
                                             </tr>
+                                        </thead>
+                                        <tbody id="exame-table-body">
                                         </tbody>
                                     </table>
                                 </div>
@@ -762,19 +802,30 @@
                             <h5>Dados do Contratado Executante</h5>
                             <div class="row">
                                 <div class="col-md-3">
-                                    <label for="codigo_operadora_executante" class="form-label">29 - Código na Operadora</label>
-                                    <input class="form-control" id="codigo_operadora_executante" name="codigo_operadora_executante"
-                                        type="text" value="{{ old('codigo_operadora_executante') }}">
+                                    <label for="codigo_operadora_executante" class="form-label">29 - Código na
+                                        Operadora</label>
+                                    <input class="form-control" id="codigo_operadora_executante"
+                                        name="codigo_operadora_executante" type="text"
+                                        value="{{ old('codigo_operadora_executante') }}">
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="nome_contratado_executante" class="form-label">30 - Nome do Contratado</label>
-                                    <input class="form-control" id="nome_contratado_executante" name="nome_contratado_executante"
-                                    type="text" value="{{ old('nome_contratado_executante') }}">
+                                <div class="col-md-2">
+                                    <label class="form-label">Selecione o Profissional</label>
+                                    <button type="button" class="btn btn-primary form-control" data-bs-toggle="modal"
+                                        data-bs-target="#modalProfissional">
+                                        <i class="bi bi-list"></i>
+                                    </button>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="nome_contratado_executante" class="form-label">30 - Nome do
+                                        Contratado</label>
+                                    <input class="form-control" id="nome_contratado_executante"
+                                        name="nome_contratado_executante" type="text"
+                                        value="{{ old('nome_contratado_executante') }}">
                                 </div>
                                 <div class="col-md-3">
                                     <label for="codigo_cnes" class="form-label">31 - Código CNES</label>
-                                    <input class="form-control" id="codigo_cnes" name="codigo_cnes"
-                                    type="text" value="{{ old('codigo_cnes') }}">
+                                    <input class="form-control" id="codigo_cnes" name="codigo_cnes" type="text"
+                                        value="{{ old('codigo_cnes') }}">
                                 </div>
                             </div>
                             <hr>
@@ -817,20 +868,20 @@
                                 <div class="space">
                                     <table class="table table-striped">
                                         <thead>
-                                          <tr>
-                                            <th>36 - Data</th>
-                                            <th>37 - Hora Inicial</th>
-                                            <th>38 - Hora Final</th>
-                                            <th>39 - Tab.</th>
-                                            <th>40 - Código</th>
-                                            <th>41 - Descrição</th>
-                                            <th>42 - Qtd.</th>
-                                            <th>43 - Via</th>
-                                            <th>44 - Tec.</th>
-                                            <th>45 - Fator Red./ Acrés</th>
-                                            <th>46 - Valor Unit.</th>
-                                            <th>47 - Valor Total</th>
-                                          </tr>
+                                            <tr>
+                                                <th>36 - Data</th>
+                                                <th>37 - Hora Inicial</th>
+                                                <th>38 - Hora Final</th>
+                                                <th>39 - Tab.</th>
+                                                <th>40 - Código</th>
+                                                <th>41 - Descrição</th>
+                                                <th>42 - Qtd.</th>
+                                                <th>43 - Via</th>
+                                                <th>44 - Tec.</th>
+                                                <th>45 - Fator Red./ Acrés</th>
+                                                <th>46 - Valor Unit.</th>
+                                                <th>47 - Valor Total</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
@@ -857,16 +908,16 @@
                                 <div class="space">
                                     <table class="table table-striped">
                                         <thead>
-                                          <tr>
-                                            <th>48 - Seq. Ref</th>
-                                            <th>49 - Grau Part</th>
-                                            <th>50 - Cód. Operadora/CPF</th>
-                                            <th>51 - Profissional</th>
-                                            <th>52 - Conselho</th>
-                                            <th>53 - Nº Conselho</th>
-                                            <th>54 - UF</th>
-                                            <th>55 - CBO</th>
-                                          </tr>
+                                            <tr>
+                                                <th>48 - Seq. Ref</th>
+                                                <th>49 - Grau Part</th>
+                                                <th>50 - Cód. Operadora/CPF</th>
+                                                <th>51 - Profissional</th>
+                                                <th>52 - Conselho</th>
+                                                <th>53 - Nº Conselho</th>
+                                                <th>54 - UF</th>
+                                                <th>55 - CBO</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
@@ -901,6 +952,45 @@
                     <button id="gerarGuiaSADTButton" class="btn btn-danger d-none">
                         <i class="bi bi-file-earmark-break"></i> Gerar Guia SADT
                     </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Seleção de Profissionais -->
+        <div class="modal fade" id="modalProfissional" tabindex="-1" aria-labelledby="modalProfissionalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalProfissionalLabel">Selecione o Profissional</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <input class="form-control" type="text" placeholder="Pesquisar por nome ou CPF...">
+                        </div>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>CPF</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($profissionals as $p)
+                                    <tr>
+                                        <td>{{ $p->name }}</td>
+                                        <td>{{ $p->cpf }}</td>
+                                        <td>
+                                            <button class="btn btn-primary" type="button"
+                                                onclick="selectProfissional('{{ $p->name }}')">Selecionar</button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1093,37 +1183,63 @@
                         success: function(response) {
                             console.log('Dados recebidos:', response);
 
-                            if (!response) {
-                                alert('Erro: Não foi possível carregar os dados.');
+                            if (!response || !response.exames || response.exames.length === 0) {
+                                alert(
+                                    'Erro: Não foi possível carregar os dados ou nenhum exame foi encontrado.');
                                 return;
                             }
 
-                            // Preencher campos do modal com os dados recebidos
+                            // Limpar o corpo da tabela para evitar duplicação
+                            $('#exame-table-body').empty();
+
+                            // Iterar sobre cada exame e preencher a tabela
+                            response.exames.forEach(function(exame) {
+                                const exameRow = `
+                        <tr>
+                            <td><input class="form-control" name="tabela[]" type="text" value="${exame.tabela || ''}" readonly></td>
+                            <td><input class="form-control" name="codigo_procedimento_solicitado[]" type="text" value="${exame.codigo || ''}" readonly></td>
+                            <td><input class="form-control" name="descricao_procedimento[]" type="text" value="${exame.procedimento || ''}" readonly></td>
+                            <td><input class="form-control" name="qtd_sol[]" type="text" value="${exame.qtd_sol || ''}"></td>
+                            <td><input class="form-control" name="qtd_aut[]" type="text" value="${exame.qtd_aut || ''}"></td>
+                            <td><button type="button" class="btn btn-danger btn-sm" onclick="excluirLinha(this)"><i class="icon bi bi-trash"></i></button></td>
+                        </tr>
+                    `;
+                                $('#exame-table-body').append(exameRow);
+                            });
+
+                            window.excluirLinha = function(button) {
+                                // Encontra a linha do botão clicado e remove-a
+                                $(button).closest('tr').remove();
+                            }
+                            // Preencher outros campos do modal
                             $('#modalSADT #nome_profissional_solicitante').val(response
                                 .profissional?.name || '');
                             $('#modalSADT #conselho_profissional').val(response.profissional
                                 ?.conselho_profissional || '');
-                            $('#modalSADT #conselho_1').val(response.profissional
-                                ?.conselho_1 || '');
-                            $('#modalSADT #nome_contratado').val(response.empresa ? response
-                                .empresa.name : '');
-                            $('#modalSADT #cnes').val(response.empresa ? response
-                                .empresa.cnes : '');
+                            $('#modalSADT #conselho_1').val(response.profissional?.conselho_1 ||
+                                '');
+                            $('#modalSADT #nome_contratado').val(response.profissional ?
+                                response.profissional.name : '');
+                            $('#modalSADT #codigo_cnes').val(response.empresa ? response.empresa
+                                .cnes : '');
                             $('#modalSADT #data_atendimento').val(response.agenda ? response
                                 .agenda.data : '');
-                            $('#modalSADT #codigo_procedimento').val(response.agenda ?
-                                response.agenda.codigo : '');
-                            $('#modalSADT #codigo_cbo').val(response.profissional ?
-                                response.profissional.cbo : '');
-                            $('#modalSADT #validade_carteira').val(response.paciente ?
-                            response.paciente.validade : '');
-                            $('#modalSADT #codigo_operadora').val(response.convenio ?
-                            response.convenio.operadora : '');
+                            $('#modalSADT #codigo_procedimento').val(response.agenda ? response
+                                .agenda.codigo : '');
+                            $('#modalSADT #codigo_cbo').val(response.profissional ? response
+                                .profissional.cbo : '');
+                            $('#modalSADT #validade_carteira').val(response.paciente ? response
+                                .paciente.validade : '');
+                            $('#modalSADT #codigo_operadora').val(response.convenio ? response
+                                .convenio.operadora : '');
+                            $('#modalSADT #codigo_operadora_executante').val(response.convenio ?
+                                response.convenio.operadora : '');
                             $('#modalSADT #nome_social').val(response.paciente ? response
-                            .paciente.nome_social : '');
-                            $('#modalSADT #uf_conselho').val(response.profissional?.uf || '');
-                            $('#modalSADT #codigo_cbo').val(response.profissional?.cbo || '');
-
+                                .paciente.nome_social : '');
+                            $('#modalSADT #uf_conselho').val(response.profissional
+                                ?.uf_conselho_1 || '');
+                            $('#modalSADT #numero_conselho').val(response.profissional
+                                ?.conselho_1 || '');
                             $('#modalSADT #registro_ans').val(response.convenio?.ans || '');
                             $('#modalSADT #numero_carteira').val(response.paciente?.matricula ||
                                 '');
@@ -1141,6 +1257,8 @@
                     });
                 }
             });
+
+            
 
             // Envio do formulário Guia SADT via AJAX
             $('#guiaForm2').on('submit', function(event) {
@@ -1217,7 +1335,7 @@
                     $('#gerarGuiaSADTButton').removeClass('d-none');
                 } else {
                     $('#gerarGuiaSADTButton').addClass(
-                    'd-none'); // Ocultar o botão se o campo estiver vazio
+                        'd-none'); // Ocultar o botão se o campo estiver vazio
                 }
             });
 
@@ -1230,7 +1348,7 @@
                     $('#gerarGuiaSADTButton').removeClass('d-none');
                 } else {
                     $('#gerarGuiaSADTButton').addClass(
-                    'd-none'); // Ocultar o botão se o campo estiver vazio
+                        'd-none'); // Ocultar o botão se o campo estiver vazio
                 }
             });
 
@@ -1350,6 +1468,21 @@
                 }
             });
         });
+
+        function selectProfissional(name) {
+            // Preenche o campo com o nome selecionado
+            document.getElementById('nome_contratado_executante').value = name;
+
+            // Fecha o modal de seleção de profissional
+            const modalProfissional = bootstrap.Modal.getInstance(document.getElementById('modalProfissional'));
+            modalProfissional.hide();
+
+            // Reabre o modal SADT após um pequeno delay para garantir o fechamento do anterior
+            setTimeout(() => {
+                const modalSADT = new bootstrap.Modal(document.getElementById('modalSADT'));
+                modalSADT.show();
+            }, 500); // ajuste o delay se necessário
+        }
 
         document.querySelectorAll('.chamar-btn').forEach(button => {
             button.addEventListener('click', function(event) {

@@ -323,29 +323,28 @@
                     <div class="tab-pane fade" id="atendimento-prescricao">
                         <div class="timeline-post">
                             <h4 class="line-head">Prescrição</h4>
-                            <div class="col-md-12 d-flex justify-content-between align-items-center">
-                                <div class="d-flex flex-row">
-                                    <div class="col-md-4">
-                                        <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                            id="flexRadioDefault2" value="receita">
+                            <div class="row">
+                                <div class="col-md-12 d-flex align-items-center justify-content-between">
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="receita">
                                         <label class="form-check-label" for="flexRadioDefault2">Receita</label>
                                     </div>
-                                    <div class="col-md-4">
-                                        <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                            id="flexRadioDefault3" value="solicitacao_exame">
-                                        <label class="form-check-label" for="flexRadioDefault3">Sol.
-                                            Exame</label>
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" value="solicitacao_exame">
+                                        <label class="form-check-label" for="flexRadioDefault3">Solicitação de Exame</label>
                                     </div>
-                                    <div class="col-md-4" id="atestadoCheck">
-                                        <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                            id="flexRadioDefault1" value="atestado">
+                                    <div class="form-check me-3" id="atestadoCheck">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="atestado">
                                         <label class="form-check-label" for="flexRadioDefault1">Atestado</label>
                                     </div>
+                                    <div>
+                                        <button type="button" class="btn btn-primary" title="Imprimir" id="enviarAtes">
+                                            <i class="bi bi-printer"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                                <button type="button" class="btn btn-primary" title="Imprimir" id="enviarAtes">
-                                    <i class="bi bi-printer"></i>
-                                </button>
                             </div>
+                            
                             <hr>
                             <div class="row">
                                 <input class="form-control" id="paciente_id" name="paciente_id" type="text"
@@ -473,6 +472,7 @@
                                                                 </td>
                                                                 <td>
                                                                     <input type="number" class="form-control qtd_sol" name="qtd_sol[]" placeholder="">
+                                                                    <input type="hidden" value="22" class="form-control tabela" name="tabela[]" placeholder="">
                                                                 </td>
                                                                 <td class="actions">
                                                                     <button type="button" class="btn btn-success plus-row">+</button>
@@ -1259,6 +1259,7 @@
                     </td>
                     <td>
                         <input type="number" class="form-control qtd_sol" name="qtd_sol[]" placeholder="">
+                        <input type="hidden" value="22" class="form-control tabela" name="tabela[]" placeholder="">
                     </td>
                     <td class="actions">
                         <button type="button" class="btn btn-success plus-row">+</button>
@@ -1281,6 +1282,7 @@
                         lastRow.find('.procedimento_id').val(item.procedimento_id).trigger(
                             'change');
                         lastRow.find('.qtd_sol').val(item.qtd_sol);
+                        lastRow.find('.tabela').val(item.tabela);
                     });
                 }
             },

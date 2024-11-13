@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Agenda;
 use App\Models\Convenio;
 use App\Models\Empresas;
+use App\Models\Exames;
 use App\Models\GuiaSp;
 use App\Models\Pacientes;
 use App\Models\Profissional;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class GuiaSpController extends Controller
 {
@@ -392,6 +394,14 @@ public function gerarZipGuiaSp($id)
         // Buscar a agenda pelo ID
         $agenda = Agenda::findOrFail($id);
 
+        $guia = GuiaSp::where('agenda_id', $agenda->id)->first();
+        
+        $exames = DB::table('exames')
+        ->join('procedimentos', 'exames.procedimento_id', '=', 'procedimentos.id')
+        ->where('exames.agenda_id', $agenda->id)
+        ->select('exames.*', 'procedimentos.procedimento as procedimento', 'procedimentos.codigo as codigo')
+        ->get();
+
         // Buscar paciente pelo ID associado à agenda
         $paciente = Pacientes::find($agenda->paciente_id);
 
@@ -406,7 +416,7 @@ public function gerarZipGuiaSp($id)
             ->first();
 
         // Buscar guia relacionada à agenda
-        $guia = GuiaSp::where('agenda_id', $agenda->id)->first();
+        
 
         // Buscar convênio associado à agenda
         $convenio = Convenio::find($agenda->convenio_id);
@@ -422,6 +432,7 @@ public function gerarZipGuiaSp($id)
             'convenio' => $convenio,
             'empresa' => $empresa,
             'guia' => $guia,
+            'exames' => $exames,
         ]);
     }
 

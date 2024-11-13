@@ -323,6 +323,7 @@ class AtendimentosController extends Controller
     $procedimento_ids = $request->input('procedimento_id', []);
     $codigos = $request->input('codigo', []); // Garantir que o código corresponda ao índice do procedimento
     $qtd_sols = $request->input('qtd_sol', []);
+    $tabelas = $request->input('tabela', []);
 
     foreach ($procedimento_ids as $index => $procedimento_id) {
         if (!empty($procedimento_id)) {
@@ -334,6 +335,7 @@ class AtendimentosController extends Controller
 
             $codigo = $codigos[$index] ?? null; // Obter o código correspondente ao índice
             $qtd_sol = $qtd_sols[$index] ?? null;
+            $tabela = $tabelas[$index] ?? null;
 
             if (!$existingPrescricao) {
                 Exames::create([
@@ -342,10 +344,12 @@ class AtendimentosController extends Controller
                     'paciente_id' => $paciente_id,
                     'procedimento_id' => $procedimento_id,
                     'codigo' => $codigo,
-                    'qtd_sol' => $qtd_sol
+                    'qtd_sol' => $qtd_sol,
+                    'tabela' => $tabela,
                 ]);
             } else {
                 $existingPrescricao->update([
+                    'tabela' => $tabela,
                     'qtd_sol' => $qtd_sol,
                     'codigo' => $codigo, // Atualizar o código, se existente
                     'procedimento_id' => $procedimento_id

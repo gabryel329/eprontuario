@@ -16,7 +16,8 @@ class Exames extends Model
         'agenda_id',
         'profissional_id',
         'procedimento_id',
-        'qtd_sol'
+        'qtd_sol',
+        'tabela'
     ];
     protected $dates=['deleted_at'];
 
