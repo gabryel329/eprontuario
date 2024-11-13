@@ -389,7 +389,8 @@ class GuiaConsultaController extends Controller
             $procedimento->addChild('ans:valorProcedimento', $guia->valor_procedimento);
 
             // Observação
-            $guiaConsulta->addChild('ans:observacao', $guia->observacao);
+            // $guiaConsulta->addChild('ans:observacao', $guia->observacao);
+            $guiaConsulta->addChild('ans:observacao', !empty($guia->observacao) ? $guia->observacao : 'N/A');
         }
 
         // Epílogo
@@ -482,7 +483,8 @@ class GuiaConsultaController extends Controller
             $procedimento->addChild('ans:codigoProcedimento', $guia->codigo_procedimento);
             $procedimento->addChild('ans:valorProcedimento', $guia->valor_procedimento);
 
-            $guiaConsulta->addChild('ans:observacao', $guia->observacao);
+            // $guiaConsulta->addChild('ans:observacao', $guia->observacao);
+            $guiaConsulta->addChild('ans:observacao', !empty($guia->observacao) ? $guia->observacao : 'N/A');
         }
 
         $epilogo = $xml->addChild('ans:epilogo');
