@@ -25,6 +25,7 @@ class Agenda extends Model
         'codigo',
         'procedimento_id',
         'status',
+        'valor_proc'
     ];
     protected $dates=['deleted_at'];
 

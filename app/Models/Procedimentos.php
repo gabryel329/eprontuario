@@ -16,6 +16,7 @@ class Procedimentos extends Model
         'procedimento',
         'idade',
         'limite',
+        'valor_proc'
     ];
     protected $dates=['deleted_at'];
 

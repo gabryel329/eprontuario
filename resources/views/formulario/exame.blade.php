@@ -147,6 +147,7 @@
                       <tr>
                         <th>Códido</th>
                         <th>Procedimento</th>
+                        <th>Qtd</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -154,6 +155,7 @@
                             <tr>
                                 <td>{{ $item->codigo }}</td>
                                 <td>{{ $item->procedimento }}</td>
+                                <td>{{ $item->qtd_sol }}</td>
                             </tr>
                         @endforeach
                     </tbody>

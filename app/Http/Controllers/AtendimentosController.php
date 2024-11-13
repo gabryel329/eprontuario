@@ -315,43 +315,48 @@ class AtendimentosController extends Controller
     }
 
     public function storeExame(Request $request)
-    {
-        $paciente_id = $request->input('paciente_id');
-        $agenda_id = $request->input('agenda_id');
-        $profissional_id = $request->input('profissional_id');
+{
+    $paciente_id = $request->input('paciente_id');
+    $agenda_id = $request->input('agenda_id');
+    $profissional_id = $request->input('profissional_id');
 
-        // Processar os medicamentos
-        $procedimento_ids = $request->input('procedimento_id', []);
+    $procedimento_ids = $request->input('procedimento_id', []);
+    $codigos = $request->input('codigo', []); // Garantir que o código corresponda ao índice do procedimento
+    $qtd_sols = $request->input('qtd_sol', []);
 
-        // Verificar se existem múltiplas linhas e processar cada uma
-        foreach ($procedimento_ids as $index => $procedimento_id) {
-            if (!empty($procedimento_id)) {
-                // Verificar se já existe uma prescrição com esses dados
-                $existingPrescricao = Exames::where('agenda_id', $agenda_id)
-                    ->where('profissional_id', $profissional_id)
-                    ->where('paciente_id', $paciente_id)
-                    ->where('procedimento_id', $procedimento_id)
-                    ->first();
+    foreach ($procedimento_ids as $index => $procedimento_id) {
+        if (!empty($procedimento_id)) {
+            $existingPrescricao = Exames::where('agenda_id', $agenda_id)
+                ->where('profissional_id', $profissional_id)
+                ->where('paciente_id', $paciente_id)
+                ->where('procedimento_id', $procedimento_id)
+                ->first();
 
-                if (!$existingPrescricao) {
-                    // Criar uma nova prescrição se não existir
-                    Exames::create([
-                        'agenda_id' => $agenda_id,
-                        'profissional_id' => $profissional_id,
-                        'paciente_id' => $paciente_id,
-                        'procedimento_id' => $procedimento_id
-                    ]);
-                } else {
-                    // Atualizar a prescrição existente
-                    $existingPrescricao->update([
-                        'procedimento_id' => $procedimento_ids[$index]
-                    ]);
-                }
+            $codigo = $codigos[$index] ?? null; // Obter o código correspondente ao índice
+            $qtd_sol = $qtd_sols[$index] ?? null;
+
+            if (!$existingPrescricao) {
+                Exames::create([
+                    'agenda_id' => $agenda_id,
+                    'profissional_id' => $profissional_id,
+                    'paciente_id' => $paciente_id,
+                    'procedimento_id' => $procedimento_id,
+                    'codigo' => $codigo,
+                    'qtd_sol' => $qtd_sol
+                ]);
+            } else {
+                $existingPrescricao->update([
+                    'qtd_sol' => $qtd_sol,
+                    'codigo' => $codigo, // Atualizar o código, se existente
+                    'procedimento_id' => $procedimento_id
+                ]);
             }
         }
-
-        return response()->noContent();
     }
+
+    return response()->noContent();
+}
+
 
     public function verificarExame($agenda_id, $paciente_id)
     {
@@ -754,7 +759,7 @@ class AtendimentosController extends Controller
         }
 
         $exames = DB::table('exames as re')
-            ->select('proc.procedimento', 'proc.codigo')
+            ->select('proc.procedimento', 'proc.codigo', 're.qtd_sol')
             ->join('procedimentos as proc', 're.procedimento_id', '=', 'proc.id')
             ->join('profissionals as pro', 're.profissional_id', '=', 'pro.id')
             ->join('pacientes as pac', 're.paciente_id', '=', 'pac.id')

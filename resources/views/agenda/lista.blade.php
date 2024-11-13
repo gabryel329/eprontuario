@@ -749,8 +749,8 @@
                                         <tbody>
                                             <tr>
                                                 <td></td>
-                                                <td>{{ $item->codigo }}</td>
-                                                <td>{{ $item->procedimento_id }}</td>
+                                                <td></td>
+                                                <td></td>
                                                 <td></td>
                                                 <td></td>
                                             </tr>

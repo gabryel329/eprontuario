@@ -35,6 +35,7 @@ class Disponibilidade extends Model
         'inihonorariomanha',
         'interhonorariomanha',
         'fimhonorariomanha',
+        'valor_proc'
     ];
 
     public function profissional()
