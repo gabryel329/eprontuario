@@ -833,40 +833,107 @@
                             <div class="row">
                                 <div class="col-md-2">
                                     <label for="tipo_atendimento" class="form-label">32 - Tipo de Atendimento</label>
-                                    <input class="form-control" id="tipo_atendimento" name="tipo_atendimento"
-                                        type="text" value="{{ old('tipo_atendimento') }}">
+                                    <select class="form-select" id="tipo_atendimento" name="tipo_atendimento">
+                                        <option value="">{{ old('tipo_atendimento') ? 'selected' : 'Selecione' }}
+                                        </option>
+                                        <option value="01">Remoção</option>
+                                        <option value="02">Pequena Cirurgia</option>
+                                        <option value="03">Outras Terapias</option>
+                                        <option value="04">Consulta</option>
+                                        <option value="05">Exame Ambulatorial</option>
+                                        <option value="06">Atendimento Domiciliar</option>
+                                        <option value="07">Internação</option>
+                                        <option value="08">Quimioterapia</option>
+                                        <option value="09">Radioterapia</option>
+                                        <option value="10">Terapia Renal Substitutiva (TRS)</option>
+                                        <option value="11">Pronto Socorro</option>
+                                        <option value="13">Pequeno atendimento (sutura, gesso e outros)</option>
+                                        <option value="14">Saúde Ocupacional - Admissional</option>
+                                        <option value="15">Saúde Ocupacional - Demissional</option>
+                                        <option value="16">Saúde Ocupacional - Periódico</option>
+                                        <option value="17">Saúde Ocupacional - Retorno ao trabalho</option>
+                                        <option value="18">Saúde Ocupacional - Mudança de função</option>
+                                        <option value="19">Saúde Ocupacional - Promoção à saúde</option>
+                                        <option value="20">Saúde Ocupacional - Beneficiário novo</option>
+                                        <option value="21">Saúde Ocupacional - Assistência a demitidos</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-2">
                                     <label for="indicacao_acidente" class="form-label">33 - Indicação de Acidente</label>
-                                    <input class="form-control" id="indicacao_acidente" name="indicacao_acidente"
-                                        type="text" value="{{ old('indicacao_acidente') }}">
+                                    <select class="form-select" id="indicacao_acidente" name="indicacao_acidente">
+                                        <option value="">{{ old('indicacao_acidente') ? 'selected' : 'Selecione' }}
+                                        </option>
+                                        <option value="1">Sim</option>
+                                        <option value="2">Não</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-2">
                                     <label for="tipo_consulta" class="form-label">34 - Tipo de Consulta</label>
-                                    <input class="form-control" id="tipo_consulta" name="tipo_consulta" type="text"
-                                        value="{{ old('tipo_consulta') }}">
+                                    <select class="form-select" id="tipo_consulta" name="tipo_consulta">
+                                        <option value="">{{ old('tipo_consulta') ? 'selected' : 'Selecione' }}
+                                        <option value="1">Primeira Consulta</option>
+                                        <option value="2">Retorno</option>
+                                        <option value="3">Pré-natal</option>
+                                        <option value="4">Por encaminhamento</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-2">
                                     <label for="motivo_encerramento" class="form-label">35 - Encerramento Atend.</label>
-                                    <input class="form-control" id="motivo_encerramento" name="motivo_encerramento"
-                                        type="text" value="{{ old('motivo_encerramento') }}">
+                                    <select class="form-select" id="motivo_encerramento" name="motivo_encerramento">
+                                        <option value="">{{ old('motivo_encerramento') ? 'selected' : 'Selecione' }}
+                                        <option value="11">Alta Curado</option>
+                                        <option value="12">Alta Melhorado</option>
+                                        <option value="14">Alta a pedido</option>
+                                        <option value="15">Alta com previsão de retorno para acompanhamento do paciente</option>
+                                        <option value="16">Alta por Evasão</option>
+                                        <option value="18">Alta por outros motivos</option>
+                                        <option value="21">Permanência, por características próprias da doença</option>
+                                        <option value="22">Permanência, por intercorrência</option>
+                                        <option value="23">Permanência, por impossibilidade sócio-familiar</option>
+                                        <option value="24">Permanência, por processo de doação de órgãos, tecidos e células - doador vivo</option>
+                                        <option value="25">Permanência, por processo de doação de órgãos, tecidos e células - doador morto</option>
+                                        <option value="26">Permanência, por mudança de procedimento</option>
+                                        <option value="27">Permanência, por reoperação</option>
+                                        <option value="28">Permanência, outros motivos</option>
+                                        <option value="31">Transferido para outro estabelecimento</option>
+                                        <option value="32">Transferência para internação domiciliar</option>
+                                        <option value="41">Óbito com declaração de óbito fornecida pelo médico assistente</option>
+                                        <option value="42">Óbito com declaração de óbito fornecida pelo Instituto Médico Legal (IML)</option>
+                                        <option value="43">Óbito com declaração de óbito fornecida pelo Serviço de Verificação de Óbito (SVO)</option>
+                                        <option value="51">Encerramento Administrativo</option>
+                                        <option value="61">Alta da mãe/puérpera e do recém-nascido</option>
+                                        <option value="62">Alta da mãe/puérpera e permanência do recém-nascido</option>
+                                        <option value="63">Alta da mãe/puérpera e óbito do recém-nascido</option>
+                                        <option value="64">Alta da mãe/puérpera com óbito fetal</option>
+                                        <option value="65">Óbito da gestante e do concepto</option>
+                                        <option value="66">Óbito da mãe/puérpera e alta do recém-nascido</option>
+                                        <option value="67">Óbito da mãe/puérpera e permanência do recém-nascido</option>
+                                    </select>  
                                 </div>
                                 <div class="col-md-2">
                                     <label for="regime_atendimento" class="form-label">91 - Regime Atendimento</label>
-                                    <input class="form-control" id="regime_atendimento" name="regime_atendimento"
-                                        type="text" value="{{ old('regime_atendimento') }}">
+                                    <select class="form-select" id="regime_atendimento" name="regime_atendimento">
+                                        <option value="">{{ old('regime_atendimento') ? 'selected' : 'Selecione' }}
+                                        <option value="1">Hospitalar</option>
+                                        <option value="2">Hospital–dia</option>
+                                        <option value="3">Domiciliar</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-2">
                                     <label for="saude_ocupacional" class="form-label">92 - Saúde Ocupacional</label>
-                                    <input class="form-control" id="saude_ocupacional" name="saude_ocupacional"
-                                        type="text" value="{{ old('saude_ocupacional') }}">
+                                    <select class="form-select" id="saude_ocupacional" name="saude_ocupacional">
+                                        <option selected disabled>Escolha</option>
+                                        <option value="1">Sim</option>
+                                        <option value="2">Não</option>
+                                    </select>
                                 </div>
                             </div>
                             <hr>
                             <h5>Dados da Execução/Procedimentos e Exames Realizados</h5>
                             <div class="row">
-                                <div class="space">
-                                    <table class="table table-striped">
+                                <div class="table-responsive" style="overflow-x: auto;">
+                                    <table class="table table-striped" 
+                                        style="text-align: center; white-space: nowrap; font-size: 12px; min-width: 1800px; vertical-align: middle;">
                                         <thead>
                                             <tr>
                                                 <th>36 - Data</th>
@@ -883,21 +950,7 @@
                                                 <th>47 - Valor Total</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
+                                        <tbody id="procedimento-table-body">
                                         </tbody>
                                     </table>
                                 </div>
@@ -1185,7 +1238,8 @@
 
                             if (!response || !response.exames || response.exames.length === 0) {
                                 alert(
-                                    'Erro: Não foi possível carregar os dados ou nenhum exame foi encontrado.');
+                                    'Erro: Não foi possível carregar os dados ou nenhum exame foi encontrado.'
+                                    );
                                 return;
                             }
 
@@ -1195,15 +1249,15 @@
                             // Iterar sobre cada exame e preencher a tabela
                             response.exames.forEach(function(exame) {
                                 const exameRow = `
-                        <tr>
-                            <td><input class="form-control" name="tabela[]" type="text" value="${exame.tabela || ''}" readonly></td>
-                            <td><input class="form-control" name="codigo_procedimento_solicitado[]" type="text" value="${exame.codigo || ''}" readonly></td>
-                            <td><input class="form-control" name="descricao_procedimento[]" type="text" value="${exame.procedimento || ''}" readonly></td>
-                            <td><input class="form-control" name="qtd_sol[]" type="text" value="${exame.qtd_sol || ''}"></td>
-                            <td><input class="form-control" name="qtd_aut[]" type="text" value="${exame.qtd_aut || ''}"></td>
-                            <td><button type="button" class="btn btn-danger btn-sm" onclick="excluirLinha(this)"><i class="icon bi bi-trash"></i></button></td>
-                        </tr>
-                    `;
+                                <tr>
+                                    <td><input class="form-control" name="tabela[]" type="text" value="${exame.tabela || ''}" readonly></td>
+                                    <td><input class="form-control" name="codigo_procedimento_solicitado[]" type="text" value="${exame.codigo || ''}" readonly></td>
+                                    <td><input class="form-control" name="descricao_procedimento[]" type="text" value="${exame.procedimento || ''}" readonly></td>
+                                    <td><input class="form-control" name="qtd_sol[]" type="text" value="${exame.qtd_sol || ''}"></td>
+                                    <td><input class="form-control" name="qtd_aut[]" type="text" value="${exame.qtd_aut || ''}"></td>
+                                    <td><button type="button" class="btn btn-danger btn-sm" onclick="excluirLinha(this)"><i class="icon bi bi-trash"></i></button></td>
+                                </tr>
+                            `;
                                 $('#exame-table-body').append(exameRow);
                             });
 
@@ -1211,6 +1265,56 @@
                                 // Encontra a linha do botão clicado e remove-a
                                 $(button).closest('tr').remove();
                             }
+
+                            if (!response || !response.procedimentos || response.procedimentos.length === 0) {
+                                alert(
+                                    'Erro: Não foi possível carregar os dados ou nenhum exame foi encontrado.'
+                                    );
+                                return;
+                            }
+
+                            // Limpar o corpo da tabela para evitar duplicação
+                            $('#procedimento-table-body').empty();
+
+                            // Iterar sobre cada exame e preencher a tabela
+                            response.procedimentos.forEach(function(procedimento) {
+                                const procedimentoRow = `
+                                <tr>
+                                    <td><input class="form-control" name="dataReal[]" type="text" <input type="text" value="${procedimento.created_at ? procedimento.created_at.substring(0, 10).split('-').reverse().join('/') : ''}"></td>
+                                    <td><input class="form-control" name="hora_inicio_atendimento[]" type="text" value="${procedimento.created_at ? procedimento.created_at.substring(11, 16) : ''}"></td>
+                                    <td><input class="form-control" name="hora_fim_atendimento[]" type="text" value="${procedimento.created_at ? procedimento.created_at.substring(11, 16) : ''}"></td>
+                                    <td><input class="form-control" name="tabela[]" type="text" value="22"></td>
+                                    <td><input class="form-control" name="codigo_procedimento_realizado[]" type="text" value="${procedimento.codigo || ''}"></td>
+                                    <td><input class="form-control" name="descricao_procedimento_realizado[]" type="text" value="${procedimento.procedimento_nome || ''}"></td>
+                                    <td><input class="form-control" name="quantidade_autorizada[]" type="text" value="${procedimento.tabela || ''}"></td>
+                                    <td>
+                                        <select class="form-control" id="via" name="via[]">
+                                            <option value="">{{ old('via') ? 'selected' : 'Selecione' }}
+                                            <option value="U">Unidade</option>
+                                            <option value="M">Múltiplo</option>
+                                        </select>
+                                    </td>
+
+                                    <td>
+                                        <select class="form-control" id="tecnica" name="tecnica[]">
+                                            <option value="">{{ old('tecnica') ? 'selected' : 'Selecione' }}
+                                            <option value="U">Unilateral</option>
+                                            <option value="B">Bilateral</option>
+                                            <option value="M">Múltiplo</option>
+                                            <option value="S">Simples</option>
+                                            <option value="C">Complexo</option>
+                                            <option value="A">Avançado</option>
+                                        </select>
+                                    </td>
+                                    <td><input class="form-control" name="fatorRedAcres[]" type="text" placeholder="EX:1,00" value="${procedimento.tabela || ''}"></td>
+                                    <td><input class="form-control" name="valor_unitario[]" type="text" value="${procedimento.valor || ''}"></td>
+                                    <td><input class="form-control" name="valor_total[]" type="text" value="${procedimento.tabela || ''}"></td>
+                                </tr>
+                            `;
+                                $('#procedimento-table-body').append(procedimentoRow);
+                            });
+
+
                             // Preencher outros campos do modal
                             $('#modalSADT #nome_profissional_solicitante').val(response
                                 .profissional?.name || '');
@@ -1258,7 +1362,7 @@
                 }
             });
 
-            
+
 
             // Envio do formulário Guia SADT via AJAX
             $('#guiaForm2').on('submit', function(event) {

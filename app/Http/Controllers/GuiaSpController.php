@@ -8,10 +8,12 @@ use App\Models\Empresas;
 use App\Models\Exames;
 use App\Models\GuiaSp;
 use App\Models\Pacientes;
+use App\Models\ProcAgenda;
 use App\Models\Profissional;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class GuiaSpController extends Controller
 {
@@ -394,6 +396,43 @@ public function gerarZipGuiaSp($id)
         // Buscar a agenda pelo ID
         $agenda = Agenda::findOrFail($id);
 
+        $procedimentos = ProcAgenda::where('agenda_id', $agenda->id)->get()->map(function ($proc) use ($agenda) {
+            $detalhes = null;
+    
+            if ($agenda->convenio && $agenda->convenio->tab_proc_id) {
+                $tabelaProcedimentos = $agenda->convenio->tab_proc_id;
+    
+                // Verifica se a tabela de procedimentos é válida
+                if (Schema::hasTable($tabelaProcedimentos)) {
+                    if (str_starts_with($tabelaProcedimentos, 'tab_amb92') || str_starts_with($tabelaProcedimentos, 'tab_amb96')) {
+                        $detalhes = DB::table($tabelaProcedimentos)
+                            ->where('id', $proc->procedimento_id)
+                            ->select('descricao as procedimento', 'valor_proc')
+                            ->first();
+                    } elseif (str_starts_with($tabelaProcedimentos, 'tab_cbhpm')) {
+                        $detalhes = DB::table($tabelaProcedimentos)
+                            ->where('id', $proc->procedimento_id)
+                            ->select('procedimento', 'valor_proc')
+                            ->first();
+                    }
+                }
+            }
+    
+            // Verifica se o `tab_proc_id` é nulo ou se nenhuma tabela foi encontrada
+            if (!$detalhes) {
+                $detalhes = DB::table('procedimentos')
+                    ->where('id', $proc->procedimento_id)
+                    ->select('procedimento', 'valor_proc')
+                    ->first();
+            }
+    
+            // Adiciona os detalhes encontrados ou valores padrão ao ProcAgenda
+            return array_merge($proc->toArray(), [
+                'procedimento_nome' => $detalhes->procedimento ?? 'Procedimento não encontrado',
+                'valor_proc' => $detalhes->valor_proc ?? 0,
+            ]);
+        });
+            
         $guia = GuiaSp::where('agenda_id', $agenda->id)->first();
         
         $exames = DB::table('exames')
@@ -401,8 +440,7 @@ public function gerarZipGuiaSp($id)
         ->where('exames.agenda_id', $agenda->id)
         ->select('exames.*', 'procedimentos.procedimento as procedimento', 'procedimentos.codigo as codigo')
         ->get();
-
-        // Buscar paciente pelo ID associado à agenda
+            // Buscar paciente pelo ID associado à agenda
         $paciente = Pacientes::find($agenda->paciente_id);
 
         // Buscar profissional com sua especialidade
@@ -433,6 +471,7 @@ public function gerarZipGuiaSp($id)
             'empresa' => $empresa,
             'guia' => $guia,
             'exames' => $exames,
+            'procedimentos' => $procedimentos,
         ]);
     }
 
