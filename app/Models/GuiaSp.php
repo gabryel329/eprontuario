@@ -96,4 +96,15 @@ class GuiaSp extends Model
     {
         return $this->belongsTo(Pacientes::class);
     }
+
+    public function examesSadt()
+    {
+        return $this->hasMany(ExamesSadt::class, 'guia_sps_id');
+    }
+
+    // Relacionamento com ExamesAutSadt
+    public function examesAutSadt()
+    {
+        return $this->hasMany(ExamesAutSadt::class, 'guia_sps_id');
+    }
 }

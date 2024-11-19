@@ -822,7 +822,13 @@ class AgendaController extends Controller
     public function index1(Request $request)
     {
         $pacientes = Pacientes::all();
-        $profissionals = Profissional::whereNotNull('conselho_1')->get();
+        $profissionals = Profissional::join('especialidade_profissional', 'profissionals.id', '=', 'especialidade_profissional.profissional_id')
+        ->leftJoin('especialidades', 'especialidade_profissional.especialidade_id', '=', 'especialidades.id')
+        ->select(
+            'profissionals.*', // Trazer todos os campos do profissional
+            'especialidades.conselho as conselho_profissional',
+        )
+        ->get();
         $agendas = collect();
         $tiposConsultas = TipoAtendimento::all();
 

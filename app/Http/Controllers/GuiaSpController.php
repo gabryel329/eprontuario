@@ -6,11 +6,14 @@ use App\Models\Agenda;
 use App\Models\Convenio;
 use App\Models\Empresas;
 use App\Models\Exames;
+use App\Models\ExamesAutSadt;
+use App\Models\ExamesSadt;
 use App\Models\GuiaSp;
 use App\Models\Pacientes;
 use App\Models\ProcAgenda;
 use App\Models\Profissional;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -496,90 +499,112 @@ public function gerarZipGuiaSp($id)
     }
 
     public function salvarGuiaSADT(Request $request)
-    {
-        // Verifica se já existe uma guia para o mesmo agenda_id
-        $guiaExistente = GuiaSp::where('agenda_id', $request->input('agenda_id'))->exists();
+{
+    $dataSolicitacao = $request->input('data_solicitacao'); // Entrada no formato '31/07/2024 11:57'
 
-        if ($guiaExistente) {
-            // Retorna uma mensagem informando que a guia já existe
-            return response()->json([
-                'success' => true,
-                'message' => 'Guia SADT já existente.',
-            ]);
+    // Converter para o formato do banco de dados
+    $dataFormatada = Carbon::createFromFormat('d/m/Y H:i', $dataSolicitacao)->format('Y-m-d H:i:s');
+
+    try {
+        DB::beginTransaction();
+
+        // Salvar os dados gerais na tabela guia_sps
+        $guiaSps = GuiaSp::create([
+            'nome_profissional_solicitante' => $request->input('nome_profissional_solicitante'),
+            'conselho_profissional' => $request->input('conselho_profissional'),
+            'codigo_cbo' => $request->input('codigo_cbo'),
+            'nome_contratado' => $request->input('nome_contratado'),
+            'codigo_cnes' => $request->input('codigo_cnes'),
+            'data_atendimento' => $request->input('data_atendimento'),
+            'codigo_procedimento' => $request->input('codigo_procedimento'),
+            'validade_carteira' => $request->input('validade_carteira'),
+            'codigo_operadora' => $request->input('codigo_operadora'),
+            'codigo_operadora_executante' => $request->input('codigo_operadora_executante'),
+            'nome_social' => $request->input('nome_social'),
+            'uf_conselho' => $request->input('uf_conselho'),
+            'numero_conselho' => $request->input('numero_conselho'),
+            'registro_ans' => $request->input('registro_ans'),
+            'numero_carteira' => $request->input('numero_carteira'),
+            'nome_beneficiario' => $request->input('nome_beneficiario'),
+            'numero_guia_prestador' => $request->input('numero_guia_prestador'),
+            'data_autorizacao' => $request->input('data_autorizacao'),
+            'senha' => $request->input('senha'),
+            'validade_senha' => $request->input('validade_senha'),
+            'numero_guia_op' => $request->input('numero_guia_op'),
+            'carater_atendimento' => $request->input('carater_atendimento'),
+            'data_solicitacao' => $dataFormatada,
+            'indicacao_clinica' => $request->input('indicacao_clinica'),
+            'indicacao_cob_especial' => $request->input('indicacao_cob_especial'),
+            'nome_contratado_executante' => $request->input('nome_contratado_executante'),
+            'tipo_atendimento' => $request->input('tipo_atendimento'),
+            'indicacao_acidente' => $request->input('indicacao_acidente'),
+            'tipo_consulta' => $request->input('tipo_consulta'),
+            'motivo_encerramento' => $request->input('motivo_encerramento'),
+            'regime_atendimento' => $request->input('regime_atendimento'),
+            'saude_ocupacional' => $request->input('saude_ocupacional'),
+            'sequencia' => $request->input('sequencia'),
+            'grau' => $request->input('grau'),
+            'codigo_operadora_profissional' => $request->input('codigo_operadora_profissional'),
+            'nome_profissional' => $request->input('nome_profissional'),
+            'sigla_conselho' => $request->input('sigla_conselho'),
+            'numero_conselho_profissional' => $request->input('numero_conselho_profissional'),
+            'uf_profissional' => $request->input('uf_profissional'),
+            'codigo_cbo_profissional' => $request->input('codigo_cbo_profissional'),
+            'observacao' => $request->input('observacao'),
+        ]);
+        
+
+        // Salvar os exames na tabela exames_sadt
+        if ($request->has('tabela')) {
+            foreach ($request->input('tabela') as $index => $tabela) {
+                ExamesSadt::create([
+                    'guia_sps_id' => $guiaSps->id,
+                    'tabela' => $tabela,
+                    'codigo_procedimento_solicitado' => $request->input("codigo_procedimento_solicitado.$index"),
+                    'descricao_procedimento' => $request->input("descricao_procedimento.$index"),
+                    'qtd_sol' => $request->input("qtd_sol.$index"),
+                    'qtd_aut' => $request->input("qtd_aut.$index"),
+                ]);
+            }
         }
 
-        // Cria uma nova guia SADT
-        $guia = new GuiaSp();
-        $guia->user_id = auth()->user()->id; // ID do usuário autenticado
-        $guia->convenio_id = $request->input('convenio_id');
-        $guia->paciente_id = $request->input('paciente_id');
-        $guia->profissional_id = $request->input('profissional_id');
-        $guia->agenda_id = $request->input('agenda_id');
-        $guia->registro_ans = $request->input('registro_ans');
-        $guia->numero_guia_prestador = $request->input('numero_guia_prestador');
-        $guia->data_autorizacao = $request->input('data_autorizacao');
-        $guia->senha = $request->input('senha');
-        $guia->validade_senha = $request->input('validade_senha');
-        $guia->numero_guia_op = $request->input('numero_guia_op');
-        $guia->numero_carteira = $request->input('numero_carteira');
-        $guia->validade_carteira = $request->input('validade_carteira');
-        $guia->nome_social = $request->input('nome_social');
-        $guia->nome_beneficiario = $request->input('nome_beneficiario');
-        $guia->atendimento_rn = $request->input('atendimento_rn');
-        $guia->codigo_operadora = $request->input('codigo_operadora');
-        $guia->nome_contratado = $request->input('nome_contratado');
-        $guia->nome_profissional_solicitante = $request->input('nome_profissional_solicitante');
-        $guia->conselho_profissional = $request->input('conselho_profissional');
-        $guia->numero_conselho = $request->input('conselho_1');
-        $guia->uf_conselho = $request->input('uf_conselho');
-        $guia->codigo_cbo = $request->input('codigo_cbo');
-        $guia->indicacao_acidente = $request->input('indicacao_acidente');
-        $guia->regime_atendimento = $request->input('regime_atendimento');
-        $guia->saude_ocupacional = $request->input('saude_ocupacional');
-        $guia->tipo_atendimento = $request->input('tipo_atendimento');
-        $guia->codigo_procedimento_solicitado = $request->input('codigo_procedimento_solicitado');
-        $guia->descricao_procedimento = $request->input('descricao_procedimento');
-        $guia->codigo_operadora_executante = $request->input('codigo_operadora_executante');
-        $guia->nome_contratado_executante = $request->input('nome_contratado_executante');
-        $guia->codigo_cnes = $request->input('cnes');
-        $guia->observacao = $request->input('observacao');
-        $guia->assinatura_profissional = $request->input('assinatura_profissional');
-        $guia->carater_atendimento = $request->input('carater_atendimento');
-        $guia->data_solicitacao = $request->input('data_solicitacao');
-        $guia->indicacao_clinica = $request->input('indicacao_clinica');
-        $guia->tipo_consulta = $request->input('tipo_consulta');
-        $guia->motivo_encerramento = $request->input('motivo_encerramento');
-        $guia->tabela = $request->input('tabela');
-        // $guia->hora_inicio_atendimento = $request->input('data_atendimento');
-        // $guia->hora_fim_atendimento = $request->input('data_atendimento');
-        $guia->codigo_procedimento_realizado = $request->input('codigo_procedimento_realizado');
-        $guia->descricao_procedimento_realizado = $request->input('descricao_procedimento_realizado');
-        $guia->quantidade_solicitada = $request->input('quantidade_solicitada');
-        $guia->quantidade_autorizada = $request->input('quantidade_autorizada');
-        $guia->via = $request->input('via');
-        $guia->tecnica = $request->input('tecnica');
-        $guia->valor_unitario = $request->input('valor_unitario');
-        $guia->valor_total = $request->input('valor_total');
-        $guia->codigo_operadora_profissional = $request->input('codigo_operadora_profissional');
-        $guia->nome_profissional = $request->input('nome_profissional_solicitante');
-        $guia->sigla_conselho = $request->input('conselho_profissional');
-        $guia->numero_conselho_profissional = $request->input('conselho_1');
-        $guia->uf_profissional = $request->input('uf_conselho');
-        $guia->codigo_cbo_profissional = $request->input('codigo_cbo');
-        // $guia->data_realizacao = $request->input('data_atendimento');
-        $guia->assinatura_beneficiario = $request->input('assinatura_beneficiario');
-        $guia->hash = $request->input('hash');
+        // Salvar os procedimentos na tabela exames_aut_sadt
+        if ($request->has('data_real')) {
+            foreach ($request->input('data_real') as $index => $dataReal) {
+                ExamesAutSadt::create([
+                    'guia_sps_id' => $guiaSps->id,
+                    'data_real' => $dataReal,
+                    'hora_inicio_atendimento' => $request->input("hora_inicio_atendimento.$index"),
+                    'hora_fim_atendimento' => $request->input("hora_fim_atendimento.$index"),
+                    'tabela' => $request->input("tabela.$index"),
+                    'codigo_procedimento_realizado' => $request->input("codigo_procedimento_realizado.$index"),
+                    'descricao_procedimento_realizado' => $request->input("descricao_procedimento_realizado.$index"),
+                    'quantidade_autorizada' => $request->input("quantidade_autorizada.$index"),
+                    'via' => $request->input("via.$index"),
+                    'tecnica' => $request->input("tecnica.$index"),
+                    'fator_red_acres' => $request->input("fator_red_acres.$index"),
+                    'valor_unitario' => $request->input("valor_unitario.$index"),
+                    'valor_total' => $request->input("valor_total.$index"),
+                ]);
+            }
+        }
 
-        // Salva a guia no banco de dados
-        $guia->save();
+        DB::commit();
 
-
-        // Retorna uma resposta de sucesso
         return response()->json([
             'success' => true,
-            'message' => 'Guia SADT criada com sucesso!',
+            'message' => 'Guia SADT salva com sucesso!'
         ]);
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => 'Erro ao salvar a Guia SADT.',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
+
     public function visualizarSp($id)
     {
         $guia = GuiaSp::find($id);
