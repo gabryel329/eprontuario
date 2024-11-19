@@ -500,11 +500,6 @@ public function gerarZipGuiaSp($id)
 
     public function salvarGuiaSADT(Request $request)
 {
-    $dataSolicitacao = $request->input('data_solicitacao'); // Entrada no formato '31/07/2024 11:57'
-
-    // Converter para o formato do banco de dados
-    $dataFormatada = Carbon::createFromFormat('d/m/Y H:i', $dataSolicitacao)->format('Y-m-d H:i:s');
-
     try {
         DB::beginTransaction();
 
@@ -532,7 +527,7 @@ public function gerarZipGuiaSp($id)
             'validade_senha' => $request->input('validade_senha'),
             'numero_guia_op' => $request->input('numero_guia_op'),
             'carater_atendimento' => $request->input('carater_atendimento'),
-            'data_solicitacao' => $dataFormatada,
+            'data_solicitacao' => $request->input('data_solicitacao'),
             'indicacao_clinica' => $request->input('indicacao_clinica'),
             'indicacao_cob_especial' => $request->input('indicacao_cob_especial'),
             'nome_contratado_executante' => $request->input('nome_contratado_executante'),
