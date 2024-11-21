@@ -151,6 +151,11 @@
                                                         <input type="text" class="form-control"
                                                             id="especialidade{{ $item->id }}" name="especialidade"
                                                             value="{{ $item->especialidade }}">
+                                                        <label for="conselho{{ $item->id }}"
+                                                            class="form-label">Conselho</label>
+                                                        <input type="text" class="form-control"
+                                                            id="conselho{{ $item->id }}" name="conselho"
+                                                            value="{{ $item->conselho }}">
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"

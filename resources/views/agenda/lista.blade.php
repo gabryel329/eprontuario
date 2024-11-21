@@ -836,15 +836,15 @@
                                     <select class="form-select" id="tipo_atendimento" name="tipo_atendimento">
                                         <option value="">{{ old('tipo_atendimento') ? 'selected' : 'Selecione' }}
                                         </option>
-                                        <option value="01">Remoção</option>
-                                        <option value="02">Pequena Cirurgia</option>
-                                        <option value="03">Outras Terapias</option>
-                                        <option value="04">Consulta</option>
-                                        <option value="05">Exame Ambulatorial</option>
-                                        <option value="06">Atendimento Domiciliar</option>
-                                        <option value="07">Internação</option>
-                                        <option value="08">Quimioterapia</option>
-                                        <option value="09">Radioterapia</option>
+                                        <option value="1">Remoção</option>
+                                        <option value="2">Pequena Cirurgia</option>
+                                        <option value="3">Outras Terapias</option>
+                                        <option value="4">Consulta</option>
+                                        <option value="5">Exame Ambulatorial</option>
+                                        <option value="6">Atendimento Domiciliar</option>
+                                        <option value="7">Internação</option>
+                                        <option value="8">Quimioterapia</option>
+                                        <option value="9">Radioterapia</option>
                                         <option value="10">Terapia Renal Substitutiva (TRS)</option>
                                         <option value="11">Pronto Socorro</option>
                                         <option value="13">Pequeno atendimento (sutura, gesso e outros)</option>
@@ -1339,7 +1339,7 @@
                                     <td><input class="form-control" name="codigo_procedimento_solicitado[]" type="text" value="${exame.codigo || ''}" readonly></td>
                                     <td><input class="form-control" name="descricao_procedimento[]" type="text" value="${exame.procedimento || ''}" readonly></td>
                                     <td><input class="form-control" name="qtd_sol[]" type="text" value="${exame.qtd_sol || ''}"></td>
-                                    <td><input class="form-control" name="qtd_aut[]" type="text" value="${exame.qtd_aut || ''}"></td>
+                                    <td><input class="form-control" name="qtd_aut[]" type="number" value="${exame.qtd_aut || ''}"></td>
                                     <td><button type="button" class="btn btn-danger btn-sm" onclick="excluirLinha(this)"><i class="icon bi bi-trash"></i></button></td>
                                 </tr>
                             `;

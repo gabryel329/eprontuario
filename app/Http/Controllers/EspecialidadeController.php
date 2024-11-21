@@ -93,15 +93,16 @@ class EspecialidadeController extends Controller
 
     // Atualiza o campo 'especialidade' com a nova entrada
     $especialidade->especialidade = ucfirst(trim($request->input('especialidade')));
+    $especialidade->conselho = strtoupper(trim($request->input('conselho')));
 
-    // Busca o conselho relacionado, se aplicável (substitua o modelo correto para Conselho)
-    $conselho = Especialidade::find($request->input('conselho_id')); 
+    // // Busca o conselho relacionado, se aplicável (substitua o modelo correto para Conselho)
+    // $conselho = Especialidade::find($request->input('conselho_id')); 
 
-    if ($conselho) {
-        // Atualiza o campo 'conselho' com a nova entrada
-        $conselho->conselho = ucfirst(trim($request->input('conselho')));
-        $conselho->save(); // Salva as alterações no conselho
-    }
+    // if ($conselho) {
+    //     // Atualiza o campo 'conselho' com a nova entrada
+    //     $conselho->conselho = ucfirst(trim($request->input('conselho')));
+    //     $conselho->save(); // Salva as alterações no conselho
+    // }
 
     // Salva as alterações na especialidade
     $especialidade->save();

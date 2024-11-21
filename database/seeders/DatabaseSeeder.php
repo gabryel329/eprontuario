@@ -72,26 +72,26 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('especialidades')->insert([
-            ['especialidade' => 'Clínico Geral', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
-            ['especialidade' => 'Ginecologia', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
-            ['especialidade' => 'Pediatria', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
-            ['especialidade' => 'Ortopedia', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
-            ['especialidade' => 'Cardiologia', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
-            ['especialidade' => 'Dermatologia', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
-            ['especialidade' => 'Oftalmologia', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
-            ['especialidade' => 'Psiquiatria', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
-            ['especialidade' => 'Neurologia', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
-            ['especialidade' => 'Radiologia', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
-            ['especialidade' => 'Urologia', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
-            ['especialidade' => 'Geriatria', 'conselho' => 'Conselho Regional de Medicina (CRM)'], // Código 06
-            ['especialidade' => 'Fisioterapia', 'conselho' => 'Conselho Regional de Fisioterapia e Terapia Ocupacional (CREFITO)'], // Código 05
-            ['especialidade' => 'Odontologia', 'conselho' => 'Conselho Regional de Odontologia (CRO)'], // Código 08
-            ['especialidade' => 'Nutrição', 'conselho' => 'Conselho Regional de Nutrição (CRN)'], // Código 07
-            ['especialidade' => 'Psicologia', 'conselho' => 'Conselho Regional de Psicologia (CRP)'], // Código 09
-            ['especialidade' => 'Enfermagem', 'conselho' => 'Conselho Regional de Enfermagem (COREN)'], // Código 02
-            ['especialidade' => 'Fonoaudiologia', 'conselho' => 'Conselho Regional de Fonoaudiologia (CRFA)'], // Código 04
-            ['especialidade' => 'Assistência Social', 'conselho' => 'Conselho Regional de Assistência Social (CRAS)'], // Código 01
-            ['especialidade' => 'Farmácia', 'conselho' => 'Conselho Regional de Farmácia (CRF)'], // Código 03
+            ['especialidade' => 'Clínico Geral', 'conselho' => 'CRM'], // Código 06
+            ['especialidade' => 'Ginecologia', 'conselho' => 'CRM'], // Código 06
+            ['especialidade' => 'Pediatria', 'conselho' => 'CRM'], // Código 06
+            ['especialidade' => 'Ortopedia', 'conselho' => 'CRM'], // Código 06
+            ['especialidade' => 'Cardiologia', 'conselho' => 'CRM'], // Código 06
+            ['especialidade' => 'Dermatologia', 'conselho' => 'CRM'], // Código 06
+            ['especialidade' => 'Oftalmologia', 'conselho' => 'CRM'], // Código 06
+            ['especialidade' => 'Psiquiatria', 'conselho' => 'CRM'], // Código 06
+            ['especialidade' => 'Neurologia', 'conselho' => 'CRM'], // Código 06
+            ['especialidade' => 'Radiologia', 'conselho' => 'CRM'], // Código 06
+            ['especialidade' => 'Urologia', 'conselho' => 'CRM'], // Código 06
+            ['especialidade' => 'Geriatria', 'conselho' => 'CRM'], // Código 06
+            ['especialidade' => 'Fisioterapia', 'conselho' => 'CREFITO'], // Código 05
+            ['especialidade' => 'Odontologia', 'conselho' => 'CRO'], // Código 08
+            ['especialidade' => 'Nutrição', 'conselho' => 'CRN'], // Código 07
+            ['especialidade' => 'Psicologia', 'conselho' => 'CRP'], // Código 09
+            ['especialidade' => 'Enfermagem', 'conselho' => 'COREN'], // Código 02
+            ['especialidade' => 'Fonoaudiologia', 'conselho' => 'CRFA'], // Código 04
+            ['especialidade' => 'Assistência Social', 'conselho' => 'CRAS'], // Código 01
+            ['especialidade' => 'Farmácia', 'conselho' => 'CRF'], // Código 03
         ]);
 
 

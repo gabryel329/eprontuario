@@ -70,7 +70,9 @@ class GuiaSp extends Model
         'qtd_aut',
         'qtd_sol',
         'cns',
-        'indicacao_cob_especial'                         // Hash para validação de integridade
+        'indicacao_cob_especial',
+        'sequencia',
+        'grua'                  // Hash para validação de integridade
     ];
 
 

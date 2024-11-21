@@ -12,6 +12,7 @@ use App\Models\GuiaSp;
 use App\Models\Pacientes;
 use App\Models\ProcAgenda;
 use App\Models\Profissional;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -437,6 +438,12 @@ public function gerarZipGuiaSp($id)
         });
             
         $guia = GuiaSp::where('agenda_id', $agenda->id)->first();
+
+        $ExameSolis = ExamesSadt::where('guia_sps_id', $guia->id)
+        ->whereNotNull('codigo_procedimento_solicitado')
+        ->get();
+
+        $ExameAuts = ExamesAutSadt::where('guia_sps_id', $guia->id)->get();
         
         $exames = DB::table('exames')
         ->join('procedimentos', 'exames.procedimento_id', '=', 'procedimentos.id')
@@ -475,6 +482,8 @@ public function gerarZipGuiaSp($id)
             'guia' => $guia,
             'exames' => $exames,
             'procedimentos' => $procedimentos,
+            'ExameSolis' => $ExameSolis,
+            'ExameAuts' => $ExameAuts,
         ]);
     }
 
@@ -486,6 +495,13 @@ public function gerarZipGuiaSp($id)
 
         // Buscar a guia SADT relacionada
         $guia = GuiaSp::where('agenda_id', $agenda->id)->first();
+        $user = User::where('id', $guia->user_id)->first();
+        $ExameSolis = ExamesSadt::where('guia_sps_id', $guia->id)
+        ->whereNotNull('codigo_procedimento_solicitado')
+        ->get();
+
+        $ExameAuts = ExamesAutSadt::where('guia_sps_id', $guia->id)->get();
+
 
         // Buscar a empresa associada
         $empresa = Empresas::first();
@@ -495,6 +511,9 @@ public function gerarZipGuiaSp($id)
             'agenda' => $agenda,
             'guia' => $guia,
             'empresa' => $empresa,
+            'ExameSolis' => $ExameSolis,
+            'ExameAuts' => $ExameAuts,
+            'user' => $user,
         ]);
     }
 
@@ -505,6 +524,13 @@ public function gerarZipGuiaSp($id)
 
         // Salvar os dados gerais na tabela guia_sps
         $guiaSps = GuiaSp::create([
+            'agenda_id' => $request->input('agenda_id'),
+            'profissional_id' => $request->input('profissional_id'),
+            'convenio_id' => $request->input('convenio_id'),
+            'paciente_id' => $request->input('paciente_id'),
+            'cns' => $request->input('cns'),
+            'atendimento_rn' => $request->input('atendimento_rn'),
+            'user_id' => $request->input('user_id'),
             'nome_profissional_solicitante' => $request->input('nome_profissional_solicitante'),
             'conselho_profissional' => $request->input('conselho_profissional'),
             'codigo_cbo' => $request->input('codigo_cbo'),
@@ -538,7 +564,7 @@ public function gerarZipGuiaSp($id)
             'regime_atendimento' => $request->input('regime_atendimento'),
             'saude_ocupacional' => $request->input('saude_ocupacional'),
             'sequencia' => $request->input('sequencia'),
-            'grau' => $request->input('grau'),
+            'grua' => $request->input('grau'),
             'codigo_operadora_profissional' => $request->input('codigo_operadora_profissional'),
             'nome_profissional' => $request->input('nome_profissional'),
             'sigla_conselho' => $request->input('sigla_conselho'),
