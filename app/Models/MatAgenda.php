@@ -15,6 +15,7 @@ class MatAgenda extends Model
         'agenda_id',
         'paciente_id',
         'material_id',
+        'valor',
     ];
 
     // Relacionamento com o model Agenda

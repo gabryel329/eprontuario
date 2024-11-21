@@ -18,6 +18,7 @@ class MedAgenda extends Model
         'medicamento_id',
         'dose',
         'hora',
+        'valor',
     ];
 
     // Relacionamento com o model Agenda

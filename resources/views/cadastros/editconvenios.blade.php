@@ -209,7 +209,7 @@
                                                 </select>
                                             </div>
 
-                                            <div class="mb-3 col-md-2" id="porte-container" style="display: none;">
+                                            <div class="mb-3 col-md-2" id="porte-container">
                                                 <label class="form-label">Porte <span style="color: red">*</span></label>
                                                 <select class="form-control" id="tab_cota_porte" name="tab_cota_porte" title="Selecione caso esteja usando a tabela CBHPM">
                                                     <option value="">{{ old('tab_cota_porte', $convenios->tab_cota_porte ?? '') }}</option>
@@ -219,7 +219,7 @@
                                                 </select>
                                             </div>
 
-                                            <div class="mb-3 col-md-2" id="ch-container" style="display: none;">
+                                            <div class="mb-3 col-md-2" id="ch-container">
                                                 <label class="form-label">CH <span style="color: red">*</span></label>
                                                 <input type="text" value="{{ old('tab_cota_ch', $convenios->tab_cota_ch ?? '') }}" class="form-control" id="tab_cota_ch" name="tab_cota_ch" title="Selecione caso esteja usando a tabela AMB">
                                             </div>
@@ -371,60 +371,5 @@
             }
         }
 
-        document.getElementById('tab_proc_id').addEventListener('change', function() {
-        var selectedTable = this.value;
-        var porteContainer = document.getElementById('porte-container');
-        var chContainer = document.getElementById('ch-container');
-
-        // Oculta ambos os campos por padrão
-        porteContainer.style.display = 'none';
-        chContainer.style.display = 'none';
-
-        // Exibe o campo adequado com base no valor selecionado
-        if (selectedTable.startsWith('tab_cbhpm')) {
-            porteContainer.style.display = 'block';
-        } else if (selectedTable.startsWith('tab_amb')) {
-            chContainer.style.display = 'block';
-        }
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const porteContainer = document.getElementById('porte-container');
-        const tabCotaPorte = document.getElementById('tab_cota_porte');
-        const chContainer = document.getElementById('ch-container');
-        const tabCotaCH = document.getElementById('tab_cota_ch');
-
-        // Verifica o valor inicial ao carregar a página
-        if (tabCotaPorte.value) {
-            porteContainer.style.display = 'block';
-        } else {
-            porteContainer.style.display = 'none';
-        }
-
-        // Escuta mudanças no campo
-        tabCotaPorte.addEventListener('change', function () {
-            if (this.value) {
-                porteContainer.style.display = 'block';
-            } else {
-                porteContainer.style.display = 'none';
-            }
-        });
-
-        // Verifica o valor inicial ao carregar a página
-        if (tabCotaCH.value) {
-            chContainer.style.display = 'block';
-        } else {
-            chContainer.style.display = 'none';
-        }
-
-        // Escuta mudanças no campo
-        tabCotaCH.addEventListener('change', function () {
-            if (this.value) {
-                chContainer.style.display = 'block';
-            } else {
-                chContainer.style.display = 'none';
-            }
-        });
-    });
     </script>
 @endsection

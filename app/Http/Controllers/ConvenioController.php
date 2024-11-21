@@ -33,7 +33,8 @@ class ConvenioController extends Controller
             FROM information_schema.tables 
             WHERE table_schema = 'public' 
             AND (
-                table_name LIKE 'tab_simpro%'
+                table_name LIKE 'tab_simpro%' OR
+                table_name LIKE 'tab_brasindice%'
             );
         ");
 
@@ -153,7 +154,8 @@ class ConvenioController extends Controller
             FROM information_schema.tables 
             WHERE table_schema = 'public' 
             AND (
-                table_name LIKE 'tab_simpro%'
+                table_name LIKE 'tab_simpro%' OR
+                table_name LIKE 'tab_brasindice%'
             );
         ");
 

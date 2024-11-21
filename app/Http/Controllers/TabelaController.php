@@ -153,10 +153,10 @@ class TabelaController extends Controller
                     $table->string('COD_LAB', 500)->nullable();
                     $table->string('LABORATORIO', 500)->nullable();
                     $table->string('COD_ITEM', 500)->nullable();
-                    $table->string('ITEM', 500)->nullable();
+                    $table->string('medicamento', 500)->nullable();
                     $table->string('COD_APR', 500)->nullable();
                     $table->string('APRESENTACAO', 500)->nullable();
-                    $table->string('PRECO', 500)->nullable();
+                    $table->string('preco', 500)->nullable();
                     $table->string('QTDE_FRACIONAMENTO', 500)->nullable();
                     $table->string('PMC_PFB', 500)->nullable();
                     $table->string('PRECO_FRACAO', 500)->nullable();
@@ -188,15 +188,23 @@ class TabelaController extends Controller
                 case 'amb92':
                 case 'amb96':
                     $table->string('codigo', 500)->nullable();
+                    $table->string('teste1', 500)->nullable();
+                    $table->string('descricao1', 500)->nullable();
+                    $table->string('teste2', 500)->nullable();
+                    $table->string('teste3', 500)->nullable();
+                    $table->string('teste4', 500)->nullable();
+                    $table->string('cod_amb', 500)->nullable();
                     $table->string('descricao', 500)->nullable();
-                    $table->string('m_filme', 500)->nullable();
-                    $table->string('auxiliares', 500)->nullable();
-                    $table->string('incidencia', 500)->nullable();
-                    $table->string('porte_anestesico', 500)->nullable();
-                    $table->string('tabela', 500)->nullable();
-                    $table->string('valor', 500)->nullable();
-                    $table->string('co', 500)->nullable();
-                    $table->string('valor_total', 500)->nullable();
+                    $table->string('teste5', 500)->nullable();
+                    $table->string('teste6', 500)->nullable();
+                    $table->string('teste7', 500)->nullable();
+                    $table->string('teste8', 500)->nullable();
+                    $table->string('filme', 500)->nullable();
+                    $table->string('custo_operacional', 500)->nullable();
+                    $table->string('ch', 500)->nullable();
+                    $table->string('auxiliar', 500)->nullable();
+                    $table->string('teste9', 500)->nullable();
+                    $table->string('porte', 500)->nullable();
                     break;
                 case 'cbhpm':
                     $table->string('id_grupo', 500)->nullable();
@@ -231,10 +239,10 @@ class TabelaController extends Controller
                     'COD_LAB' => $row[0] ?? null,
                     'LABORATORIO' => $row[1] ?? null,
                     'COD_ITEM' => $row[2] ?? null,
-                    'ITEM' => $row[3] ?? null,
+                    'medicamento' => $row[3] ?? null,
                     'COD_APR' => $row[4] ?? null,
                     'APRESENTACAO' => $row[5] ?? null,
-                    'PRECO' => $row[6] ?? null,
+                    'preco' => $row[6] ?? null,
                     'QTDE_FRACIONAMENTO' => $row[7] ?? null,
                     'PMC_PFB' => $row[8] ?? null,
                     'PRECO_FRACAO' => $row[9] ?? null,
@@ -268,15 +276,14 @@ class TabelaController extends Controller
             case 'amb96':
                 return [
                     'codigo' => $row[0] ?? null,
-                    'descricao' => $row[1] ?? null,
-                    'm_filme' => $row[2] ?? null,
-                    'auxiliares' => $row[3] ?? null,
-                    'incidencia' => $row[4] ?? null,
-                    'porte_anestesico' => $row[5] ?? null,
-                    'tabela' => $row[6] ?? null,
-                    'valor' => $row[7] ?? null,
-                    'co' => $row[8] ?? null,
-                    'valor_total' => $row[9] ?? null,
+                    'descricao1' => $row[2] ?? null,
+                    'cod_amb' => $row[6] ?? null,
+                    'descricao' => $row[7] ?? null,
+                    'filme' => $row[12] ?? null,
+                    'custo_operacional' => $row[13] ?? null,
+                    'ch' => $row[14] ?? null,
+                    'auxiliar' => $row[15] ?? null,
+                    'porte' => $row[17] ?? null,
                 ];
             case 'cbhpm':
                 return [

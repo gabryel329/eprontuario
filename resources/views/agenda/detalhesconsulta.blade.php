@@ -272,22 +272,25 @@
                                             <tbody id="prescricao-table-body_new">
                                                 <tr class="prescricao-row">
                                                     <td>
-                                                        <select class="form-control medicamento_id"
-                                                            name="medicamento_id[]">
-                                                            <option value="">Selecione o remédio</option>
-                                                            @foreach ($medicamento as $item)
-                                                                <option value="{{ $item->id }}">
-                                                                    {{ $item->nome }}</option>
-                                                            @endforeach
+                                                        <select class="form-control medicamento_id" name="medicamento_id[]" onchange="updateValor(this)">
+                                                            <option value="" data-valor="">Selecione o remédio</option>
+                                                            @if ($agendas->medicamentos && $agendas->medicamentos->isNotEmpty())
+                                                                @foreach ($agendas->medicamentos as $medicamento)
+                                                                    <option value="{{ $medicamento->id }}" data-valor="{{ $medicamento->preco }}">
+                                                                        {{ $medicamento->medicamento }}
+                                                                    </option>
+                                                                @endforeach
+                                                            @else
+                                                                <option value="">Nenhum medicamento encontrado</option>
+                                                            @endif
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <input type="number" class="form-control dose"
-                                                            name="dose[]" placeholder="Dose">
+                                                        <input type="number" class="form-control dose" name="dose[]" placeholder="Dose">
                                                     </td>
                                                     <td>
-                                                        <input type="number" class="form-control hora"
-                                                            name="hora[]" placeholder="Horas">
+                                                        <input type="number" class="form-control hora" name="hora[]" placeholder="Horas">
+                                                        <input type="text" class="form-control valor" name="valor[]" readonly>
                                                     </td>
                                                     <td>
                                                         <button type="button"
@@ -425,6 +428,27 @@
     <!-- JS do Select2 -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
+
+        // Função para atualizar o valor ao selecionar um medicamento
+        function updateValor(selectElement) {
+            // Encontra a linha mais próxima da seleção
+            const row = selectElement.closest('.prescricao-row');
+            
+            // Encontra o campo 'valor' correspondente na linha
+            const valorInput = row.querySelector('input[name="valor[]"]');
+            
+            // Obtém a opção selecionada no select
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            
+            // Obtém o preço do atributo 'data-valor' da opção
+            const preco = selectedOption.getAttribute('data-valor') || 0;
+
+            // Define o valor no campo 'valor' formatado com duas casas decimais
+            if (valorInput) {
+                valorInput.value = parseFloat(preco).toFixed(2);
+            }
+        }
+
         function applySelect2(element) {
             element.select2({
                 placeholder: "Selecione o Procedimento",
@@ -442,7 +466,6 @@
             const valorInput = row.querySelector('input[name="valor[]"]'); // Campo de código
             const selectedOption = selectElement.options[selectElement.selectedIndex]; // Opção selecionada
             codigoInput.value = selectedOption.getAttribute('data-codigo'); // Define o código
-            valorInput.value = selectedOption.getAttribute('data-valor'); // Define o código
         }
 
         $(document).ready(function() {
@@ -453,15 +476,23 @@
                 var newRow = `
             <tr class="prescricao-row">
                 <td>
-                    <select class="form-control medicamento_id" name="medicamento_id[]">
-                            <option value="">Selecione o remédio</option>
-                            @foreach ($medicamento as $item)
-                                <option value="{{ $item->id }}">{{ $item->nome }}</option>
-                            @endforeach
-                        </select>
+                     <select class="form-control medicamento_id" name="medicamento_id[]" onchange="updateValor(this)">
+                                                            <option value="" data-valor="">Selecione o remédio</option>
+                                                            @if ($agendas->medicamentos && $agendas->medicamentos->isNotEmpty())
+                                                                @foreach ($agendas->medicamentos as $medicamento)
+                                                                    <option value="{{ $medicamento->id }}" data-valor="{{ $medicamento->preco }}">
+                                                                        {{ $medicamento->medicamento }}
+                                                                    </option>
+                                                                @endforeach
+                                                            @else
+                                                                <option value="">Nenhum medicamento encontrado</option>
+                                                            @endif
+                                                        </select>
                 </td>
                 <td><input type="number" class="form-control dose" name="dose[]" placeholder="Dose"></td>
-                <td><input type="number" class="form-control hora" name="hora[]" placeholder="Horas"></td>
+                <td><input type="number" class="form-control hora" name="hora[]" placeholder="Horas">
+                    <input type="text" class="form-control valor" name="valor[]"  readonly></td>
+                
                 <td>
                     <button type="button" class="btn btn-success add-row">+</button>
                     <button type="button" class="btn btn-danger remove-row">-</button>
@@ -485,6 +516,7 @@
                                 'change'); // Dispara 'change'
                             lastRow.find('.dose').val(remedio.dose);
                             lastRow.find('.hora').val(remedio.hora);
+                            lastRow.find('.valor').val(remedio.valor);
                         });
                     }
                 },
@@ -500,6 +532,24 @@
 
             $(document).on('click', '.remove-row', function() {
                 $(this).closest('.prescricao-row').remove();
+            });
+
+            document.addEventListener("DOMContentLoaded", function () {
+                // Adiciona um listener ao evento de mudança no select de medicamentos
+                document.querySelectorAll('.medicamento_id').forEach(function (select) {
+                    select.addEventListener('change', function () {
+                        // Obtém o valor selecionado e o campo de preço relacionado
+                        const selectedOption = this.options[this.selectedIndex];
+                        const valorInput = this.closest('tr').querySelector('.valor');
+                        
+                        // Atualiza o valor no input correspondente
+                        if (selectedOption.dataset.valor) {
+                            valorInput.value = selectedOption.dataset.valor;
+                        } else {
+                            valorInput.value = ''; // Caso nenhum valor seja encontrado
+                        }
+                    });
+                });
             });
 
             // Salvar medicamentos via AJAX
