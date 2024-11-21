@@ -439,11 +439,11 @@ public function gerarZipGuiaSp($id)
             
         $guia = GuiaSp::where('agenda_id', $agenda->id)->first();
 
-        $ExameSolis = ExamesSadt::where('guia_sps_id', $guia->id)
+        $ExameSolis = ExamesSadt::where('guia_sps_id', $agenda->id)
         ->whereNotNull('codigo_procedimento_solicitado')
         ->get();
 
-        $ExameAuts = ExamesAutSadt::where('guia_sps_id', $guia->id)->get();
+        $ExameAuts = ExamesAutSadt::where('guia_sps_id', $agenda->id)->get();
         
         $exames = DB::table('exames')
         ->join('procedimentos', 'exames.procedimento_id', '=', 'procedimentos.id')
