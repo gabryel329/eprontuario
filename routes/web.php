@@ -306,6 +306,7 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::post('/taxa/store', [AgendaController::class, 'storeTaxa']);
     Route::get('/taxa/{agenda_id}/{paciente_id}', [AgendaController::class, 'verificarTaxa']);
 
+    Route::post('/import-txt', [TabelaController::class, 'importarTxt'])->name('importarTxt');
     Route::get('/importar-excel', [TabelaController::class, 'importarExcelIndex'])->name('imp_tabela.index');
     Route::delete('/tabela/{nome}', [TabelaController::class, 'excluirTabela'])->name('tabela.excluir');
     Route::post('/importar-excel', [TabelaController::class, 'importarExcel']);

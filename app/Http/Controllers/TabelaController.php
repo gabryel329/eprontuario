@@ -309,6 +309,60 @@ class TabelaController extends Controller
         }
     }
 
+    public function importarTxt(Request $request)
+    {
+        ini_set('memory_limit', '512M');
+        \Log::info('Entrou no método importarTxt');
+
+        try {
+            $request->validate([
+                'tabela' => 'required|in:brasindice,amb92,simpro,amb96,cbhpm',
+                'file' => 'required',
+                'descricao' => 'required|string|max:255'
+            ]);
+
+            $prefixoTabela = strtolower($request->input('tabela'));
+
+            // Formatar a descrição para uso no nome da tabela (substitui espaços por underscores)
+            $descricao = str_replace(' ', '_', $request->input('descricao'));
+
+            // Concatenar o prefixo da tabela com a descrição formatada
+            $tableName = "tab_{$prefixoTabela}_{$descricao}";
+
+            // Criar a tabela com o nome final
+            $this->criarTabela($prefixoTabela, $tableName);
+
+            // Processar o arquivo TXT
+            $file = $request->file('file');
+            $fileContent = file($file->getPathname(), FILE_IGNORE_NEW_LINES);
+
+            if (empty($fileContent)) {
+                return response()->json(['error' => 'O arquivo TXT está vazio ou inválido.'], 400);
+            }
+
+            $batchSize = 1000; // Tamanho do lote
+            $dataBatch = [];
+
+            foreach ($fileContent as $index => $line) {
+                // Converte para UTF-8
+                $line = mb_convert_encoding($line, 'UTF-8', 'auto');
+                $row = str_getcsv($line, ',', '"');
+                $dataBatch[] = $this->formatarDados($prefixoTabela, $row);
+            
+                if (count($dataBatch) === $batchSize || $index === array_key_last($fileContent)) {
+                    DB::table($tableName)->insert($dataBatch);
+                    $dataBatch = []; // Limpa o lote
+                }
+            }
+
+            return redirect()->back()->with('success', 'Dados inseridos com sucesso!');
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            return redirect()->back()->with('error', 'Erro ao inserir dados.');
+        }
+    }
+
+
 
     /**
      * Display a listing of the resource.
