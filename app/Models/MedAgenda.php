@@ -19,6 +19,8 @@ class MedAgenda extends Model
         'dose',
         'hora',
         'valor',
+        'unidade_medida',
+        'qtd_solicitada',
     ];
 
     // Relacionamento com o model Agenda

@@ -127,14 +127,18 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::get('/gerar-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarGuiaConsultaMODAL'])->name('gerar.guia.consulta');
         Route::post('/salvar-guia-consulta', [GuiaConsultaController::class, 'salvarGuiaConsulta'])->name('salvar.guiaConsulta');
         Route::get('/agenda/{id}/guia-consulta', [GuiaConsultaController::class, 'gerarGuiaConsulta'])->name('guia.consulta2');
-
-        Route::post('/verificar-numeracao', [GuiaConsultaController::class, 'verificarNumeracao'])->name('guias.verificarNumeracao');
+        #GuiaConsulta
+        Route::post('/verificar-numeracao-consulta', [GuiaConsultaController::class, 'verificarNumeracao'])->name('guias.verificarNumeracaoConsulta');
         Route::post('/gerar-zip-guia-consulta-em-lote', [GuiaConsultaController::class, 'gerarZipGuiaConsultaEmLote'])->name('guias.gerarZipEmLote');
         Route::post('/gerar-xml-guia-consulta-em-lote', [GuiaConsultaController::class, 'gerarXmlGuiaConsultaEmLote'])->name('guias.gerarXmlEmLote');
         Route::post('/gerar-xml-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarXmlGuiaConsulta']);
         Route::post('/gerar-zip-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarZipGuiaConsulta']);
-        Route::get('/gerar-xml-guia-sp/{id}', [GuiaSpController::class, 'gerarXmlGuiaSp']);
-        Route::get('/gerar-zip-guia-sp/{id}', [GuiaSpController::class, 'gerarZipGuiaSp']);
+        #GuiaSadt
+        Route::post('/verificar-numeracao-sadt', [GuiaSpController::class, 'verificarNumeracao'])->name('guias.verificarNumeracaoSadt');
+        Route::post('/gerar-zip-guia-sadt-em-lote', [GuiaSpController::class, 'gerarZipGuiasadtEmLote'])->name('guias.gerarZipEmLote');
+        Route::post('/gerar-xml-guia-sadt-em-lote', [GuiaSpController::class, 'gerarXmlGuiasadtEmLote'])->name('guias.gerarXmlEmLote');
+        Route::post('/gerar-xml-guia-sadt/{id}', [GuiaSpController::class, 'gerarXmlGuiasadt']);
+        Route::post('/gerar-zip-guia-sadt/{id}', [GuiaSpController::class, 'gerarZipGuiasadt']);
 
         Route::get('/convenios/procedures', [ConvenioController::class, 'getProceduresIndex'])->name('convenios.index');
         Route::get('/convenios/procedures/{id}', [ConvenioController::class, 'getProcedures'])->name('convenios.getProcedures');

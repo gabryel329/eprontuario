@@ -712,7 +712,7 @@
 
 // Função para verificar numeração no backend
 function verificarNumeracao(id) {
-    return fetch(`/verificar-numeracao`, {
+    return fetch(`/verificar-numeracao-consulta`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

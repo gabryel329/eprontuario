@@ -144,18 +144,20 @@
             <div class="space">
                 <table class="table table-striped">
                     <thead>
-                      <tr>
-                        <th>Medicamento</th>
-                        <th>Doses</th>
-                        <th>H/H</th>
-                      </tr>
+                        <tr>
+                            <th>Medicamento ID</th>
+                            <th>Dose</th>
+                            <th>Hora</th>
+                            <th>Valor</th>
+                        </tr>
                     </thead>
                     <tbody>
                         @foreach ($remedios as $item)
                             <tr>
-                                <td>{{ $item->remedios }}</td>
-                                <td>{{ $item->dose }}</td>
-                                <td>{{ $item->horas }}</td>
+                                <td>{{ $item->medicamento_id }}</td> <!-- ID do medicamento -->
+                                <td>{{ $item->dose }}</td> <!-- Dose -->
+                                <td>{{ $item->hora }}</td> <!-- Hora -->
+                                <td>{{ $item->valor }}</td> <!-- Valor -->
                             </tr>
                         @endforeach
                     </tbody>

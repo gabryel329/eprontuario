@@ -16,6 +16,8 @@ class MatAgenda extends Model
         'paciente_id',
         'material_id',
         'valor',
+        'unidade_medida',
+        'quantidade',
     ];
 
     // Relacionamento com o model Agenda

@@ -43,7 +43,7 @@ return new class extends Migration
             $table->string('assinatura_profissional')->nullable(); // 20 - Assinatura do Profissional Solicitante
             // Dados da Solicitação
             $table->string('carater_atendimento')->nullable(); // 21 - Caráter do Atendimento
-            $table->date('data_solicitacao')->nullable(); // 22 - Data da Solicitação
+            $table->string('data_solicitacao')->nullable(); // 22 - Data da Solicitação
             $table->string('indicacao_clinica')->nullable(); // 23 - Indicação Clínica
             $table->string('codigo_procedimento_solicitado')->nullable(); // 25 - Código do Procedimento Solicitado
             $table->text('descricao_procedimento')->nullable(); // 26 - Descrição do Procedimento
@@ -80,7 +80,7 @@ return new class extends Migration
             $table->string('codigo_cbo_profissional')->nullable(); // 55 - Código CBO Profissional
 
             // Assinaturas
-            $table->date('data_realizacao')->nullable(); // 56 - Data de Realização do Procedimento
+            $table->string('data_realizacao')->nullable(); // 56 - Data de Realização do Procedimento
             $table->string('assinatura_beneficiario')->nullable(); // 57 - Assinatura do Beneficiário ou Responsável
 
             // Observações

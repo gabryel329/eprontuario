@@ -528,8 +528,8 @@
                                     <label for="regime_atendimento" class="form-label">Regime de Atendimento</label>
                                     <select class="form-select" id="regime_atendimento" name="regime_atendimento">
                                         <option selected disabled>Escolha</option>
-                                        <option value="1">Ambulatórial</option>
-                                        <option value="2">Emergência</option>
+                                        <option value="01">Ambulatórial</option>
+                                        <option value="02">Emergência</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
@@ -590,7 +590,7 @@
                 </div>
             </div>
         </div>
-
+        {{-- MODAL SADT --}}
         <div class="modal fade" id="modalSADT" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-xl" role="document">
@@ -671,9 +671,9 @@
                                 <div class="col-md-2">
                                     <label for="atendimento_rn" class="form-label">12 - Atendimento RN</label>
                                     <select class="form-select" id="atendimento_rn" name="atendimento_rn">
-                                        <option value="0" {{ old('atendimento_rn') == '0' ? 'selected' : '' }}>Não
+                                        <option value="N" {{ old('atendimento_rn') == '1' ? 'selected' : '' }}>Não
                                         </option>
-                                        <option value="1" {{ old('atendimento_rn') == '1' ? 'selected' : '' }}>Sim
+                                        <option value="S" {{ old('atendimento_rn') == '2' ? 'selected' : '' }}>Sim
                                         </option>
                                     </select>
                                 </div>
@@ -922,9 +922,9 @@
                                     <label for="regime_atendimento" class="form-label">91 - Regime Atendimento</label>
                                     <select class="form-select" id="regime_atendimento" name="regime_atendimento">
                                         <option value="">{{ old('regime_atendimento') ? 'selected' : 'Selecione' }}
-                                        <option value="1">Hospitalar</option>
-                                        <option value="2">Hospital–dia</option>
-                                        <option value="3">Domiciliar</option>
+                                        <option value="01">Hospitalar</option>
+                                        <option value="02">Hospital–dia</option>
+                                        <option value="03">Domiciliar</option>
                                     </select>
                                 </div>
                                 <div class="col-md-2">
@@ -1376,8 +1376,8 @@
                                     <td>
                                         <select class="form-control" id="via" name="via[]">
                                             <option value="">{{ old('via') ? 'selected' : 'Selecione' }}
-                                            <option value="U">Unidade</option>
-                                            <option value="M">Múltiplo</option>
+                                            <option value="1">Unidade</option>
+                                            <option value="2">Múltiplo</option>
                                         </select>
                                     </td>
 
@@ -1447,7 +1447,7 @@
                             '');
                             $('#modalSADT #carater_atendimento').val(response.guia?.carater_atendimento ||
                             '');
-                            $('#modalSADT #data_solicitacao').val(response.guia?.data_solicitacao ||
+                            $('#modalSADT #data_solicitacao').val(response.agenda?.data ||
                             '');
                             $('#modalSADT #indicacao_clinica').val(response.guia?.indicacao_clinica ||
                             '');

@@ -8,6 +8,7 @@ use App\Models\Atendimentos;
 use App\Models\Cid;
 use App\Models\Empresas;
 use App\Models\Exames;
+use App\Models\MedAgenda;
 use App\Models\Medicamento;
 use App\Models\Pacientes;
 use App\Models\Procedimentos;
@@ -17,6 +18,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AtendimentosController extends Controller
 {
@@ -628,10 +630,13 @@ class AtendimentosController extends Controller
                 ]);
                 break;
             case 'receita':
+                // Obter medicamentos relacionados ao agenda_id
+                $remedios = MedAgenda::where('agenda_id', $agendaId)->get();
                 $redirectUrl = route('formulario.receita', [
+                    'medicamentos' => $remedios,
                     'paciente_id' => $pacienteId,
                     'agenda_id' => $agendaId,
-                    'profissional_id' => $profissionalId
+                    'profissional_id' => $profissionalId,
                 ]);
                 break;
             case 'solicitacao_exame':
