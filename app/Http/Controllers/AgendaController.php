@@ -60,131 +60,178 @@ class AgendaController extends Controller
     }
 
     public function detalhesConsulta($id)
-{
-    ini_set('memory_limit', '512M');
+    {
+        ini_set('memory_limit', '512M');
 
-    $agendas = Agenda::find($id);
+        $agendas = Agenda::find($id);
 
-    if (!$agendas) {
-        return redirect()->back()->withErrors('Agenda não encontrada');
-    }
+        if (!$agendas) {
+            return redirect()->back()->withErrors('Agenda não encontrada');
+        }
 
-    if ($agendas && $agendas->paciente && $agendas->paciente->convenio) {
-        $tabelaProcedimentos = $agendas->paciente->convenio->tab_proc_id;
+        if ($agendas && $agendas->paciente && $agendas->paciente->convenio) {
+            $tabelaProcedimentos = $agendas->paciente->convenio->tab_proc_id;
 
-        if ($tabelaProcedimentos === null) {
-            $agendas->procedimento_lista = DB::table('procedimentos')
-                ->select('id', 'procedimento', 'codigo', 'valor_proc')
-                ->get();
-        } elseif (Schema::hasTable($tabelaProcedimentos)) {
-            if (str_starts_with($tabelaProcedimentos, 'tab_amb92') || str_starts_with($tabelaProcedimentos, 'tab_amb96')) {
-                $agendas->procedimento_lista = DB::table($tabelaProcedimentos)
-                    ->select('id', 'descricao as procedimento', 'codigo', 'valor_proc')
-                    ->orderBy('id', 'asc')
+            if ($tabelaProcedimentos === null) {
+                $agendas->procedimento_lista = DB::table('procedimentos')
+                    ->select('id', 'procedimento', 'codigo', 'valor_proc')
                     ->get();
-            } elseif (str_starts_with($tabelaProcedimentos, 'tab_cbhpm')) {
-                $agendas->procedimento_lista = DB::table($tabelaProcedimentos)
-                    ->select('id', 'procedimento', 'codigo_anatomico as codigo', 'valor_proc')
-                    ->orderBy('id', 'asc')
-                    ->get();
+            } elseif (Schema::hasTable($tabelaProcedimentos)) {
+                if (str_starts_with($tabelaProcedimentos, 'tab_amb92') || str_starts_with($tabelaProcedimentos, 'tab_amb96')) {
+                    $agendas->procedimento_lista = DB::table($tabelaProcedimentos)
+                        ->select('id', 'descricao as procedimento', 'codigo', 'valor_proc')
+                        ->orderBy('id', 'asc')
+                        ->get();
+                } elseif (str_starts_with($tabelaProcedimentos, 'tab_cbhpm')) {
+                    $agendas->procedimento_lista = DB::table($tabelaProcedimentos)
+                        ->select('id', 'procedimento', 'codigo_anatomico as codigo', 'valor_proc')
+                        ->orderBy('id', 'asc')
+                        ->get();
+                } else {
+                    $agendas->procedimento_lista = collect([(object) [
+                        'id' => null,
+                        'procedimento' => 'Procedimento não encontrado',
+                        'codigo' => null,
+                        'valor_proc' => null
+                    ]]);
+                }
             } else {
                 $agendas->procedimento_lista = collect([(object) [
                     'id' => null,
-                    'procedimento' => 'Procedimento não encontrado',
+                    'procedimento' => 'Tabela de procedimentos não encontrada',
                     'codigo' => null,
                     'valor_proc' => null
                 ]]);
             }
-        } else {
-            $agendas->procedimento_lista = collect([(object) [
-                'id' => null,
-                'procedimento' => 'Tabela de procedimentos não encontrada',
-                'codigo' => null,
-                'valor_proc' => null
-            ]]);
         }
-    }
 
-    if ($agendas->paciente->convenio) {
-        $tabelaMedicamentos = $agendas->paciente->convenio->tab_med_id;
+        if ($agendas->paciente->convenio) {
+            $tabelaMedicamentos = $agendas->paciente->convenio->tab_med_id;
 
-        if ($tabelaMedicamentos && Schema::hasTable($tabelaMedicamentos)) {
-            $query = DB::table($tabelaMedicamentos)->select('id', 'medicamento', 'preco');
+            if ($tabelaMedicamentos && Schema::hasTable($tabelaMedicamentos)) {
+                $query = DB::table($tabelaMedicamentos);
 
-            if (str_starts_with($tabelaMedicamentos, 'tab_brasindice')) {
-                $query->select('id', 'medicamento', 'preco');
-            } elseif (str_starts_with($tabelaMedicamentos, 'tab_simpro')) {
-                $query->select('id', 'DESCRICAO as medicamento');
+                if (str_starts_with($tabelaMedicamentos, 'tab_brasindice')) {
+                    $query->select('id', 'medicamento', 'preco', 'GENERICO as codigo', 'APRESENTACAO as unid');
+                } elseif (str_starts_with($tabelaMedicamentos, 'tab_simpro')) {
+                    $query->select('id', 'DESCRICAO as medicamento');
+                }
+
+                $agendas->medicamentos = $query->get();
+            } else {
+                $agendas->medicamentos = collect([(object) [
+                    'id' => null,
+                    'medicamento' => 'Tabela de medicamentos não encontrada',
+                    'preco' => null
+                ]]);
             }
-
-            $agendas->medicamentos = $query->get();
         } else {
-            $agendas->medicamentos = collect([(object) [
-                'id' => null,
-                'medicamento' => 'Tabela de medicamentos não encontrada',
-                'preco' => null
-            ]]);
+            $agendas->medicamentos = DB::table('medicamentos')
+                ->select('id', 'nome as medicamento')
+                ->orderBy('id')
+                ->get();
         }
-    } else {
-        $agendas->medicamentos = DB::table('medicamentos')
-            ->select('id', 'nome as medicamento')
-            ->orderBy('id')
-            ->get();
+
+        $pacientes = Pacientes::join('agendas', 'pacientes.id', '=', 'agendas.paciente_id')
+            ->where('agendas.id', $id)
+            ->select('pacientes.*', 'agendas.data', 'agendas.hora')
+            ->first();
+
+        if ($agendas->paciente->convenio) {
+            $tabelaMaterias = $agendas->paciente->convenio->tab_mat_id;
+        
+            if ($tabelaMaterias && Schema::hasTable($tabelaMaterias)) {
+                $query = DB::table($tabelaMaterias);
+        
+                if (str_starts_with($tabelaMaterias, 'tab_brasindice')) {
+                    // Seleciona COD_ITEM como codigo
+                    $query->select('id', 'medicamento', 'preco', 'GENERICO as codigo');
+                } elseif (str_starts_with($tabelaMaterias, 'tab_simpro')) {
+                    // Adiciona codigo como NULL para tabelas sem essa coluna
+                    $query->select('id', 'DESCRICAO as medicamento', DB::raw('NULL as codigo'));
+                } else {
+                    // Adiciona codigo como NULL para tabelas genéricas
+                    $query->select('id', 'medicamento', 'preco', DB::raw('NULL as codigo'));
+                }
+        
+                $agendas->materias = $query->get();
+            } else {
+                // Caso a tabela não exista
+                $agendas->materias = collect([(object) [
+                    'id' => null,
+                    'medicamento' => 'Tabela de materias não encontrada',
+                    'preco' => null,
+                    'codigo' => null, // Garante que a propriedade codigo existe
+                ]]);
+            }
+        } else {
+            // Caso não exista um convenio
+            $agendas->materias = DB::table('medicamentos')
+                ->select('id', 'nome as medicamento', DB::raw('NULL as codigo')) // Define codigo como NULL
+                ->orderBy('id')
+                ->get();
+        }
+            
+         
+        $produto = Produtos::all();
+        return view('agenda.detalhesconsulta', compact('agendas', 'pacientes', 'produto'));
     }
-    $pacientes = Pacientes::join('agendas', 'pacientes.id', '=', 'agendas.paciente_id')
-        ->where('agendas.id', $id)
-        ->select('pacientes.*', 'agendas.data', 'agendas.hora')
-        ->first();
-
-    $produto = Produtos::all();
-
-    return view('agenda.detalhesconsulta', compact('agendas', 'pacientes', 'produto'));
-}
 
 
     public function storeMedicamento(Request $request)
-    {
-        try {
-            $validated = $request->validate([
-                'paciente_id' => 'required|exists:pacientes,id',
-                'agenda_id' => 'required|exists:agendas,id',
-                'medicamento_id.*' => 'required',
-                'dose.*' => 'required|numeric|min:1',
-                'hora.*' => 'required|numeric|min:1',
-                'valor.*' => 'nullable|numeric|min:0',
-                'unidade_medida.*' => 'required|string|in:001,002,003,004,005,006,007,008,036',
+{
+    Log::info('Dados recebidos no backend:', $request->all());
+
+    try {
+        // Validação ajustada
+        $validated = $request->validate([
+            'paciente_id' => 'required|exists:pacientes,id',
+            'agenda_id' => 'required|exists:agendas,id',
+            'medicamento_id.*' => 'required',
+            'quantidade.*' => ['required', 'regex:/^\d+$/'], // Valida como string numérica (ex: "2")
+            'codigo.*' => 'required',
+            'valor.*' => 'nullable|numeric|min:0',
+            'unidade_medida.*' => 'required',
+        ]);
+
+        foreach ($validated['medicamento_id'] as $index => $medicamento_id) {
+            $quantidade = isset($validated['quantidade'][$index]) ? (int) $validated['quantidade'][$index] : 0;
+        
+            Log::info('Processando medicamento:', [
+                'medicamento_id' => $medicamento_id,
+                'quantidade' => $quantidade,
+                'codigo' => $validated['codigo'][$index],
+                'valor' => $validated['valor'][$index],
+                'unidade_medida' => $validated['unidade_medida'][$index],
             ]);
-
-
-            foreach ($validated['medicamento_id'] as $index => $medicamento_id) {
-                MedAgenda::updateOrCreate(
-                    [
-                        'agenda_id' => $validated['agenda_id'],
-                        'paciente_id' => $validated['paciente_id'],
-                        'medicamento_id' => $medicamento_id,
-                    ],
-                    [
-                        'dose' => $validated['dose'][$index],
-                        'hora' => $validated['hora'][$index],
-                        'valor' => $validated['valor'][$index],
-                        'unidade_medida' => $validated['unidade_medida'][$index],
-                    ]
-                );
-            }
-
-            return response()->json(['message' => 'Medicamentos salvas com sucesso!']);
-        } catch (\Exception $e) {
-            Log::error($e->getMessage()); // Registra o erro no log
-            return response()->json(['error' => 'Erro ao salvar a medicamento.'], 500);
+        
+            $medAgenda = MedAgenda::firstOrNew([
+                'agenda_id' => $validated['agenda_id'],
+                'paciente_id' => $validated['paciente_id'],
+                'medicamento_id' => $medicamento_id,
+            ]);
+        
+            $medAgenda->codigo = $validated['codigo'][$index];
+            $medAgenda->quantidade = $quantidade;
+            $medAgenda->valor = $validated['valor'][$index];
+            $medAgenda->unidade_medida = $validated['unidade_medida'][$index];
+            $medAgenda->save();
         }
+        
+
+        return response()->json(['message' => 'Medicamentos salvas com sucesso!']);
+    } catch (\Exception $e) {
+        Log::error('Erro ao salvar medicamento:', ['exception' => $e->getMessage()]);
+        return response()->json(['error' => 'Erro ao salvar a medicamento.'], 500);
     }
+}
 
 
     public function verificarMedicamento($agenda_id, $paciente_id)
     {
         $remedios = MedAgenda::where('agenda_id', $agenda_id)
             ->where('paciente_id', $paciente_id)
-            ->select('medicamento_id', 'dose', 'hora', 'valor', 'unidade_medida', 'qtd_solicitada')
+            ->select('medicamento_id', 'quantidade', 'codigo', 'valor', 'unidade_medida')
             ->get();
 
         if ($remedios->isEmpty()) {
