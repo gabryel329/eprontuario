@@ -387,89 +387,135 @@ class ConvenioController extends Controller
             $convenio = Convenio::findOrFail($id);
             $tableProc = $convenio->tab_proc_id;
             $tablePorte = $convenio->tab_cota_porte;
+            $tableCh = $convenio->tab_cota_ch;
 
             // Verifica se a tabela de procedimentos existe
             if (!Schema::hasTable($tableProc)) {
                 return response()->json(['error' => 'Tabela de procedimentos não encontrada'], 404);
             }
 
-            // Obtém os procedimentos, incluindo a coluna `porcentagem`
-            $procedures = DB::table($tableProc)
-                ->select("codigo_anatomico as codigo", "procedimento", "porte", "custo_operacional", "porcentagem")
-                ->get();
-
-            // Verifica se a tabela de portes existe
-            if (!Schema::hasTable($tablePorte)) {
-                return response()->json(['error' => 'Tabela de portes não encontrada'], 404);
-            }
-
+            // Variáveis para armazenar os resultados
             $proceduresWithValues = [];
 
-            foreach ($procedures as $procedure) {
-                $porteColumn = strtolower($procedure->porte); // Converte o valor de `porte` para minúsculas
+            if (str_starts_with($tableProc, 'tab_cbhpm')) {
+                $proceduresCBHPM = DB::table($tableProc)
+                    ->select("codigo_anatomico as codigo", "procedimento", "porte", "custo_operacional", "porcentagem")
+                    ->get();
 
-                try {
-                    // Verifica se o valor de `porte` não é vazio e existe como coluna
-                    if (!empty($porteColumn) && Schema::hasColumn($tablePorte, $porteColumn)) {
-                        // Usa uma consulta SQL bruta para selecionar o porte e o valor de `uco` dinamicamente
-                        $porteValue = DB::select("SELECT p.\"$porteColumn\" as porte_valor, p.\"uco\" FROM \"$tablePorte\" p WHERE p.\"id\" = 1 LIMIT 1");
+                // Verifica se a tabela de portes existe
+                if (!Schema::hasTable($tablePorte)) {
+                    return response()->json(['error' => 'Tabela de portes não encontrada'], 404);
+                }
 
-                        // Obtém os valores da coluna `porte` e `uco` se a consulta retornar resultados
-                        $valorPorte = isset($porteValue[0]->porte_valor) ? (float) str_replace(',', '.', $porteValue[0]->porte_valor) : null;
-                        $valorUco = isset($porteValue[0]->uco) ? (float) str_replace(',', '.', $porteValue[0]->uco) : null;
-                        $custoOperacional = !empty($procedure->custo_operacional) ? (float) str_replace(',', '.', $procedure->custo_operacional) : null;
-                        $porcentagem = !empty($procedure->porcentagem) ? (float) str_replace(',', '.', $procedure->porcentagem) : null;
+                // Cálculo para proceduresCBHPM
+                foreach ($proceduresCBHPM as $procedure) {
+                    $porteColumn = strtolower($procedure->porte); // Converte o valor de `porte` para minúsculas
 
-                        // Log dos valores antes do cálculo
-                        \Log::info("Cálculo para o procedimento {$procedure->codigo}:");
-                        \Log::info("custo_operacional: {$custoOperacional}");
-                        \Log::info("valorUco: {$valorUco}");
-                        \Log::info("valorPorte: {$valorPorte}");
-                        \Log::info("porcentagem: {$porcentagem}");
+                    try {
+                        // Verifica se o valor de `porte` não é vazio e existe como coluna
+                        if (!empty($porteColumn) && Schema::hasColumn($tablePorte, $porteColumn)) {
+                            // Usa uma consulta SQL bruta para selecionar o porte e o valor de `uco` dinamicamente
+                            $porteValue = DB::select("SELECT p.\"$porteColumn\" as porte_valor, p.\"uco\" FROM \"$tablePorte\" p WHERE p.\"id\" = 1 LIMIT 1");
 
-                        // Cálculo do valor final
-                        if ($custoOperacional !== null && $valorUco !== null) {
-                            $resultadoMultiplicacao = $custoOperacional * $valorUco;
-                            if ($porcentagem !== null) {
-                                // Cálculo com porcentagem
-                                $valor = ($valorPorte * ($porcentagem / 100)) + $resultadoMultiplicacao;
-                                \Log::info("Valor calculado com porcentagem: {$valor}");
+                            // Obtém os valores da coluna `porte` e `uco` se a consulta retornar resultados
+                            $valorPorte = isset($porteValue[0]->porte_valor) ? (float) str_replace(',', '.', $porteValue[0]->porte_valor) : null;
+                            $valorUco = isset($porteValue[0]->uco) ? (float) str_replace(',', '.', $porteValue[0]->uco) : null;
+                            $custoOperacional = !empty($procedure->custo_operacional) ? (float) str_replace(',', '.', $procedure->custo_operacional) : null;
+                            $porcentagem = !empty($procedure->porcentagem) ? (float) str_replace(',', '.', $procedure->porcentagem) : null;
+
+                            // Cálculo do valor final
+                            if ($custoOperacional !== null && $valorUco !== null) {
+                                $resultadoMultiplicacao = $custoOperacional * $valorUco;
+                                if ($porcentagem !== null) {
+                                    // Cálculo com porcentagem
+                                    $valor = ($valorPorte * ($porcentagem / 100)) + $resultadoMultiplicacao;
+                                } else {
+                                    // Cálculo padrão sem porcentagem
+                                    $valor = $resultadoMultiplicacao + $valorPorte;
+                                }
                             } else {
-                                // Cálculo padrão sem porcentagem
-                                $valor = $resultadoMultiplicacao + $valorPorte;
-                                \Log::info("Valor calculado com custo_operacional e uco: {$valor}");
+                                // Se custo_operacional ou uco é inválido, usa apenas o valor do porte
+                                $valor = $valorPorte;
                             }
                         } else {
-                            // Se custo_operacional ou uco é inválido, usa apenas o valor do porte
-                            $valor = $valorPorte;
-                            \Log::info("Valor usando apenas valorPorte: {$valor}");
+                            $valor = null; // Coluna de porte não encontrada ou valor de porte é vazio
                         }
-                    } else {
-                        $valor = null; // Coluna de porte não encontrada ou valor de porte é vazio
-                        \Log::info("Coluna de porte não encontrada ou valor de porte vazio para o procedimento {$procedure->codigo}");
-                    }
 
-                    // Adiciona o procedimento e o valor calculado ao array final, com duas casas decimais
-                    $proceduresWithValues[] = [
-                        'codigo' => $procedure->codigo,
-                        'procedimento' => $procedure->procedimento,
-                        'porte' => $procedure->porte,
-                        'valor' => number_format($valor, 2, '.', '')
-                    ];
-                } catch (\Exception $e) {
-                    // Se houver um erro ao tentar buscar o valor, registre-o e continue
-                    \Log::error("Erro ao buscar valor para o porte {$procedure->porte}: " . $e->getMessage());
-                    $proceduresWithValues[] = [
-                        'codigo' => $procedure->codigo,
-                        'procedimento' => $procedure->procedimento,
-                        'porte' => $procedure->porte,
-                        'valor' => null
-                    ];
+                        // Adiciona o procedimento e o valor calculado ao array final, com duas casas decimais
+                        $proceduresWithValues[] = [
+                            'codigo' => $procedure->codigo,
+                            'procedimento' => $procedure->procedimento,
+                            'porte' => $procedure->porte,
+                            'valor' => $valor !== null ? number_format($valor, 2, '.', '') : null,
+                        ];
+                    } catch (\Exception $e) {
+                        // Log de erro para o cálculo do procedimento específico
+                        \Log::error("Erro ao calcular valor para o porte {$procedure->porte}: " . $e->getMessage());
+                        $proceduresWithValues[] = [
+                            'codigo' => $procedure->codigo,
+                            'procedimento' => $procedure->procedimento,
+                            'porte' => $procedure->porte,
+                            'valor' => null,
+                        ];
+                    }
                 }
+            } elseif (str_starts_with($tableProc, 'tab_amb92') || str_starts_with($tableProc, 'tab_amb96')) {
+                $proceduresAMB = DB::table($tableProc)
+                    ->select("codigo", "descricao as procedimento", "filme", "ch")
+                    ->get();
+    
+                // Verifica se a tabela de CH existe
+                if (!Schema::hasTable($tableCh)) {
+                    return response()->json(['error' => 'Tabela de CH não encontrada'], 404);
+                }
+    
+                // Cálculo para proceduresAMB
+                foreach ($proceduresAMB as $procedure) {
+                    $valor = null; // Valor calculado do procedimento
+    
+                    try {
+                        // Obtém o valor da coluna `ch` e `fr` da tabela tableCh
+                        $chValue = DB::table($tableCh)->select("ch", "fr")->where('id', 1)->first();
+    
+                        if ($chValue) {
+                            $valorChTableProc = (float) str_replace(',', '.', $procedure->ch);
+                            $valorChTableCh = (float) str_replace(',', '.', $chValue->ch);
+    
+                            // Cálculo base: ch (tableProc) * ch (tableCh)
+                            $resultadoCh = $valorChTableProc * $valorChTableCh;
+    
+                            if (!empty($procedure->filme)) {
+                                $valorFilme = (float) str_replace(',', '.', $procedure->filme);
+                                $valorFr = (float) str_replace(',', '.', $chValue->fr);
+    
+                                // Cálculo com `filme`: fr (tableCh) * filme (tableProc) + resultadoCh
+                                $valor = ($valorFr * $valorFilme) + $resultadoCh;
+                            } else {
+                                // Cálculo sem `filme`: apenas o resultado de `ch * ch`
+                                $valor = $resultadoCh;
+                            }
+                        }
+    
+                        // Adiciona o resultado ao array final
+                        $proceduresWithValues[] = [
+                            'codigo' => $procedure->codigo,
+                            'procedimento' => $procedure->procedimento,
+                            'valor' => $valor !== null ? number_format($valor, 2, '.', '') : null,
+                        ];
+                    } catch (\Exception $e) {
+                        \Log::error("Erro ao calcular valor para o procedimento {$procedure->codigo}: " . $e->getMessage());
+                        $proceduresWithValues[] = [
+                            'codigo' => $procedure->codigo,
+                            'procedimento' => $procedure->procedimento,
+                            'valor' => null,
+                        ];
+                    }
+                }
+            } else {
+                return response()->json(['error' => 'Tipo de tabela de procedimentos não suportado'], 400);
             }
 
             return response()->json($proceduresWithValues);
-
         } catch (\Exception $e) {
             // Log geral para identificar o erro
             \Log::error("Erro ao obter procedimentos: " . $e->getMessage());
@@ -477,22 +523,26 @@ class ConvenioController extends Controller
         }
     }
 
+
     public function updateProceduresValues($id)
-    {
-        try {
-            $convenio = Convenio::findOrFail($id);
-            $tableProc = $convenio->tab_proc_id;
-            $tablePorte = $convenio->tab_cota_porte;
+{
+    try {
+        $convenio = Convenio::findOrFail($id);
+        $tableProc = $convenio->tab_proc_id;
+        $tablePorte = $convenio->tab_cota_porte;
+        $tableCh = $convenio->tab_cota_ch;
 
-            if (!Schema::hasTable($tableProc) || !Schema::hasTable($tablePorte)) {
-                return response()->json(['error' => 'Tabela de procedimentos ou portes não encontrada'], 404);
-            }
+        // Verifica se a tabela de procedimentos existe
+        if (!Schema::hasTable($tableProc)) {
+            return response()->json(['error' => 'Tabela de procedimentos não encontrada'], 404);
+        }
 
-            $procedures = DB::table($tableProc)
+        if (str_starts_with($tableProc, 'tab_cbhpm')) {
+            $proceduresCBHPM = DB::table($tableProc)
                 ->select("id", "codigo_anatomico as codigo", "procedimento", "porte", "custo_operacional", "porcentagem")
                 ->get();
 
-            foreach ($procedures as $procedure) {
+            foreach ($proceduresCBHPM as $procedure) {
                 $porteColumn = strtolower($procedure->porte);
 
                 if (!empty($porteColumn) && Schema::hasColumn($tablePorte, $porteColumn)) {
@@ -520,13 +570,61 @@ class ConvenioController extends Controller
                         ->update(['valor_proc' => number_format($valor, 2, '.', '')]);
                 }
             }
+        } elseif (str_starts_with($tableProc, 'tab_amb92') || str_starts_with($tableProc, 'tab_amb96')) {
+            $proceduresAMB = DB::table($tableProc)
+                ->select("id", "codigo", "descricao as procedimento", "filme", "ch")
+                ->get();
 
-            return response()->json(['success' => 'Valores dos procedimentos atualizados com sucesso.']);
-        } catch (\Exception $e) {
-            \Log::error("Erro ao atualizar valores dos procedimentos: " . $e->getMessage());
-            return response()->json(['error' => 'Erro ao processar a atualização dos valores'], 500);
+            // Verifica se a tabela de CH existe
+            if (!Schema::hasTable($tableCh)) {
+                return response()->json(['error' => 'Tabela de CH não encontrada'], 404);
+            }
+
+            // Cálculo para proceduresAMB
+            foreach ($proceduresAMB as $procedure) {
+                $valor = null; // Valor calculado do procedimento
+
+                try {
+                    // Obtém o valor da coluna `ch` e `fr` da tabela tableCh
+                    $chValue = DB::table($tableCh)->select("ch", "fr")->where('id', 1)->first();
+
+                    if ($chValue) {
+                        $valorChTableProc = (float) str_replace(',', '.', $procedure->ch);
+                        $valorChTableCh = (float) str_replace(',', '.', $chValue->ch);
+
+                        // Cálculo base: ch (tableProc) * ch (tableCh)
+                        $resultadoCh = $valorChTableProc * $valorChTableCh;
+
+                        if (!empty($procedure->filme)) {
+                            $valorFilme = (float) str_replace(',', '.', $procedure->filme);
+                            $valorFr = (float) str_replace(',', '.', $chValue->fr);
+
+                            // Cálculo com `filme`: fr (tableCh) * filme (tableProc) + resultadoCh
+                            $valor = ($valorFr * $valorFilme) + $resultadoCh;
+                        } else {
+                            // Cálculo sem `filme`: apenas o resultado de `ch * ch`
+                            $valor = $resultadoCh;
+                        }
+
+                        // Atualiza a coluna valor_proc na tabela
+                        DB::table($tableProc)
+                            ->where('id', $procedure->id)
+                            ->update(['valor_proc' => number_format($valor, 2, '.', '')]);
+                    }
+                } catch (\Exception $e) {
+                    \Log::error("Erro ao calcular valor para o procedimento {$procedure->codigo}: " . $e->getMessage());
+                }
+            }
+        } else {
+            return response()->json(['error' => 'Tipo de tabela de procedimentos não suportado'], 400);
         }
+
+        return response()->json(['success' => 'Valores dos procedimentos atualizados com sucesso.']);
+    } catch (\Exception $e) {
+        \Log::error("Erro ao atualizar valores dos procedimentos: " . $e->getMessage());
+        return response()->json(['error' => 'Erro ao processar a atualização dos valores'], 500);
     }
+}
 
 
 }

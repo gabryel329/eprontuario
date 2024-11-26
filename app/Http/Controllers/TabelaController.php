@@ -256,6 +256,7 @@ class TabelaController extends Controller
                     $table->string('auxiliar', 500)->nullable();
                     $table->string('teste9', 500)->nullable();
                     $table->string('porte', 500)->nullable();
+                    $table->string('valor_proc', 500)->nullable();
                     break;
                 case 'cbhpm':
                     $table->string('id_grupo', 500)->nullable();
@@ -335,6 +336,7 @@ class TabelaController extends Controller
                     'ch' => $row[14] ?? null,
                     'auxiliar' => $row[15] ?? null,
                     'porte' => $row[17] ?? null,
+                    'valor_proc' => $row[18] ?? null,
                 ];
             case 'cbhpm':
                 return [
