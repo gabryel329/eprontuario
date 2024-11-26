@@ -313,6 +313,8 @@ Route::middleware(['check.session.expired'])->group(function () {
 
     Route::post('/porte/salvar', [TabelaController::class, 'porteSalvar'])->name('porte.salvar');
     Route::delete('/porte/{nome}', [TabelaController::class, 'porteExcluir'])->name('porte.excluir');
+    Route::post('/ch/salvar', [TabelaController::class, 'chSalvar'])->name('ch.salvar');
+    Route::delete('/ch/{nome}', [TabelaController::class, 'chExcluir'])->name('ch.excluir');
 
     Route::middleware(['auth', 'check.question'])->group(function () {
         Route::post('/salvar-sala', [UserController::class, 'salvarSala']);

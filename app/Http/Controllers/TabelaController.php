@@ -37,6 +37,15 @@ class TabelaController extends Controller
             );
         ");
 
+        $ch = DB::select("
+            SELECT table_name 
+            FROM information_schema.tables 
+            WHERE table_schema = 'public' 
+            AND (
+                table_name LIKE 'ch_%'
+            );
+        ");
+
         // Extrair apenas os nomes das tabelas
         $tabelas = array_map(function ($table) {
             return $table->table_name;
@@ -46,7 +55,11 @@ class TabelaController extends Controller
             return $table->table_name;
         }, $portes);
 
-        return view('cadastros.imp_tabela', compact(['tabelas', 'portes']));
+        $ch = array_map(function ($table) {
+            return $table->table_name;
+        }, $ch);
+
+        return view('cadastros.imp_tabela', compact(['tabelas', 'portes', 'ch']));
     }
 
     public function porteExcluir($nome)
@@ -55,6 +68,14 @@ class TabelaController extends Controller
         DB::statement("DROP TABLE IF EXISTS {$nome}");
 
         return redirect()->route('imp_tabela.index')->with('success', "Porte {$nome} excluído com sucesso!");
+    }
+
+    public function chExcluir($nome)
+    {
+        // Excluir a tabela específica
+        DB::statement("DROP TABLE IF EXISTS {$nome}");
+
+        return redirect()->route('imp_tabela.index')->with('success', "CH {$nome} excluído com sucesso!");
     }
 
     public function excluirTabela($nome)
@@ -70,6 +91,36 @@ class TabelaController extends Controller
         // Obter a descrição e formatar para o nome da tabela
         $descricao = $request->input('descricao');
         $tableName = 'porte_' . strtolower(str_replace(' ', '_', $descricao)); // Adicionar prefixo "porte_"
+
+        // Coletar todos os dados do formulário, exceto o campo 'descricao' e '_token'
+        $data = $request->except(['descricao', '_token']);
+
+        // Verificar se a tabela existe; caso contrário, criar a tabela
+        if (!Schema::hasTable($tableName)) {
+            Schema::create($tableName, function (Blueprint $table) use ($data) {
+                $table->id();
+                foreach ($data as $column => $value) {
+                    $table->string($column)->nullable();
+                }
+                $table->timestamps();
+            });
+        }
+
+        // Inserir os dados na tabela
+        try {
+            DB::table($tableName)->insert($data);
+            return redirect()->back()->with('success', 'Dados inseridos com sucesso!');
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            return redirect()->back()->with('error', 'Erro ao inserir dados.');
+        }
+    }
+
+    public function chSalvar(Request $request)
+    {
+        // Obter a descrição e formatar para o nome da tabela
+        $descricao = $request->input('descricao');
+        $tableName = 'ch_' . strtolower(str_replace(' ', '_', $descricao)); // Adicionar prefixo "porte_"
 
         // Coletar todos os dados do formulário, exceto o campo 'descricao' e '_token'
         $data = $request->except(['descricao', '_token']);

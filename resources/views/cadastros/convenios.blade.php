@@ -205,7 +205,12 @@
 
                                             <div class="mb-3 col-md-2" id="ch-container" style="display: none;">
                                                 <label class="form-label">CH <span style="color: red">*</span></label>
-                                                <input type="text" class="form-control" id="tab_cota_ch" name="tab_cota_ch" title="Selecione caso esteja usando a tabela AMB">
+                                                <select class="form-control" id="tab_cota_ch" name="tab_cota_ch" title="Selecione caso esteja usando a tabela AMB">
+                                                    <option value="">Selecione uma Cotação</option>
+                                                    @foreach ($ch as $ch)
+                                                        <option value="{{ $ch->table_name }}">{{ $ch->table_name }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
 
                                             <div class="mb-3 col-md-2">

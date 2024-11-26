@@ -38,6 +38,7 @@
                 <ul class="nav nav-tabs user-tabs">
                     <li class="nav-item"><a class="nav-link active" href="#vinculo" data-bs-toggle="tab">Tabelas</a></li>
                     <li class="nav-item"><a class="nav-link" href="#tabelas" data-bs-toggle="tab">Portes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#ch" data-bs-toggle="tab">CH</a></li>
                 </ul>
             </div>
             <div class="tab-content">
@@ -458,6 +459,71 @@
                                                     <td>
                                                         <form action="{{ route('porte.excluir', $porte) }}" method="POST"
                                                             onsubmit="return confirm('Tem certeza que deseja excluir esta porte?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="btn btn-danger btn-sm">Excluir</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile tab-pane" id="ch">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="tile">
+                                <h3 class="tile-title">Tabela de Honorário Médico</h3>
+                                <div class="form-group">
+                                    <form id="ch-form" action="{{ route('ch.salvar') }}" method="POST"
+                                        enctype="multipart/form-data">
+                                        @csrf <!-- Token CSRF para segurança -->
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label for="descricao">Descrição da tabela</label>
+                                                <input type="text" name="descricao" id="descricao"
+                                                    placeholder="EX:(AMB (2016_2017))" class="form-control"
+                                                    required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="ch">CH</label>
+                                                <input type="text" name="ch" id="ch"
+                                                    class="form-control moeda" required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="fr">F.R</label>
+                                                <input type="text" name="fr" id="fr"
+                                                    class="form-control moeda" required>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mt-3">Salvar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="tile">
+                                <h3 class="tile-title">Lista de CH</h3>
+                                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>CH</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($ch as $ch)
+                                                <tr>
+                                                    <td>{{ $ch }}</td>
+                                                    <td>
+                                                        <form action="{{ route('ch.excluir', $ch) }}" method="POST"
+                                                            onsubmit="return confirm('Tem certeza que deseja excluir esta CH?');">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit"

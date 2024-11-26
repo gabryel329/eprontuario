@@ -199,7 +199,7 @@
                                     <h3 class="tile-title">Tabelas</h3>
                                     <div class="tile-body">
                                         <div class="row">
-                                            <div class="mb-3 col-md-4">
+                                            <div class="mb-3 col-md-2">
                                                 <label class="form-label">Procedimentos</label>
                                                 <select class="form-control" id="tab_proc_id" name="tab_proc_id">
                                                     <option value="">{{ old('tab_proc_id', $convenios->tab_proc_id ?? '') }}</option>
@@ -221,7 +221,12 @@
 
                                             <div class="mb-3 col-md-2" id="ch-container">
                                                 <label class="form-label">CH <span style="color: red">*</span></label>
-                                                <input type="text" value="{{ old('tab_cota_ch', $convenios->tab_cota_ch ?? '') }}" class="form-control" id="tab_cota_ch" name="tab_cota_ch" title="Selecione caso esteja usando a tabela AMB">
+                                                <select class="form-control" id="tab_cota_ch" name="tab_cota_ch" title="Selecione caso esteja usando a tabela AMB">
+                                                    <option value="">{{ old('tab_cota_ch', $convenios->tab_cota_ch ?? '') }}</option>
+                                                    @foreach ($ch as $ch)
+                                                        <option value="{{ $ch->table_name }}">{{ $ch->table_name }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
 
                                             <div class="mb-3 col-md-2">
@@ -259,7 +264,7 @@
                                 <div class="row">
                                     <div class="col-md-12 d-flex justify-content-end">
                                         <button class="btn btn-primary" type="submit">
-                                            <i class="bi bi-check-circle-fill me-2"></i> Salva
+                                            <i class="bi bi-check-circle-fill me-2"></i> Salvar
                                         </button>
                                     </div>
                                 </div>

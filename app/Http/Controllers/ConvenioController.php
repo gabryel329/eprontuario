@@ -57,7 +57,16 @@ class ConvenioController extends Controller
             );
         ");
 
-        return view('cadastros.convenios', compact(['convenios', 'portes', 'medicamentos', 'materiais', 'procedimentos']));
+        $ch = DB::select("
+            SELECT table_name 
+            FROM information_schema.tables 
+            WHERE table_schema = 'public' 
+            AND (
+                table_name LIKE 'ch_%'
+            );
+        ");
+
+        return view('cadastros.convenios', compact(['convenios', 'portes', 'medicamentos', 'materiais', 'procedimentos', 'ch']));
     }
 
     public function index1()
@@ -177,7 +186,16 @@ class ConvenioController extends Controller
                 table_name LIKE 'porte_%'
             );
         ");
-        return view('cadastros.editconvenios', compact(['convenios', 'procedimentos', 'materiais', 'medicamentos', 'portes']));
+
+        $ch = DB::select("
+            SELECT table_name 
+            FROM information_schema.tables 
+            WHERE table_schema = 'public' 
+            AND (
+                table_name LIKE 'ch_%'
+            );
+        ");
+        return view('cadastros.editconvenios', compact(['convenios', 'procedimentos', 'materiais', 'medicamentos', 'portes', 'ch']));
     }
 
     /**
