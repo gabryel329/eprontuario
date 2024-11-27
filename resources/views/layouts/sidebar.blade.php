@@ -113,7 +113,7 @@
         @endif
 
         @if (Auth::user()->permissoes->pluck('id')->intersect([3])->isNotEmpty())
-            <li class="treeview {{ request()->is('permisoes*', 'especialidades*', 'usuarios*','listausuarios', 'profissional*','listaprofissional', 'tipoprof*', 'convenio*') ? 'is-expanded' : '' }}">
+            <li class="treeview {{ request()->is('permisoes*', 'especialidades*', 'usuarios*','listausuarios*', 'profissional*','listaprofissional*', 'tipoprof*', 'convenio*', 'taxa*') ? 'is-expanded' : '' }}">
                 <a class="app-menu__item" href="#" data-toggle="treeview">
                     <i class="app-menu__icon bi bi bi-gear"></i>
                     <span class="app-menu__label">Cadastros</span>
@@ -148,6 +148,11 @@
                     <li>
                         <a class="treeview-item {{ request()->is('convenio*') ? 'active' : '' }}" href="{{ route('convenio.index') }}">
                             <i class="icon bi bi-building-fill-add"></i> Convenios
+                        </a>
+                    </li>
+                    <li>
+                        <a class="treeview-item {{ request()->is('taxa*') ? 'active' : '' }}" href="{{ route('taxa.index') }}">
+                            <i class="icon bi bi-building-fill-add"></i> Taxa
                         </a>
                     </li>
                 </ul>

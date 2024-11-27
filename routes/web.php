@@ -19,6 +19,7 @@ use App\Http\Controllers\ProdutosController;
 use App\Http\Controllers\ProfissionalController;
 use App\Http\Controllers\TabConvenioController;
 use App\Http\Controllers\TabelaController;
+use App\Http\Controllers\TaxaController;
 use App\Http\Controllers\TipoProfController;
 use App\Http\Controllers\UserController;
 use App\Models\GuiaSp;
@@ -54,7 +55,7 @@ Auth::routes();
 // Rota para a Página de Erro 419
 Route::view('/error/419', 'errors.419')->name('error.419');
 #GenerateIA
-Route::POST('/generate-ia',  [GenerateIAController::class, 'index'])->name('generateIA.index');
+Route::POST('/generate-ia', [GenerateIAController::class, 'index'])->name('generateIA.index');
 // Rotas Protegidas pelo Middleware 'check.session.expired'
 Route::middleware(['check.session.expired'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -315,6 +316,11 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::delete('/porte/{nome}', [TabelaController::class, 'porteExcluir'])->name('porte.excluir');
     Route::post('/ch/salvar', [TabelaController::class, 'chSalvar'])->name('ch.salvar');
     Route::delete('/ch/{nome}', [TabelaController::class, 'chExcluir'])->name('ch.excluir');
+
+    Route::get('taxa', [TaxaController::class, 'index'])->name('taxa.index'); // Listar taxas
+    Route::post('taxa', [TaxaController::class, 'store'])->name('taxa.store'); // Salvar nova taxa
+    Route::put('taxa/{id}', [TaxaController::class, 'update'])->name('taxa.update'); // Atualizar taxa
+    Route::delete('taxa/{id}', [TaxaController::class, 'destroy'])->name('taxa.destroy'); // Excluir taxa
 
     Route::middleware(['auth', 'check.question'])->group(function () {
         Route::post('/salvar-sala', [UserController::class, 'salvarSala']);

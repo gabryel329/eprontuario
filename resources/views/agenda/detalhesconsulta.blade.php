@@ -354,8 +354,11 @@
                                             <table class="table">
                                                 <thead>
                                                     <tr>
-                                                        <th>Material</th>
-                                                        <th>Ações</th>
+                                                        <th class="col-7">Material</th>
+                                                        <th class="col-2 text-center">Código</th>
+                                                        <th class="col-1 text-center">Qtd</th>
+                                                        <th class="col-1 text-center">Unidade Medida</th>
+                                                        <th class="col-2 text-center">Ações</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="material-table-body">
@@ -363,25 +366,31 @@
                                                 </tbody>
                                                 <tbody id="material-table-body">
                                                     <tr class="material-row">
-                                                        <td>
+                                                        <td class="col-7">
                                                             <select class="form-control material_id"
-                                                                name="material_id[]">
-                                                                <option value="" data-valor="">Selecione o
-                                                                    remédio</option>
-                                                                @if ($agendas->materias && $agendas->materias->isNotEmpty())
-                                                                    @foreach ($agendas->materias as $material)
-                                                                        <option value="{{ $material->id }}"
-                                                                            data-valor="{{ $material->preco }}">
-                                                                            {{ $material->medicamento }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                @else
-                                                                    <option value="">Nenhum material encontrado
+                                                                name="material_id[]" onchange="updateValorCod(this)">
+                                                                <option value="" data-valor="" data-codigo="">
+                                                                    Selecione o Material</option>
+                                                                @foreach ($agendas->materias as $material)
+                                                                    <option value="{{ $material->id }}"
+                                                                        data-valor="{{ $material->preco }}"
+                                                                        data-codigo="{{ $material->codigo }}">
+                                                                        {{ $material->medicamento }}-{{ $material->unid }}
                                                                     </option>
-                                                                @endif
+                                                                @endforeach
                                                             </select>
                                                         </td>
-                                                        <td>
+                                                        <td class="col-1 text-center">
+                                                            <input type="text" class="form-control codigo"
+                                                                name="codigo[]" readonly>
+                                                        </td>
+                                                        <td class="col-1 text-center">
+                                                            <input type="number" class="form-control quantidade"
+                                                                name="quantidade[]" placeholder="Qtd">
+                                                            <input type="hidden" class="form-control valor"
+                                                                name="valor[]" readonly>
+                                                        </td>
+                                                        <td class="col-1 text-center">
                                                             <select class="form-control unidade_medida"
                                                                 name="unidade_medida[]">
                                                                 <option value="001">Unidade</option>
@@ -395,11 +404,7 @@
                                                                 <option value="036">Outros</option>
                                                             </select>
                                                         </td>
-                                                        <td>
-                                                            <input type="number" class="form-control quantidade"
-                                                                name="quantidade[]" placeholder="Quantidade">
-                                                        </td>
-                                                        <td class="actions">
+                                                        <td class="actions col-2 text-center">
                                                             <button type="button"
                                                                 class="btn btn-success plus1-row">+</button>
                                                             <button type="button"
@@ -441,23 +446,23 @@
                                                 </tbody>
                                                 <tbody id="taxa-table-body">
                                                     <tr class="taxa-row">
-                                                        <td class="col-md-10">
-                                                            <select class="form-control taxa_id" name="taxa_id[]"
-                                                                id="taxa_id">
-                                                                <option value="">Selecione o Taxa</option>
-                                                                @foreach ($produto as $item)
-                                                                    <option value="{{ $item->id }}">
-                                                                        {{ $item->nome }}</option>
+                                                        <td>
+                                                            <select class="form-control taxa_id select2" name="taxa_id[]" onchange="updateCodValor(this)">
+                                                                <option value="">Selecione a Taxa</option>
+                                                                @foreach ($taxas as $item)
+                                                                    <option value="{{ $item->id }}" data-valor="{{ $item->valor }}">
+                                                                        {{ $item->descricao }}
+                                                                    </option>
                                                                 @endforeach
                                                             </select>
+                                                            <input type="hidden" class="form-control valor" name="valor[]" readonly>
                                                         </td>
                                                         <td class="actions">
-                                                            <button type="button"
-                                                                class="btn btn-success plus2-row">+</button>
-                                                            <button type="button"
-                                                                class="btn btn-danger delete2-row">-</button>
+                                                            <button type="button" class="btn btn-success plus2-row">+</button>
+                                                            <button type="button" class="btn btn-danger delete2-row">-</button>
                                                         </td>
                                                     </tr>
+                                                    
                                                 </tbody>
                                             </table>
                                         </div>
@@ -511,6 +516,75 @@
                 valorInput.value = parseFloat(valor).toFixed(2); // Preenche o campo 'valor' formatado
             }
         }
+
+        function updateValorCod(selectElement) {
+            // Encontra a linha mais próxima da seleção
+            const row = selectElement.closest('.material-row');
+
+            // Encontra os inputs de 'codigo' e 'valor' na mesma linha
+            const codigoInput = row.querySelector('input[name="codigo[]"]');
+            const valorInput = row.querySelector('input[name="valor[]"]');
+
+            // Obtém a opção selecionada no select
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+
+            // Obtém os atributos 'data-codigo' e 'data-valor' da opção
+            const codigo = selectedOption.getAttribute('data-codigo') || "0";
+            const valor = selectedOption.getAttribute('data-valor') || "0";
+
+            // Preenche os inputs com os valores correspondentes
+            if (codigoInput) {
+                codigoInput.value = codigo; // Preenche o campo 'codigo'
+            }
+
+            if (valorInput) {
+                valorInput.value = parseFloat(valor).toFixed(2); // Preenche o campo 'valor' formatado
+            }
+        }
+
+        function updateCodValor(selectElement) {
+    // Encontra a linha mais próxima da seleção
+    const row = selectElement.closest('.taxa-row');
+
+    // Encontra o input 'valor' na mesma linha
+    const valorInput = row.querySelector('input[name="valor[]"]');
+
+    // Obtém a opção selecionada no select
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
+
+    // Obtém o atributo 'data-valor' da opção
+    const valor = selectedOption.getAttribute('data-valor') || "0";
+
+    // Atualiza o campo 'valor' com o formato adequado
+    if (valorInput) {
+        valorInput.value = parseFloat(valor).toFixed(2); // Formata para 2 casas decimais
+    }
+}
+
+function applySelect5(element) {
+    element.select2({
+        placeholder: "Selecione a Taxa",
+        allowClear: false,
+        closeOnSelect: true,
+        width: '100%'
+    }).on('select2:select', function() {
+        updateCodValor(this); // Chama a função ao selecionar uma opção
+    });
+}
+
+
+
+        function applySelect4(element) {
+            element.select2({
+                placeholder: "Selecione o Material",
+                allowClear: false,
+                closeOnSelect: true,
+                width: '100%'
+            }).on('select2:select', function(e) {
+                updateValorCod(this); // Atualiza os campos ao selecionar uma opção
+            });
+        }
+
 
 
         function applySelect2(element) {
@@ -633,65 +707,65 @@
                 $(this).closest('.prescricao-row').remove();
             });
 
-           // Salvar medicamentos via AJAX
-// Salvar medicamentos via AJAX
-$('#saveRemedioButton').on('click', function(event) {
-    event.preventDefault();
+            // Salvar medicamentos via AJAX
+            // Salvar medicamentos via AJAX
+            $('#saveRemedioButton').on('click', function(event) {
+                event.preventDefault();
 
-    let isValid = true;
+                let isValid = true;
 
-    $('#prescricao-table-body_new .prescricao-row').each(function() {
-        const selectMedicamento = $(this).find('select[name="medicamento_id[]"]');
-        const inputCodigo = $(this).find('input[name="codigo[]"]');
-        const inputQuantidade = $(this).find('input[name="quantidade[]"]');
+                $('#prescricao-table-body_new .prescricao-row').each(function() {
+                    const selectMedicamento = $(this).find('select[name="medicamento_id[]"]');
+                    const inputCodigo = $(this).find('input[name="codigo[]"]');
+                    const inputQuantidade = $(this).find('input[name="quantidade[]"]');
 
-        if (!selectMedicamento.val()) {
-            alert('Selecione um medicamento.');
-            isValid = false;
-            return false; // Sai do loop
-        }
+                    if (!selectMedicamento.val()) {
+                        alert('Selecione um medicamento.');
+                        isValid = false;
+                        return false; // Sai do loop
+                    }
 
-        if (!inputCodigo.val()) {
-            alert('O código do medicamento é obrigatório.');
-            isValid = false;
-            return false; // Sai do loop
-        }
+                    if (!inputCodigo.val()) {
+                        alert('O código do medicamento é obrigatório.');
+                        isValid = false;
+                        return false; // Sai do loop
+                    }
 
-        if (!inputQuantidade.val() || inputQuantidade.val() <= 0) {
-            alert('A quantidade deve ser maior que zero.');
-            isValid = false;
-            return false; // Sai do loop
-        }
-    });
+                    if (!inputQuantidade.val() || inputQuantidade.val() <= 0) {
+                        alert('A quantidade deve ser maior que zero.');
+                        isValid = false;
+                        return false; // Sai do loop
+                    }
+                });
 
-    if (isValid) {
-        // Captura os dados enviados
-        const formData = $('#remedioForm').serialize();
-        
-        // Decodifica os dados para visualização como objeto
-        const decodedData = Object.fromEntries(new URLSearchParams(formData));
-        console.log('Dados enviados para o servidor (como objeto):', decodedData);
+                if (isValid) {
+                    // Captura os dados enviados
+                    const formData = $('#remedioForm').serialize();
 
-        $.ajax({
-            url: '/medicamento/store',
-            type: 'POST',
-            data: formData,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function() {
-                alert('Prescrição de remédios cadastrada/atualizada com sucesso');
-            },
-            error: function(xhr) {
-                if (xhr.responseJSON && xhr.responseJSON.error) {
-                    alert(xhr.responseJSON.error);
-                } else {
-                    alert('Ocorreu um erro. Tente novamente.');
+                    // Decodifica os dados para visualização como objeto
+                    const decodedData = Object.fromEntries(new URLSearchParams(formData));
+                    console.log('Dados enviados para o servidor (como objeto):', decodedData);
+
+                    $.ajax({
+                        url: '/medicamento/store',
+                        type: 'POST',
+                        data: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function() {
+                            alert('Prescrição de remédios cadastrada/atualizada com sucesso');
+                        },
+                        error: function(xhr) {
+                            if (xhr.responseJSON && xhr.responseJSON.error) {
+                                alert(xhr.responseJSON.error);
+                            } else {
+                                alert('Ocorreu um erro. Tente novamente.');
+                            }
+                        }
+                    });
                 }
-            }
-        });
-    }
-});
+            });
 
 
 
@@ -814,25 +888,32 @@ $('#saveRemedioButton').on('click', function(event) {
         $(document).ready(function() {
             var agenda_id = "{{ $agendas->id }}";
             var paciente_id = "{{ $pacientes->id }}";
+            applySelect4($('select.select2'));
 
             function addMaterialRow() {
-                var newRow = `
+                const newRow = `
                 <tr class="material-row">
-                    <td>
-                        <select class="form-control material_id" name="material_id[]">
-                                                                <option value="" data-valor="">Selecione o remédio</option>
-                                                                @if ($agendas->materias && $agendas->materias->isNotEmpty())
-                                                                    @foreach ($agendas->materias as $material)
-                                                                        <option value="{{ $material->id }}" data-valor="{{ $material->preco }}">
-                                                                            {{ $material->medicamento }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                @else
-                                                                    <option value="">Nenhum material encontrado</option>
-                                                                @endif
-                                                            </select>
+                    <td class="col-7">
+                        <select class="select2 form-control material_id"
+                            name="material_id[]" onchange="updateValorCod(this)">
+                            <option value="" data-valor="" data-codigo="">Selecione o Material</option>
+                            @foreach ($agendas->materias as $material)
+                                <option value="{{ $material->id }}"
+                                    data-valor="{{ $material->preco }}"
+                                    data-codigo="{{ $material->codigo }}">
+                                    {{ $material->medicamento }}-{{ $material->unid }}
+                                </option>
+                            @endforeach
+                        </select>
                     </td>
-                    <td>
+                    <td class="col-1 text-center">
+                        <input type="text" class="form-control codigo" name="codigo[]" readonly>
+                    </td>
+                    <td class="col-1 text-center">
+                        <input type="number" class="form-control quantidade" name="quantidade[]" placeholder="Qtd">
+                        <input type="hidden" class="form-control valor" name="valor[]" readonly>
+                    </td>
+                    <td class="col-1 text-center">
                         <select class="form-control unidade_medida" name="unidade_medida[]">
                             <option value="001">Unidade</option>
                             <option value="002">Caixa</option>
@@ -845,36 +926,37 @@ $('#saveRemedioButton').on('click', function(event) {
                             <option value="036">Outros</option>
                         </select>
                     </td>
-                    <td>
-                        <input type="number" class="form-control quantidade" name="quantidade[]" placeholder="Quantidade">
-                    </td>
-                    <td class="actions">
+                    <td class="actions col-2 text-center">
                         <button type="button" class="btn btn-success plus1-row">+</button>
                         <button type="button" class="btn btn-danger delete1-row">-</button>
                     </td>
                 </tr>`;
                 $('#material-table-body').append(newRow);
-                applySelect2($('#material-table-body select:last'));
+                applySelect4($('#material-table-body select.select2:last'));
             }
+
 
             function addTaxaRow() {
                 var newRow = `
-            <tr class="taxa-row">
-                <td>
-                    <select class="form-control taxa_id" name="taxa_id[]">
-                        <option value="">Selecione a Taxa</option>
-                        @foreach ($produto as $item)
-                            <option value="{{ $item->id }}">{{ $item->nome }}</option>
-                        @endforeach
-                    </select>
-                </td>
-                <td class="actions">
-                    <button type="button" class="btn btn-success plus2-row">+</button>
-                    <button type="button" class="btn btn-danger delete2-row">-</button>
-                </td>
-            </tr>`;
-                $('#taxa-table-body').append(newRow);
-                applySelect2($('#taxa-table-body select:last'));
+                <tr class="taxa-row">
+                                                        <td>
+                                                            <select class="form-control taxa_id select2" name="taxa_id[]" onchange="updateCodValor(this)">
+                                                                <option value="">Selecione a Taxa</option>
+                                                                @foreach ($taxas as $item)
+                                                                    <option value="{{ $item->id }}" data-valor="{{ $item->valor }}">
+                                                                        {{ $item->descricao }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                            <input type="hidden" class="form-control valor" name="valor[]" readonly>
+                                                        </td>
+                                                        <td class="actions">
+                                                            <button type="button" class="btn btn-success plus2-row">+</button>
+                                                            <button type="button" class="btn btn-danger delete2-row">-</button>
+                                                        </td>
+                                                    </tr>`;
+                    $('#taxa-table-body').append(newRow);
+                    applySelect5($('#taxa-table-body select.select2:last'));
             }
 
             // Eventos para adicionar e remover linhas

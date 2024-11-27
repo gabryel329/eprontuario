@@ -1031,5 +1031,43 @@ class DatabaseSeeder extends Seeder
         ];
 
         DB::table('tabelas')->insert($dados);
+
+        $taxas = [
+            ['descricao' => 'Manutenção de equipamentos médicos', 'valor' => '150.00'],
+            ['descricao' => 'Esterilização de materiais', 'valor' => '50.00'],
+            ['descricao' => 'Manutenção de infraestrutura', 'valor' => '100.00'],
+            ['descricao' => 'Agendamento prioritário', 'valor' => '30.00'],
+            ['descricao' => 'Reagendamento fora do prazo', 'valor' => '20.00'],
+            ['descricao' => 'Consulta administrativa (documentos ou atestados)', 'valor' => '50.00'],
+            ['descricao' => 'Cancelamento tardio (menos de 24h)', 'valor' => '40.00'],
+            ['descricao' => 'Materiais descartáveis', 'valor' => '25.00'],
+            ['descricao' => 'Sedação/anestesia', 'valor' => '200.00'],
+            ['descricao' => 'Uso de sala de procedimentos (prolongado)', 'valor' => '300.00'],
+            ['descricao' => 'Avaliação pré-procedimento', 'valor' => '100.00'],
+            ['descricao' => 'Ultrassom portátil', 'valor' => '500.00'],
+            ['descricao' => 'Monitor multiparamétrico', 'valor' => '250.00'],
+            ['descricao' => 'Desfibrilador', 'valor' => '300.00'],
+            ['descricao' => 'Bombas de infusão', 'valor' => '150.00'],
+            ['descricao' => 'Equipamentos de fisioterapia', 'valor' => '100.00'],
+            ['descricao' => 'Equipamentos de fototerapia', 'valor' => '200.00'],
+            ['descricao' => 'Sala de pequenos procedimentos', 'valor' => '500.00'],
+            ['descricao' => 'Sala de consulta', 'valor' => '400.00'],
+            ['descricao' => 'Sala cirúrgica', 'valor' => '1500.00'],
+            ['descricao' => 'Cadeira odontológica (parceiros)', 'valor' => '350.00'],
+            ['descricao' => 'Manutenção de ultrassom', 'valor' => '150.00'],
+            ['descricao' => 'Calibração de equipamentos', 'valor' => '75.00'],
+            ['descricao' => 'Exames laboratoriais (coleta e processamento)', 'valor' => '50.00'],
+            ['descricao' => 'Exames de imagem (uso de contraste)', 'valor' => '100.00'],
+            ['descricao' => 'Materiais descartáveis em cirurgias', 'valor' => '200.00'],
+            ['descricao' => 'Uso de equipamentos adicionais (endoscopia, laparoscopia)', 'valor' => '200.00'],
+            ['descricao' => 'Anestesia local', 'valor' => '150.00'],
+            ['descricao' => 'Anestesia geral', 'valor' => '500.00'],
+            ['descricao' => 'Monitoramento anestésico', 'valor' => '300.00'],
+            ['descricao' => 'Instrumentador cirúrgico', 'valor' => '200.00'],
+            ['descricao' => 'Enfermeiro(a) auxiliar', 'valor' => '200.00'],
+        ];
+
+        // Insere os dados na tabela 'taxas'
+        DB::table('taxas')->insert($taxas);
     }
 }

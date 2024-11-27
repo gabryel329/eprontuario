@@ -17,6 +17,7 @@ use App\Models\Procedimentos;
 use App\Models\Produtos;
 use App\Models\Profissional;
 use App\Models\Remedio;
+use App\Models\Taxa;
 use App\Models\TaxaAgenda;
 use App\Models\TipoAtendimento;
 use App\Models\User;
@@ -145,7 +146,7 @@ class AgendaController extends Controller
         
                 if (str_starts_with($tabelaMaterias, 'tab_brasindice')) {
                     // Seleciona COD_ITEM como codigo
-                    $query->select('id', 'medicamento', 'preco', 'GENERICO as codigo');
+                    $query->select('id', 'medicamento', 'preco', 'EAN as codigo', 'APRESENTACAO as unid');
                 } elseif (str_starts_with($tabelaMaterias, 'tab_simpro')) {
                     // Adiciona codigo como NULL para tabelas sem essa coluna
                     $query->select('id', 'DESCRICAO as medicamento', DB::raw('NULL as codigo'));
@@ -173,8 +174,8 @@ class AgendaController extends Controller
         }
             
          
-        $produto = Produtos::all();
-        return view('agenda.detalhesconsulta', compact('agendas', 'pacientes', 'produto'));
+        $taxas = Taxa::all();
+        return view('agenda.detalhesconsulta', compact('agendas', 'pacientes', 'taxas'));
     }
 
 
@@ -306,6 +307,7 @@ class AgendaController extends Controller
                 'agenda_id' => 'required|exists:agendas,id',
                 'paciente_id' => 'required|exists:pacientes,id',
                 'material_id.*' => 'required',
+                'valor.*' => 'required',
                 'unidade_medida.*' => 'required|string|in:001,002,003,004,005,006,007,008,036',
                 'quantidade.*' => 'required|integer|min:1',
             ]);
@@ -321,6 +323,7 @@ class AgendaController extends Controller
                     [
                         'unidade_medida' => $validated['unidade_medida'][$index],
                         'quantidade' => $validated['quantidade'][$index],
+                        'valor' => $validated['valor'][$index],
                     ]
                 );
             }
