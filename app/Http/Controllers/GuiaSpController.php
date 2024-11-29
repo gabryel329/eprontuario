@@ -9,6 +9,8 @@ use App\Models\Exames;
 use App\Models\ExamesAutSadt;
 use App\Models\ExamesSadt;
 use App\Models\GuiaSp;
+use App\Models\MatAgenda;
+use App\Models\MedAgenda;
 use App\Models\Pacientes;
 use App\Models\ProcAgenda;
 use App\Models\Profissional;
@@ -18,6 +20,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Log;
 
 class GuiaSpController extends Controller
 {
@@ -453,6 +456,28 @@ public function gerarZipGuiaSp($id)
             // Buscar paciente pelo ID associado à agenda
         $paciente = Pacientes::find($agenda->paciente_id);
 
+        $tabelaMed = $agenda->convenio->tab_med_id; // Nome da tabela de medicamentos do convênio
+
+        if (Schema::hasTable($tabelaMed)) { // Verifica se a tabela existe no banco
+            $medicamentos = MedAgenda::where('agenda_id', $agenda->id)
+                ->join($tabelaMed, "$tabelaMed.id", '=', 'med_agendas.medicamento_id') // Realiza o INNER JOIN
+                ->select('med_agendas.*', "$tabelaMed.medicamento as nome_medicamento") // Seleciona as colunas desejadas
+                ->get();
+        } else {
+            $medicamentos = collect(); // Retorna uma coleção vazia se a tabela não existir
+        }
+
+        $tabelaMat = $agenda->convenio->tab_mat_id; // Nome da tabela de medicamentos do convênio
+
+        if (Schema::hasTable($tabelaMat)) { // Verifica se a tabela existe no banco
+            $materiais = MatAgenda::where('agenda_id', $agenda->id)
+                ->join($tabelaMat, "$tabelaMat.id", '=', 'mat_agendas.material_id') // Realiza o INNER JOIN
+                ->select('mat_agendas.*', "$tabelaMat.medicamento as nome_material") // Seleciona as colunas desejadas
+                ->get();
+        } else {
+            $materiais = collect(); // Retorna uma coleção vazia se a tabela não existir
+        }
+
         // Buscar profissional com sua especialidade
         $profissional = Profissional::join('especialidade_profissional', 'profissionals.id', '=', 'especialidade_profissional.profissional_id')
             ->leftJoin('especialidades', 'especialidade_profissional.especialidade_id', '=', 'especialidades.id')
@@ -462,9 +487,6 @@ public function gerarZipGuiaSp($id)
             )
             ->where('profissionals.id', $agenda->profissional_id)
             ->first();
-
-        // Buscar guia relacionada à agenda
-
 
         // Buscar convênio associado à agenda
         $convenio = Convenio::find($agenda->convenio_id);
@@ -484,6 +506,8 @@ public function gerarZipGuiaSp($id)
             'procedimentos' => $procedimentos,
             'ExameSolis' => $ExameSolis,
             'ExameAuts' => $ExameAuts,
+            'medicamentos' => $medicamentos,
+            'materiais' => $materiais,
         ]);
     }
 
@@ -1447,14 +1471,34 @@ public function gerarZipGuiasadt($id, Request $request)
 
         // Buscar a guia SADT relacionada
         $guia = GuiaSp::where('agenda_id', $agenda->id)->first();
-        $user = User::where('id', $guia->user_id)->first();
+        // $user = User::where('id', $guia->user_id)->get();
         $ExameSolis = ExamesSadt::where('guia_sps_id', $guia->id)
         ->whereNotNull('codigo_procedimento_solicitado')
         ->get();
 
         $ExameAuts = ExamesAutSadt::where('guia_sps_id', $guia->id)->get();
 
+        $tabelaMed = $agenda->convenio->tab_med_id; // Nome da tabela de medicamentos do convênio
 
+        if (Schema::hasTable($tabelaMed)) { // Verifica se a tabela existe no banco
+            $medicamentos = MedAgenda::where('agenda_id', $agenda->id)
+                ->join($tabelaMed, "$tabelaMed.id", '=', 'med_agendas.medicamento_id') // Realiza o INNER JOIN
+                ->select('med_agendas.*', "$tabelaMed.medicamento as nome_medicamento") // Seleciona as colunas desejadas
+                ->get();
+        } else {
+            $medicamentos = collect(); // Retorna uma coleção vazia se a tabela não existir
+        }
+
+        $tabelaMat = $agenda->convenio->tab_mat_id; // Nome da tabela de medicamentos do convênio
+
+        if (Schema::hasTable($tabelaMat)) { // Verifica se a tabela existe no banco
+            $materiais = MatAgenda::where('agenda_id', $agenda->id)
+                ->join($tabelaMat, "$tabelaMat.id", '=', 'mat_agendas.material_id') // Realiza o INNER JOIN
+                ->select('mat_agendas.*', "$tabelaMat.medicamento as nome_material") // Seleciona as colunas desejadas
+                ->get();
+        } else {
+            $materiais = collect(); // Retorna uma coleção vazia se a tabela não existir
+        }
         // Buscar a empresa associada
         $empresa = Empresas::first();
 
@@ -1465,7 +1509,9 @@ public function gerarZipGuiasadt($id, Request $request)
             'empresa' => $empresa,
             'ExameSolis' => $ExameSolis,
             'ExameAuts' => $ExameAuts,
-            'user' => $user,
+            'medicamentos' => $medicamentos,
+            'materiais' => $materiais,
+            // 'user' => $user,
         ]);
     }
 
@@ -1609,7 +1655,7 @@ public function gerarZipGuiasadt($id, Request $request)
         $guiaSps->save();
 
         // Salvar os exames na tabela exames_sadt
-        if ($request->has('tabela')) {
+        if ($request->has('descricao_procedimento')) {
             foreach ($request->input('tabela') as $index => $tabela) {
                 ExamesSadt::create([
                     'guia_sps_id' => $guiaSps->id,
@@ -1622,8 +1668,10 @@ public function gerarZipGuiasadt($id, Request $request)
             }
         }
 
+        Log::info($request->input("codigo_procedimento_solicitado.$index"));
+
         // Salvar os procedimentos na tabela exames_aut_sadt
-        if ($request->has('data_real')) {
+        if ($request->has('descricao_procedimento_realizado')) {
             foreach ($request->input('data_real') as $index => $dataReal) {
                 ExamesAutSadt::create([
                     'guia_sps_id' => $guiaSps->id,
@@ -1642,6 +1690,8 @@ public function gerarZipGuiasadt($id, Request $request)
                 ]);
             }
         }
+
+        Log::info($request->input("descricao_procedimento_realizado.$index"));
 
         DB::commit();
 

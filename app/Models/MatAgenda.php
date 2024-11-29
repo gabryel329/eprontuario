@@ -18,6 +18,11 @@ class MatAgenda extends Model
         'valor',
         'unidade_medida',
         'quantidade',
+        'valor_total',
+        'cd',
+        'tabela',
+        'fator',
+        'codigo',
     ];
 
     // Relacionamento com o model Agenda

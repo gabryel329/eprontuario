@@ -222,7 +222,7 @@ class TabelaController extends Controller
                 case 'simpro':
                     $table->string('SEQUENCIA')->notNullable();
                     $table->string('CD_SIMPRO', 500)->nullable();
-                    $table->string('DESCRICAO')->notNullable();
+                    $table->string('medicamento')->notNullable();
                     $table->string('VIGENCIA', 500)->nullable();
                     $table->string('PC_FR_FAB', 500)->nullable();
                     $table->string('TP_EMBAL', 500)->nullable();
@@ -310,7 +310,7 @@ class TabelaController extends Controller
                 return [
                     'SEQUENCIA' => $row[0] ?? null,
                     'CD_SIMPRO' => $row[1] ?? null,
-                    'DESCRICAO' => $row[2] ?? null,
+                    'medicamento' => $row[2] ?? null,
                     'VIGENCIA' => $row[3] ?? null,
                     'PC_FR_FAB' => $row[4] ?? null,
                     'TP_EMBAL' => $row[5] ?? null,

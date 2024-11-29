@@ -89,20 +89,24 @@ class AgendaController extends Controller
                         ->orderBy('id', 'asc')
                         ->get();
                 } else {
-                    $agendas->procedimento_lista = collect([(object) [
-                        'id' => null,
-                        'procedimento' => 'Procedimento não encontrado',
-                        'codigo' => null,
-                        'valor_proc' => null
-                    ]]);
+                    $agendas->procedimento_lista = collect([
+                        (object) [
+                            'id' => null,
+                            'procedimento' => 'Procedimento não encontrado',
+                            'codigo' => null,
+                            'valor_proc' => null
+                        ]
+                    ]);
                 }
             } else {
-                $agendas->procedimento_lista = collect([(object) [
-                    'id' => null,
-                    'procedimento' => 'Tabela de procedimentos não encontrada',
-                    'codigo' => null,
-                    'valor_proc' => null
-                ]]);
+                $agendas->procedimento_lista = collect([
+                    (object) [
+                        'id' => null,
+                        'procedimento' => 'Tabela de procedimentos não encontrada',
+                        'codigo' => null,
+                        'valor_proc' => null
+                    ]
+                ]);
             }
         }
 
@@ -120,11 +124,13 @@ class AgendaController extends Controller
 
                 $agendas->medicamentos = $query->get();
             } else {
-                $agendas->medicamentos = collect([(object) [
-                    'id' => null,
-                    'medicamento' => 'Tabela de medicamentos não encontrada',
-                    'preco' => null
-                ]]);
+                $agendas->medicamentos = collect([
+                    (object) [
+                        'id' => null,
+                        'medicamento' => 'Tabela de medicamentos não encontrada',
+                        'preco' => null
+                    ]
+                ]);
             }
         } else {
             $agendas->medicamentos = DB::table('medicamentos')
@@ -140,10 +146,10 @@ class AgendaController extends Controller
 
         if ($agendas->paciente->convenio) {
             $tabelaMaterias = $agendas->paciente->convenio->tab_mat_id;
-        
+
             if ($tabelaMaterias && Schema::hasTable($tabelaMaterias)) {
                 $query = DB::table($tabelaMaterias);
-        
+
                 if (str_starts_with($tabelaMaterias, 'tab_brasindice')) {
                     // Seleciona COD_ITEM como codigo
                     $query->select('id', 'medicamento', 'preco', 'EAN as codigo', 'APRESENTACAO as unid');
@@ -154,16 +160,18 @@ class AgendaController extends Controller
                     // Adiciona codigo como NULL para tabelas genéricas
                     $query->select('id', 'medicamento', 'preco', DB::raw('NULL as codigo'));
                 }
-        
+
                 $agendas->materias = $query->get();
             } else {
                 // Caso a tabela não exista
-                $agendas->materias = collect([(object) [
-                    'id' => null,
-                    'medicamento' => 'Tabela de materias não encontrada',
-                    'preco' => null,
-                    'codigo' => null, // Garante que a propriedade codigo existe
-                ]]);
+                $agendas->materias = collect([
+                    (object) [
+                        'id' => null,
+                        'medicamento' => 'Tabela de materias não encontrada',
+                        'preco' => null,
+                        'codigo' => null, // Garante que a propriedade codigo existe
+                    ]
+                ]);
             }
         } else {
             // Caso não exista um convenio
@@ -172,8 +180,8 @@ class AgendaController extends Controller
                 ->orderBy('id')
                 ->get();
         }
-            
-         
+
+
         $taxas = Taxa::all();
         return view('agenda.detalhesconsulta', compact('agendas', 'pacientes', 'taxas'));
     }
@@ -193,39 +201,50 @@ class AgendaController extends Controller
             'codigo.*' => 'required',
             'valor.*' => 'nullable|numeric|min:0',
             'unidade_medida.*' => 'required',
+            'fator.*' => 'string',
         ]);
 
         foreach ($validated['medicamento_id'] as $index => $medicamento_id) {
             $quantidade = isset($validated['quantidade'][$index]) ? (int) $validated['quantidade'][$index] : 0;
-        
+            $valor = isset($validated['valor'][$index]) ? (float) $validated['valor'][$index] : 0.0;
+
+            // Calcular o valor total
+            $valor_total = number_format($quantidade * $valor, 2, '.', '');
+
             Log::info('Processando medicamento:', [
                 'medicamento_id' => $medicamento_id,
                 'quantidade' => $quantidade,
+                'valor' => $valor,
+                'valor_total' => $valor_total,
                 'codigo' => $validated['codigo'][$index],
-                'valor' => $validated['valor'][$index],
                 'unidade_medida' => $validated['unidade_medida'][$index],
             ]);
-        
+
             $medAgenda = MedAgenda::firstOrNew([
                 'agenda_id' => $validated['agenda_id'],
                 'paciente_id' => $validated['paciente_id'],
                 'medicamento_id' => $medicamento_id,
             ]);
-        
+
+            // Atualizar ou criar os valores para o medicamento
             $medAgenda->codigo = $validated['codigo'][$index];
             $medAgenda->quantidade = $quantidade;
-            $medAgenda->valor = $validated['valor'][$index];
+            $medAgenda->valor = $valor;
             $medAgenda->unidade_medida = $validated['unidade_medida'][$index];
+            $medAgenda->fator = $validated['fator'][$index];
+            $medAgenda->cd = '02';
+            $medAgenda->tabela = '20';
+            $medAgenda->valor_total = $valor_total;
             $medAgenda->save();
         }
-        
 
-        return response()->json(['message' => 'Medicamentos salvas com sucesso!']);
+        return response()->json(['message' => 'Medicamentos salvos com sucesso!']);
     } catch (\Exception $e) {
         Log::error('Erro ao salvar medicamento:', ['exception' => $e->getMessage()]);
-        return response()->json(['error' => 'Erro ao salvar a medicamento.'], 500);
+        return response()->json(['error' => 'Erro ao salvar o medicamento.'], 500);
     }
 }
+
 
 
     public function verificarMedicamento($agenda_id, $paciente_id)
@@ -300,40 +319,54 @@ class AgendaController extends Controller
     }
 
     public function storeMaterial(Request $request)
-    {
-        try {
-            // Validação dos campos
-            $validated = $request->validate([
-                'agenda_id' => 'required|exists:agendas,id',
-                'paciente_id' => 'required|exists:pacientes,id',
-                'material_id.*' => 'required',
-                'valor.*' => 'required',
-                'unidade_medida.*' => 'required|string|in:001,002,003,004,005,006,007,008,036',
-                'quantidade.*' => 'required|integer|min:1',
-            ]);
+{
+    try {
+        // Validação dos campos
+        $validated = $request->validate([
+            'agenda_id' => 'required|exists:agendas,id',
+            'paciente_id' => 'required|exists:pacientes,id',
+            'material_id.*' => 'required',
+            'fator.*' => 'string',
+            'codigo.*' => 'string',
+            'valor.*' => 'required|numeric|min:0',
+            'unidade_medida.*' => 'required|string|in:001,002,003,004,005,006,007,008,036',
+            'quantidade.*' => 'required|integer|min:1',
+        ]);
 
-            // Loop para salvar ou atualizar cada material
-            foreach ($validated['material_id'] as $index => $material_id) {
-                MatAgenda::updateOrCreate(
-                    [
-                        'agenda_id' => $validated['agenda_id'],
-                        'paciente_id' => $validated['paciente_id'],
-                        'material_id' => $material_id,
-                    ],
-                    [
-                        'unidade_medida' => $validated['unidade_medida'][$index],
-                        'quantidade' => $validated['quantidade'][$index],
-                        'valor' => $validated['valor'][$index],
-                    ]
-                );
-            }
+        // Loop para salvar ou atualizar cada material
+        foreach ($validated['material_id'] as $index => $material_id) {
+            $quantidade = $validated['quantidade'][$index];
+            $valor = $validated['valor'][$index];
 
-            return response()->json(['message' => 'Materiais salvos com sucesso!']);
-        } catch (\Exception $e) {
-            Log::error($e->getMessage()); // Registra o erro no log
-            return response()->json(['error' => 'Erro ao salvar os materiais.'], 500);
+            // Calcular o valor total
+            $valor_total = number_format($quantidade * $valor, 2, '.', '');
+
+            MatAgenda::updateOrCreate(
+                [
+                    'agenda_id' => $validated['agenda_id'],
+                    'paciente_id' => $validated['paciente_id'],
+                    'material_id' => $material_id,
+                ],
+                [
+                    'unidade_medida' => $validated['unidade_medida'][$index],
+                    'quantidade' => $quantidade,
+                    'valor' => $valor,
+                    'valor_total' => $valor_total,
+                    'cd' => '03',
+                    'tabela' => '19',
+                    'fator' => $validated['fator'][$index],
+                    'codigo' => $validated['codigo'][$index],
+                ]
+            );
         }
+
+        return response()->json(['message' => 'Materiais salvos com sucesso!']);
+    } catch (\Exception $e) {
+        Log::error('Erro ao salvar materiais:', ['exception' => $e->getMessage()]); // Registra o erro no log
+        return response()->json(['error' => 'Erro ao salvar os materiais.'], 500);
     }
+}
+
 
     public function verificarMaterial($agenda_id, $paciente_id)
     {
@@ -879,13 +912,13 @@ class AgendaController extends Controller
     {
         $pacientes = Pacientes::all();
         $profissionals = Profissional::join('especialidade_profissional', 'profissionals.id', '=', 'especialidade_profissional.profissional_id')
-        ->leftJoin('especialidades', 'especialidade_profissional.especialidade_id', '=', 'especialidades.id')
-        ->select(
-            'profissionals.*',
-            'especialidades.conselho as conselho_profissional'
-        )
-        ->distinct('profissionals.id') // Retorna registros únicos por profissional
-        ->get();
+            ->leftJoin('especialidades', 'especialidade_profissional.especialidade_id', '=', 'especialidades.id')
+            ->select(
+                'profissionals.*',
+                'especialidades.conselho as conselho_profissional'
+            )
+            ->distinct('profissionals.id') // Retorna registros únicos por profissional
+            ->get();
         $agendas = collect();
         $tiposConsultas = TipoAtendimento::all();
         // Store form values in the session
@@ -1151,12 +1184,18 @@ class AgendaController extends Controller
         // Encontrar a agenda pelo ID
         $agenda = Agenda::findOrFail($id);
 
+        $paciente = Pacientes::find($request->paciente_id);
+
+        $convenio = $paciente->convenio_id;
+
+        Log::info($convenio);
+
         // Atualizar os dados da agenda
         $agenda->profissional_id = $request->profissional_id;
         $agenda->data = $request->data;
         $agenda->hora = $request->hora;
         $agenda->paciente_id = $request->paciente_id;
-        $agenda->convenio_id = $request->convenio_id;
+        $agenda->convenio_id = $convenio;
         $agenda->matricula = $request->matricula;
         $agenda->name = $request->name;
         $agenda->celular = $request->celular;
@@ -1167,38 +1206,59 @@ class AgendaController extends Controller
 
             // Obter o convênio e a tabela de procedimentos associada
             $convenio = Convenio::find($request->convenio_id);
+
+            if (!$convenio) {
+                Log::warning('Convênio não encontrado', ['convenio_id' => $request->convenio_id]);
+                return; // Interrompe se o convênio não for válido
+            }
+
             $tabelaProcedimentos = $convenio->tab_proc_id;
 
             // Log para verificar qual tabela está sendo usada
-            Log::info('Tabela de Procedimentos:', ['tabela' => $convenio]);
+            Log::info('Tabela de Procedimentos Associada:', ['tabela' => $tabelaProcedimentos]);
+
+            $procedimento = null;
 
             // Verificar se a tabela existe e buscar o procedimento
             if ($tabelaProcedimentos && Schema::hasTable($tabelaProcedimentos)) {
                 Log::info('Executando consulta na tabela dinâmica', ['tabela' => $tabelaProcedimentos]);
 
                 // Ativar o log de SQL para capturar a consulta
-                DB::enableQueryLog();  // Ativar log de consultas
+                DB::enableQueryLog();
 
-                $procedimento = DB::table($tabelaProcedimentos)
-                    ->where('procedimento', $request->procedimento_id)  // Supondo que 'id' seja a coluna correta para buscar
-                    ->select('codigo_anatomico as codigo', 'valor_proc')
-                    ->first();
+                // Selecionar a consulta de acordo com o prefixo da tabela
+                if (str_starts_with($tabelaProcedimentos, 'tab_amb92') || str_starts_with($tabelaProcedimentos, 'tab_amb96')) {
+                    $procedimento = DB::table($tabelaProcedimentos)
+                        ->where('descricao', $request->procedimento_id)
+                        ->select('codigo', 'valor_proc')
+                        ->first();
+                } elseif (str_starts_with($tabelaProcedimentos, 'tab_cbhpm')) {
+                    $procedimento = DB::table($tabelaProcedimentos)
+                        ->where('procedimento', $request->procedimento_id)
+                        ->select('codigo_anatomico as codigo', 'valor_proc')
+                        ->first();
+                }
 
                 // Log do SQL executado
                 Log::info('SQL Executado:', ['sql' => DB::getQueryLog()]);
             } else {
+                // Caso a tabela dinâmica não exista, buscar na tabela padrão
+                Log::info('Tabela dinâmica não encontrada. Consultando tabela padrão: procedimentos');
                 $procedimento = DB::table('procedimentos')
-                    ->where('procedimento', $request->procedimento_id)  // Supondo que 'id' seja a coluna correta para buscar
+                    ->where('procedimento', $request->procedimento_id)
                     ->select('codigo', 'valor_proc')
                     ->first();
             }
 
             // Atualizar o código e o valor_proc, se o procedimento for encontrado
             if ($procedimento) {
-                $agenda->codigo = $procedimento->codigo ?? $agenda->codigo; // Atualiza apenas se encontrado
-                $agenda->valor_proc = $procedimento->valor_proc ?? $agenda->valor_proc; // Atualiza apenas se encontrado
+                $agenda->codigo = $procedimento->codigo ?? $agenda->codigo; // Atualiza apenas se o campo existir
+                $agenda->valor_proc = $procedimento->valor_proc ?? $agenda->valor_proc; // Atualiza apenas se o campo existir
+            } else {
+                Log::warning('Procedimento não encontrado', ['procedimento_id' => $request->procedimento_id]);
             }
         }
+
 
         // Salvar as mudanças
         $agenda->save();

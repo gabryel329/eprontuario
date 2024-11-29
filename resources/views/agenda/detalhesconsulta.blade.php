@@ -271,6 +271,7 @@
                                                     <th class="col-2 text-center">Código</th>
                                                     <th class="col-1 text-center">Qtd</th>
                                                     <th class="col-1 text-center">Unidade Medida</th>
+                                                    <th class="col-1 text-center"> Fator Red./Acresc.</th>
                                                     <th class="col-2 text-center">Ações</th>
                                                 </tr>
                                             </thead>
@@ -322,6 +323,10 @@
                                                             <option value="036">Outros</option>
                                                         </select>
                                                     </td>
+                                                    <td class="col-1 text-center">
+                                                        <input type="text" class="form-control fator"
+                                                            name="fator[]" placeholder="Ex:(1,00)">
+                                                    </td>
                                                     <td class="col-3 text-center">
                                                         <button type="button"
                                                             class="btn btn-success add-row">+</button>
@@ -358,6 +363,7 @@
                                                         <th class="col-2 text-center">Código</th>
                                                         <th class="col-1 text-center">Qtd</th>
                                                         <th class="col-1 text-center">Unidade Medida</th>
+                                                        <th class="col-1 text-center"> Fator Red./Acresc.</th>
                                                         <th class="col-2 text-center">Ações</th>
                                                     </tr>
                                                 </thead>
@@ -403,6 +409,10 @@
                                                                 <option value="008">Grama (g)</option>
                                                                 <option value="036">Outros</option>
                                                             </select>
+                                                        </td>
+                                                        <td class="col-1 text-center">
+                                                            <input type="text" class="form-control fator"
+                                                                name="fator[]" placeholder="Ex:(1,00)">
                                                         </td>
                                                         <td class="actions col-2 text-center">
                                                             <button type="button"
@@ -663,6 +673,10 @@ function applySelect5(element) {
                                                             <option value="036">Outros</option>
                                                         </select>
                                                     </td>
+                                                    <td class="col-1 text-center">
+                                                        <input type="text" class="form-control fator"
+                                                            name="fator[]" placeholder="Ex:(1,00)">
+                                                    </td>
                                                     <td class="col-3 text-center">
                                                         <button type="button" class="btn btn-success add-row">+</button>
                                                         <button type="button" class="btn btn-danger remove-row">-</button>
@@ -690,6 +704,7 @@ function applySelect5(element) {
                             lastRow.find('.codigo').val(remedio.codigo);
                             lastRow.find('.quantidade').val(remedio.quantidade);
                             lastRow.find('.unidade_medida').val(remedio.unidade_medida);
+                            lastRow.find('.fator').val(remedio.fator);
                         });
                     }
                 },
@@ -926,6 +941,10 @@ function applySelect5(element) {
                             <option value="036">Outros</option>
                         </select>
                     </td>
+                    <td class="col-1 text-center">
+                                                        <input type="text" class="form-control fator"
+                                                            name="fator[]" placeholder="Ex:(1,00)">
+                                                    </td>
                     <td class="actions col-2 text-center">
                         <button type="button" class="btn btn-success plus1-row">+</button>
                         <button type="button" class="btn btn-danger delete1-row">-</button>
@@ -990,6 +1009,8 @@ function applySelect5(element) {
                             lastRow.find('.unidade_medida').val(item.unidade_medida).trigger(
                                 'change');
                             lastRow.find('.quantidade').val(item.quantidade);
+                            lastRow.find('.fator').val(item.fator);
+                            lastRow.find('.codigo').val(item.codigo);
                         });
                     }
                 },

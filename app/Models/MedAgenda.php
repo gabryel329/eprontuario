@@ -21,6 +21,10 @@ class MedAgenda extends Model
         'valor',
         'unidade_medida',
         'qtd_solicitada',
+        'valor_total',
+        'cd',
+        'tabela',
+        'fator',
     ];
 
     // Relacionamento com o model Agenda

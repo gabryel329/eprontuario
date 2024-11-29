@@ -604,7 +604,7 @@
                             <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
                             <input type="hidden" id="convenio_id" name="convenio_id"
                                 value="{{ $item->convenio_id ?? '' }}">
-                            <input type="hidden" id="agenda_id" name="agenda_id" value="{{ $item->id }}">
+                            <input type="hidden" id="agenda_id" name="agenda_id" value="{{ old('agenda_id') }}">
                             <input type="hidden" id="paciente_id" name="paciente_id" value="{{ $item->paciente_id }}">
                             <input type="hidden" id="profissional_id" name="profissional_id"
                                 value="{{ $item->profissional_id }}">
@@ -966,8 +966,9 @@
                             <hr>
                             <h5>Identificação do(s) profissional(is) Executante(s)</h5>
                             <div class="row">
-                                <div class="space">
-                                    <table class="table table-striped">
+                                <div class="table-responsive" style="overflow-x: auto;">
+                                    <table class="table table-striped"
+                                        style="text-align: center; white-space: nowrap; font-size: 12px; min-width: 1800px; vertical-align: middle;">
                                         <thead>
                                             <tr>
                                                 <th>48 - Seq. Ref</th>
@@ -983,12 +984,14 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td><input class="form-control" name="sequencia" type="text" value="1" readonly></</td>
+                                                <td><input class="form-control" name="sequencia" type="text"
+                                                        value="1" readonly></< /td>
                                                 <td>
                                                     <select id="grau" name="grau" class="form-control">
                                                         <option value="">
                                                             {{ old('grau') ? 'selected' : 'Selecione' }}
-                                                        <option value="12">Médico principal ou responsável pelo procedimento</option>
+                                                        <option value="12">Médico principal ou responsável pelo
+                                                            procedimento</option>
                                                         <option value="13">Assistente</option>
                                                         <option value="14">Anestesista</option>
                                                         <option value="15">Cirurgião Auxiliar</option>
@@ -998,17 +1001,28 @@
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-primary form-control" data-bs-toggle="modal"
-                                                        data-bs-target="#modalProfissional1">
+                                                    <button type="button" class="btn btn-primary form-control"
+                                                        data-bs-toggle="modal" data-bs-target="#modalProfissional1">
                                                         <i class="bi bi-list"></i>
                                                     </button>
                                                 </td>
-                                                <td><input class="form-control" name="codigo_operadora_profissional" id="codigo_operadora_profissional" type="text" value="" readonly></</td>
-                                                <td><input class="form-control" id="nome_profissional" name="nome_profissional" type="text" value="" readonly></</td>
-                                                <td><input class="form-control" name="sigla_conselho" id="sigla_conselho" type="text" value="" readonly></</td>
-                                                <td><input class="form-control" name="numero_conselho_profissional" id="numero_conselho_profissional" type="text" value="" readonly></</td>
-                                                <td><input class="form-control" name="uf_profissional" id="uf_profissional" type="text" value="" readonly></</td>
-                                                <td><input class="form-control" name="codigo_cbo_profissional" id="codigo_cbo_profissional" type="text" value="" readonly></</td>
+                                                <td><input class="form-control" name="codigo_operadora_profissional"
+                                                        id="codigo_operadora_profissional" type="text" value=""
+                                                        readonly></< /td>
+                                                <td><input class="form-control" id="nome_profissional"
+                                                        name="nome_profissional" type="text" value="" readonly>
+                                                    </< /td>
+                                                <td><input class="form-control" name="sigla_conselho" id="sigla_conselho"
+                                                        type="text" value="" readonly></< /td>
+                                                <td><input class="form-control" name="numero_conselho_profissional"
+                                                        id="numero_conselho_profissional" type="text" value=""
+                                                        readonly></< /td>
+                                                <td><input class="form-control" name="uf_profissional"
+                                                        id="uf_profissional" type="text" value="" readonly></<
+                                                        /td>
+                                                <td><input class="form-control" name="codigo_cbo_profissional"
+                                                        id="codigo_cbo_profissional" type="text" value=""
+                                                        readonly></< /td>
                                             </tr>
                                             {{-- <tr>
                                                 <td><input class="form-control" name="sequencia1" type="text" value="" readonly></</td>
@@ -1034,6 +1048,36 @@
                                     </table>
                                 </div>
                             </div>
+                            <hr>
+                            <h5>Despesas Realizadas</h5>
+                            <div class="row">
+                                <div class="table-responsive" style="overflow-x: auto;">
+                                    <table class="table table-striped"
+                                        style="text-align: center; white-space: nowrap; font-size: 12px; min-width: 1800px; vertical-align: middle;">
+                                        <thead>
+                                            <tr>
+                                                <th>6 - CD</th>
+                                                <th>7 - Data</th>
+                                                <th>8 - Hora inicial</th>
+                                                <th>9 - Hora Final</th>
+                                                <th>10 - Tabela</th>
+                                                <th>17 - Descrição</th>
+                                                <th>11 - Código do Ítem</th>
+                                                <th>12 - Qtd</th>
+                                                <th>13 - Unid de Medida </th>
+                                                <th>14 - Fator Red./Acresc.</th>
+                                                <th>15 - Valor Unitário</th>
+                                                <th>16 - Valor Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="medicamentos-table-body">materiais-table-body
+                                        </tbody>
+                                        <tbody id="materiais-table-body">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <hr>
                             <hr>
                             <div class="row">
                                 <div class="col-md-12">
@@ -1067,7 +1111,8 @@
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <input class="form-control" id="profSearch" type="text" placeholder="Pesquisar por nome ou CPF...">
+                            <input class="form-control" id="profSearch" type="text"
+                                placeholder="Pesquisar por nome ou CPF...">
                         </div>
                         <table class="table table-hover" id="profTable">
                             <thead>
@@ -1105,7 +1150,8 @@
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <input class="form-control" id="profSearch" type="text" placeholder="Pesquisar por nome ou CPF...">
+                            <input class="form-control" id="profSearch" type="text"
+                                placeholder="Pesquisar por nome ou CPF...">
                         </div>
                         <table class="table table-hover" id="profTable">
                             <thead>
@@ -1321,7 +1367,7 @@
                         success: function(response) {
                             console.log('Dados recebidos:', response);
 
-                            if (!response || !response.exames || response.exames.length === 0) {
+                            if (!response || !response.exames) {
                                 alert(
                                     'Erro: Não foi possível carregar os dados ou nenhum exame foi encontrado.'
                                 );
@@ -1351,8 +1397,7 @@
                                 $(button).closest('tr').remove();
                             }
 
-                            if (!response || !response.procedimentos || response.procedimentos
-                                .length === 0) {
+                            if (!response || !response.procedimentos) {
                                 alert(
                                     'Erro: Não foi possível carregar os dados ou nenhum exame foi encontrado.'
                                 );
@@ -1400,6 +1445,83 @@
                                 $('#procedimento-table-body').append(procedimentoRow);
                             });
 
+                            if (!response || !response.medicamentos) {
+                                alert(
+                                    'Erro: Não foi possível carregar os dados ou nenhum medicamento foi encontrado.'
+                                );
+                                return;
+                            }
+
+                            const unidadeMedidaMap = {
+                                "001": "Unidade",
+                                "002": "Caixa",
+                                "003": "Frasco",
+                                "004": "Ampola",
+                                "005": "Comprimido",
+                                "006": "Gotas",
+                                "007": "Mililitro (ml)",
+                                "008": "Grama (g)",
+                                "036": "Outros"
+                            };
+
+
+                            // Limpar o corpo da tabela para evitar duplicação
+                            $('#medicamentos-table-body').empty();
+
+                            // Iterar sobre cada exame e preencher a tabela
+                            response.medicamentos.forEach(function(medicamento) {
+                                const unidadeMedidaNome = unidadeMedidaMap[medicamento.unidade_medida] || "Desconhecido";
+                                const medicamentoRow = `
+                                <tr>
+                                    <td><input style="width: 50px;" class="form-control" type="text" value="${medicamento.cd || ''}" readonly></td>
+                                    <td><input style="width: 120px;" class="form-control" type="text" <input type="text" readonly value="${medicamento.created_at ? medicamento.created_at.substring(0, 10).split('-').reverse().join('/') : ''}"></td>
+                                    <td><input class="form-control" type="text" readonly value="${medicamento.created_at ? medicamento.created_at.substring(11, 16) : ''}"></td>
+                                    <td><input class="form-control" type="text" readonly value="${medicamento.created_at ? medicamento.created_at.substring(11, 16) : ''}"></td>
+                                    <td><input class="form-control" type="text" value="${medicamento.tabela || ''}" readonly></td>
+                                    <td><input class="form-control" type="text" value="${medicamento.nome_medicamento || ''}" readonly></td>
+                                    <td><input class="form-control" type="text" value="${medicamento.codigo || ''}" readonly></td>
+                                    <td><input class="form-control" type="text" value="${medicamento.quantidade  || ''}" readonly></td>
+                                    <td><input class="form-control" type="text" value="${unidadeMedidaNome}" readonly></td>
+                                    <td><input class="form-control" type="text" value="${medicamento.fator || ''}" readonly></td>
+                                    <td><input class="form-control" type="text" value="${medicamento.valor || ''}" readonly></td>
+                                    <td><input class="form-control" type="text" value="${medicamento.valor_total || ''}" readonly></td>
+                                </tr>
+                            `;
+                                $('#medicamentos-table-body').append(medicamentoRow);
+                            });
+
+                            if (!response || !response.materiais) {
+                                alert(
+                                    'Erro: Não foi possível carregar os dados ou nenhum medicamento foi encontrado.'
+                                );
+                                return;
+                            }
+
+                            // Limpar o corpo da tabela para evitar duplicação
+                            $('#materiais-table-body').empty();
+
+                            // Iterar sobre cada exame e preencher a tabela
+                            response.materiais.forEach(function(material) {
+                                const unidadeMedidaNome = unidadeMedidaMap[material.unidade_medida] || "Desconhecido";
+                                const materialRow = `
+                                <tr>
+                                    <td><input style="width: 50px;" class="form-control" type="text" value="${material.cd || ''}" readonly></td>
+                                    <td><input style="width: 120px;" class="form-control" type="text" <input type="text" readonly value="${material.created_at ? material.created_at.substring(0, 10).split('-').reverse().join('/') : ''}"></td>
+                                    <td><input class="form-control" type="text" readonly value="${material.created_at ? material.created_at.substring(11, 16) : ''}"></td>
+                                    <td><input class="form-control" type="text" readonly value="${material.created_at ? material.created_at.substring(11, 16) : ''}"></td>
+                                    <td><input class="form-control" type="text" value="${material.tabela || ''}" readonly></td>
+                                    <td><input class="form-control" type="text" value="${material.nome_material || ''}" readonly></td>
+                                    <td><input class="form-control" type="text" value="${material.codigo || ''}" readonly></td>
+                                    <td><input class="form-control" type="text" value="${material.quantidade  || ''}" readonly></td>
+                                    <td><input class="form-control" type="text" value="${unidadeMedidaNome}" readonly></td>
+                                    <td><input class="form-control" type="text" value="${material.fator || ''}" readonly></td>
+                                    <td><input class="form-control" type="text" value="${material.valor || ''}" readonly></td>
+                                    <td><input class="form-control" type="text" value="${material.valor_total || ''}" readonly></td>
+                                </tr>
+                            `;
+                                $('#materiais-table-body').append(materialRow);
+                            });
+
 
                             // Preencher outros campos do modal
                             $('#modalSADT #nome_profissional_solicitante').val(response
@@ -1414,6 +1536,8 @@
                                 .cnes : '');
                             $('#modalSADT #data_atendimento').val(response.agenda ? response
                                 .agenda.data : '');
+                            $('#modalSADT #agenda_id').val(response.agenda ? response
+                                .agenda.id : '');
                             $('#modalSADT #codigo_procedimento').val(response.agenda ? response
                                 .agenda.codigo : '');
                             $('#modalSADT #codigo_cbo').val(response.profissional ? response
@@ -1435,56 +1559,72 @@
                                 '');
                             $('#modalSADT #nome_beneficiario').val(response.paciente?.name ||
                                 '');
-                            $('#modalSADT #numero_guia_prestador').val(response.guia?.numero_guia_prestador ||
-                            '');
-                            $('#modalSADT #data_autorizacao').val(response.guia?.data_autorizacao ||
-                            '');
+                            $('#modalSADT #numero_guia_prestador').val(response.guia
+                                ?.numero_guia_prestador ||
+                                '');
+                            $('#modalSADT #data_autorizacao').val(response.guia
+                                ?.data_autorizacao ||
+                                '');
                             $('#modalSADT #senha').val(response.guia?.senha ||
-                            '');
+                                '');
                             $('#modalSADT #validade_senha').val(response.guia?.validade_senha ||
-                            '');
+                                '');
                             $('#modalSADT #numero_guia_op').val(response.guia?.numero_guia_op ||
-                            '');
-                            $('#modalSADT #carater_atendimento').val(response.guia?.carater_atendimento ||
-                            '');
+                                '');
+                            $('#modalSADT #carater_atendimento').val(response.guia
+                                ?.carater_atendimento ||
+                                '');
                             $('#modalSADT #data_solicitacao').val(response.agenda?.data ||
-                            '');
-                            $('#modalSADT #indicacao_clinica').val(response.guia?.indicacao_clinica ||
-                            '');
-                            $('#modalSADT #indicacao_cob_especial').val(response.guia?.indicacao_cob_especial ||
-                            '');
-                            $('#modalSADT #nome_contratado_executante').val(response.guia?.nome_contratado_executante ||
-                            '');
-                            $('#modalSADT #tipo_atendimento').val(response.guia?.tipo_atendimento ||
-                            '');
-                            $('#modalSADT #indicacao_acidente').val(response.guia?.indicacao_acidente ||
-                            '');
+                                '');
+                            $('#modalSADT #indicacao_clinica').val(response.guia
+                                ?.indicacao_clinica ||
+                                '');
+                            $('#modalSADT #indicacao_cob_especial').val(response.guia
+                                ?.indicacao_cob_especial ||
+                                '');
+                            $('#modalSADT #nome_contratado_executante').val(response.guia
+                                ?.nome_contratado_executante ||
+                                '');
+                            $('#modalSADT #tipo_atendimento').val(response.guia
+                                ?.tipo_atendimento ||
+                                '');
+                            $('#modalSADT #indicacao_acidente').val(response.guia
+                                ?.indicacao_acidente ||
+                                '');
                             $('#modalSADT #tipo_consulta').val(response.guia?.tipo_consulta ||
-                            '');
-                            $('#modalSADT #motivo_encerramento').val(response.guia?.motivo_encerramento ||
-                            '');
-                            $('#modalSADT #regime_atendimento').val(response.guia?.regime_atendimento ||
-                            '');
-                            $('#modalSADT #saude_ocupacional').val(response.guia?.saude_ocupacional ||
-                            '');
+                                '');
+                            $('#modalSADT #motivo_encerramento').val(response.guia
+                                ?.motivo_encerramento ||
+                                '');
+                            $('#modalSADT #regime_atendimento').val(response.guia
+                                ?.regime_atendimento ||
+                                '');
+                            $('#modalSADT #saude_ocupacional').val(response.guia
+                                ?.saude_ocupacional ||
+                                '');
                             $('#modalSADT #sequencia').val(response.guia?.sequencia ||
-                            '');
+                                '');
                             $('#modalSADT #grau').val(response.guia?.grau ||
-                            '');
-                            $('#modalSADT #codigo_operadora_profissional').val(response.guia?.codigo_operadora_profissional ||
-                            '');
-                            $('#modalSADT #nome_profissional').val(response.guia?.nome_profissional ||
-                            '');
+                                '');
+                            $('#modalSADT #codigo_operadora_profissional').val(response.guia
+                                ?.codigo_operadora_profissional ||
+                                '');
+                            $('#modalSADT #nome_profissional').val(response.guia
+                                ?.nome_profissional ||
+                                '');
                             $('#modalSADT #sigla_conselho').val(response.guia?.sigla_conselho ||
-                            '');
-                            $('#modalSADT #numero_conselho_profissional').val(response.guia?.numero_conselho_profissional ||
-                            '');
-                            $('#modalSADT #uf_profissional').val(response.guia?.uf_profissional ||
-                            '');
-                            $('#modalSADT #codigo_cbo_profissional').val(response.guia?.codigo_cbo_profissional ||
-                            '');
+                                '');
+                            $('#modalSADT #numero_conselho_profissional').val(response.guia
+                                ?.numero_conselho_profissional ||
+                                '');
+                            $('#modalSADT #uf_profissional').val(response.guia
+                                ?.uf_profissional ||
+                                '');
+                            $('#modalSADT #codigo_cbo_profissional').val(response.guia
+                                ?.codigo_cbo_profissional ||
+                                '');
                             $('#modalSADT #observacao').val(response.guia?.observacao ||
-                            '');
+                                '');
                             // Exibir o modal após preencher os dados
                             $('#modalSADT').modal('show');
                         },
@@ -1529,8 +1669,10 @@
             $(document).ready(function() {
                 // Escutar o evento de clique no botão de gerar Guia SADT
                 $('#gerarGuiaSADTButton').on('click', function() {
-                    // Capturar o ID da agenda a partir do campo hidden
-                    var agendaId = $('#agenda_id').val();
+                    // Capturar o ID da agenda a partir do campo hidden dentro do formulário guiaForm2
+                    var agendaId = $('#guiaForm2 #agenda_id')
+                .val(); // Escopo limitado ao formulário guiaForm2
+                    console.log(agendaId);
 
                     // Substituir ':id' na rota com o ID da agenda
                     var url = "{{ route('guia.sadt', ':id') }}".replace(':id', agendaId);
@@ -1539,6 +1681,7 @@
                     window.open(url, '_blank',
                         'toolbar=no,scrollbars=yes,resizable=yes,width=1000,height=800');
                 });
+
 
                 // Mostrar ou ocultar o botão de gerar Guia SADT baseado na entrada
                 $('#numero_guia_prestador').on('input', function() {
@@ -1607,20 +1750,20 @@
 
 
         function calcularValorTotal(element) {
-                // Encontra a linha do campo alterado
-                const row = element.closest('tr');
+            // Encontra a linha do campo alterado
+            const row = element.closest('tr');
 
-                // Obtém os campos da mesma linha
-                const quantidade = row.querySelector('.quantidade_autorizada').value;
-                const valorUnitario = row.querySelector('.valor_unitario').value;
-                const valorTotalField = row.querySelector('.valor_total');
+            // Obtém os campos da mesma linha
+            const quantidade = row.querySelector('.quantidade_autorizada').value;
+            const valorUnitario = row.querySelector('.valor_unitario').value;
+            const valorTotalField = row.querySelector('.valor_total');
 
-                // Calcula o valor total
-                const valorTotal = (parseFloat(quantidade) || 0) * (parseFloat(valorUnitario) || 0);
+            // Calcula o valor total
+            const valorTotal = (parseFloat(quantidade) || 0) * (parseFloat(valorUnitario) || 0);
 
-                // Atualiza o campo de valor total
-                valorTotalField.value = valorTotal.toFixed(2);
-            }
+            // Atualiza o campo de valor total
+            valorTotalField.value = valorTotal.toFixed(2);
+        }
 
 
         $(document).ready(function() {

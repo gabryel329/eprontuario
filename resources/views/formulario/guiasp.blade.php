@@ -13,11 +13,11 @@
         }
 
         @media print {
-        .page-break {
-            page-break-before: always;
-            break-before: page;
+            .page-break {
+                page-break-before: always;
+                break-before: page;
+            }
         }
-    }
 
         .container {
             width: 100%;
@@ -122,9 +122,21 @@
         .center {
             text-align: center;
         }
-
     </style>
 </head>
+@php
+    $totalValorTotal2 = 0; // Inicialize a variável
+
+    foreach ($medicamentos as $medicamento) {
+        $totalValorTotal2 += $medicamento->valor_total; // Acumula os valores totais
+    }
+
+    $totalValorTotal3 = 0; // Inicialize a variável
+
+    foreach ($materiais as $material) {
+        $totalValorTotal3 += $material->valor_total; // Acumula os valores totais
+    }
+@endphp
 
 <body>
     <!-- Início da Guia SADT-->
@@ -149,7 +161,8 @@
         <div class="block">
             <div class="small-field">1- Registro ANS: <br> <strong>{{ $guia->registro_ans ?? '' }}</strong></div>
             <div class="large-field">3- Nº Guia Principal: <br>
-                <strong>{{ $guia->numero_guia_prestador ?? '' }}</strong></div>
+                <strong>{{ $guia->numero_guia_prestador ?? '' }}</strong>
+            </div>
         </div>
         <div class="block">
             <div class="medium-field">4- Data da autorização: <br>
@@ -173,7 +186,8 @@
             <div class="small-field">10- Nome: <br> <strong>{{ $guia->nome_beneficiario ?? '' }}</strong></div>
             <div class="small-field">11- Cartão Nacional de Saúde: <br> <strong>{{ $guia->cns ?? '' }}</strong></div>
             <div class="small-field center">12- Atendimento RN: <br>
-                <strong>{{ $guia->atendimento_rn === 1 ? 'Sim' : 'Não' }} </strong></div>
+                <strong>{{ $guia->atendimento_rn === 1 ? 'Sim' : 'Não' }} </strong>
+            </div>
         </div>
 
         <!-- Dados do Solicitante-->
@@ -184,12 +198,16 @@
         </div>
 
         <div class="block">
-            <div class="small-field">15- Nome Prof. Solicitante: <br> <strong>{{ $guia->nome_profissional_solicitante ?? '' }}</strong></div>
-            <div class="small-field center">16- Conselho: <br> <strong>{{ $guia->conselho_profissional ?? '' }}</strong> </div>
-            <div class="small-field center">17- Nº Conselho: <br> <strong>{{ $guia->numero_conselho ?? '' }}</strong></div>
+            <div class="small-field">15- Nome Prof. Solicitante: <br>
+                <strong>{{ $guia->nome_profissional_solicitante ?? '' }}</strong></div>
+            <div class="small-field center">16- Conselho: <br>
+                <strong>{{ $guia->conselho_profissional ?? '' }}</strong> </div>
+            <div class="small-field center">17- Nº Conselho: <br> <strong>{{ $guia->numero_conselho ?? '' }}</strong>
+            </div>
             <div class="small-field center">18- UF: <br> <strong>{{ $guia->uf_conselho ?? '' }}</strong></div>
             <div class="small-field center">19- CBO: <br> <strong>{{ $guia->codigo_cbo ?? '' }}</strong></div>
-            <div class="small-field">20- Assinatura Prof. Solicitante: <br> <strong>{{ $guia->assinatura ?? '' }}</strong></div>
+            <div class="small-field">20- Assinatura Prof. Solicitante: <br>
+                <strong>{{ $guia->assinatura ?? '' }}</strong></div>
         </div>
 
         <!-- Dados do Procedimento Solicitado-->
@@ -203,7 +221,8 @@
             <div class="small-field">23- Indicação Clínica: <br> <strong>{{ $guia->indicacao_clinica ?? '' }}</strong>
             </div>
             <div class="small-field">90- Indicador de Cobertura Especial: <br>
-                <strong>{{ $guia->indicacao_cob_especial ?? '' }}</strong></div>
+                <strong>{{ $guia->indicacao_cob_especial ?? '' }}</strong>
+            </div>
         </div>
 
         <!-- Procedimentos-->
@@ -274,6 +293,10 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $totalValorTotal = 0;
+                    @endphp
+
                     @foreach ($ExameAuts as $ExameAut)
                         <tr>
                             <td>{{ \Carbon\Carbon::parse($ExameAut->data_real)->format('d/m/Y') ?? '____/____/____' }}
@@ -290,9 +313,13 @@
                             <td>{{ $ExameAut->fator_red_acres ?? '|__|__|__|,|__|__|' }}</td>
                             <td>{{ number_format($ExameAut->valor_unitario, 2, ',', '.') ?? '|__|__|__|__|,|__|__|' }}
                             </td>
-                            <td>{{ number_format($ExameAut->valor_total, 2, ',', '.') ?? '|__|__|__|__|,|__|__|' }}
+                            <td>
+                                {{ number_format($ExameAut->valor_total, 2, ',', '.') ?? '|__|__|__|__|,|__|__|' }}
                             </td>
                         </tr>
+                        @php
+                            $totalValorTotal += $ExameAut->valor_total;
+                        @endphp
                     @endforeach
                 </tbody>
             </table>
@@ -302,16 +329,18 @@
         <div class="block center">
             <div>48- Seq.Ref: <br> <strong>{{ $guia->sequencia ?? '  ' }}</strong></div>
             <div>49- Grau Part: <br> <strong>{{ $guia->grua ?? '  ' }}</strong></div>
-            <div>50- Códigoo na Operadora/CPF: <br> <strong>{{ $guia->codigo_operadora_profissional ?? '  ' }}</strong></div>
+            <div>50- Códigoo na Operadora/CPF: <br> <strong>{{ $guia->codigo_operadora_profissional ?? '  ' }}</strong>
+            </div>
             <div>51- Nome do Profissional: <br> <strong>{{ $guia->nome_profissional ?? '  ' }}</strong></div>
             <div>52- Conselho: <br> <strong>{{ $guia->sigla_conselho ?? '  ' }}</strong></div>
             <div>53- Nº do Conselho: <br> <strong>{{ $guia->numero_conselho_profissional ?? '  ' }}</strong></div>
             <div>54- UF: <br> <strong>{{ $guia->uf_profissional ?? '  ' }}</strong></div>
             <div>55- CBO: <br> <strong>{{ $guia->codigo_cbo_profissional ?? '  ' }}</strong></div>
         </div>
-        
+
         <!-- Assinaturas-->
-        <div class="section-title">56- Data de Realização de Procedimentos em Série // 57- Assinatura do Beneficiário ou Responsável</div>
+        <div class="section-title">56- Data de Realização de Procedimentos em Série // 57- Assinatura do Beneficiário ou
+            Responsável</div>
         <div class="block">
             <div>1- <strong> ____/____/______ ______________________________</strong></div>
             <div>2- <strong>____/____/______ _______________________________</strong></div>
@@ -329,36 +358,45 @@
 
         <!-- Observação / Justificativa-->
         <div class="block">
-            <div>58- Observação / Justificativa:  Atendente: <strong>{{ $user->name }}</strong> <br> <strong>{{ $guia->observacao ?? '' }}</strong></div>
+            <div>58- Observação / Justificativa: <br> <strong>{{ $guia->observacao ?? '' }}</strong></div>
         </div>
         <div class="block">
             <div>
                 <span>59- Total Proc.</span><br>
-                <strong>R$</strong>
+                <strong>R$ {{ number_format($totalValorTotal, 2, ',', '.') }}</strong>
             </div>
             <div>
                 <span>60- Total Taxas</span><br>
-                <strong>R$</strong>
+                <strong>R$0,00</strong>
             </div>
             <div>
                 <span>61- Total Mat.</span><br>
-                <strong>R$</strong>
+                <strong>R$ {{ number_format($totalValorTotal3, 2, ',', '.') }}</strong>
             </div>
             <div>
                 <span>62- Total de OPME</span><br>
-                <strong></strong>
+                <strong>R$0,00</strong>
             </div>
             <div>
                 <span>63- Total de Med.</span><br>
-                <strong>R$</strong>
+                <strong>R$ {{ number_format($totalValorTotal2, 2, ',', '.') }}</strong>
             </div>
             <div>
                 <span>64- Total Gases Medi.</span><br>
-                <strong>R$</strong>
+                <strong>R$0,00</strong>
             </div>
             <div>
+                @php
+                    // Garantir que as variáveis estejam definidas antes de usar
+                    $totalValorTotal = $totalValorTotal ?? 0;
+                    $totalValorTotal2 = $totalValorTotal2 ?? 0;
+                    $totalValorTotal3 = $totalValorTotal3 ?? 0;
+
+                    // Calcular o total geral
+                    $totalGeral = $totalValorTotal + $totalValorTotal2 + $totalValorTotal3;
+                @endphp
                 <span>65- Total Geral</span><br>
-                <strong>R$</strong>
+                <strong>R$ {{ number_format($totalGeral, 2, ',', '.') }}</strong>
             </div>
         </div>
         <div class="block">
@@ -401,9 +439,11 @@
         <div class="block">
             <div class="small-field">1- Registro ANS: <br> <strong>{{ $guia->registro_ans ?? '' }}</strong></div>
             <div class="medium-field">2- Nº Guia Referenciada: <br>
-                <strong>{{ $guia->numero_guia_referenciada ?? '' }}</strong></div>
+                <strong>{{ $guia->numero_guia_op ?? '' }}</strong>
+            </div>
             <div class="medium-field">3- Código na Operadora: <br>
-                <strong>{{ $guia->codigo_operadora ?? '' }}</strong></div>
+                <strong>{{ $guia->codigo_operadora ?? '' }}</strong>
+            </div>
             <div class="large-field">4- Nome do Contratado: <br> <strong>{{ $guia->nome_contratado ?? '' }}</strong>
             </div>
             <div class="medium-field">5- Código CNES: <br> <strong>{{ $guia->codigo_cnes ?? '' }}</strong></div>
@@ -413,33 +453,78 @@
         <table class="despesas-table">
             <thead>
                 <tr>
-                    <th>Descrição</th>
-                    <th>Data</th>
-                    <th>Hora Inicial</th>
-                    <th>Hora Final</th>
-                    <th>Tabela</th>
-                    <th>Código do Item</th>
-                    <th>Qtd</th>
-                    <th>Unidade</th>
-                    <th>Fator Red./Acre.</th>
-                    <th>Valor Unitário (R$)</th>
-                    <th>Valor Total (R$)</th>
+                    <th>6 - CD</th>
+                    <th>7 - Data</th>
+                    <th>8 - Hora inicial</th>
+                    <th>9 - Hora Final</th>
+                    <th>10 - Tabela</th>
+                    <th>17 - Descrição</th>
+                    <th>11 - Código do Ítem</th>
+                    <th>12 - Qtd</th>
+                    <th>13 - Unid de Medida </th>
+                    <th>14 - Fator Red./Acresc.</th>
+                    <th>15 - Valor Unitário</th>
+                    <th>16 - Valor Total</th>
                 </tr>
             </thead>
             <tbody>
                 <!-- Exemplo de despesas-->
                 <tr>
-                    <td>DIPROSPAN</td>
-                    <td>31/07/2024</td>
-                    <td>11:57</td>
-                    <td>11:57</td>
-                    <td>20</td>
-                    <td>90148142</td>
-                    <td>2,000</td>
-                    <td>AMP</td>
-                    <td>2,0002</td>
-                    <td>45,80</td>
-                    <td>22,90</td>
+                    @php
+                        $totalValorTotal2 = 0;
+                    @endphp
+
+                    @foreach ($medicamentos as $medicamento)
+                <tr>
+                    <td><strong>{{ $medicamento->cd ?? '' }}</strong></td>
+                    <td>{{ $medicamento->created_at ? \Carbon\Carbon::parse($medicamento->created_at)->format('d/m/Y') : '' }}
+                    </td>
+                    <td>{{ $medicamento->created_at ? \Carbon\Carbon::parse($medicamento->created_at)->format('H:i') : '' }}
+                    </td>
+                    <td>{{ $medicamento->created_at ? \Carbon\Carbon::parse($medicamento->created_at)->format('H:i') : '' }}
+                    </td>
+                    <td>{{ $medicamento->tabela ?? '' }}</td>
+                    <td>{{ $medicamento->nome_medicamento ?? '' }}</td>
+                    <td>{{ $medicamento->codigo ?? '' }}</td>
+                    <td>{{ $medicamento->quantidade ?? '' }}</td>
+                    <td>{{ $medicamento->unidade_medida ?? '' }}</td>
+                    <td>{{ $medicamento->fator ?? '' }}</td>
+                    <td>{{ number_format($medicamento->valor, 2, ',', '.') ?? '' }}</td>
+                    <td>{{ number_format($medicamento->valor_total, 2, ',', '.') ?? '' }}</td>
+                </tr>
+                @php
+                    $totalValorTotal2 += $medicamento->valor_total;
+                @endphp
+                @endforeach
+                </tr>
+
+                <tr>
+                    @php
+                        $totalValorTotal3 = 0;
+                    @endphp
+
+                    @foreach ($materiais as $material)
+                <tr>
+                    <td><strong>{{ $material->cd ?? '' }}</strong></td>
+                    <td>{{ $material->created_at ? \Carbon\Carbon::parse($material->created_at)->format('d/m/Y') : '' }}
+                    </td>
+                    <td>{{ $material->created_at ? \Carbon\Carbon::parse($material->created_at)->format('H:i') : '' }}
+                    </td>
+                    <td>{{ $material->created_at ? \Carbon\Carbon::parse($material->created_at)->format('H:i') : '' }}
+                    </td>
+                    <td>{{ $material->tabela ?? '' }}</td>
+                    <td>{{ $material->nome_material ?? '' }}</td>
+                    <td>{{ $material->codigo ?? '' }}</td>
+                    <td>{{ $material->quantidade ?? '' }}</td>
+                    <td>{{ $material->unidade_medida ?? '' }}</td>
+                    <td>{{ $material->fator ?? '' }}</td>
+                    <td>{{ number_format($material->valor, 2, ',', '.') ?? '' }}</td>
+                    <td>{{ number_format($material->valor_total, 2, ',', '.') ?? '' }}</td>
+                </tr>
+                @php
+                    $totalValorTotal3 += $material->valor_total;
+                @endphp
+                @endforeach
                 </tr>
                 <!-- Outras despesas podem ser adicionadas aqui-->
             </tbody>
@@ -448,15 +533,27 @@
         <!-- Totais da Guia OD-->
         <div class="section-title">Totais</div>
         <div class="block">
-            <div>Total Gases Medicinais (R$): <br> <strong>70,35</strong></div>
-            <div>Total Medicamentos (R$): <br> <strong>173,88</strong></div>
-            <div>Total Materiais (R$): <br> <strong>18.124,23</strong></div>
+            <div>Total Gases Medicinais (R$): <br> <strong>0,00</strong></div>
+            <div>Total Medicamentos (R$): <br> <strong>{{ number_format($totalValorTotal2, 2, ',', '.') }}</strong></div>
+            <div>Total Materiais (R$): <br> <strong>{{ number_format($totalValorTotal3, 2, ',', '.') }}</strong></div>
         </div>
         <div class="block">
             <div>Total de OPME (R$): <br> <strong>0,00</strong></div>
             <div>Total Taxas e Aluguéis (R$): <br> <strong>0,00</strong></div>
             <div>Total Diárias (R$): <br> <strong>0,00</strong></div>
-            <div>Total Geral (R$): <br> <strong>18.124,23</strong></div>
+            @php
+                // Garantir que as variáveis estejam definidas antes de usar
+                $totalValorTotal2 = $totalValorTotal2 ?? 0;
+                $totalValorTotal3 = $totalValorTotal3 ?? 0;
+
+                // Calcular o total geral
+                $totalGeral = $totalValorTotal2 + $totalValorTotal3;
+            @endphp
+
+            <div>
+                Total Geral (R$): <br>
+                <strong>{{ number_format($totalGeral, 2, ',', '.') }}</strong>
+            </div>
         </div>
 
         <!-- Assinaturas-->
