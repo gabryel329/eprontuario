@@ -6,6 +6,8 @@ use App\Models\Agenda;
 use App\Models\Convenio;
 use App\Models\Disponibilidade;
 use App\Models\Especialidade;
+use App\Models\Exames;
+use App\Models\ExamesSadt;
 use App\Models\Feriado;
 use App\Models\MatAgenda;
 use App\Models\MedAgenda;
@@ -916,6 +918,9 @@ class AgendaController extends Controller
     public function index1(Request $request)
     {
         $pacientes = Pacientes::all();
+
+        $examesSolicitados = Exames::all();
+
         $profissionals = Profissional::join('especialidade_profissional', 'profissionals.id', '=', 'especialidade_profissional.profissional_id')
             ->leftJoin('especialidades', 'especialidade_profissional.especialidade_id', '=', 'especialidades.id')
             ->select(
@@ -1013,14 +1018,12 @@ class AgendaController extends Controller
                 }
             }
 
-
-
         } else {
             // Clear session data if no filter is applied
             session()->forget(['data', 'profissional_id']);
         }
 
-        return view('agenda.lista', compact('profissionals', 'agendas', 'pacientes', 'tiposConsultas'));
+        return view('agenda.lista', compact('profissionals', 'agendas', 'pacientes', 'tiposConsultas', 'examesSolicitados'));
     }
 
 

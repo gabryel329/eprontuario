@@ -183,7 +183,11 @@
                                                     {{ is_null($item->paciente_id) ? 'disabled' : '' }}>
                                                     <option selected disabled>Selecione a Guia</option>
                                                     <option value="consulta">Guia de Consulta</option>
-                                                    <option value="sadt">Guia SADT</option>
+                                                    @if ($examesSolicitados instanceof \Illuminate\Support\Collection)
+                                                        <option
+                                                            {{ $examesSolicitados->contains('agenda_id', $item->id) ? '' : 'disabled' }}
+                                                            value="sadt">Guia SADT</option>
+                                                    @endif
                                                 </select>
                                             </td>
                                             <td>
@@ -922,8 +926,8 @@
                                     <label for="regime_atendimento" class="form-label">91 - Regime Atendimento</label>
                                     <select class="form-select" id="regime_atendimento" name="regime_atendimento">
                                         <option value="">{{ old('regime_atendimento') ? 'selected' : 'Selecione' }}
-                                            <option value="01">Ambulatórial</option>
-                                            <option value="02">Emergência</option>
+                                        <option value="01">Ambulatórial</option>
+                                        <option value="02">Emergência</option>
                                     </select>
                                 </div>
                                 <div class="col-md-2">
@@ -1436,7 +1440,7 @@
                                             <option value="A">Avançado</option>
                                         </select>
                                     </td>
-                                    <td><input class="form-control" name="fator_red_acres[]" id="fator_red_acres" type="text" placeholder="EX:1,00" value="${procedimento.tabela || ''}"></td>
+                                    <td><input class="form-control" name="fator_red_acres[]" id="fator_red_acres" type="text" oninput="calcularValorTotal(this)" placeholder="EX:1,00" value="${procedimento.tabela || ''}"></td>
                                     <td><input class="form-control valor_unitario" id="valor_unitario" oninput="calcularValorTotal(this)" name="valor_unitario[]" type="text" value="${procedimento.valor || ''}"></td>
                                     <td><input class="form-control valor_total" id="valor_total" name="valor_total[]" type="text" readonly placeholder="Valor Total"></td>
                                 </tr>
@@ -1469,7 +1473,8 @@
 
                             // Iterar sobre cada exame e preencher a tabela
                             response.medicamentos.forEach(function(medicamento) {
-                                const unidadeMedidaNome = unidadeMedidaMap[medicamento.unidade_medida] || "Desconhecido";
+                                const unidadeMedidaNome = unidadeMedidaMap[medicamento
+                                    .unidade_medida] || "Desconhecido";
                                 const medicamentoRow = `
                                 <tr>
                                     <td><input style="width: 50px;" class="form-control" type="text" value="${medicamento.cd || ''}" readonly></td>
@@ -1501,7 +1506,8 @@
 
                             // Iterar sobre cada exame e preencher a tabela
                             response.materiais.forEach(function(material) {
-                                const unidadeMedidaNome = unidadeMedidaMap[material.unidade_medida] || "Desconhecido";
+                                const unidadeMedidaNome = unidadeMedidaMap[material
+                                    .unidade_medida] || "Desconhecido";
                                 const materialRow = `
                                 <tr>
                                     <td><input style="width: 50px;" class="form-control" type="text" value="${material.cd || ''}" readonly></td>
@@ -1533,7 +1539,8 @@
                                 response.profissional.name : '');
                             $('#modalSADT #codigo_cnes').val(response.empresa ? response.empresa
                                 .cnes : '');
-                            $('#modalSADT #nome_contratado_executante').val(response.empresa ? response.empresa
+                            $('#modalSADT #nome_contratado_executante').val(response.empresa ?
+                                response.empresa
                                 .name : '');
                             $('#modalSADT #data_atendimento').val(response.agenda ? response
                                 .agenda.data : '');
@@ -1669,7 +1676,7 @@
                 $('#gerarGuiaSADTButton').on('click', function() {
                     // Capturar o ID da agenda a partir do campo hidden dentro do formulário guiaForm2
                     var agendaId = $('#guiaForm2 #agenda_id')
-                .val(); // Escopo limitado ao formulário guiaForm2
+                        .val(); // Escopo limitado ao formulário guiaForm2
                     console.log(agendaId);
 
                     // Substituir ':id' na rota com o ID da agenda
@@ -1752,16 +1759,22 @@
             const row = element.closest('tr');
 
             // Obtém os campos da mesma linha
-            const quantidade = row.querySelector('.quantidade_autorizada').value;
-            const valorUnitario = row.querySelector('.valor_unitario').value;
+            const quantidade = parseFloat(row.querySelector('.quantidade_autorizada').value) || 0;
+            const valorUnitario = parseFloat(row.querySelector('.valor_unitario').value) || 0;
+            const fator = parseFloat(row.querySelector('#fator_red_acres').value.replace(',', '.')) ||
+            1; // Converte vírgula para ponto
             const valorTotalField = row.querySelector('.valor_total');
 
-            // Calcula o valor total
-            const valorTotal = (parseFloat(quantidade) || 0) * (parseFloat(valorUnitario) || 0);
+            // Calcula o valor total considerando o fator
+            let valorTotal = quantidade * valorUnitario;
+
+            // Aplica o fator de redução ou acréscimo
+            valorTotal *= fator;
 
             // Atualiza o campo de valor total
             valorTotalField.value = valorTotal.toFixed(2);
         }
+
 
 
         $(document).ready(function() {
