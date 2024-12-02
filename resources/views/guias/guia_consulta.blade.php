@@ -45,7 +45,7 @@
                         </div>
                     </div>
                     <div class="tile-title d-flex justify-content-between align-items-center">
-                        <label class="form-label">Lista de Guias</label>
+                        <label class="form-label">Lista de Guias Consulta</label>
                         <!-- Botão para gerar guias em massa -->
                         <button type="button" class="btn btn-success" id="btnGerarGuias" disabled>
                             <i class="bi bi-file-earmark-zip"></i> Gerar Guias Selecionadas
@@ -56,7 +56,7 @@
                             <thead>
                                 <tr>
                                     <th><input type="checkbox" id="selectAll" /></th>
-                                    <th>Registro ANS</th>
+                                    <th>Lote</th>
                                     <th>Data</th>
                                     <th>Ações</th>
                                 </tr>
@@ -646,7 +646,7 @@
                                         html +=
                                             '<td><input type="checkbox" name="guiaCheckbox" value="' +
                                             guia.id + '" /></td>';
-                                        html += '<td>' + guia.nome_beneficiario +
+                                        html += '<td>' + guia.numeracao +
                                             '</td>';
                                         html += '<td>' + dataFormatada + '</td>';
                                         html += '<td>';
