@@ -446,9 +446,10 @@ public function gerarZipGuiaSp($id)
             return array_merge($proc->toArray(), [
                 'procedimento_nome' => $detalhes->procedimento ?? 'Procedimento não encontrado',
                 'valor_proc' => $detalhes->valor_proc ?? 0,
+                'dataproc' => $proc->dataproc ?? '0000-00-00',
             ]);
         });
-
+        
         $guia = GuiaSp::where('agenda_id', $agenda->id)->first();
 
         $ExameSolis = ExamesSadt::where('guia_sps_id', $agenda->id)

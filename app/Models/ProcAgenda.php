@@ -18,6 +18,7 @@ class ProcAgenda extends Model
         'procedimento_id',
         'codigo',
         'valor',
+        'dataproc'
     ];
 
     // Relacionamento com o model Agenda

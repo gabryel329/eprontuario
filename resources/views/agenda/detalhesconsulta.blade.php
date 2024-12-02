@@ -207,6 +207,7 @@
                                             <table class="table">
                                                 <thead>
                                                     <tr>
+                                                        <th>Data</th>
                                                         <th>Procedimento</th>
                                                         <th>Código</th>
                                                         <th>Ações</th>
@@ -214,6 +215,10 @@
                                                 </thead>
                                                 <tbody id="exame-table-body">
                                                     <tr class="exame-row">
+                                                        <td>
+                                                            <input type="date" value="{{ session('data', \Carbon\Carbon::now()->format('Y-m-d')) }}" class="form-control dataproc"
+                                                                name="dataproc[]">
+                                                        </td>
                                                         <td>
                                                             <select name="procedimento_id[]"
                                                                 class="select2 form-control procedimento_id" required>
@@ -791,39 +796,40 @@ function applySelect5(element) {
             applySelect2($('select.select2'));
 
             function addExameRow() {
-                var newRow = `
-                    <tr class="exame-row">
-                        <td>
-                            <select class="select2 form-control procedimento_id" name="procedimento_id[]" required>
-                                <option value="" data-codigo="">Selecione o Procedimento</option>
-                                @foreach ($agendas->procedimento_lista as $procedimento)
-                                    <option value="{{ $procedimento->id }}"
-                                        data-codigo="{{ $procedimento->codigo }}" data-valor="{{ $procedimento->valor_proc }}">
-                                        {{ $procedimento->procedimento }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td>
-                            <input type="text" class="form-control codigo" name="codigo[]" placeholder="Código" readonly>
-                            <input type="hidden" class="form-control valor" name="valor[]" placeholder="Código" readonly>
-                        </td>
-                        <td class="actions">
-                            <button type="button" class="btn btn-success plus-row">+</button>
-                            <button type="button" class="btn btn-danger delete-row">-</button>
-                        </td>
-                    </tr>`;
-                $('#exame-table-body').append(newRow);
-                applySelect2($('#exame-table-body select.select2:last'));
+                const rowHtml = `
+                <tr class="exame-row">
+                    <td>
+                        <input type="date" value="{{ session('data', \Carbon\Carbon::now()->format('Y-m-d')) }}" class="form-control dataproc" name="dataproc[]">
+                    </td>
+                    <td>
+                        <select class="select2 form-control procedimento_id" name="procedimento_id[]" required>
+                            <option value="" data-codigo="">Selecione o Procedimento</option>
+                            @foreach ($agendas->procedimento_lista as $procedimento)
+                                <option value="{{ $procedimento->id }}"
+                                    data-codigo="{{ $procedimento->codigo }}" data-valor="{{ $procedimento->valor_proc }}">
+                                    {{ $procedimento->procedimento }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control codigo" name="codigo[]" placeholder="Código" readonly>
+                        <input type="hidden" class="form-control valor" name="valor[]" placeholder="Código" readonly>
+                    </td>
+                    <td class="actions">
+                        <button type="button" class="btn btn-success plus-row">+</button>
+                        <button type="button" class="btn btn-danger delete-row">-</button>
+                    </td>
+                </tr>
+                `;
 
-                // Adiciona o evento change para atualizar o campo de código
-                $('#exame-table-body .procedimento_id:last').on('change', function() {
-                    var codigo = $(this).find('option:selected').data('codigo');
-                    var valor = $(this).find('option:selected').data('valor');
-                    $(this).closest('.exame-row').find('.valor').val(valor);
-                    $(this).closest('.exame-row').find('.codigo').val(codigo);
-                });
+                // Adiciona a nova linha ao corpo da tabela
+                $('#exame-table-body').append(rowHtml);
+
+                // Reinicializa o Select2 na nova linha
+                $('.select2').select2();
             }
+
 
             $(document).on('click', '.plus-row', function() {
                 addExameRow();
@@ -851,19 +857,29 @@ function applySelect5(element) {
                 success: function(response) {
                     if (response.data && response.data.length > 0) {
                         response.data.forEach(function(item) {
+                            console.log(item);
+                            
+                            // Adiciona uma nova linha
                             addExameRow();
+
+                            // Seleciona a última linha adicionada
                             const lastRow = $('#exame-table-body').find('.exame-row:last');
-                            lastRow.find('.procedimento_id').val(item.procedimento_id).trigger(
-                                'change');
+
+                            // Preenche os campos da linha com os dados recebidos
+                            lastRow.find('.procedimento_id').val(item.procedimento_id).trigger('change');
                             lastRow.find('.codigo').val(item.codigo);
                             lastRow.find('.valor').val(item.valor);
+                            lastRow.find('.dataproc').val(item.dataproc);
                         });
+                    } else {
+                        console.log('Nenhum dado encontrado.');
                     }
                 },
                 error: function() {
                     console.log('Erro ao carregar dados do banco.');
                 }
             });
+
 
             $('#saveExameButton').on('click', function(event) {
                 event.preventDefault();

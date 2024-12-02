@@ -273,11 +273,13 @@ class AgendaController extends Controller
                 'procedimento_id.*' => 'required',
                 'codigo.*' => 'required|string',
                 'valor.*' => 'required|string',
+                'dataproc.*' => 'required',
             ]);
 
             foreach ($validated['procedimento_id'] as $index => $procedimento_id) {
                 $codigo = $validated['codigo'][$index];
                 $valor = $validated['valor'][$index];
+                $dataproc = $validated['dataproc'][$index];
 
                 // Log para verificar o valor antes de salvar
                 Log::info("Salvando procedimento_id: $procedimento_id, código: $codigo, valor: $valor");
@@ -291,6 +293,7 @@ class AgendaController extends Controller
                     [
                         'codigo' => $codigo,
                         'valor' => $valor,
+                        'dataproc' => $dataproc,
                     ]
                 );
             }
@@ -307,16 +310,18 @@ class AgendaController extends Controller
 
     public function verificarProcedimento($agenda_id, $paciente_id)
     {
-        $procedimento = ProcAgenda::where('agenda_id', $agenda_id)
+        $procedimentos = ProcAgenda::where('agenda_id', $agenda_id)
             ->where('paciente_id', $paciente_id)
-            ->get();
+            ->get(['procedimento_id', 'dataproc', 'codigo', 'valor']); // Certifique-se de selecionar os campos necessários
 
-        if ($procedimento->isEmpty()) {
+        if ($procedimentos->isEmpty()) {
             return response()->json(['error' => 'Nenhum procedimento encontrado'], 404);
         }
 
-        return response()->json(['data' => $procedimento]);
+        return response()->json(['data' => $procedimentos]);
     }
+
+
 
     public function storeMaterial(Request $request)
 {

@@ -1070,7 +1070,7 @@
                                                 <th>16 - Valor Total</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="medicamentos-table-body">materiais-table-body
+                                        <tbody id="medicamentos-table-body">
                                         </tbody>
                                         <tbody id="materiais-table-body">
                                         </tbody>
@@ -1411,7 +1411,7 @@
                             response.procedimentos.forEach(function(procedimento) {
                                 const procedimentoRow = `
                                 <tr>
-                                    <td><input class="form-control" id="data_real" name="data_real[]" type="text" <input type="text" readonly value="${procedimento.created_at ? procedimento.created_at.substring(0, 10).split('-').reverse().join('/') : ''}"></td>
+                                    <td><input class="form-control" id="data_real" name="data_real[]" type="date" readonly value="${procedimento.dataproc}"></td>
                                     <td><input class="form-control" id="hora_inicio_atendimento" name="hora_inicio_atendimento[]" type="text" readonly value="${procedimento.created_at ? procedimento.created_at.substring(11, 16) : ''}"></td>
                                     <td><input class="form-control" id="hora_fim_atendimento" name="hora_fim_atendimento[]" type="text" readonly value="${procedimento.created_at ? procedimento.created_at.substring(11, 16) : ''}"></td>
                                     <td><input class="form-control" id="tabela" name="tabela[]" type="text" readonly value="22"></td>
