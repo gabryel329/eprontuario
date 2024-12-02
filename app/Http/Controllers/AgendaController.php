@@ -262,50 +262,50 @@ class AgendaController extends Controller
     }
 
     public function storeProcedimento(Request $request)
-    {
-        try {
-            // Registra os dados recebidos no log
-            Log::info('Dados recebidos:', $request->all());
+{
+    Log::info('Dados recebidos no backend:', $request->all());
 
-            $validated = $request->validate([
-                'paciente_id' => 'required|exists:pacientes,id',
-                'agenda_id' => 'required|exists:agendas,id',
-                'procedimento_id.*' => 'required',
-                'codigo.*' => 'required|string',
-                'valor.*' => 'required|string',
-                'dataproc.*' => 'required',
+    try {
+        // Validação ajustada
+        $validated = $request->validate([
+            'paciente_id' => 'required|exists:pacientes,id',
+            'agenda_id' => 'required|exists:agendas,id',
+            'procedimento_id.*' => 'required',
+            'codigo.*' => 'required|string',
+            'valor.*' => 'required|string',
+            'dataproc.*' => 'required|date',
+        ]);
+
+        foreach ($validated['procedimento_id'] as $index => $procedimento_id) {
+            $valor = isset($validated['valor'][$index]) ? (float) $validated['valor'][$index] : 0.0;
+
+            Log::info('Processando procedimento:', [
+                'procedimento_id' => $procedimento_id,
+                'valor' => $valor,
+                'codigo' => $validated['codigo'][$index],
+                'dataproc' => $validated['dataproc'][$index],
             ]);
 
-            foreach ($validated['procedimento_id'] as $index => $procedimento_id) {
-                $codigo = $validated['codigo'][$index];
-                $valor = $validated['valor'][$index];
-                $dataproc = $validated['dataproc'][$index];
+            // Busca ou cria um novo registro incluindo o campo `dataproc`
+            $ProcAgenda = ProcAgenda::firstOrNew([
+                'agenda_id' => $validated['agenda_id'],
+                'paciente_id' => $validated['paciente_id'],
+                'procedimento_id' => $procedimento_id,
+                'dataproc' => $validated['dataproc'][$index], // Inclui dataproc na condição de busca
+            ]);
 
-                // Log para verificar o valor antes de salvar
-                Log::info("Salvando procedimento_id: $procedimento_id, código: $codigo, valor: $valor");
-
-                ProcAgenda::updateOrCreate(
-                    [
-                        'agenda_id' => $validated['agenda_id'],
-                        'paciente_id' => $validated['paciente_id'],
-                        'procedimento_id' => $procedimento_id,
-                    ],
-                    [
-                        'codigo' => $codigo,
-                        'valor' => $valor,
-                        'dataproc' => $dataproc,
-                    ]
-                );
-            }
-
-            return response()->json(['message' => 'Procedimentos salvos com sucesso!']);
-        } catch (\Exception $e) {
-            Log::error('Erro ao salvar os procedimentos: ' . $e->getMessage()); // Registra o erro no log
-            return response()->json(['error' => 'Erro ao salvar os procedimentos.'], 500);
+            // Atualizar ou criar os valores para o procedimento
+            $ProcAgenda->codigo = $validated['codigo'][$index];
+            $ProcAgenda->valor = $valor;
+            $ProcAgenda->save();
         }
+
+        return response()->json(['message' => 'Procedimentos salvos com sucesso!']);
+    } catch (\Exception $e) {
+        Log::error('Erro ao salvar procedimento:', ['exception' => $e->getMessage()]);
+        return response()->json(['error' => 'Erro ao salvar o procedimento.'], 500);
     }
-
-
+}
 
 
     public function verificarProcedimento($agenda_id, $paciente_id)

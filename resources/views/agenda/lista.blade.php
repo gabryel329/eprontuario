@@ -808,14 +808,14 @@
                                         name="codigo_operadora_executante" type="text"
                                         value="{{ old('codigo_operadora_executante') }}">
                                 </div>
-                                <div class="col-md-2">
+                                {{-- <div class="col-md-2">
                                     <label class="form-label">Selecione o Profissional</label>
                                     <button type="button" class="btn btn-primary form-control" data-bs-toggle="modal"
                                         data-bs-target="#modalProfissional">
                                         <i class="bi bi-list"></i>
                                     </button>
-                                </div>
-                                <div class="col-md-4">
+                                </div> --}}
+                                <div class="col-md-6">
                                     <label for="nome_contratado_executante" class="form-label">30 - Nome do
                                         Contratado</label>
                                     <input class="form-control" id="nome_contratado_executante"
@@ -922,9 +922,8 @@
                                     <label for="regime_atendimento" class="form-label">91 - Regime Atendimento</label>
                                     <select class="form-select" id="regime_atendimento" name="regime_atendimento">
                                         <option value="">{{ old('regime_atendimento') ? 'selected' : 'Selecione' }}
-                                        <option value="01">Hospitalar</option>
-                                        <option value="02">Hospital–dia</option>
-                                        <option value="03">Domiciliar</option>
+                                            <option value="01">Ambulatórial</option>
+                                            <option value="02">Emergência</option>
                                     </select>
                                 </div>
                                 <div class="col-md-2">
@@ -1534,6 +1533,8 @@
                                 response.profissional.name : '');
                             $('#modalSADT #codigo_cnes').val(response.empresa ? response.empresa
                                 .cnes : '');
+                            $('#modalSADT #nome_contratado_executante').val(response.empresa ? response.empresa
+                                .name : '');
                             $('#modalSADT #data_atendimento').val(response.agenda ? response
                                 .agenda.data : '');
                             $('#modalSADT #agenda_id').val(response.agenda ? response
@@ -1581,9 +1582,6 @@
                                 '');
                             $('#modalSADT #indicacao_cob_especial').val(response.guia
                                 ?.indicacao_cob_especial ||
-                                '');
-                            $('#modalSADT #nome_contratado_executante').val(response.guia
-                                ?.nome_contratado_executante ||
                                 '');
                             $('#modalSADT #tipo_atendimento').val(response.guia
                                 ?.tipo_atendimento ||

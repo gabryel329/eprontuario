@@ -692,7 +692,7 @@ public function gerarZipGuiaSp($id)
             $dadosProcedimento->addChild('ans:descricaoProcedimento', $procedimento->descricao_procedimento_realizado);
             $procedimentoExecutado->addChild('ans:quantidadeExecutada', $procedimento->quantidade_autorizada);
             $procedimentoExecutado->addChild('ans:viaAcesso', $procedimento->via);
-            $procedimentoExecutado->addChild('ans:reducaoAcrescimo', '1.00');
+            $procedimentoExecutado->addChild('ans:reducaoAcrescimo', $procedimento->fator_red_acres);
             $procedimentoExecutado->addChild('ans:valorUnitario', $procedimento->valor_unitario);
             $procedimentoExecutado->addChild('ans:valorTotal', $procedimento->valor_total);
 
