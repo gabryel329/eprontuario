@@ -46,8 +46,9 @@ class GuiaConsulta extends Model
         'assinatura_profissional_executante', // 24 - Assinatura do Profissional Executante
         'assinatura_beneficiario', // 25 - Assinatura do Beneficiário ou Responsável
         'hash', // Hash para validação de integridade
+        'identificador',
     ];
-    
+
 
     public function user()
     {

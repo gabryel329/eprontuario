@@ -31,14 +31,23 @@ class GuiaConsultaController extends Controller
     public function listarGuiasConsulta(Request $request)
     {
         $convenio_id = $request->get('convenio_id');
+        $identificador = $request->get('identificador');
 
+        // Verifica se o convênio foi fornecido
         if (!$convenio_id) {
             return response()->json(['error' => 'Convênio não encontrado.'], 404);
         }
 
-        $guiaConsulta = GuiaConsulta::where('convenio_id', $convenio_id)->get();
+        // Consulta com base no convênio e identificador (se fornecido)
+        $query = GuiaConsulta::where('convenio_id', $convenio_id);
 
-        return response()->json(['guias' => $guiaConsulta]);
+        if ($identificador) {
+            $query->where('identificador', $identificador);
+        }
+
+        $guiasp = $query->get();
+
+        return response()->json(['guias' => $guiasp]);
     }
     public function gerarGuiaConsulta($id)
     {
@@ -177,6 +186,7 @@ class GuiaConsultaController extends Controller
         $guia->codigo_procedimento = $request->input('codigo_procedimento');
         $guia->valor_procedimento = $request->input('valor_procedimento');
         $guia->observacao = $request->input('observacao');
+        $guia->identificador = 'PENDENTE';
 
         // Verifica se o conselho_profissional está no mapeamento e substitui pelo código numérico
         $conselhoProfissional = $request->input('conselho_profissional');
@@ -397,6 +407,9 @@ class GuiaConsultaController extends Controller
         $epilogo = $xml->addChild('ans:epilogo');
         $epilogo->addChild('ans:hash', md5($xml->asXML())); // Gera um hash MD5 do XML para verificar integridade
 
+        $guia->identificador = 'GERADO';
+        $guia->save();
+
         // Retorna o XML como download
         $fileName = 'lote_guias_consulta.xml';
         return response($xml->asXML(), 200)
@@ -490,6 +503,9 @@ class GuiaConsultaController extends Controller
         $epilogo = $xml->addChild('ans:epilogo');
         $hash = md5($xml->asXML());
         $epilogo->addChild('ans:hash', $hash);
+
+        $guia->identificador = 'GERADO';
+        $guia->save();
 
         $fileName = 'lote_guias_consulta.xml';
         $filePath = storage_path('app/public/' . $fileName);
@@ -612,6 +628,9 @@ class GuiaConsultaController extends Controller
         $epilogo = $xml->addChild('ans:epilogo');
         $epilogo->addChild('ans:hash', $guia->hash);
 
+        $guia->identificador = 'GERADO';
+        $guia->save();
+
         // Retornar o XML como download
         return response($xml->asXML(), 200)
             ->header('Content-Type', 'application/xml')
@@ -699,6 +718,9 @@ class GuiaConsultaController extends Controller
         // Adicione o hash ao XML
         $epilogo = $xml->addChild('ans:epilogo');
         $epilogo->addChild('ans:hash', $hash);
+
+        $guia->identificador = 'GERADO';
+        $guia->save();
 
         // Salvar o XML temporariamente no servidor
         $fileName = 'guia_consulta_' . $guia->id . '.xml';

@@ -66,13 +66,14 @@ class GuiaSp extends Model
         'data_realizacao',                // 56 - Data de Realização do Procedimento
         'assinatura_beneficiario',        // 57 - Assinatura do Beneficiário ou Responsável
         'observacao',                     // 58 - Observação / Justificativa
-        'hash', 
+        'hash',
         'qtd_aut',
         'qtd_sol',
         'cns',
         'indicacao_cob_especial',
         'sequencia',
-        'grua'                  // Hash para validação de integridade
+        'grua',
+        'identificador',
     ];
 
 

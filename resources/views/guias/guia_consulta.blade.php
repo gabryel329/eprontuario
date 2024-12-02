@@ -30,6 +30,20 @@
         <div class="row mt-3">
             <div class="col-md-12">
                 <div class="tile">
+                    <div class="timeline-post">
+                        <div class="col-md-12">
+                            <ul class="nav nav-tabs user-tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#dados" data-bs-toggle="tab"
+                                        data-identificador="PENDENTE">Guias Pendentes</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#honorario" data-bs-toggle="tab"
+                                        data-identificador="GERADO">Guias Geradas</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                     <div class="tile-title d-flex justify-content-between align-items-center">
                         <label class="form-label">Lista de Guias</label>
                         <!-- Botão para gerar guias em massa -->
@@ -48,13 +62,12 @@
                                 </tr>
                             </thead>
                             <tbody id="listaGuias">
-                                <!-- Guias serão listadas aqui via AJAX -->
+                                <!-- Dados dinâmicos serão carregados aqui -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-        </div>
     </main>
 
     <!-- Modal para visualização de guias -->
@@ -482,167 +495,205 @@
             });
 
             function gerarLote(ids) {
-        let numeracao = null;
+                let numeracao = null;
 
-        // Função para verificar e solicitar numeração apenas se necessário
-        function verificarNumeracao() {
-            return fetch(`/verificar-numeracao`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({ guia_ids: ids })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.numeracao) {
-                    numeracao = data.numeracao;
-                    return true;
-                } else {
-                    numeracao = prompt("Numeração não encontrada. Por favor, insira a numeração para o lote:");
-                    return numeracao ? true : false;
+                // Função para verificar e solicitar numeração apenas se necessário
+                function verificarNumeracao() {
+                    return fetch(`/verificar-numeracao`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                    'content')
+                            },
+                            body: JSON.stringify({
+                                guia_ids: ids
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.numeracao) {
+                                numeracao = data.numeracao;
+                                return true;
+                            } else {
+                                numeracao = prompt(
+                                    "Numeração não encontrada. Por favor, insira a numeração para o lote:");
+                                return numeracao ? true : false;
+                            }
+                        })
+                        .catch(error => {
+                            alert("Erro ao verificar a numeração: " + error.message);
+                            return false;
+                        });
                 }
-            })
-            .catch(error => {
-                alert("Erro ao verificar a numeração: " + error.message);
-                return false;
-            });
-        }
 
-        // Função para gerar o XML em lote
-        function gerarXml() {
-            return fetch("{{ route('guias.gerarXmlEmLote') }}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({ guia_ids: ids, numeracao: numeracao })
-            })
-            .then(response => {
-                if (response.status === 422) return response.json();
-                else if (response.ok) return response.blob();
-                else throw new Error('Erro ao gerar XML.');
-            })
-            .then(data => {
-                if (data && data.error) {
-                    alert("Erro: " + data.error);
-                    return false;
-                } else if (data instanceof Blob) {
-                    const url = window.URL.createObjectURL(data);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `lote_guias_consulta.xml`;
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
-                    return true;
+                // Função para gerar o XML em lote
+                function gerarXml() {
+                    return fetch("{{ route('guias.gerarXmlEmLote') }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                    'content')
+                            },
+                            body: JSON.stringify({
+                                guia_ids: ids,
+                                numeracao: numeracao
+                            })
+                        })
+                        .then(response => {
+                            if (response.status === 422) return response.json();
+                            else if (response.ok) return response.blob();
+                            else throw new Error('Erro ao gerar XML.');
+                        })
+                        .then(data => {
+                            if (data && data.error) {
+                                alert("Erro: " + data.error);
+                                return false;
+                            } else if (data instanceof Blob) {
+                                const url = window.URL.createObjectURL(data);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = `lote_guias_consulta.xml`;
+                                document.body.appendChild(a);
+                                a.click();
+                                a.remove();
+                                return true;
+                            }
+                        })
+                        .catch(error => alert("Erro ao gerar XML em lote: " + error.message));
                 }
-            })
-            .catch(error => alert("Erro ao gerar XML em lote: " + error.message));
-        }
 
-        // Função para gerar o ZIP em lote
-        function gerarZip() {
-            return fetch("{{ route('guias.gerarZipEmLote') }}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({ guia_ids: ids, numeracao: numeracao })
-            })
-            .then(response => {
-                if (response.status === 422) return response.json();
-                else if (response.ok) return response.blob();
-                else throw new Error('Erro ao gerar ZIP.');
-            })
-            .then(data => {
-                if (data && data.error) {
-                    alert("Erro: " + data.error);
-                    return false;
-                } else if (data instanceof Blob) {
-                    const url = window.URL.createObjectURL(data);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `lote_guias_consulta.zip`;
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
-                    return true;
+                // Função para gerar o ZIP em lote
+                function gerarZip() {
+                    return fetch("{{ route('guias.gerarZipEmLote') }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                    'content')
+                            },
+                            body: JSON.stringify({
+                                guia_ids: ids,
+                                numeracao: numeracao
+                            })
+                        })
+                        .then(response => {
+                            if (response.status === 422) return response.json();
+                            else if (response.ok) return response.blob();
+                            else throw new Error('Erro ao gerar ZIP.');
+                        })
+                        .then(data => {
+                            if (data && data.error) {
+                                alert("Erro: " + data.error);
+                                return false;
+                            } else if (data instanceof Blob) {
+                                const url = window.URL.createObjectURL(data);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = `lote_guias_consulta.zip`;
+                                document.body.appendChild(a);
+                                a.click();
+                                a.remove();
+                                return true;
+                            }
+                        })
+                        .catch(error => alert("Erro ao gerar ZIP em lote: " + error.message));
                 }
-            })
-            .catch(error => alert("Erro ao gerar ZIP em lote: " + error.message));
-        }
 
-        // Executa as funções para gerar XML e ZIP em sequência após verificar numeração
-        verificarNumeracao().then(result => {
-            if (result) {
-                gerarXml().then(result => {
-                    if (result !== false) {
-                        return gerarZip();
+                // Executa as funções para gerar XML e ZIP em sequência após verificar numeração
+                verificarNumeracao().then(result => {
+                    if (result) {
+                        gerarXml().then(result => {
+                            if (result !== false) {
+                                return gerarZip();
+                            }
+                        });
                     }
                 });
             }
-        });
-    }
 
             // Aplicar a máscara no campo de hora
             $('#hora_inicio_atendimento').mask('00:00');
 
-            // Carregar as guias ao selecionar o convênio
-            $('#convenio_id').change(function() {
-                var convenio_id = $(this).val();
-                if (convenio_id) {
-                    $.ajax({
-                        url: '/guia-consulta/listar',
-                        type: 'GET',
-                        data: { convenio_id: convenio_id },
-                        success: function(response) {
-                            if (response.guias && response.guias.length > 0) {
+            $(document).ready(function() {
+                function listarGuiasConsulta() {
+                    var convenio_id = $('#convenio_id').val(); // ID do convênio selecionado
+                    var identificador = $('.nav-link.active').data(
+                    'identificador'); // Identificador da aba ativa
+
+                    if (convenio_id && identificador) {
+                        $.ajax({
+                            url: '/guia-consulta/listar', // Verifique se essa rota está correta no Laravel
+                            type: 'GET',
+                            data: {
+                                convenio_id: convenio_id,
+                                identificador: identificador // Envia o identificador da aba ativa
+                            },
+                            success: function(response) {
                                 var html = '';
-                                $.each(response.guias, function(index, guia) {
-                                    var data = new Date(guia.created_at);
-                                    var dataFormatada = data.toLocaleDateString('pt-BR', {
-                                        day: '2-digit',
-                                        month: '2-digit',
-                                        year: 'numeric'
+                                if (response.guias && response.guias.length > 0) {
+                                    $.each(response.guias, function(index, guia) {
+                                        var data = new Date(guia.created_at);
+                                        var dataFormatada = data.toLocaleDateString(
+                                            'pt-BR', {
+                                                day: '2-digit',
+                                                month: '2-digit',
+                                                year: 'numeric'
+                                            });
+
+                                        html += '<tr>';
+                                        html +=
+                                            '<td><input type="checkbox" name="guiaCheckbox" value="' +
+                                            guia.id + '" /></td>';
+                                        html += '<td>' + guia.nome_beneficiario +
+                                            '</td>';
+                                        html += '<td>' + dataFormatada + '</td>';
+                                        html += '<td>';
+                                        html +=
+                                            '<button type="button" class="btn btn-success btnVisualizarImprimir" data-id="' +
+                                            guia.id + '" title="Visualizar">';
+                                        html += '<i class="bi bi-eye"></i></button>';
+                                        html +=
+                                            '<button type="button" class="btn btn-danger ms-2" title="Gerar XML e ZIP" onclick="baixarArquivosConsulta(' +
+                                            guia.id + ')">';
+                                        html +=
+                                            '<i class="bi bi-filetype-xml"></i></button>';
+                                        html += '</td>';
+                                        html += '</tr>';
                                     });
-
-                                    html += '<tr>';
-                                    html += '<td><input type="checkbox" name="guiaCheckbox" value="' + guia.id + '"></td>';
-                                    html += '<td>' + guia.nome_beneficiario + '</td>';
-                                    html += '<td>' + dataFormatada + '</td>';
-                                    html += '<td>';
-                                    html += '<button type="button" class="btn btn-success btnVisualizarImprimir" data-id="' + guia.id + '" title="Visualizar e Imprimir">';
-                                    html += '<i class="bi bi-printer"></i>';
-                                    html += '</button>';
-                                    html += '<a href="javascript:void(0);" class="btn btn-danger ms-2" title="Gerar XML e ZIP" onclick="baixarArquivos(' + guia.id + ')">';
-                                    html += '<i class="bi bi-filetype-xml"></i>';
-                                    html += '</a>';
-                                    html += '</td>';
-                                    html += '</tr>';
-                                });
-
+                                } else {
+                                    html =
+                                        '<tr><td colspan="4">Nenhuma guia encontrada para este convênio e aba selecionados.</td></tr>';
+                                }
                                 $('#listaGuias').html(html);
-                            } else {
-                                $('#listaGuias').html('<tr><td colspan="4">Nenhuma guia encontrada para este convênio.</td></tr>');
+                            },
+                            error: function() {
+                                alert('Erro ao buscar as guias.');
                             }
-                            $('#btnNovoGuia').prop('disabled', false);
-                            $('#convenio_id_hidden').val(convenio_id);
-                        },
-                        error: function() {
-                            alert('Erro ao buscar as guias.');
-                            $('#btnNovoGuia').prop('disabled', true);
-                        }
-                    });
-                } else {
-                    $('#listaGuias').html('');
-                    $('#btnNovoGuia').prop('disabled', true);
+                        });
+                    } else {
+                        $('#listaGuias').html(
+                            '<tr><td colspan="4">Por favor, selecione um convênio e uma aba para ver as guias.</td></tr>'
+                            );
+                    }
                 }
-            });
 
+                // Evento para carregar guias ao trocar de convênio
+                $('#convenio_id').change(function() {
+                    listarGuiasConsulta();
+                });
+
+                // Evento para carregar guias ao mudar de aba
+                $('.nav-link').click(function() {
+                    $('.nav-link').removeClass('active'); // Remove a classe ativa de outras abas
+                    $(this).addClass('active'); // Adiciona a classe ativa à aba clicada
+                    listarGuiasConsulta(); // Carrega os dados para a aba selecionada
+                });
+
+                // Carregar guias iniciais com a primeira aba ativa
+                listarGuiasConsulta();
+            });
             $(document).on('click', '.btnVisualizarGuia', function() {
                 var guiaId = $(this).data('id');
 
@@ -710,92 +761,98 @@
             };
         });
 
-// Função para verificar numeração no backend
-function verificarNumeracao(id) {
-    return fetch(`/verificar-numeracao-consulta`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({ guia_ids: [id] })
-    })
-    .then(response => response.json())
-    .then(data => data.numeracao);
-}
-
-// Função para gerar o XML com verificação de numeração
-function gerarXmlGuiaConsulta(id) {
-    if (!numGuia) {
-        numGuia = prompt("Numeração não encontrada para esta guia. Por favor, insira a numeração:");
-        if (!numGuia) {
-            alert("A numeração é necessária para gerar o XML.");
-            return;
+        // Função para verificar numeração no backend
+        function verificarNumeracao(id) {
+            return fetch(`/verificar-numeracao-consulta`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        guia_ids: [id]
+                    })
+                })
+                .then(response => response.json())
+                .then(data => data.numeracao);
         }
-    }
 
-    fetch(`/gerar-xml-guia-consulta/${id}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({ numeracao: numGuia })
-    })
-    .then(response => response.blob())
-    .then(blob => downloadBlob(blob, `guia_consulta_${id}.xml`))
-    .catch(error => alert("Erro ao gerar XML: " + error.message));
-}
-
-// Função para gerar o ZIP com a mesma numeração
-function gerarZipGuiaConsulta(id) {
-    if (!numGuia) {
-        alert("Por favor, gere o XML primeiro para definir a numeração.");
-        return;
-    }
-
-    fetch(`/gerar-zip-guia-consulta/${id}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({ numeracao: numGuia })
-    })
-    .then(response => response.blob())
-    .then(blob => downloadBlob(blob, `guia_consulta_${id}.zip`))
-    .catch(error => alert("Erro ao gerar ZIP: " + error.message));
-}
-
-// Função para baixar arquivos XML e ZIP com verificação de numeração
-function baixarArquivos(guiaId) {
-    verificarNumeracao(guiaId).then(numeracao => {
-        if (numeracao) {
-            numGuia = numeracao; // Usa a numeração existente
-        } else {
-            // Solicita a numeração se não estiver definida
-            numGuia = prompt("Numeração não encontrada para esta guia. Por favor, insira a numeração:");
+        // Função para gerar o XML com verificação de numeração
+        function gerarXmlGuiaConsulta(id) {
             if (!numGuia) {
-                alert("A numeração é necessária para gerar os arquivos.");
+                numGuia = prompt("Numeração não encontrada para esta guia. Por favor, insira a numeração:");
+                if (!numGuia) {
+                    alert("A numeração é necessária para gerar o XML.");
+                    return;
+                }
+            }
+
+            fetch(`/gerar-xml-guia-consulta/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        numeracao: numGuia
+                    })
+                })
+                .then(response => response.blob())
+                .then(blob => downloadBlob(blob, `guia_consulta_${id}.xml`))
+                .catch(error => alert("Erro ao gerar XML: " + error.message));
+        }
+
+        // Função para gerar o ZIP com a mesma numeração
+        function gerarZipGuiaConsulta(id) {
+            if (!numGuia) {
+                alert("Por favor, gere o XML primeiro para definir a numeração.");
                 return;
             }
+
+            fetch(`/gerar-zip-guia-consulta/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        numeracao: numGuia
+                    })
+                })
+                .then(response => response.blob())
+                .then(blob => downloadBlob(blob, `guia_consulta_${id}.zip`))
+                .catch(error => alert("Erro ao gerar ZIP: " + error.message));
         }
 
-        // Gera o XML e ZIP usando a numeração confirmada ou nova
-        gerarXmlGuiaConsulta(guiaId);
-        gerarZipGuiaConsulta(guiaId);
-    }).catch(error => alert("Erro ao verificar a numeração: " + error.message));
-}
+        // Função para baixar arquivos XML e ZIP com verificação de numeração
+        function baixarArquivos(guiaId) {
+            verificarNumeracao(guiaId).then(numeracao => {
+                if (numeracao) {
+                    numGuia = numeracao; // Usa a numeração existente
+                } else {
+                    // Solicita a numeração se não estiver definida
+                    numGuia = prompt("Numeração não encontrada para esta guia. Por favor, insira a numeração:");
+                    if (!numGuia) {
+                        alert("A numeração é necessária para gerar os arquivos.");
+                        return;
+                    }
+                }
 
-// Função de download de blobs
-function downloadBlob(blob, filename) {
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-}
+                // Gera o XML e ZIP usando a numeração confirmada ou nova
+                gerarXmlGuiaConsulta(guiaId);
+                gerarZipGuiaConsulta(guiaId);
+            }).catch(error => alert("Erro ao verificar a numeração: " + error.message));
+        }
+
+        // Função de download de blobs
+        function downloadBlob(blob, filename) {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        }
     </script>
 @endsection

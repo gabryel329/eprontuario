@@ -20,7 +20,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class GuiaSpController extends Controller
 {
@@ -37,12 +37,21 @@ class GuiaSpController extends Controller
     public function listarGuiasSp(Request $request)
     {
         $convenio_id = $request->get('convenio_id');
+        $identificador = $request->get('identificador');
 
+        // Verifica se o convênio foi fornecido
         if (!$convenio_id) {
             return response()->json(['error' => 'Convênio não encontrado.'], 404);
         }
 
-        $guiasp = GuiaSp::where('convenio_id', $convenio_id)->get();
+        // Consulta com base no convênio e identificador (se fornecido)
+        $query = GuiaSp::where('convenio_id', $convenio_id);
+
+        if ($identificador) {
+            $query->where('identificador', $identificador);
+        }
+
+        $guiasp = $query->get();
 
         return response()->json(['guias' => $guiasp]);
     }
@@ -594,7 +603,7 @@ public function gerarZipGuiaSp($id)
                     ->where('med_agendas.agenda_id', $guia->agenda_id)
                     ->select(
                         'med_agendas.id as id',
-                        'med_agendas.dose as quantidade',
+                        'med_agendas.quantidade as quantidade',
                         'med_agendas.unidade_medida',
                         "{$tabelaMedicamentos}.medicamento as nome_produto",
                         "{$tabelaMedicamentos}.medicamento as descricao_produto",
@@ -736,6 +745,9 @@ public function gerarZipGuiaSp($id)
     $epilogo = $xml->addChild('ans:epilogo');
     $epilogo->addChild('ans:hash', md5($xml->asXML()));
 
+    $guia->identificador = 'GERADO';
+    $guia->save();
+
     // Retorna o XML como download
     $fileName = 'lote_guias_sadt.xml';
     return response($xml->asXML(), 200)
@@ -773,7 +785,7 @@ public function gerarZipGuiasadtEmLote(Request $request)
 
    $origem = $cabecalho->addChild('ans:origem');
    $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
-   $identificacaoPrestador->addChild('ans:CPF', $guias->first()->profissional->cpf ?? ''); // CPF do profissional da primeira guia
+   $identificacaoPrestador->addChild('ans:CPF', $guias->first()->profissional->cpf ?? '');
 
    $destino = $cabecalho->addChild('ans:destino');
    $destino->addChild('ans:registroANS', $guias->first()->registro_ans);
@@ -818,7 +830,7 @@ public function gerarZipGuiasadtEmLote(Request $request)
                    ->where('med_agendas.agenda_id', $guia->agenda_id)
                    ->select(
                        'med_agendas.id as id',
-                       'med_agendas.dose as quantidade',
+                       'med_agendas.quantidade as quantidade',
                        'med_agendas.unidade_medida',
                        "{$tabelaMedicamentos}.medicamento as nome_produto",
                        "{$tabelaMedicamentos}.medicamento as descricao_produto",
@@ -959,6 +971,9 @@ public function gerarZipGuiasadtEmLote(Request $request)
     $hash = md5($xml->asXML());
     $epilogo->addChild('ans:hash', $hash);
 
+    $guia->identificador = 'GERADO';
+    $guia->save();
+
     $fileName = 'lote_guias_sadt.xml';
     $filePath = storage_path('app/public/' . $fileName);
 
@@ -1039,8 +1054,8 @@ public function gerarZipGuiasadtEmLote(Request $request)
         ->where('med_agendas.agenda_id', $guia->agenda_id)
         ->select(
             'med_agendas.id as id',
-            'med_agendas.dose as quantidade',
-            'med_agendas.unidade_medida', // Incluído
+            'med_agendas.quantidade as quantidade',
+            'med_agendas.unidade_medida',
             "{$tabelaMedicamentos}.medicamento as nome_produto",
             "{$tabelaMedicamentos}.medicamento as descricao_produto",
             DB::raw("'MEDICAMENTO' as tipo_produto"),
@@ -1206,6 +1221,9 @@ public function gerarZipGuiasadtEmLote(Request $request)
     $epilogo = $xml->addChild('ans:epilogo');
     $epilogo->addChild('ans:hash', md5($xml->asXML()));
 
+    $guia->identificador = 'GERADO';
+    $guia->save();
+
     // Retornar o XML como download
     return response($xml->asXML(), 200)
         ->header('Content-Type', 'application/xml')
@@ -1256,7 +1274,7 @@ public function gerarZipGuiasadt($id, Request $request)
                 ->where('med_agendas.agenda_id', $guia->agenda_id)
                 ->select(
                     'med_agendas.id as id',
-                    'med_agendas.dose as quantidade',
+                    'med_agendas.quantidade as quantidade',
                     'med_agendas.unidade_medida',
                     "{$tabelaMedicamentos}.medicamento as nome_produto",
                     "{$tabelaMedicamentos}.medicamento as descricao_produto",
@@ -1424,6 +1442,9 @@ public function gerarZipGuiasadt($id, Request $request)
     // Epílogo
     $epilogo = $xml->addChild('ans:epilogo');
     $epilogo->addChild('ans:hash', md5($xml->asXML()));
+
+    $guia->identificador = 'GERADO';
+    $guia->save();
 
     // Salvar o XML em um arquivo
     $fileName = 'guia_sadt_' . $guia->id . '.xml';
@@ -1627,6 +1648,7 @@ public function gerarZipGuiasadt($id, Request $request)
             'uf_profissional' => $request->input('uf_profissional'),
             'codigo_cbo_profissional' => $request->input('codigo_cbo_profissional'),
             'observacao' => $request->input('observacao') ?? 'N/A',
+            'identificador' => 'PENDENTE'
         ]);
 
         // Verifica se o conselho_profissional está no mapeamento e substitui pelo código numérico
