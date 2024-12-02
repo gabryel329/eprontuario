@@ -402,9 +402,50 @@ public function gerarZipGuiaSp($id)
     public function impressaoGuia($id)
     {
         $guia = GuiaSp::find($id);
+        $agenda = Agenda::where('id',$guia->agenda_id)->first();
+
+        // $user = User::where('id', $guia->user_id)->get();
+        $ExameSolis = ExamesSadt::where('guia_sps_id', $guia->id)
+        ->whereNotNull('codigo_procedimento_solicitado')
+        ->get();
+
+        $ExameAuts = ExamesAutSadt::where('guia_sps_id', $guia->id)->get();
+
+        $tabelaMed = $agenda->convenio->tab_med_id; // Nome da tabela de medicamentos do convênio
+
+        if (Schema::hasTable($tabelaMed)) { // Verifica se a tabela existe no banco
+            $medicamentos = MedAgenda::where('agenda_id', $agenda->id)
+                ->join($tabelaMed, "$tabelaMed.id", '=', 'med_agendas.medicamento_id') // Realiza o INNER JOIN
+                ->select('med_agendas.*', "$tabelaMed.medicamento as nome_medicamento") // Seleciona as colunas desejadas
+                ->get();
+        } else {
+            $medicamentos = collect(); // Retorna uma coleção vazia se a tabela não existir
+        }
+
+        $tabelaMat = $agenda->convenio->tab_mat_id; // Nome da tabela de medicamentos do convênio
+
+        if (Schema::hasTable($tabelaMat)) { // Verifica se a tabela existe no banco
+            $materiais = MatAgenda::where('agenda_id', $agenda->id)
+                ->join($tabelaMat, "$tabelaMat.id", '=', 'mat_agendas.material_id') // Realiza o INNER JOIN
+                ->select('mat_agendas.*', "$tabelaMat.medicamento as nome_material") // Seleciona as colunas desejadas
+                ->get();
+        } else {
+            $materiais = collect(); // Retorna uma coleção vazia se a tabela não existir
+        }
+        // Buscar a empresa associada
         $empresa = Empresas::first();
 
-        return view('formulario.guiasp', compact('guia', 'empresa'));
+        // Retornar a view de impressão da Guia SADT
+        return view('formulario.guiasp', [
+            'agenda' => $agenda,
+            'guia' => $guia,
+            'empresa' => $empresa,
+            'ExameSolis' => $ExameSolis,
+            'ExameAuts' => $ExameAuts,
+            'medicamentos' => $medicamentos,
+            'materiais' => $materiais,
+            // 'user' => $user,
+        ]);
     }
 
     public function gerarGuiaSADTMODAL($id)

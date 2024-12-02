@@ -153,7 +153,7 @@
                 <h3>GUIA DE SERVIÇO PROFISSIONAL- SP/SADT</h3>
             </div>
             <div class="address">
-                <p>2- Nº Guia no Prestador <br> <strong>{{ $guia->numero_guia_op ?? '' }}</strong></p>
+                <p>2- Nº Guia no Prestador <br> <strong>{{ $guia->numero_guia_prestador ?? '' }}</strong></p>
             </div>
         </div>
 
