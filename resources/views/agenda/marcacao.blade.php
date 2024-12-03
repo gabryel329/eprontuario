@@ -333,7 +333,7 @@
             <td><input type="text" name="matricula[${horario}]" value="${horario.matricula ?? ''}" class="form-control" ${isDisabled}></td>
             <td>${renderProcedimentoInput(horario, procedimentos, isDisabled)}</td>
             <td><input type="text"name="codigo[${horario.hora}]" id="codigo${horario.hora}" value="${horario.codigo ?? ''}" class="form-control" readonly ${isDisabled}></td>
-            <td><input type="text"name="valor_proc[${horario.hora}]" id="valor_proc${horario.hora}" value="${horario.valor_proc ?? ''}" class="form-control" readonly ${isDisabled}></td>
+            <td><input type="text"name="valor_proc[${horario.hora}]" id="valor_proc${horario.hora}" value="${horario.valor_proc ?? ''}" class="form-control" ${isDisabled}></td>
 
         </tr>
     `;

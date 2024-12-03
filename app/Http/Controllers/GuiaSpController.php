@@ -222,7 +222,7 @@ class GuiaSpController extends Controller
     $guiaSP = $guiasTISS->addChild('ans:guiaSP-SADT');
     $cabecalhoGuia = $guiaSP->addChild('ans:cabecalhoGuia');
     $cabecalhoGuia->addChild('ans:registroANS', $guia->registro_ans);
-    $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_prestador);
+    $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_op);
 
     // Dados de Autorização
     $dadosAutorizacao = $guiaSP->addChild('ans:dadosAutorizacao');
@@ -259,7 +259,7 @@ class GuiaSpController extends Controller
     $dadosAtendimento->addChild('ans:tipoAtendimento', $guia->tipo_atendimento);
     $dadosAtendimento->addChild('ans:indicacaoAcidente', $guia->indicacao_acidente);
     $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta);
-    $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento);
+    $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento ?? '01');
 
     // Procedimentos Executados
     $procedimentosExecutados = $guiaSP->addChild('ans:procedimentosExecutados');
@@ -319,7 +319,7 @@ public function gerarZipGuiaSp($id)
     $guiaSP = $guiasTISS->addChild('ans:guiaSP-SADT');
     $cabecalhoGuia = $guiaSP->addChild('ans:cabecalhoGuia');
     $cabecalhoGuia->addChild('ans:registroANS', $guia->registro_ans);
-    $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_prestador);
+    $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_op);
 
     // Dados de Autorização
     $dadosAutorizacao = $guiaSP->addChild('ans:dadosAutorizacao');
@@ -356,7 +356,7 @@ public function gerarZipGuiaSp($id)
     $dadosAtendimento->addChild('ans:tipoAtendimento', $guia->tipo_atendimento);
     $dadosAtendimento->addChild('ans:indicacaoAcidente', $guia->indicacao_acidente);
     $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta);
-    $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento);
+    $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento ?? '01');
 
     // Procedimentos Executados
     $procedimentosExecutados = $guiaSP->addChild('ans:procedimentosExecutados');
@@ -673,11 +673,11 @@ public function gerarZipGuiaSp($id)
         // Cabeçalho da Guia
         $cabecalhoGuia = $guiaSadt->addChild('ans:cabecalhoGuia');
         $cabecalhoGuia->addChild('ans:registroANS', $guia->registro_ans);
-        $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_operadora);
+        $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_op);
 
         // Dados de Autorização
         $dadosAutorizacao = $guiaSadt->addChild('ans:dadosAutorizacao');
-        $dadosAutorizacao->addChild('ans:numeroGuiaOperadora', $guia->numero_guia_operadora);
+        $dadosAutorizacao->addChild('ans:numeroGuiaOperadora', $guia->numero_guia_op);
         $dadosAutorizacao->addChild('ans:dataAutorizacao', $guia->data_autorizacao);
         $dadosAutorizacao->addChild('ans:senha', $guia->senha);
         $dadosAutorizacao->addChild('ans:dataValidadeSenha', $guia->validade_senha);
@@ -716,7 +716,7 @@ public function gerarZipGuiaSp($id)
         $dadosAtendimento->addChild('ans:tipoAtendimento', $guia->tipo_atendimento);
         $dadosAtendimento->addChild('ans:indicacaoAcidente', $guia->indicacao_acidente);
         $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta);
-        $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento);
+        $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento ?? '01');
 
         // Procedimentos Executados
         $procedimentosExecutados = $guiaSadt->addChild('ans:procedimentosExecutados');
@@ -900,11 +900,11 @@ public function gerarZipGuiasadtEmLote(Request $request)
        // Cabeçalho da Guia
        $cabecalhoGuia = $guiaSadt->addChild('ans:cabecalhoGuia');
        $cabecalhoGuia->addChild('ans:registroANS', $guia->registro_ans);
-       $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_operadora);
+       $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_op);
 
        // Dados de Autorização
        $dadosAutorizacao = $guiaSadt->addChild('ans:dadosAutorizacao');
-       $dadosAutorizacao->addChild('ans:numeroGuiaOperadora', $guia->numero_guia_operadora);
+       $dadosAutorizacao->addChild('ans:numeroGuiaOperadora', $guia->numero_guia_op);
        $dadosAutorizacao->addChild('ans:dataAutorizacao', $guia->data_autorizacao);
        $dadosAutorizacao->addChild('ans:senha', $guia->senha);
        $dadosAutorizacao->addChild('ans:dataValidadeSenha', $guia->validade_senha);
@@ -943,7 +943,7 @@ public function gerarZipGuiasadtEmLote(Request $request)
        $dadosAtendimento->addChild('ans:tipoAtendimento', $guia->tipo_atendimento);
        $dadosAtendimento->addChild('ans:indicacaoAcidente', $guia->indicacao_acidente);
        $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta);
-       $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento);
+       $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento ?? '01');
 
        // Procedimentos Executados
         $procedimentosExecutados = $guiaSadt->addChild('ans:procedimentosExecutados');
@@ -1131,7 +1131,7 @@ public function gerarZipGuiasadtEmLote(Request $request)
 
     $origem = $cabecalho->addChild('ans:origem');
     $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
-    $identificacaoPrestador->addChild('ans:CPF', $guia->profissional->cpf ?? '');
+    $identificacaoPrestador->addChild('ans:CNPJ', $guia->codigo_operadora ?? '');
 
     $destino = $cabecalho->addChild('ans:destino');
     $destino->addChild('ans:registroANS', $guia->registro_ans);
@@ -1150,11 +1150,11 @@ public function gerarZipGuiasadtEmLote(Request $request)
     // Cabeçalho da Guia
     $cabecalhoGuia = $guiaSadt->addChild('ans:cabecalhoGuia');
     $cabecalhoGuia->addChild('ans:registroANS', $guia->registro_ans);
-    $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_prestador);
+    $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_op);
 
     // Dados de Autorização
     $dadosAutorizacao = $guiaSadt->addChild('ans:dadosAutorizacao');
-    $dadosAutorizacao->addChild('ans:numeroGuiaOperadora', $guia->numero_guia_prestador);
+    $dadosAutorizacao->addChild('ans:numeroGuiaOperadora', $guia->numero_guia_op);
     $dadosAutorizacao->addChild('ans:dataAutorizacao', $guia->data_autorizacao);
     $dadosAutorizacao->addChild('ans:senha', $guia->senha);
     $dadosAutorizacao->addChild('ans:dataValidadeSenha', $guia->validade_senha);
@@ -1167,8 +1167,8 @@ public function gerarZipGuiasadtEmLote(Request $request)
     // Dados do Solicitante
     $dadosSolicitante = $guiaSadt->addChild('ans:dadosSolicitante');
     $contratadoSolicitante = $dadosSolicitante->addChild('ans:contratadoSolicitante');
-    $contratadoSolicitante->addChild('ans:cpfContratado', $guia->profissional->cpf ?? '');
-    $dadosSolicitante->addChild('ans:nomeContratadoSolicitante', $guia->nome_profissional_solicitante);
+    $contratadoSolicitante->addChild('ans:cnpjContratado', $guia->codigo_operadora ?? '');
+    $dadosSolicitante->addChild('ans:nomeContratadoSolicitante', $guia->nome_contratado_executante);
     $profissionalSolicitante = $dadosSolicitante->addChild('ans:profissionalSolicitante');
     $profissionalSolicitante->addChild('ans:nomeProfissional', $guia->nome_profissional_solicitante);
     $profissionalSolicitante->addChild('ans:conselhoProfissional', $guia->conselho_profissional);
@@ -1193,7 +1193,7 @@ public function gerarZipGuiasadtEmLote(Request $request)
     $dadosAtendimento->addChild('ans:tipoAtendimento', $guia->tipo_atendimento);
     $dadosAtendimento->addChild('ans:indicacaoAcidente', $guia->indicacao_acidente);
     $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta);
-    $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento);
+    $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento ?? '01');
 
     // Procedimentos Executados
     $procedimentosExecutados = $guiaSadt->addChild('ans:procedimentosExecutados');
@@ -1209,7 +1209,9 @@ public function gerarZipGuiasadtEmLote(Request $request)
         $dadosProcedimento->addChild('ans:codigoProcedimento', $procedimento->codigo_procedimento_realizado);
         $dadosProcedimento->addChild('ans:descricaoProcedimento', $procedimento->descricao_procedimento_realizado);
         $procedimentoExecutado->addChild('ans:quantidadeExecutada', $procedimento->quantidade_autorizada);
-        $procedimentoExecutado->addChild('ans:viaAcesso', $procedimento->via);
+        if (!empty($procedimento->via)) {
+            $procedimentoExecutado->addChild('ans:viaAcesso', $procedimento->via);
+        } 
         $procedimentoExecutado->addChild('ans:reducaoAcrescimo', '1.00');
         $procedimentoExecutado->addChild('ans:valorUnitario', $procedimento->valor_unitario);
         $procedimentoExecutado->addChild('ans:valorTotal', $procedimento->valor_total);
@@ -1227,28 +1229,29 @@ public function gerarZipGuiasadtEmLote(Request $request)
         $equipeSadt->addChild('ans:UF', $guia->uf_profissional);
         $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional);
     }
-    // Outras Despesas
-    $outrasDespesas = $guiaSadt->addChild('ans:outrasDespesas');
-    foreach ($outrasDespesasItems as $index => $item) {
-        $despesa = $outrasDespesas->addChild('ans:despesa');
-        $despesa->addChild('ans:sequencialItem', $index + 1);
-        $despesa->addChild('ans:codigoDespesa');
-
-        $servicosExecutados = $despesa->addChild('ans:servicosExecutados');
-        $servicosExecutados->addChild('ans:dataExecucao', $guia->data_autorizacao);
-        $servicosExecutados->addChild('ans:horaInicial', $guia->hora_inicio_atendimento);
-        $servicosExecutados->addChild('ans:horaFinal', $guia->hora_fim_atendimento);
-
-        $codigoTabela = strtoupper(trim($item->tipo_produto)) === 'MEDICAMENTO' ? '20' : '19';
-        $servicosExecutados->addChild('ans:codigoTabela', $codigoTabela);
-
-        $servicosExecutados->addChild('ans:codigoProcedimento', $item->material_id);
-        $servicosExecutados->addChild('ans:quantidadeExecutada', $item->quantidade);
-        $servicosExecutados->addChild('ans:unidadeMedida', $item->unidade_medida);
-        $servicosExecutados->addChild('ans:reducaoAcrescimo', '1.00');
-        $servicosExecutados->addChild('ans:valorUnitario', $item->valor_unitario_produto);
-        $servicosExecutados->addChild('ans:valorTotal', $item->quantidade * $item->valor_unitario_produto);
-        $servicosExecutados->addChild('ans:descricaoProcedimento', $item->nome_produto);
+    if (is_array($outrasDespesasItems) && count($outrasDespesasItems) > 0) {
+        $outrasDespesas = $guiaSadt->addChild('ans:outrasDespesas');
+        foreach ($outrasDespesasItems as $index => $item) {
+            $despesa = $outrasDespesas->addChild('ans:despesa');
+            $despesa->addChild('ans:sequencialItem', $index + 1);
+            $despesa->addChild('ans:codigoDespesa');
+    
+            $servicosExecutados = $despesa->addChild('ans:servicosExecutados');
+            $servicosExecutados->addChild('ans:dataExecucao', $guia->data_autorizacao);
+            $servicosExecutados->addChild('ans:horaInicial', $guia->hora_inicio_atendimento);
+            $servicosExecutados->addChild('ans:horaFinal', $guia->hora_fim_atendimento);
+    
+            $codigoTabela = strtoupper(trim($item->tipo_produto)) === 'MEDICAMENTO' ? '20' : '19';
+            $servicosExecutados->addChild('ans:codigoTabela', $codigoTabela);
+    
+            $servicosExecutados->addChild('ans:codigoProcedimento', $item->material_id);
+            $servicosExecutados->addChild('ans:quantidadeExecutada', $item->quantidade);
+            $servicosExecutados->addChild('ans:unidadeMedida', $item->unidade_medida);
+            $servicosExecutados->addChild('ans:reducaoAcrescimo', '1.00');
+            $servicosExecutados->addChild('ans:valorUnitario', $item->valor_unitario_produto);
+            $servicosExecutados->addChild('ans:valorTotal', $item->quantidade * $item->valor_unitario_produto);
+            $servicosExecutados->addChild('ans:descricaoProcedimento', $item->nome_produto);
+        }
     }
 
     // Adicionar valores totais conforme o padrão TISS
@@ -1352,7 +1355,7 @@ public function gerarZipGuiasadt($id, Request $request)
 
     $origem = $cabecalho->addChild('ans:origem');
     $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
-    $identificacaoPrestador->addChild('ans:CPF', $guia->profissional->cpf ?? '');
+    $identificacaoPrestador->addChild('ans:CNPJ', $guia->codigo_operadora ?? '');
 
     $destino = $cabecalho->addChild('ans:destino');
     $destino->addChild('ans:registroANS', $guia->registro_ans);
@@ -1371,11 +1374,11 @@ public function gerarZipGuiasadt($id, Request $request)
     // Cabeçalho da Guia
     $cabecalhoGuia = $guiaSadt->addChild('ans:cabecalhoGuia');
     $cabecalhoGuia->addChild('ans:registroANS', $guia->registro_ans);
-    $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_operadora);
+    $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_op);
 
     // Dados de Autorização
     $dadosAutorizacao = $guiaSadt->addChild('ans:dadosAutorizacao');
-    $dadosAutorizacao->addChild('ans:numeroGuiaOperadora', $guia->numero_guia_operadora);
+    $dadosAutorizacao->addChild('ans:numeroGuiaOperadora', $guia->numero_guia_op);
     $dadosAutorizacao->addChild('ans:dataAutorizacao', $guia->data_autorizacao);
     $dadosAutorizacao->addChild('ans:senha', $guia->senha);
     $dadosAutorizacao->addChild('ans:dataValidadeSenha', $guia->validade_senha);
@@ -1388,8 +1391,8 @@ public function gerarZipGuiasadt($id, Request $request)
     // Dados do Solicitante
     $dadosSolicitante = $guiaSadt->addChild('ans:dadosSolicitante');
     $contratadoSolicitante = $dadosSolicitante->addChild('ans:contratadoSolicitante');
-    $contratadoSolicitante->addChild('ans:cpfContratado', $guia->profissional->cpf ?? '');
-    $dadosSolicitante->addChild('ans:nomeContratadoSolicitante', $guia->nome_profissional_solicitante);
+    $contratadoSolicitante->addChild('ans:cnpjContratado', $guia->codigo_operadora ?? '');
+    $dadosSolicitante->addChild('ans:nomeContratadoSolicitante', $guia->nome_contratado_executante);
     $profissionalSolicitante = $dadosSolicitante->addChild('ans:profissionalSolicitante');
     $profissionalSolicitante->addChild('ans:nomeProfissional', $guia->nome_profissional_solicitante);
     $profissionalSolicitante->addChild('ans:conselhoProfissional', $guia->conselho_profissional);
@@ -1414,7 +1417,7 @@ public function gerarZipGuiasadt($id, Request $request)
     $dadosAtendimento->addChild('ans:tipoAtendimento', $guia->tipo_atendimento);
     $dadosAtendimento->addChild('ans:indicacaoAcidente', $guia->indicacao_acidente);
     $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta);
-    $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento);
+    $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento ?? '01');
 
     // Procedimentos Executados
     $procedimentosExecutados = $guiaSadt->addChild('ans:procedimentosExecutados');
@@ -1430,7 +1433,9 @@ public function gerarZipGuiasadt($id, Request $request)
         $dadosProcedimento->addChild('ans:codigoProcedimento', $procedimento->codigo_procedimento_realizado);
         $dadosProcedimento->addChild('ans:descricaoProcedimento', $procedimento->descricao_procedimento_realizado);
         $procedimentoExecutado->addChild('ans:quantidadeExecutada', $procedimento->quantidade_autorizada);
-        $procedimentoExecutado->addChild('ans:viaAcesso', $procedimento->via);
+        if (!empty($procedimento->via)) {
+            $procedimentoExecutado->addChild('ans:viaAcesso', $procedimento->via);
+        }        
         $procedimentoExecutado->addChild('ans:reducaoAcrescimo', '1.00');
         $procedimentoExecutado->addChild('ans:valorUnitario', $procedimento->valor_unitario);
         $procedimentoExecutado->addChild('ans:valorTotal', $procedimento->valor_total);
@@ -1449,27 +1454,29 @@ public function gerarZipGuiasadt($id, Request $request)
         $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional);
     }
     // Outras Despesas
-    $outrasDespesas = $guiaSadt->addChild('ans:outrasDespesas');
-    foreach ($outrasDespesasItems as $index => $item) {
-        $despesa = $outrasDespesas->addChild('ans:despesa');
-        $despesa->addChild('ans:sequencialItem', $index + 1);
-        $despesa->addChild('ans:codigoDespesa');
-
-        $servicosExecutados = $despesa->addChild('ans:servicosExecutados');
-        $servicosExecutados->addChild('ans:dataExecucao', $guia->data_autorizacao);
-        $servicosExecutados->addChild('ans:horaInicial', $guia->hora_inicio_atendimento);
-        $servicosExecutados->addChild('ans:horaFinal', $guia->hora_fim_atendimento);
-
-        $codigoTabela = strtoupper(trim($item->tipo_produto)) === 'MEDICAMENTO' ? '20' : '19';
-        $servicosExecutados->addChild('ans:codigoTabela', $codigoTabela);
-
-        $servicosExecutados->addChild('ans:codigoProcedimento', $item->material_id);
-        $servicosExecutados->addChild('ans:quantidadeExecutada', $item->quantidade);
-        $servicosExecutados->addChild('ans:unidadeMedida', $item->unidade_medida);
-        $servicosExecutados->addChild('ans:reducaoAcrescimo', '1.00');
-        $servicosExecutados->addChild('ans:valorUnitario', $item->valor_unitario_produto);
-        $servicosExecutados->addChild('ans:valorTotal', $item->quantidade * $item->valor_unitario_produto);
-        $servicosExecutados->addChild('ans:descricaoProcedimento', $item->nome_produto);
+    if (is_array($outrasDespesasItems) && count($outrasDespesasItems) > 0) {
+        $outrasDespesas = $guiaSadt->addChild('ans:outrasDespesas');
+        foreach ($outrasDespesasItems as $index => $item) {
+            $despesa = $outrasDespesas->addChild('ans:despesa');
+            $despesa->addChild('ans:sequencialItem', $index + 1);
+            $despesa->addChild('ans:codigoDespesa');
+    
+            $servicosExecutados = $despesa->addChild('ans:servicosExecutados');
+            $servicosExecutados->addChild('ans:dataExecucao', $guia->data_autorizacao);
+            $servicosExecutados->addChild('ans:horaInicial', $guia->hora_inicio_atendimento);
+            $servicosExecutados->addChild('ans:horaFinal', $guia->hora_fim_atendimento);
+    
+            $codigoTabela = strtoupper(trim($item->tipo_produto)) === 'MEDICAMENTO' ? '20' : '19';
+            $servicosExecutados->addChild('ans:codigoTabela', $codigoTabela);
+    
+            $servicosExecutados->addChild('ans:codigoProcedimento', $item->material_id);
+            $servicosExecutados->addChild('ans:quantidadeExecutada', $item->quantidade);
+            $servicosExecutados->addChild('ans:unidadeMedida', $item->unidade_medida);
+            $servicosExecutados->addChild('ans:reducaoAcrescimo', '1.00');
+            $servicosExecutados->addChild('ans:valorUnitario', $item->valor_unitario_produto);
+            $servicosExecutados->addChild('ans:valorTotal', $item->quantidade * $item->valor_unitario_produto);
+            $servicosExecutados->addChild('ans:descricaoProcedimento', $item->nome_produto);
+        }
     }
 
     // Adicionar valores totais conforme o padrão TISS

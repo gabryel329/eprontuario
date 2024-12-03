@@ -840,15 +840,15 @@
                                     <select class="form-select" id="tipo_atendimento" name="tipo_atendimento">
                                         <option value="">{{ old('tipo_atendimento') ? 'selected' : 'Selecione' }}
                                         </option>
-                                        <option value="1">Remoção</option>
-                                        <option value="2">Pequena Cirurgia</option>
-                                        <option value="3">Outras Terapias</option>
-                                        <option value="4">Consulta</option>
-                                        <option value="5">Exame Ambulatorial</option>
-                                        <option value="6">Atendimento Domiciliar</option>
-                                        <option value="7">Internação</option>
-                                        <option value="8">Quimioterapia</option>
-                                        <option value="9">Radioterapia</option>
+                                        <option value="01">Remoção</option>
+                                        <option value="02">Pequena Cirurgia</option>
+                                        <option value="03">Outras Terapias</option>
+                                        <option value="04">Consulta</option>
+                                        <option value="05">Exame Ambulatorial</option>
+                                        <option value="06">Atendimento Domiciliar</option>
+                                        <option value="07">Internação</option>
+                                        <option value="08">Quimioterapia</option>
+                                        <option value="09">Radioterapia</option>
                                         <option value="10">Terapia Renal Substitutiva (TRS)</option>
                                         <option value="11">Pronto Socorro</option>
                                         <option value="13">Pequeno atendimento (sutura, gesso e outros)</option>
@@ -1415,8 +1415,8 @@
                                 const procedimentoRow = `
                                 <tr>
                                     <td><input class="form-control" id="data_real" name="data_real[]" type="date" readonly value="${procedimento.dataproc}"></td>
-                                    <td><input class="form-control" id="hora_inicio_atendimento" name="hora_inicio_atendimento[]" type="text" readonly value="${procedimento.created_at ? procedimento.created_at.substring(11, 16) : ''}"></td>
-                                    <td><input class="form-control" id="hora_fim_atendimento" name="hora_fim_atendimento[]" type="text" readonly value="${procedimento.created_at ? procedimento.created_at.substring(11, 16) : ''}"></td>
+                                    <td><input class="form-control" id="hora_inicio_atendimento" name="hora_inicio_atendimento[]" type="text" readonly value="${procedimento.created_at ? procedimento.created_at.substring(11, 19) : ''}"></td>
+                                    <td><input class="form-control" id="hora_fim_atendimento" name="hora_fim_atendimento[]" type="text" readonly value="${procedimento.created_at ? procedimento.created_at.substring(11, 19) : ''}"></td>
                                     <td><input class="form-control" id="tabela" name="tabela[]" type="text" readonly value="22"></td>
                                     <td><input class="form-control" id="codigo_procedimento_realizado" name="codigo_procedimento_realizado[]" readonly type="text" value="${procedimento.codigo || ''}"></td>
                                     <td><input class="form-control" id="descricao_procedimento_realizado" name="descricao_procedimento_realizado[]" readonly type="text" value="${procedimento.procedimento_nome || ''}"></td>
@@ -1478,9 +1478,9 @@
                                 const medicamentoRow = `
                                 <tr>
                                     <td><input style="width: 50px;" class="form-control" type="text" value="${medicamento.cd || ''}" readonly></td>
-                                    <td><input style="width: 120px;" class="form-control" type="text" <input type="text" readonly value="${medicamento.created_at ? medicamento.created_at.substring(0, 10).split('-').reverse().join('/') : ''}"></td>
-                                    <td><input class="form-control" type="text" readonly value="${medicamento.created_at ? medicamento.created_at.substring(11, 16) : ''}"></td>
-                                    <td><input class="form-control" type="text" readonly value="${medicamento.created_at ? medicamento.created_at.substring(11, 16) : ''}"></td>
+                                    <td><input style="width: 119px;" class="form-control" type="text" <input type="text" readonly value="${medicamento.created_at ? medicamento.created_at.substring(0, 10).split('-').reverse().join('/') : ''}"></td>
+                                    <td><input class="form-control" type="text" readonly value="${medicamento.created_at ? medicamento.created_at.substring(11, 19) : ''}"></td>
+                                    <td><input class="form-control" type="text" readonly value="${medicamento.created_at ? medicamento.created_at.substring(11, 19) : ''}"></td>
                                     <td><input class="form-control" type="text" value="${medicamento.tabela || ''}" readonly></td>
                                     <td><input class="form-control" type="text" value="${medicamento.nome_medicamento || ''}" readonly></td>
                                     <td><input class="form-control" type="text" value="${medicamento.codigo || ''}" readonly></td>
