@@ -546,7 +546,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="data_atendimento" class="form-label">Data do Atendimento</label>
                                     <input class="form-control" id="data_atendimento" name="data_atendimento"
                                         type="date">
@@ -560,19 +560,19 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-2">
-                                    <label for="codigo_tabela" class="form-label">Código da Tabela</label>
-                                    <input class="form-control" id="codigo_tabela" name="codigo_tabela" type="text">
-                                </div>
+                                {{-- <div class="col-md-2">
+                                    <label for="codigo_tabela" class="form-label">Código da Tabela</label> --}}
+                                    {{-- <input class="form-control" id="codigo_tabela" value="22" name="codigo_tabela" type="hidden" readonly> --}}
+                                {{-- </div> --}}
                                 <div class="col-md-3">
                                     <label for="codigo_procedimento" class="form-label">Código do Procedimento</label>
                                     <input class="form-control" id="codigo_procedimento" name="codigo_procedimento"
-                                        type="text">
+                                        type="text" readonly>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="valor_procedimento" class="form-label">Valor do Procedimento</label>
                                     <input class="form-control" id="valor_procedimento" name="valor_procedimento"
-                                        type="text">
+                                        type="text" readonly>
                                 </div>
                             </div>
                             <hr>

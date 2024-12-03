@@ -1,6 +1,16 @@
 @extends('layouts.app')
 @section('content')
     <main class="app-content">
+        <div class="app-title">
+            <div>
+                <h1><i class="bi bi-ui-checks"></i> Lista de Guias SP/SADT</h1>
+            </div>
+            <ul class="app-breadcrumb breadcrumb">
+                <li class="breadcrumb-item"><i class="bi bi-house-door fs-6"></i></li>
+                <li class="breadcrumb-item">Faturamento</li>
+                <li class="breadcrumb-item"><a href="#">Guia SP/SADT</a></li>
+            </ul>
+        </div>
         @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -45,7 +55,7 @@
                         </div>
                     </div>
                     <div class="tile-title d-flex justify-content-between align-items-center">
-                        <label class="form-label">Lista de Guias SADT</label>
+                        <label class="form-label"></label>
                         <button type="button" class="btn btn-success" id="btnGerarGuias" disabled>
                             <i class="bi bi-file-earmark-zip"></i> Gerar Guias Selecionadas
                         </button>
@@ -64,6 +74,9 @@
                                 <!-- Dados dinâmicos serão carregados aqui -->
                             </tbody>
                         </table>
+                        <div id="paginacao" class="mt-3 text-center">
+                            <!-- Botões de paginação serão gerados dinamicamente aqui -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -398,82 +411,113 @@
 
             // Função para listar guias com base no convênio selecionado e na aba ativa
             $(document).ready(function() {
-                function listarGuias() {
-                    var convenio_id = $('#convenio_id').val(); // ID do convênio selecionado
-                    var identificador = $('.nav-link.active').data(
-                    'identificador'); // Identificador da aba ativa
+    var registrosPorPagina = 100; // Número de registros por página
+    var paginaAtual = 1; // Página inicial
+    var totalRegistros = 0; // Total de registros retornados
+    var registros = []; // Armazena os registros retornados pela API
 
-                    if (convenio_id && identificador) {
-                        $.ajax({
-                            url: '/guia-sp/listar', // Verifique se essa rota está correta no Laravel
-                            type: 'GET',
-                            data: {
-                                convenio_id: convenio_id,
-                                identificador: identificador // Envia o identificador da aba ativa
-                            },
-                            success: function(response) {
-                                var html = '';
-                                if (response.guias && response.guias.length > 0) {
-                                    $.each(response.guias, function(index, guia) {
-                                        var data = new Date(guia.created_at);
-                                        var dataFormatada = data.toLocaleDateString(
-                                            'pt-BR', {
-                                                day: '2-digit',
-                                                month: '2-digit',
-                                                year: 'numeric'
-                                            });
+    function listarGuias() {
+        var convenio_id = $('#convenio_id').val(); // ID do convênio selecionado
+        var identificador = $('.nav-link.active').data('identificador'); // Identificador da aba ativa
 
-                                        html += '<tr>';
-                                        html +=
-                                            '<td><input type="checkbox" name="guiaCheckbox" value="' +
-                                            guia.id + '" /></td>';
-                                        html += '<td>' + guia.numeracao + '</td>';
-                                        html += '<td>' + dataFormatada + '</td>';
-                                        html += '<td>';
-                                        html +=
-                                            '<button type="button" class="btn btn-success btnVisualizarImprimir" data-id="' +
-                                            guia.id + '" title="Visualizar">';
-                                        html += '<i class="bi bi-eye"></i></button>';
-                                        html +=
-                                            '<button type="button" class="btn btn-danger ms-2" title="Gerar XML e ZIP" onclick="baixarArquivosSadt(' +
-                                            guia.id + ')">';
-                                        html +=
-                                            '<i class="bi bi-filetype-xml"></i></button>';
-                                        html += '</td>';
-                                        html += '</tr>';
-                                    });
-                                } else {
-                                    html =
-                                        '<tr><td colspan="4">Nenhuma guia encontrada para este convênio e aba selecionados.</td></tr>';
-                                }
-                                $('#listaGuias').html(html);
-                            },
-                            error: function() {
-                                alert('Erro ao buscar as guias.');
-                            }
-                        });
+        if (convenio_id && identificador) {
+            $.ajax({
+                url: '/guia-sp/listar', // Verifique se essa rota está correta no Laravel
+                type: 'GET',
+                data: {
+                    convenio_id: convenio_id,
+                    identificador: identificador // Envia o identificador da aba ativa
+                },
+                success: function(response) {
+                    if (response.guias && response.guias.length > 0) {
+                        registros = response.guias; // Armazena os registros retornados
+                        totalRegistros = registros.length;
+                        renderizarPagina(paginaAtual); // Renderiza a primeira página
+                        criarPaginacao(); // Cria os botões de paginação
                     } else {
                         $('#listaGuias').html(
-                            '<tr><td colspan="4">Por favor, selecione um convênio e uma aba para ver as guias.</td></tr>'
-                            );
+                            '<tr><td colspan="4">Nenhuma guia encontrada para este convênio e aba selecionados.</td></tr>'
+                        );
+                        $('#paginacao').html(''); // Limpa a paginação
                     }
+                },
+                error: function() {
+                    alert('Erro ao buscar as guias.');
                 }
-
-                // Evento para carregar guias ao trocar de convênio
-                $('#convenio_id').change(function() {
-                    listarGuias();
-                });
-
-                // Evento para carregar guias ao mudar de aba
-                $('.nav-link').click(function() {
-                    $('.nav-link').removeClass('active'); // Remove a classe ativa de outras abas
-                    $(this).addClass('active'); // Adiciona a classe ativa à aba clicada
-                    listarGuias(); // Carrega os dados para a aba selecionada
-                });
-
-                // Carregar guias iniciais com a primeira aba ativa
-                listarGuias();
             });
+        } else {
+            $('#listaGuias').html(
+                '<tr><td colspan="4">Por favor, selecione um convênio e uma aba para ver as guias.</td></tr>'
+            );
+        }
+    }
+
+    function renderizarPagina(pagina) {
+        var inicio = (pagina - 1) * registrosPorPagina;
+        var fim = inicio + registrosPorPagina;
+        var registrosPagina = registros.slice(inicio, fim);
+
+        var html = '';
+        $.each(registrosPagina, function(index, guia) {
+            var data = new Date(guia.created_at);
+            var dataFormatada = data.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+
+            html += '<tr>';
+            html += '<td><input type="checkbox" name="guiaCheckbox" value="' + guia.id + '" /></td>';
+            html += '<td>' + guia.numeracao + '</td>';
+            html += '<td>' + dataFormatada + '</td>';
+            html += '<td>';
+            html +=
+                '<button type="button" class="btn btn-success btnVisualizarImprimir" data-id="' +
+                guia.id + '" title="Visualizar">';
+            html += '<i class="bi bi-eye"></i></button>';
+            html +=
+                '<button type="button" class="btn btn-danger ms-2" title="Gerar XML e ZIP" onclick="baixarArquivosSadt(' +
+                guia.id + ')">';
+            html += '<i class="bi bi-filetype-xml"></i></button>';
+            html += '</td>';
+            html += '</tr>';
+        });
+
+        $('#listaGuias').html(html);
+    }
+
+    function criarPaginacao() {
+        var totalPaginas = Math.ceil(totalRegistros / registrosPorPagina);
+        var html = '';
+
+        for (var i = 1; i <= totalPaginas; i++) {
+            html += '<button class="btn btn-primary mx-1 paginacao-btn" data-pagina="' + i + '">' + i + '</button>';
+        }
+
+        $('#paginacao').html(html);
+
+        // Adiciona evento de clique nos botões de paginação
+        $('.paginacao-btn').click(function() {
+            paginaAtual = $(this).data('pagina');
+            renderizarPagina(paginaAtual);
+        });
+    }
+
+    // Evento para carregar guias ao trocar de convênio
+    $('#convenio_id').change(function() {
+        listarGuias();
+    });
+
+    // Evento para carregar guias ao mudar de aba
+    $('.nav-link').click(function() {
+        $('.nav-link').removeClass('active'); // Remove a classe ativa de outras abas
+        $(this).addClass('active'); // Adiciona a classe ativa à aba clicada
+        listarGuias(); // Carrega os dados para a aba selecionada
+    });
+
+    // Carregar guias iniciais com a primeira aba ativa
+    listarGuias();
+});
         });
 
         $(document).on('click', '.btnVisualizarImprimir', function() {

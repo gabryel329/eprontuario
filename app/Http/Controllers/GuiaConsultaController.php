@@ -182,7 +182,7 @@ class GuiaConsultaController extends Controller
         $guia->saude_ocupacional = $request->input('saude_ocupacional');
         $guia->data_atendimento = $request->input('data_atendimento');
         $guia->tipo_consulta = $request->input('tipo_consulta');
-        $guia->codigo_tabela = $request->input('codigo_tabela');
+        $guia->codigo_tabela = '22';
         $guia->codigo_procedimento = $request->input('codigo_procedimento');
         $guia->valor_procedimento = $request->input('valor_procedimento');
         $guia->observacao = $request->input('observacao');
