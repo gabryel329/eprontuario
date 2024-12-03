@@ -216,10 +216,11 @@
                                                 <tbody id="exame-table-body">
                                                     <tr class="exame-row">
                                                         <td>
-                                                            <input type="date" value="{{ session('data', \Carbon\Carbon::now()->format('Y-m-d')) }}" class="form-control dataproc"
-                                                                name="dataproc[]">
+                                                            <input type="date"
+                                                                value="{{ session('data', \Carbon\Carbon::now()->format('Y-m-d')) }}"
+                                                                class="form-control dataproc" name="dataproc[]">
                                                         </td>
-                                                        <td>
+                                                        <td class="col-4">
                                                             <select name="procedimento_id[]"
                                                                 class="select2 form-control procedimento_id" required>
                                                                 <option value="" data-codigo="">Selecione o
@@ -272,21 +273,18 @@
                                         <table class="table">
                                             <thead>
                                                 <tr>
-                                                    <th class="col-7">Medicamentos</th>
-                                                    <th class="col-2 text-center">Código</th>
-                                                    <th class="col-1 text-center">Qtd</th>
-                                                    <th class="col-1 text-center">Unidade Medida</th>
-                                                    <th class="col-1 text-center"> Fator Red./Acresc.</th>
-                                                    <th class="col-2 text-center">Ações</th>
+                                                    <th>Medicamentos</th>
+                                                    <th>Código</th>
+                                                    <th>Qtd</th>
+                                                    <th>Unidade Medida</th>
+                                                    <th>Fator Red./Acresc.</th>
+                                                    <th>Ações</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="prescricao-table-body">
-                                                {{-- Aqui gera o do Banco --}}
-                                            </tbody>
-                                            <tbody id="prescricao-table-body_new">
                                                 <tr class="prescricao-row">
                                                     <td class="col-7">
-                                                        <select class="form-control medicamento_id"
+                                                        <select class="form-control medicamento_id select2"
                                                             name="medicamento_id[]" onchange="updateValor(this)">
                                                             <option value="" data-valor="" data-codigo="">
                                                                 Selecione o remédio</option>
@@ -304,35 +302,83 @@
                                                             @endif
                                                         </select>
                                                     </td>
-                                                    <td class="col-1 text-center">
+                                                    <td>
                                                         <input type="text" class="form-control codigo"
                                                             name="codigo[]" readonly>
                                                     </td>
-                                                    <td class="col-1 text-center">
+                                                    <td>
                                                         <input type="number" class="form-control quantidade"
                                                             name="quantidade[]" placeholder="Qtd">
                                                         <input type="hidden" class="form-control valor"
                                                             name="valor[]" readonly>
                                                     </td>
-                                                    <td class="col-1 text-center">
-                                                        <select class="form-control unidade_medida"
-                                                            name="unidade_medida[]">
-                                                            <option value="001">Unid.</option>
-                                                            <option value="002">Cx.</option>
-                                                            <option value="003">Fr.</option>
-                                                            <option value="004">Amp.</option>
-                                                            <option value="005">Comp.</option>
-                                                            <option value="006">Gts.</option>
-                                                            <option value="007">ml</option>
-                                                            <option value="008">g</option>
-                                                            <option value="036">Outros</option>
-                                                        </select>
+                                                    <td>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="unidade_medida[]" id="unid"
+                                                                value="001">
+                                                            <label class="form-check-label"
+                                                                for="unid">Unid.</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="unidade_medida[]" id="cx"
+                                                                value="002">
+                                                            <label class="form-check-label" for="cx">Cx.</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="unidade_medida[]" id="fr"
+                                                                value="003">
+                                                            <label class="form-check-label" for="fr">Fr.</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="unidade_medida[]" id="amp"
+                                                                value="004">
+                                                            <label class="form-check-label"
+                                                                for="amp">Amp.</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="unidade_medida[]" id="comp"
+                                                                value="005">
+                                                            <label class="form-check-label"
+                                                                for="comp">Comp.</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="unidade_medida[]" id="gts"
+                                                                value="006">
+                                                            <label class="form-check-label"
+                                                                for="gts">Gts.</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="unidade_medida[]" id="ml"
+                                                                value="007">
+                                                            <label class="form-check-label" for="ml">ml</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="unidade_medida[]" id="g"
+                                                                value="008">
+                                                            <label class="form-check-label" for="g">g</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="unidade_medida[]" id="outros"
+                                                                value="036">
+                                                            <label class="form-check-label"
+                                                                for="outros">Outros</label>
+                                                        </div>
                                                     </td>
-                                                    <td class="col-1 text-center">
+
+                                                    <td>
                                                         <input type="text" class="form-control fator"
                                                             name="fator[]" placeholder="Ex:(1,00)">
                                                     </td>
-                                                    <td class="col-3 text-center">
+                                                    <td>
                                                         <button type="button"
                                                             class="btn btn-success add-row">+</button>
                                                         <button type="button"
@@ -365,20 +411,17 @@
                                                 <thead>
                                                     <tr>
                                                         <th class="col-7">Material</th>
-                                                        <th class="col-2 text-center">Código</th>
-                                                        <th class="col-1 text-center">Qtd</th>
-                                                        <th class="col-1 text-center">Unidade Medida</th>
-                                                        <th class="col-1 text-center"> Fator Red./Acresc.</th>
-                                                        <th class="col-2 text-center">Ações</th>
+                                                        <th>Código</th>
+                                                        <th>Qtd</th>
+                                                        <th>Unidade Medida</th>
+                                                        <th>Fator Red./Acresc.</th>
+                                                        <th>Ações</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="material-table-body">
-                                                    {{-- Gera Material --}}
-                                                </tbody>
-                                                <tbody id="material-table-body">
                                                     <tr class="material-row">
                                                         <td class="col-7">
-                                                            <select class="form-control material_id"
+                                                            <select class="form-control material_id select2"
                                                                 name="material_id[]" onchange="updateValorCod(this)">
                                                                 <option value="" data-valor="" data-codigo="">
                                                                     Selecione o Material</option>
@@ -391,35 +434,87 @@
                                                                 @endforeach
                                                             </select>
                                                         </td>
-                                                        <td class="col-1 text-center">
+                                                        <td>
                                                             <input type="text" class="form-control codigo"
                                                                 name="codigo[]" readonly>
                                                         </td>
-                                                        <td class="col-1 text-center">
+                                                        <td>
                                                             <input type="number" class="form-control quantidade"
                                                                 name="quantidade[]" placeholder="Qtd">
                                                             <input type="hidden" class="form-control valor"
                                                                 name="valor[]" readonly>
                                                         </td>
-                                                        <td class="col-1 text-center">
-                                                            <select class="form-control unidade_medida"
-                                                                name="unidade_medida[]">
-                                                                <option value="001">Unidade</option>
-                                                                <option value="002">Caixa</option>
-                                                                <option value="003">Frasco</option>
-                                                                <option value="004">Ampola</option>
-                                                                <option value="005">Comprimido</option>
-                                                                <option value="006">Gotas</option>
-                                                                <option value="007">Mililitro (ml)</option>
-                                                                <option value="008">Grama (g)</option>
-                                                                <option value="036">Outros</option>
-                                                            </select>
+                                                        <td>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="unidade_medida[]" id="unid"
+                                                                    value="001">
+                                                                <label class="form-check-label"
+                                                                    for="unid">Unid.</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="unidade_medida[]" id="cx"
+                                                                    value="002">
+                                                                <label class="form-check-label"
+                                                                    for="cx">Cx.</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="unidade_medida[]" id="fr"
+                                                                    value="003">
+                                                                <label class="form-check-label"
+                                                                    for="fr">Fr.</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="unidade_medida[]" id="amp"
+                                                                    value="004">
+                                                                <label class="form-check-label"
+                                                                    for="amp">Amp.</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="unidade_medida[]" id="comp"
+                                                                    value="005">
+                                                                <label class="form-check-label"
+                                                                    for="comp">Comp.</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="unidade_medida[]" id="gts"
+                                                                    value="006">
+                                                                <label class="form-check-label"
+                                                                    for="gts">Gts.</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="unidade_medida[]" id="ml"
+                                                                    value="007">
+                                                                <label class="form-check-label"
+                                                                    for="ml">ml</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="unidade_medida[]" id="g"
+                                                                    value="008">
+                                                                <label class="form-check-label"
+                                                                    for="g">g</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="unidade_medida[]" id="outros"
+                                                                    value="036">
+                                                                <label class="form-check-label"
+                                                                    for="outros">Outros</label>
+                                                            </div>
                                                         </td>
-                                                        <td class="col-1 text-center">
+
+                                                        <td>
                                                             <input type="text" class="form-control fator"
                                                                 name="fator[]" placeholder="Ex:(1,00)">
                                                         </td>
-                                                        <td class="actions col-2 text-center">
+                                                        <td class="actions">
                                                             <button type="button"
                                                                 class="btn btn-success plus1-row">+</button>
                                                             <button type="button"
@@ -457,27 +552,29 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody id="taxa-table-body">
-                                                    {{-- Gera Taxa --}}
-                                                </tbody>
-                                                <tbody id="taxa-table-body">
                                                     <tr class="taxa-row">
-                                                        <td>
-                                                            <select class="form-control taxa_id select2" name="taxa_id[]" onchange="updateCodValor(this)">
+                                                        <td class="col-7">
+                                                            <select class="form-control taxa_id select2"
+                                                                name="taxa_id[]" onchange="updateCodValor(this)">
                                                                 <option value="">Selecione a Taxa</option>
                                                                 @foreach ($taxas as $item)
-                                                                    <option value="{{ $item->id }}" data-valor="{{ $item->valor }}">
+                                                                    <option value="{{ $item->id }}"
+                                                                        data-valor="{{ $item->valor }}">
                                                                         {{ $item->descricao }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
-                                                            <input type="hidden" class="form-control valor" name="valor[]" readonly>
+                                                            <input type="hidden" class="form-control valor"
+                                                                name="valor[]" readonly>
                                                         </td>
                                                         <td class="actions">
-                                                            <button type="button" class="btn btn-success plus2-row">+</button>
-                                                            <button type="button" class="btn btn-danger delete2-row">-</button>
+                                                            <button type="button"
+                                                                class="btn btn-success plus2-row">+</button>
+                                                            <button type="button"
+                                                                class="btn btn-danger delete2-row">-</button>
                                                         </td>
                                                     </tr>
-                                                    
+
                                                 </tbody>
                                             </table>
                                         </div>
@@ -528,7 +625,7 @@
             }
 
             if (valorInput) {
-                valorInput.value = parseFloat(valor).toFixed(2); // Preenche o campo 'valor' formatado
+                valorInput.value = parseFloat(valor).toFixed(2);
             }
         }
 
@@ -558,59 +655,22 @@
         }
 
         function updateCodValor(selectElement) {
-    // Encontra a linha mais próxima da seleção
-    const row = selectElement.closest('.taxa-row');
+            // Encontra a linha mais próxima da seleção
+            const row = selectElement.closest('.taxa-row');
 
-    // Encontra o input 'valor' na mesma linha
-    const valorInput = row.querySelector('input[name="valor[]"]');
+            // Encontra o input 'valor' na mesma linha
+            const valorInput = row.querySelector('input[name="valor[]"]');
 
-    // Obtém a opção selecionada no select
-    const selectedOption = selectElement.options[selectElement.selectedIndex];
+            // Obtém a opção selecionada no select
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
 
-    // Obtém o atributo 'data-valor' da opção
-    const valor = selectedOption.getAttribute('data-valor') || "0";
+            // Obtém o atributo 'data-valor' da opção
+            const valor = selectedOption.getAttribute('data-valor') || "0";
 
-    // Atualiza o campo 'valor' com o formato adequado
-    if (valorInput) {
-        valorInput.value = parseFloat(valor).toFixed(2); // Formata para 2 casas decimais
-    }
-}
-
-function applySelect5(element) {
-    element.select2({
-        placeholder: "Selecione a Taxa",
-        allowClear: false,
-        closeOnSelect: true,
-        width: '100%'
-    }).on('select2:select', function() {
-        updateCodValor(this); // Chama a função ao selecionar uma opção
-    });
-}
-
-
-
-        function applySelect4(element) {
-            element.select2({
-                placeholder: "Selecione o Material",
-                allowClear: false,
-                closeOnSelect: true,
-                width: '100%'
-            }).on('select2:select', function(e) {
-                updateValorCod(this); // Atualiza os campos ao selecionar uma opção
-            });
-        }
-
-
-
-        function applySelect2(element) {
-            element.select2({
-                placeholder: "Selecione o Procedimento",
-                allowClear: false,
-                closeOnSelect: true,
-                width: '100%'
-            }).on('select2:select', function(e) {
-                updateCodigo(this); // Chama updateCodigo ao selecionar uma opção
-            });
+            // Atualiza o campo 'valor' com o formato adequado
+            if (valorInput) {
+                valorInput.value = parseFloat(valor).toFixed(2); // Formata para 2 casas decimais
+            }
         }
 
         function updateCodigo(selectElement) {
@@ -621,102 +681,117 @@ function applySelect5(element) {
             codigoInput.value = selectedOption.getAttribute('data-codigo'); // Define o código
         }
 
-        function applySelect3(element) {
+        function applySelect2(element) {
             element.select2({
-                placeholder: "Selecione o Medicamento",
+                placeholder: "Selecione",
                 allowClear: false,
                 closeOnSelect: true,
-                width: '100%'
+                width: '60%'
             }).on('select2:select', function(e) {
-                updateValor(this); // Chama updateValor ao selecionar uma opção
+                updateCodigo(this);
+                updateCodValor(this);
+                updateValor(this);
+                updateValorCod(this);
             });
         }
 
+
         $(document).ready(function() {
-            // Aplica Select2 nos selects existentes ao carregar a página
-            applySelect3($('select.select2'));
+            applySelect2($('select.select2'));
 
-            var agenda_id = "{{ $agendas->id }}";
-            var paciente_id = "{{ $pacientes->id }}";
-
+            // Função para adicionar uma nova linha na tabela de prescrição
             function addPrescricaoRow() {
-                var newRow = `
-            <tr class="prescricao-row">
-                                                    <td class="col-7">
-                                                        <select class="form-control medicamento_id" name="medicamento_id[]" onchange="updateValor(this)">
-                                                            <option value="" data-valor="" data-codigo="">Selecione o remédio</option>
-                                                            @if ($agendas->medicamentos && $agendas->medicamentos->isNotEmpty())
-                                                                @foreach ($agendas->medicamentos as $medicamento)
-                                                                    <option value="{{ $medicamento->id }}" 
-                                                                            data-valor="{{ $medicamento->preco }}" 
-                                                                            data-codigo="{{ $medicamento->codigo }}">
-                                                                        {{ $medicamento->medicamento }}-{{ $medicamento->unid }}
-                                                                    </option>
-                                                                @endforeach
-                                                            @else
-                                                                <option value="">Nenhum medicamento encontrado</option>
-                                                            @endif
-                                                        </select>
-                                                    </td>
-                                                    <td class="col-1 text-center">
-                                                        <input type="text" class="form-control codigo" name="codigo[]" readonly>
-                                                    </td>
-                                                    <td class="col-1 text-center">
-                                                        <input type="number" class="form-control quantidade" name="quantidade[]" placeholder="Qtd">
-                                                        <input type="hidden" class="form-control valor" name="valor[]" readonly>
-                                                    </td>
-                                                    <td class="col-1 text-center">
-                                                        <select class="form-control unidade_medida" name="unidade_medida[]">
-                                                            <option value="001">Unid.</option>
-                                                            <option value="002">Cx.</option>
-                                                            <option value="003">Fr.</option>
-                                                            <option value="004">Amp.</option>
-                                                            <option value="005">Comp.</option>
-                                                            <option value="006">Gts.</option>
-                                                            <option value="007">ml</option>
-                                                            <option value="008">g</option>
-                                                            <option value="036">Outros</option>
-                                                        </select>
-                                                    </td>
-                                                    <td class="col-1 text-center">
-                                                        <input type="text" class="form-control fator"
-                                                            name="fator[]" placeholder="Ex:(1,00)">
-                                                    </td>
-                                                    <td class="col-3 text-center">
-                                                        <button type="button" class="btn btn-success add-row">+</button>
-                                                        <button type="button" class="btn btn-danger remove-row">-</button>
-                                                    </td>
-                                                </tr>`;
+                const rowCount = $('#prescricao-table-body .prescricao-row').length; // Conta as linhas existentes
+                const newRow = `
+        <tr class="prescricao-row">
+            <td class="col-7">
+                <select class="form-control medicamento_id select2" name="medicamento_id[]" onchange="updateValor(this)">
+                    <option value="" data-valor="" data-codigo="">Selecione o remédio</option>
+                    @if ($agendas->medicamentos && $agendas->medicamentos->isNotEmpty())
+                        @foreach ($agendas->medicamentos as $medicamento)
+                            <option value="{{ $medicamento->id }}" 
+                                    data-valor="{{ $medicamento->preco }}" 
+                                    data-codigo="{{ $medicamento->codigo }}">
+                                {{ $medicamento->medicamento }}-{{ $medicamento->unid }}
+                            </option>
+                        @endforeach
+                    @else
+                        <option value="">Nenhum medicamento encontrado</option>
+                    @endif
+                </select>
+            </td>
+            <td class="col-1 text-center">
+                <input type="text" class="form-control codigo" name="codigo[]" readonly>
+            </td>
+            <td>
+                <input type="number" class="form-control quantidade" name="quantidade[]" placeholder="Qtd">
+                <input type="hidden" class="form-control valor" name="valor[]" readonly>
+            </td>
+            <td>
+                ${generateRadioButtons(rowCount)}
+            </td>
+            <td>
+                <input type="text" class="form-control fator" name="fator[]" placeholder="Ex:(1,00)">
+            </td>
+            <td>
+                <button type="button" class="btn btn-success add-row">+</button>
+                <button type="button" class="btn btn-danger remove-row">-</button>
+            </td>
+        </tr>`;
                 $('#prescricao-table-body').append(newRow);
 
-                // Aplica Select2 nos selects adicionados dinamicamente
-                applySelect3($('#prescricao-table-body .prescricao-row:last select'));
+                // Aplica Select2 ao novo select
+                applySelect2($('#prescricao-table-body .prescricao-row:last .medicamento_id'));
             }
 
-            // Carrega medicamentos registrados do banco e adiciona linhas dinamicamente
-            $.ajax({
-                url: `/medicamento/${agenda_id}/${paciente_id}`,
-                type: 'GET',
-                success: function(response) {
-                    if (response.data && response.data.length > 0) {
-                        response.data.forEach(function(remedio) {
-                            addPrescricaoRow();
-                            const lastRow = $('#prescricao-table-body').find(
-                                '.prescricao-row:last');
-                            lastRow.find('.medicamento_id').val(remedio.medicamento_id).trigger(
-                                'change');
-                            lastRow.find('.valor').val(remedio.valor);
-                            lastRow.find('.codigo').val(remedio.codigo);
-                            lastRow.find('.quantidade').val(remedio.quantidade);
-                            lastRow.find('.unidade_medida').val(remedio.unidade_medida);
-                            lastRow.find('.fator').val(remedio.fator);
-                        });
+            function generateRadioButtons(index) {
+                const options = [{
+                        value: "001",
+                        label: "Unid."
+                    },
+                    {
+                        value: "002",
+                        label: "Cx."
+                    },
+                    {
+                        value: "003",
+                        label: "Fr."
+                    },
+                    {
+                        value: "004",
+                        label: "Amp."
+                    },
+                    {
+                        value: "005",
+                        label: "Comp."
+                    },
+                    {
+                        value: "006",
+                        label: "Gts."
+                    },
+                    {
+                        value: "007",
+                        label: "ml"
+                    },
+                    {
+                        value: "008",
+                        label: "g"
+                    },
+                    {
+                        value: "036",
+                        label: "Outros"
                     }
-                },
-                error: function() {
-                    console.log('Erro ao carregar dados do banco.');
-                }
-            });
+                ];
+                return options
+                    .map(
+                        (option) => `
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="unidade_medida[${index}]" value="${option.value}">
+                <label class="form-check-label">${option.label}</label>
+            </div>`
+                    )
+                    .join("");
+            }
 
             // Adicionar e remover linhas dinamicamente
             $(document).on('click', '.add-row', function() {
@@ -727,68 +802,70 @@ function applySelect5(element) {
                 $(this).closest('.prescricao-row').remove();
             });
 
-            // Salvar medicamentos via AJAX
+            // Evento para carregar dados ao selecionar um medicamento
+            $(document).on('change', '.medicamento_id', function() {
+                const row = $(this).closest('.prescricao-row');
+                const selectedOption = $(this).find('option:selected');
+                row.find('.codigo').val(selectedOption.data('codigo'));
+                row.find('.valor').val(selectedOption.data('valor'));
+            });
+
+            // Carregar medicamentos do backend e adicionar as linhas dinamicamente
+            const agenda_id = "{{ $agendas->id }}";
+            const paciente_id = "{{ $pacientes->id }}";
+
+            $.ajax({
+                url: `/medicamento/${agenda_id}/${paciente_id}`,
+                type: 'GET',
+                success: function(response) {
+                    if (response.data && response.data.length > 0) {
+                        response.data.forEach(remedio => {
+                            addPrescricaoRow();
+                            const lastRow = $('#prescricao-table-body .prescricao-row:last');
+
+                            // Preenche os campos com os dados retornados
+                            lastRow.find('.medicamento_id').val(remedio.medicamento_id).trigger(
+                                'change');
+                            lastRow.find('.quantidade').val(remedio.quantidade);
+                            lastRow.find(
+                                `input[name^="unidade_medida"][value="${remedio.unidade_medida}"]`
+                            ).prop('checked', true);
+                            lastRow.find('.fator').val(remedio.fator);
+                        });
+                    } else {
+                        console.warn('Nenhum medicamento encontrado.');
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Erro ao carregar medicamentos:', xhr.responseText);
+                }
+            });
+
             // Salvar medicamentos via AJAX
             $('#saveRemedioButton').on('click', function(event) {
                 event.preventDefault();
 
-                let isValid = true;
+                const formData = $('#remedioForm').serialize();
 
-                $('#prescricao-table-body_new .prescricao-row').each(function() {
-                    const selectMedicamento = $(this).find('select[name="medicamento_id[]"]');
-                    const inputCodigo = $(this).find('input[name="codigo[]"]');
-                    const inputQuantidade = $(this).find('input[name="quantidade[]"]');
-
-                    if (!selectMedicamento.val()) {
-                        alert('Selecione um medicamento.');
-                        isValid = false;
-                        return false; // Sai do loop
-                    }
-
-                    if (!inputCodigo.val()) {
-                        alert('O código do medicamento é obrigatório.');
-                        isValid = false;
-                        return false; // Sai do loop
-                    }
-
-                    if (!inputQuantidade.val() || inputQuantidade.val() <= 0) {
-                        alert('A quantidade deve ser maior que zero.');
-                        isValid = false;
-                        return false; // Sai do loop
+                $.ajax({
+                    url: '/medicamento/store',
+                    type: 'POST',
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function() {
+                        alert('Prescrição de remédios cadastrada/atualizada com sucesso');
+                    },
+                    error: function(xhr) {
+                        if (xhr.responseJSON && xhr.responseJSON.error) {
+                            alert(xhr.responseJSON.error);
+                        } else {
+                            alert('Ocorreu um erro. Tente novamente.');
+                        }
                     }
                 });
-
-                if (isValid) {
-                    // Captura os dados enviados
-                    const formData = $('#remedioForm').serialize();
-
-                    // Decodifica os dados para visualização como objeto
-                    const decodedData = Object.fromEntries(new URLSearchParams(formData));
-                    console.log('Dados enviados para o servidor (como objeto):', decodedData);
-
-                    $.ajax({
-                        url: '/medicamento/store',
-                        type: 'POST',
-                        data: formData,
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function() {
-                            alert('Prescrição de remédios cadastrada/atualizada com sucesso');
-                        },
-                        error: function(xhr) {
-                            if (xhr.responseJSON && xhr.responseJSON.error) {
-                                alert(xhr.responseJSON.error);
-                            } else {
-                                alert('Ocorreu um erro. Tente novamente.');
-                            }
-                        }
-                    });
-                }
             });
-
-
-
         });
 
 
@@ -801,7 +878,7 @@ function applySelect5(element) {
                     <td>
                         <input type="date" value="{{ session('data', \Carbon\Carbon::now()->format('Y-m-d')) }}" class="form-control dataproc" name="dataproc[]">
                     </td>
-                    <td>
+                    <td class="col-4">
                         <select class="select2 form-control procedimento_id" name="procedimento_id[]" required>
                             <option value="" data-codigo="">Selecione o Procedimento</option>
                             @foreach ($agendas->procedimento_lista as $procedimento)
@@ -858,7 +935,7 @@ function applySelect5(element) {
                     if (response.data && response.data.length > 0) {
                         response.data.forEach(function(item) {
                             console.log(item);
-                            
+
                             // Adiciona uma nova linha
                             addExameRow();
 
@@ -866,7 +943,8 @@ function applySelect5(element) {
                             const lastRow = $('#exame-table-body').find('.exame-row:last');
 
                             // Preenche os campos da linha com os dados recebidos
-                            lastRow.find('.procedimento_id').val(item.procedimento_id).trigger('change');
+                            lastRow.find('.procedimento_id').val(item.procedimento_id).trigger(
+                                'change');
                             lastRow.find('.codigo').val(item.codigo);
                             lastRow.find('.valor').val(item.valor);
                             lastRow.find('.dataproc').val(item.dataproc);
@@ -904,71 +982,144 @@ function applySelect5(element) {
                     }
                 });
             });
-
+            applySelect2($('select'));
         });
 
-        function applySelect2(element) {
-            element.select2({
-                width: '100%'
+        $(document).ready(function () {
+            const agenda_id = "{{ $agendas->id }}";
+            const paciente_id = "{{ $pacientes->id }}";
+
+            applySelect2($('select.select2'));
+
+            // Função para adicionar uma nova linha na tabela de materiais
+            function addMaterialRow() {
+                const rowCount = $('#material-table-body .material-row').length; // Conta as linhas existentes
+                const newRow = `
+                    <tr class="material-row">
+                        <td class="col-7">
+                            <select class="form-control material_id select2" name="material_id[]" onchange="updateValorCod(this)">
+                                <option value="" data-valor="" data-codigo="">Selecione o Material</option>
+                                @foreach ($agendas->materias as $material)
+                                    <option value="{{ $material->id }}" 
+                                            data-valor="{{ $material->preco }}" 
+                                            data-codigo="{{ $material->codigo }}">
+                                        {{ $material->medicamento }}-{{ $material->unid }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control codigo" name="codigo[]" readonly>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control quantidade" name="quantidade[]" placeholder="Qtd">
+                            <input type="hidden" class="form-control valor" name="valor[]" readonly>
+                        </td>
+                        <td>
+                            ${generateMaterialRadioButtons(rowCount)}
+                        </td>
+                        <td>
+                            <input type="text" class="form-control fator" name="fator[]" placeholder="Ex:(1,00)">
+                        </td>
+                        <td class="actions">
+                            <button type="button" class="btn btn-success plus1-row">+</button>
+                            <button type="button" class="btn btn-danger delete1-row">-</button>
+                        </td>
+                    </tr>`;
+                $('#material-table-body').append(newRow);
+
+                // Aplica Select2 ao novo select
+                applySelect2($('#material-table-body .material-row:last .material_id'));
+            }
+
+            // Função para gerar botões rádio para materiais
+            function generateMaterialRadioButtons(index) {
+                const options = [
+                    { value: "001", label: "Unid." },
+                    { value: "002", label: "Cx." },
+                    { value: "003", label: "Fr." },
+                    { value: "004", label: "Amp." },
+                    { value: "005", label: "Comp." },
+                    { value: "006", label: "Gts." },
+                    { value: "007", label: "ml" },
+                    { value: "008", label: "g" },
+                    { value: "036", label: "Outros" }
+                ];
+                return options
+                    .map(
+                        (option) => `
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="unidade_medida[${index}]" value="${option.value}">
+                            <label class="form-check-label">${option.label}</label>
+                        </div>`
+                    )
+                    .join("");
+            }
+
+            // Eventos para adicionar e remover linhas
+            $(document).on('click', '.plus1-row', function () {
+                addMaterialRow();
             });
-        }
 
+            $(document).on('click', '.delete1-row', function () {
+                $(this).closest('.material-row').remove();
+            });
 
+            // Carregar materiais do backend e preencher dinamicamente
+            $.ajax({
+                url: `/material/${agenda_id}/${paciente_id}`,
+                type: 'GET',
+                success: function (response) {
+                    if (response.data && response.data.length > 0) {
+                        response.data.forEach((item) => {
+                            addMaterialRow();
+                            const lastRow = $('#material-table-body .material-row:last');
+
+                            // Preenche os campos com os dados retornados
+                            lastRow.find('.material_id').val(item.material_id).trigger('change');
+                            lastRow.find('.codigo').val(item.codigo);
+                            lastRow.find('.quantidade').val(item.quantidade);
+                            lastRow.find(`input[name^="unidade_medida"][value="${item.unidade_medida}"]`).prop('checked', true);
+                            lastRow.find('.fator').val(item.fator);
+                        });
+                    } else {
+                        console.warn('Nenhum material encontrado.');
+                    }
+                },
+                error: function (xhr) {
+                    console.error('Erro ao carregar materiais:', xhr.responseText);
+                }
+            });
+
+            // Salvar materiais via AJAX
+            $('#saveMaterialButton').on('click', function (event) {
+                event.preventDefault();
+
+                const formData = $('#materialForm').serialize();
+
+                $.ajax({
+                    url: '/material/store',
+                    type: 'POST',
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function () {
+                        alert('Materiais cadastrados/atualizados com sucesso');
+                    },
+                    error: function (xhr) {
+                        console.error('Erro ao salvar materiais:', xhr.responseText);
+                        alert('Erro ao salvar os materiais. Verifique os dados e tente novamente.');
+                    }
+                });
+            });
+        });
 
 
         $(document).ready(function() {
             var agenda_id = "{{ $agendas->id }}";
             var paciente_id = "{{ $pacientes->id }}";
-            applySelect4($('select.select2'));
-
-            function addMaterialRow() {
-                const newRow = `
-                <tr class="material-row">
-                    <td class="col-7">
-                        <select class="select2 form-control material_id"
-                            name="material_id[]" onchange="updateValorCod(this)">
-                            <option value="" data-valor="" data-codigo="">Selecione o Material</option>
-                            @foreach ($agendas->materias as $material)
-                                <option value="{{ $material->id }}"
-                                    data-valor="{{ $material->preco }}"
-                                    data-codigo="{{ $material->codigo }}">
-                                    {{ $material->medicamento }}-{{ $material->unid }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td class="col-1 text-center">
-                        <input type="text" class="form-control codigo" name="codigo[]" readonly>
-                    </td>
-                    <td class="col-1 text-center">
-                        <input type="number" class="form-control quantidade" name="quantidade[]" placeholder="Qtd">
-                        <input type="hidden" class="form-control valor" name="valor[]" readonly>
-                    </td>
-                    <td class="col-1 text-center">
-                        <select class="form-control unidade_medida" name="unidade_medida[]">
-                            <option value="001">Unidade</option>
-                            <option value="002">Caixa</option>
-                            <option value="003">Frasco</option>
-                            <option value="004">Ampola</option>
-                            <option value="005">Comprimido</option>
-                            <option value="006">Gotas</option>
-                            <option value="007">Mililitro (ml)</option>
-                            <option value="008">Grama (g)</option>
-                            <option value="036">Outros</option>
-                        </select>
-                    </td>
-                    <td class="col-1 text-center">
-                                                        <input type="text" class="form-control fator"
-                                                            name="fator[]" placeholder="Ex:(1,00)">
-                                                    </td>
-                    <td class="actions col-2 text-center">
-                        <button type="button" class="btn btn-success plus1-row">+</button>
-                        <button type="button" class="btn btn-danger delete1-row">-</button>
-                    </td>
-                </tr>`;
-                $('#material-table-body').append(newRow);
-                applySelect4($('#material-table-body select.select2:last'));
-            }
+            applySelect2($('select.select2'));
 
 
             function addTaxaRow() {
@@ -990,18 +1141,9 @@ function applySelect5(element) {
                                                             <button type="button" class="btn btn-danger delete2-row">-</button>
                                                         </td>
                                                     </tr>`;
-                    $('#taxa-table-body').append(newRow);
-                    applySelect5($('#taxa-table-body select.select2:last'));
+                $('#taxa-table-body').append(newRow);
+                $('.select2').select2();
             }
-
-            // Eventos para adicionar e remover linhas
-            $(document).on('click', '.plus1-row', function() {
-                addMaterialRow();
-            });
-
-            $(document).on('click', '.delete1-row', function() {
-                $(this).closest('.material-row').remove();
-            });
 
             $(document).on('click', '.plus2-row', function() {
                 addTaxaRow();
@@ -1009,30 +1151,6 @@ function applySelect5(element) {
 
             $(document).on('click', '.delete2-row', function() {
                 $(this).closest('.taxa-row').remove();
-            });
-
-            $.ajax({
-                url: `/material/${agenda_id}/${paciente_id}`,
-                type: 'GET',
-                success: function(response) {
-                    if (response.data && response.data.length > 0) {
-                        response.data.forEach(function(item) {
-                            addMaterialRow();
-                            const lastRow = $('#material-table-body').find(
-                                '.material-row:last');
-                            lastRow.find('.material_id').val(item.material_id).trigger(
-                                'change');
-                            lastRow.find('.unidade_medida').val(item.unidade_medida).trigger(
-                                'change');
-                            lastRow.find('.quantidade').val(item.quantidade);
-                            lastRow.find('.fator').val(item.fator);
-                            lastRow.find('.codigo').val(item.codigo);
-                        });
-                    }
-                },
-                error: function() {
-                    console.log('Erro ao carregar materiais.');
-                }
             });
 
             $.ajax({
@@ -1050,26 +1168,6 @@ function applySelect5(element) {
                 error: function() {
                     console.log('Erro ao carregar taxas.');
                 }
-            });
-
-            // Salvar materiais e taxas via AJAX
-            $('#saveMaterialButton').on('click', function(event) {
-                event.preventDefault();
-                $.ajax({
-                    url: '/material/store',
-                    type: 'POST',
-                    data: $('#materialForm').serialize(),
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function() {
-                        alert('Materiais cadastrados/atualizados com sucesso');
-                    },
-                    error: function(xhr) {
-                        console.error(xhr.responseText);
-                        alert('Erro: ' + xhr.responseText);
-                    }
-                });
             });
 
             $('#saveTaxaButton').on('click', function(event) {
@@ -1090,8 +1188,6 @@ function applySelect5(element) {
                     }
                 });
             });
-
-            // Aplicar Select2 aos selects iniciais
             applySelect2($('select'));
         });
     </script>

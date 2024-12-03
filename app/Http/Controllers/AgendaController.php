@@ -188,64 +188,81 @@ class AgendaController extends Controller
         return view('agenda.detalhesconsulta', compact('agendas', 'pacientes', 'taxas'));
     }
 
-
     public function storeMedicamento(Request $request)
-{
-    Log::info('Dados recebidos no backend:', $request->all());
-
-    try {
-        // Validação ajustada
-        $validated = $request->validate([
-            'paciente_id' => 'required|exists:pacientes,id',
-            'agenda_id' => 'required|exists:agendas,id',
-            'medicamento_id.*' => 'required',
-            'quantidade.*' => ['required', 'regex:/^\d+$/'], // Valida como string numérica (ex: "2")
-            'codigo.*' => 'required',
-            'valor.*' => 'nullable|numeric|min:0',
-            'unidade_medida.*' => 'required',
-            'fator.*' => 'string',
-        ]);
-
-        foreach ($validated['medicamento_id'] as $index => $medicamento_id) {
-            $quantidade = isset($validated['quantidade'][$index]) ? (int) $validated['quantidade'][$index] : 0;
-            $valor = isset($validated['valor'][$index]) ? (float) $validated['valor'][$index] : 0.0;
-
-            // Calcular o valor total
-            $valor_total = number_format($quantidade * $valor, 2, '.', '');
-
-            Log::info('Processando medicamento:', [
-                'medicamento_id' => $medicamento_id,
-                'quantidade' => $quantidade,
-                'valor' => $valor,
-                'valor_total' => $valor_total,
-                'codigo' => $validated['codigo'][$index],
-                'unidade_medida' => $validated['unidade_medida'][$index],
+    {
+        Log::info('Dados recebidos no backend:', $request->all());
+    
+        try {
+            $validated = $request->validate([
+                'paciente_id' => 'required|exists:pacientes,id',
+                'agenda_id' => 'required|exists:agendas,id',
+                'medicamento_id' => 'required|array',
+                'medicamento_id.*' => 'required',
+                'quantidade' => 'required|array',
+                'quantidade.*' => ['required', 'regex:/^\d+$/'],
+                'codigo' => 'required|array',
+                'codigo.*' => 'required|string',
+                'valor' => 'nullable|array',
+                'valor.*' => 'nullable|numeric|min:0',
+                'unidade_medida' => 'required|array',
+                'unidade_medida.*' => 'required|string',
+                'fator' => 'nullable|array',
+                'fator.*' => 'nullable|string',
             ]);
-
-            $medAgenda = MedAgenda::firstOrNew([
-                'agenda_id' => $validated['agenda_id'],
-                'paciente_id' => $validated['paciente_id'],
-                'medicamento_id' => $medicamento_id,
-            ]);
-
-            // Atualizar ou criar os valores para o medicamento
-            $medAgenda->codigo = $validated['codigo'][$index];
-            $medAgenda->quantidade = $quantidade;
-            $medAgenda->valor = $valor;
-            $medAgenda->unidade_medida = $validated['unidade_medida'][$index];
-            $medAgenda->fator = $validated['fator'][$index];
-            $medAgenda->cd = '02';
-            $medAgenda->tabela = '20';
-            $medAgenda->valor_total = $valor_total;
-            $medAgenda->save();
+    
+            // Certifica-se de que todos os arrays têm o mesmo tamanho
+            $count = count($validated['medicamento_id']);
+    
+            for ($index = 0; $index < $count; $index++) {
+                if (
+                    isset($validated['quantidade'][$index]) &&
+                    isset($validated['codigo'][$index]) &&
+                    isset($validated['valor'][$index]) &&
+                    isset($validated['unidade_medida'][$index]) &&
+                    isset($validated['fator'][$index])
+                ) {
+                    $medicamento_id = $validated['medicamento_id'][$index];
+                    $quantidade = (int) $validated['quantidade'][$index];
+                    $valor = (float) $validated['valor'][$index];
+                    $fator = (float) str_replace(',', '.', $validated['fator'][$index] ?? 1); // Converte vírgula para ponto
+                    $valor_total = number_format($quantidade * $valor * $fator, 2, '.', ''); // Aplica fator ao cálculo
+        
+                    Log::info('Processando medicamento:', [
+                        'medicamento_id' => $medicamento_id,
+                        'quantidade' => $quantidade,
+                        'valor' => $valor,
+                        'valor_total' => $valor_total,
+                        'codigo' => $validated['codigo'][$index],
+                        'unidade_medida' => $validated['unidade_medida'][$index],
+                    ]);
+        
+                    $medAgenda = MedAgenda::firstOrNew([
+                        'agenda_id' => $validated['agenda_id'],
+                        'paciente_id' => $validated['paciente_id'],
+                        'medicamento_id' => $medicamento_id,
+                    ]);
+        
+                    $medAgenda->codigo = $validated['codigo'][$index];
+                    $medAgenda->quantidade = $quantidade;
+                    $medAgenda->valor = $valor;
+                    $medAgenda->unidade_medida = $validated['unidade_medida'][$index];
+                    $medAgenda->fator = $validated['fator'][$index];
+                    $medAgenda->cd = '02';
+                    $medAgenda->tabela = '20';
+                    $medAgenda->valor_total = $valor_total;
+                    $medAgenda->save();
+                } else {
+                    Log::warning("Dados incompletos no índice {$index}: ", $validated);
+                }
+            }
+        
+            return response()->json(['message' => 'Medicamentos salvos com sucesso!']);
+        } catch (\Exception $e) {
+            Log::error('Erro ao salvar medicamento:', ['exception' => $e->getMessage()]);
+            return response()->json(['error' => 'Erro ao salvar o medicamento.'], 500);
         }
-
-        return response()->json(['message' => 'Medicamentos salvos com sucesso!']);
-    } catch (\Exception $e) {
-        Log::error('Erro ao salvar medicamento:', ['exception' => $e->getMessage()]);
-        return response()->json(['error' => 'Erro ao salvar o medicamento.'], 500);
     }
-}
+    
 
 
 
@@ -253,7 +270,7 @@ class AgendaController extends Controller
     {
         $remedios = MedAgenda::where('agenda_id', $agenda_id)
             ->where('paciente_id', $paciente_id)
-            ->select('medicamento_id', 'quantidade', 'codigo', 'valor', 'unidade_medida')
+            ->select('medicamento_id', 'quantidade', 'codigo', 'valor', 'unidade_medida', 'fator')
             ->get();
 
         if ($remedios->isEmpty()) {
@@ -279,7 +296,7 @@ class AgendaController extends Controller
         ]);
 
         foreach ($validated['procedimento_id'] as $index => $procedimento_id) {
-            $valor = isset($validated['valor'][$index]) ? (float) $validated['valor'][$index] : 0.0;
+            $valor = (float) $validated['valor'][$index];
 
             Log::info('Processando procedimento:', [
                 'procedimento_id' => $procedimento_id,
@@ -328,52 +345,75 @@ class AgendaController extends Controller
     public function storeMaterial(Request $request)
 {
     try {
-        // Validação dos campos
         $validated = $request->validate([
-            'agenda_id' => 'required|exists:agendas,id',
             'paciente_id' => 'required|exists:pacientes,id',
+            'agenda_id' => 'required|exists:agendas,id',
+            'material_id' => 'required|array',
             'material_id.*' => 'required',
-            'fator.*' => 'string',
-            'codigo.*' => 'string',
-            'valor.*' => 'required|numeric|min:0',
-            'unidade_medida.*' => 'required|string|in:001,002,003,004,005,006,007,008,036',
-            'quantidade.*' => 'required|integer|min:1',
+            'quantidade' => 'required|array',
+            'quantidade.*' => ['required', 'regex:/^\d+$/'],
+            'codigo' => 'required|array',
+            'codigo.*' => 'required|string',
+            'valor' => 'nullable|array',
+            'valor.*' => 'nullable|numeric|min:0',
+            'unidade_medida' => 'required|array',
+            'unidade_medida.*' => 'required|string',
+            'fator' => 'nullable|array',
+            'fator.*' => 'nullable|string',
         ]);
 
-        // Loop para salvar ou atualizar cada material
-        foreach ($validated['material_id'] as $index => $material_id) {
-            $quantidade = $validated['quantidade'][$index];
-            $valor = $validated['valor'][$index];
+        // Certifica-se de que todos os arrays têm o mesmo tamanho
+        $count = count($validated['material_id']);
 
-            // Calcular o valor total
-            $valor_total = number_format($quantidade * $valor, 2, '.', '');
-
-            MatAgenda::updateOrCreate(
-                [
-                    'agenda_id' => $validated['agenda_id'],
-                    'paciente_id' => $validated['paciente_id'],
+        for ($index = 0; $index < $count; $index++) {
+            if (
+                isset($validated['quantidade'][$index]) &&
+                isset($validated['codigo'][$index]) &&
+                isset($validated['valor'][$index]) &&
+                isset($validated['unidade_medida'][$index]) &&
+                isset($validated['fator'][$index])
+            ) {
+                $material_id = $validated['material_id'][$index];
+                $quantidade = (int) $validated['quantidade'][$index];
+                $valor = (float) $validated['valor'][$index];
+                $fator = (float) str_replace(',', '.', $validated['fator'][$index] ?? 1); // Converte vírgula para ponto
+                $valor_total = number_format($quantidade * $valor * $fator, 2, '.', ''); // Aplica fator ao cálculo
+    
+                Log::info('Processando materias:', [
                     'material_id' => $material_id,
-                ],
-                [
-                    'unidade_medida' => $validated['unidade_medida'][$index],
                     'quantidade' => $quantidade,
                     'valor' => $valor,
                     'valor_total' => $valor_total,
-                    'cd' => '03',
-                    'tabela' => '19',
-                    'fator' => $validated['fator'][$index],
                     'codigo' => $validated['codigo'][$index],
-                ]
-            );
+                    'unidade_medida' => $validated['unidade_medida'][$index],
+                ]);
+    
+                $matAgenda = MatAgenda::firstOrNew([
+                    'agenda_id' => $validated['agenda_id'],
+                    'paciente_id' => $validated['paciente_id'],
+                    'material_id' => $material_id,
+                ]);
+    
+                $matAgenda->codigo = $validated['codigo'][$index];
+                $matAgenda->quantidade = $quantidade;
+                $matAgenda->valor = $valor;
+                $matAgenda->unidade_medida = $validated['unidade_medida'][$index];
+                $matAgenda->fator = $validated['fator'][$index];
+                $matAgenda->cd = '03';
+                $matAgenda->tabela = '19';
+                $matAgenda->valor_total = $valor_total;
+                $matAgenda->save();
+            } else {
+                Log::warning("Dados incompletos no índice {$index}: ", $validated);
+            }
         }
 
         return response()->json(['message' => 'Materiais salvos com sucesso!']);
     } catch (\Exception $e) {
-        Log::error('Erro ao salvar materiais:', ['exception' => $e->getMessage()]); // Registra o erro no log
+        Log::error('Erro ao salvar materiais:', ['exception' => $e->getMessage()]);
         return response()->json(['error' => 'Erro ao salvar os materiais.'], 500);
     }
 }
-
 
     public function verificarMaterial($agenda_id, $paciente_id)
     {

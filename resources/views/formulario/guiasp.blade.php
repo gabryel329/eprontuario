@@ -25,6 +25,7 @@
             padding: 10px;
             border: 1px solid #000;
             box-sizing: border-box;
+            font-size: 10px;
         }
 
         table {
@@ -123,6 +124,11 @@
             text-align: center;
         }
     </style>
+    <script>
+        window.onload = function() {
+            window.print(); // Dispara o diálogo de impressão quando a página carrega
+        }
+    </script>
 </head>
 @php
     $totalValorTotal2 = 0; // Inicialize a variável

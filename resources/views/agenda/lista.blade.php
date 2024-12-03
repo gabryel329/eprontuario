@@ -1484,11 +1484,11 @@
                                     <td><input class="form-control" type="text" value="${medicamento.tabela || ''}" readonly></td>
                                     <td><input class="form-control" type="text" value="${medicamento.nome_medicamento || ''}" readonly></td>
                                     <td><input class="form-control" type="text" value="${medicamento.codigo || ''}" readonly></td>
-                                    <td><input class="form-control" type="text" value="${medicamento.quantidade  || ''}" readonly></td>
+                                    <td><input class="form-control quantidade" type="text" value="${medicamento.quantidade  || ''}" readonly></td>
                                     <td><input class="form-control" type="text" value="${unidadeMedidaNome}" readonly></td>
-                                    <td><input class="form-control" type="text" value="${medicamento.fator || ''}" readonly></td>
-                                    <td><input class="form-control" type="text" value="${medicamento.valor || ''}" readonly></td>
-                                    <td><input class="form-control" type="text" value="${medicamento.valor_total || ''}" readonly></td>
+                                    <td><input class="form-control fator" type="text" value="${medicamento.fator || ''}" readonly></td>
+                                    <td><input class="form-control valor" type="text" value="${medicamento.valor || ''}" readonly></td>
+                                    <td><input class="form-control valor_total" type="text" value="${medicamento.valor_total || ''}" readonly></td>
                                 </tr>
                             `;
                                 $('#medicamentos-table-body').append(medicamentoRow);
@@ -1517,11 +1517,11 @@
                                     <td><input class="form-control" type="text" value="${material.tabela || ''}" readonly></td>
                                     <td><input class="form-control" type="text" value="${material.nome_material || ''}" readonly></td>
                                     <td><input class="form-control" type="text" value="${material.codigo || ''}" readonly></td>
-                                    <td><input class="form-control" type="text" value="${material.quantidade  || ''}" readonly></td>
+                                    <td><input class="form-control quantidade" type="text" value="${material.quantidade  || ''}" readonly></td>
                                     <td><input class="form-control" type="text" value="${unidadeMedidaNome}" readonly></td>
-                                    <td><input class="form-control" type="text" value="${material.fator || ''}" readonly></td>
-                                    <td><input class="form-control" type="text" value="${material.valor || ''}" readonly></td>
-                                    <td><input class="form-control" type="text" value="${material.valor_total || ''}" readonly></td>
+                                    <td><input class="form-control fator" type="text" value="${material.fator || ''}" readonly></td>
+                                    <td><input class="form-control valor" type="text" value="${material.valor || ''}" readonly></td>
+                                    <td><input class="form-control valor_total" type="text" value="${material.valor_total || ''}" readonly></td>
                                 </tr>
                             `;
                                 $('#materiais-table-body').append(materialRow);
@@ -1775,6 +1775,57 @@
             valorTotalField.value = valorTotal.toFixed(2);
         }
 
+        function calcularValorTotal2(element) {
+            // Encontra a linha do campo alterado
+            const row = element.closest('tr');
+
+            // Obtém os campos da mesma linha
+            const quantidadeField = row.querySelector('.quantidade');
+            const valorField = row.querySelector('.valor');
+            const fatorField = row.querySelector('.fator');
+            const valorTotalField = row.querySelector('.valor_total');
+
+            // Obtém os valores e faz conversões
+            const quantidade = parseFloat(quantidadeField.value) || 0;
+            const valorUnitario = parseFloat(valorField.value) || 0;
+            const fator = parseFloat(fatorField.value.replace(',', '.')) || 1; // Converte vírgula para ponto
+
+            // Calcula o valor total
+            let valorTotal = quantidade * valorUnitario;
+
+            // Aplica o fator de redução ou acréscimo
+            valorTotal *= fator;
+
+            // Atualiza o campo de valor total
+            valorTotalField.value = valorTotal.toFixed(2);
+        }
+
+        // Evento para cálculo automático ao alterar quantidade, valor ou fator
+        document.addEventListener('input', function (event) {
+            const target = event.target;
+
+            // Verifica se o campo alterado é quantidade, valor ou fator
+            if (target.classList.contains('quantidade') || 
+                target.classList.contains('valor') || 
+                target.classList.contains('fator')) {
+                calcularValorTotal(target);
+            }
+        });
+
+
+
+
+        // Evento para cálculo automático ao alterar quantidade, valor ou fator
+        document.addEventListener('input', function (event) {
+            const target = event.target;
+
+            // Verifica se o campo alterado é quantidade, valor ou fator
+            if (target.classList.contains('quantidade') || 
+                target.classList.contains('valor') || 
+                target.classList.contains('fator')) {
+                calcularValorTotal(target);
+            }
+        });
 
 
         $(document).ready(function() {
