@@ -490,7 +490,7 @@ public function gerarZipGuiaSp($id)
                 'dataproc' => $proc->dataproc ?? '0000-00-00',
             ]);
         });
-        
+
         $guia = GuiaSp::where('agenda_id', $agenda->id)->first();
 
         $ExameSolis = ExamesSadt::where('guia_sps_id', $agenda->id)
@@ -587,7 +587,7 @@ public function gerarZipGuiaSp($id)
         }
     }
 
-    // Criação do XML
+    // Criar o XML utilizando SimpleXMLElement
     $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas http://www.ans.gov.br/padroes/tiss/schemas/tissV4_01_00.xsd"></ans:mensagemTISS>');
 
     // Cabeçalho
@@ -600,7 +600,7 @@ public function gerarZipGuiaSp($id)
 
     $origem = $cabecalho->addChild('ans:origem');
     $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
-    $identificacaoPrestador->addChild('ans:CPF', $guias->first()->profissional->cpf ?? ''); // CPF do profissional da primeira guia
+    $identificacaoPrestador->addChild('ans:CNPJ', $guia->codigo_operadora); // CPF do profissional da primeira guia
 
     $destino = $cabecalho->addChild('ans:destino');
     $destino->addChild('ans:registroANS', $guias->first()->registro_ans);
@@ -690,10 +690,10 @@ public function gerarZipGuiaSp($id)
         // Dados do Solicitante
         $dadosSolicitante = $guiaSadt->addChild('ans:dadosSolicitante');
         $contratadoSolicitante = $dadosSolicitante->addChild('ans:contratadoSolicitante');
-        $contratadoSolicitante->addChild('ans:cpfContratado', $guia->profissional->cpf ?? '');
-        $dadosSolicitante->addChild('ans:nomeContratadoSolicitante', $guia->nome_profissional_solicitante);
+        $contratadoSolicitante->addChild('ans:cnpjContratado', $guia->codigo_operadora ?? '');
+        $dadosSolicitante->addChild('ans:nomeContratadoSolicitante', $guia->nome_contratado_executante);
         $profissionalSolicitante = $dadosSolicitante->addChild('ans:profissionalSolicitante');
-        $profissionalSolicitante->addChild('ans:nomeProfissional', $guia->profissional->name);
+        $profissionalSolicitante->addChild('ans:nomeProfissional', $guia->nome_profissional_solicitante);
         $profissionalSolicitante->addChild('ans:conselhoProfissional', $guia->conselho_profissional);
         $profissionalSolicitante->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho);
         $profissionalSolicitante->addChild('ans:UF', $guia->uf_conselho);
@@ -732,7 +732,9 @@ public function gerarZipGuiaSp($id)
             $dadosProcedimento->addChild('ans:codigoProcedimento', $procedimento->codigo_procedimento_realizado);
             $dadosProcedimento->addChild('ans:descricaoProcedimento', $procedimento->descricao_procedimento_realizado);
             $procedimentoExecutado->addChild('ans:quantidadeExecutada', $procedimento->quantidade_autorizada);
-            $procedimentoExecutado->addChild('ans:viaAcesso', $procedimento->via);
+            if (!empty($procedimento->via)) {
+                $procedimentoExecutado->addChild('ans:viaAcesso', $procedimento->via);
+            }
             $procedimentoExecutado->addChild('ans:reducaoAcrescimo', $procedimento->fator_red_acres);
             $procedimentoExecutado->addChild('ans:valorUnitario', $procedimento->valor_unitario);
             $procedimentoExecutado->addChild('ans:valorTotal', $procedimento->valor_total);
@@ -750,28 +752,29 @@ public function gerarZipGuiaSp($id)
             $equipeSadt->addChild('ans:UF', $guia->uf_profissional);
             $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional);
         }
-        // Outras Despesas
-        $outrasDespesas = $guiaSadt->addChild('ans:outrasDespesas');
-        foreach ($outrasDespesasItems as $index => $item) {
-            $despesa = $outrasDespesas->addChild('ans:despesa');
-            $despesa->addChild('ans:sequencialItem', $index + 1);
-            $despesa->addChild('ans:codigoDespesa');
+        if (is_array($outrasDespesasItems) && count($outrasDespesasItems) > 0) {
+            $outrasDespesas = $guiaSadt->addChild('ans:outrasDespesas');
+            foreach ($outrasDespesasItems as $index => $item) {
+                $despesa = $outrasDespesas->addChild('ans:despesa');
+                $despesa->addChild('ans:sequencialItem', $index + 1);
+                $despesa->addChild('ans:codigoDespesa');
 
-            $servicosExecutados = $despesa->addChild('ans:servicosExecutados');
-            $servicosExecutados->addChild('ans:dataExecucao', $guia->data_autorizacao);
-            $servicosExecutados->addChild('ans:horaInicial', $guia->hora_inicio_atendimento);
-            $servicosExecutados->addChild('ans:horaFinal', $guia->hora_fim_atendimento);
+                $servicosExecutados = $despesa->addChild('ans:servicosExecutados');
+                $servicosExecutados->addChild('ans:dataExecucao', $guia->data_autorizacao);
+                $servicosExecutados->addChild('ans:horaInicial', $guia->hora_inicio_atendimento);
+                $servicosExecutados->addChild('ans:horaFinal', $guia->hora_fim_atendimento);
 
-            $codigoTabela = strtoupper(trim($item->tipo_produto)) === 'MEDICAMENTO' ? '20' : '19';
-            $servicosExecutados->addChild('ans:codigoTabela', $codigoTabela);
+                $codigoTabela = strtoupper(trim($item->tipo_produto)) === 'MEDICAMENTO' ? '20' : '19';
+                $servicosExecutados->addChild('ans:codigoTabela', $codigoTabela);
 
-            $servicosExecutados->addChild('ans:codigoProcedimento', $item->material_id);
-            $servicosExecutados->addChild('ans:quantidadeExecutada', $item->quantidade);
-            $servicosExecutados->addChild('ans:unidadeMedida', $item->unidade_medida);
-            $servicosExecutados->addChild('ans:reducaoAcrescimo', '1.00');
-            $servicosExecutados->addChild('ans:valorUnitario', $item->valor_unitario_produto);
-            $servicosExecutados->addChild('ans:valorTotal', $item->quantidade * $item->valor_unitario_produto);
-            $servicosExecutados->addChild('ans:descricaoProcedimento', $item->nome_produto);
+                $servicosExecutados->addChild('ans:codigoProcedimento', $item->material_id);
+                $servicosExecutados->addChild('ans:quantidadeExecutada', $item->quantidade);
+                $servicosExecutados->addChild('ans:unidadeMedida', $item->unidade_medida);
+                $servicosExecutados->addChild('ans:reducaoAcrescimo', '1.00');
+                $servicosExecutados->addChild('ans:valorUnitario', $item->valor_unitario_produto);
+                $servicosExecutados->addChild('ans:valorTotal', $item->quantidade * $item->valor_unitario_produto);
+                $servicosExecutados->addChild('ans:descricaoProcedimento', $item->nome_produto);
+            }
         }
     }
 
@@ -814,31 +817,31 @@ public function gerarZipGuiasadtEmLote(Request $request)
         }
     }
 
-   // Criação do XML
-   $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas http://www.ans.gov.br/padroes/tiss/schemas/tissV4_01_00.xsd"></ans:mensagemTISS>');
+    // Criar o XML utilizando SimpleXMLElement
+    $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas http://www.ans.gov.br/padroes/tiss/schemas/tissV4_01_00.xsd"></ans:mensagemTISS>');
 
-   // Cabeçalho
-   $cabecalho = $xml->addChild('ans:cabecalho');
-   $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
-   $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
-   $identificacaoTransacao->addChild('ans:sequencialTransacao', $sequencialTransacao);
-   $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
-   $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
+    // Cabeçalho
+    $cabecalho = $xml->addChild('ans:cabecalho');
+    $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
+    $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
+    $identificacaoTransacao->addChild('ans:sequencialTransacao', $sequencialTransacao);
+    $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
+    $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
 
-   $origem = $cabecalho->addChild('ans:origem');
-   $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
-   $identificacaoPrestador->addChild('ans:CPF', $guias->first()->profissional->cpf ?? '');
+    $origem = $cabecalho->addChild('ans:origem');
+    $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
+    $identificacaoPrestador->addChild('ans:CNPJ', $guia->codigo_operadora); // CPF do profissional da primeira guia
 
-   $destino = $cabecalho->addChild('ans:destino');
-   $destino->addChild('ans:registroANS', $guias->first()->registro_ans);
+    $destino = $cabecalho->addChild('ans:destino');
+    $destino->addChild('ans:registroANS', $guias->first()->registro_ans);
 
-   $cabecalho->addChild('ans:Padrao', '4.01.00');
+    $cabecalho->addChild('ans:Padrao', '4.01.00');
 
-   // Lote de Guias
-   $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
-   $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
-   $loteGuias->addChild('ans:numeroLote', $sequencialTransacao);
-   $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
+    // Lote de Guias
+    $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
+    $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
+    $loteGuias->addChild('ans:numeroLote', $sequencialTransacao);
+    $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
 
    // Iterar sobre cada guia
    foreach ($guias as $guia) {
@@ -914,17 +917,17 @@ public function gerarZipGuiasadtEmLote(Request $request)
        $dadosBeneficiario->addChild('ans:numeroCarteira', $guia->numero_carteira);
        $dadosBeneficiario->addChild('ans:atendimentoRN', $guia->atendimento_rn);
 
-       // Dados do Solicitante
-       $dadosSolicitante = $guiaSadt->addChild('ans:dadosSolicitante');
-       $contratadoSolicitante = $dadosSolicitante->addChild('ans:contratadoSolicitante');
-       $contratadoSolicitante->addChild('ans:cpfContratado', $guia->profissional->cpf ?? '');
-       $dadosSolicitante->addChild('ans:nomeContratadoSolicitante', $guia->nome_profissional_solicitante);
-       $profissionalSolicitante = $dadosSolicitante->addChild('ans:profissionalSolicitante');
-       $profissionalSolicitante->addChild('ans:nomeProfissional', $guia->profissional->name);
-       $profissionalSolicitante->addChild('ans:conselhoProfissional', $guia->conselho_profissional);
-       $profissionalSolicitante->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho);
-       $profissionalSolicitante->addChild('ans:UF', $guia->uf_conselho);
-       $profissionalSolicitante->addChild('ans:CBOS', $guia->codigo_cbo);
+        // Dados do Solicitante
+        $dadosSolicitante = $guiaSadt->addChild('ans:dadosSolicitante');
+        $contratadoSolicitante = $dadosSolicitante->addChild('ans:contratadoSolicitante');
+        $contratadoSolicitante->addChild('ans:cnpjContratado', $guia->codigo_operadora ?? '');
+        $dadosSolicitante->addChild('ans:nomeContratadoSolicitante', $guia->nome_contratado_executante);
+        $profissionalSolicitante = $dadosSolicitante->addChild('ans:profissionalSolicitante');
+        $profissionalSolicitante->addChild('ans:nomeProfissional', $guia->nome_profissional_solicitante);
+        $profissionalSolicitante->addChild('ans:conselhoProfissional', $guia->conselho_profissional);
+        $profissionalSolicitante->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho);
+        $profissionalSolicitante->addChild('ans:UF', $guia->uf_conselho);
+        $profissionalSolicitante->addChild('ans:CBOS', $guia->codigo_cbo);
 
        // Dados Solicitação
        $dadosSolicitacao = $guiaSadt->addChild('ans:dadosSolicitacao');
@@ -959,8 +962,9 @@ public function gerarZipGuiasadtEmLote(Request $request)
             $dadosProcedimento->addChild('ans:codigoProcedimento', $procedimento->codigo_procedimento_realizado);
             $dadosProcedimento->addChild('ans:descricaoProcedimento', $procedimento->descricao_procedimento_realizado);
             $procedimentoExecutado->addChild('ans:quantidadeExecutada', $procedimento->quantidade_autorizada);
-            $procedimentoExecutado->addChild('ans:viaAcesso', $procedimento->via);
-            $procedimentoExecutado->addChild('ans:reducaoAcrescimo', '1.00');
+            if (!empty($procedimento->via)) {
+                $procedimentoExecutado->addChild('ans:viaAcesso', $procedimento->via);
+            }            $procedimentoExecutado->addChild('ans:reducaoAcrescimo', '1.00');
             $procedimentoExecutado->addChild('ans:valorUnitario', $procedimento->valor_unitario);
             $procedimentoExecutado->addChild('ans:valorTotal', $procedimento->valor_total);
 
@@ -977,28 +981,29 @@ public function gerarZipGuiasadtEmLote(Request $request)
             $equipeSadt->addChild('ans:UF', $guia->uf_profissional);
             $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional);
         }
-        // Outras Despesas
-        $outrasDespesas = $guiaSadt->addChild('ans:outrasDespesas');
-        foreach ($outrasDespesasItems as $index => $item) {
-            $despesa = $outrasDespesas->addChild('ans:despesa');
-            $despesa->addChild('ans:sequencialItem', $index + 1);
-            $despesa->addChild('ans:codigoDespesa');
+        if (is_array($outrasDespesasItems) && count($outrasDespesasItems) > 0) {
+            $outrasDespesas = $guiaSadt->addChild('ans:outrasDespesas');
+            foreach ($outrasDespesasItems as $index => $item) {
+                $despesa = $outrasDespesas->addChild('ans:despesa');
+                $despesa->addChild('ans:sequencialItem', $index + 1);
+                $despesa->addChild('ans:codigoDespesa');
 
-            $servicosExecutados = $despesa->addChild('ans:servicosExecutados');
-            $servicosExecutados->addChild('ans:dataExecucao', $guia->data_autorizacao);
-            $servicosExecutados->addChild('ans:horaInicial', $guia->hora_inicio_atendimento);
-            $servicosExecutados->addChild('ans:horaFinal', $guia->hora_fim_atendimento);
+                $servicosExecutados = $despesa->addChild('ans:servicosExecutados');
+                $servicosExecutados->addChild('ans:dataExecucao', $guia->data_autorizacao);
+                $servicosExecutados->addChild('ans:horaInicial', $guia->hora_inicio_atendimento);
+                $servicosExecutados->addChild('ans:horaFinal', $guia->hora_fim_atendimento);
 
-            $codigoTabela = strtoupper(trim($item->tipo_produto)) === 'MEDICAMENTO' ? '20' : '19';
-            $servicosExecutados->addChild('ans:codigoTabela', $codigoTabela);
+                $codigoTabela = strtoupper(trim($item->tipo_produto)) === 'MEDICAMENTO' ? '20' : '19';
+                $servicosExecutados->addChild('ans:codigoTabela', $codigoTabela);
 
-            $servicosExecutados->addChild('ans:codigoProcedimento', $item->material_id);
-            $servicosExecutados->addChild('ans:quantidadeExecutada', $item->quantidade);
-            $servicosExecutados->addChild('ans:unidadeMedida', $item->unidade_medida);
-            $servicosExecutados->addChild('ans:reducaoAcrescimo', '1.00');
-            $servicosExecutados->addChild('ans:valorUnitario', $item->valor_unitario_produto);
-            $servicosExecutados->addChild('ans:valorTotal', $item->quantidade * $item->valor_unitario_produto);
-            $servicosExecutados->addChild('ans:descricaoProcedimento', $item->nome_produto);
+                $servicosExecutados->addChild('ans:codigoProcedimento', $item->material_id);
+                $servicosExecutados->addChild('ans:quantidadeExecutada', $item->quantidade);
+                $servicosExecutados->addChild('ans:unidadeMedida', $item->unidade_medida);
+                $servicosExecutados->addChild('ans:reducaoAcrescimo', '1.00');
+                $servicosExecutados->addChild('ans:valorUnitario', $item->valor_unitario_produto);
+                $servicosExecutados->addChild('ans:valorTotal', $item->quantidade * $item->valor_unitario_produto);
+                $servicosExecutados->addChild('ans:descricaoProcedimento', $item->nome_produto);
+            }
         }
    }
     // Adicionar valores totais conforme o padrão TISS
@@ -1211,7 +1216,7 @@ public function gerarZipGuiasadtEmLote(Request $request)
         $procedimentoExecutado->addChild('ans:quantidadeExecutada', $procedimento->quantidade_autorizada);
         if (!empty($procedimento->via)) {
             $procedimentoExecutado->addChild('ans:viaAcesso', $procedimento->via);
-        } 
+        }
         $procedimentoExecutado->addChild('ans:reducaoAcrescimo', '1.00');
         $procedimentoExecutado->addChild('ans:valorUnitario', $procedimento->valor_unitario);
         $procedimentoExecutado->addChild('ans:valorTotal', $procedimento->valor_total);
@@ -1235,15 +1240,15 @@ public function gerarZipGuiasadtEmLote(Request $request)
             $despesa = $outrasDespesas->addChild('ans:despesa');
             $despesa->addChild('ans:sequencialItem', $index + 1);
             $despesa->addChild('ans:codigoDespesa');
-    
+
             $servicosExecutados = $despesa->addChild('ans:servicosExecutados');
             $servicosExecutados->addChild('ans:dataExecucao', $guia->data_autorizacao);
             $servicosExecutados->addChild('ans:horaInicial', $guia->hora_inicio_atendimento);
             $servicosExecutados->addChild('ans:horaFinal', $guia->hora_fim_atendimento);
-    
+
             $codigoTabela = strtoupper(trim($item->tipo_produto)) === 'MEDICAMENTO' ? '20' : '19';
             $servicosExecutados->addChild('ans:codigoTabela', $codigoTabela);
-    
+
             $servicosExecutados->addChild('ans:codigoProcedimento', $item->material_id);
             $servicosExecutados->addChild('ans:quantidadeExecutada', $item->quantidade);
             $servicosExecutados->addChild('ans:unidadeMedida', $item->unidade_medida);
@@ -1435,7 +1440,7 @@ public function gerarZipGuiasadt($id, Request $request)
         $procedimentoExecutado->addChild('ans:quantidadeExecutada', $procedimento->quantidade_autorizada);
         if (!empty($procedimento->via)) {
             $procedimentoExecutado->addChild('ans:viaAcesso', $procedimento->via);
-        }        
+        }
         $procedimentoExecutado->addChild('ans:reducaoAcrescimo', '1.00');
         $procedimentoExecutado->addChild('ans:valorUnitario', $procedimento->valor_unitario);
         $procedimentoExecutado->addChild('ans:valorTotal', $procedimento->valor_total);
@@ -1460,15 +1465,15 @@ public function gerarZipGuiasadt($id, Request $request)
             $despesa = $outrasDespesas->addChild('ans:despesa');
             $despesa->addChild('ans:sequencialItem', $index + 1);
             $despesa->addChild('ans:codigoDespesa');
-    
+
             $servicosExecutados = $despesa->addChild('ans:servicosExecutados');
             $servicosExecutados->addChild('ans:dataExecucao', $guia->data_autorizacao);
             $servicosExecutados->addChild('ans:horaInicial', $guia->hora_inicio_atendimento);
             $servicosExecutados->addChild('ans:horaFinal', $guia->hora_fim_atendimento);
-    
+
             $codigoTabela = strtoupper(trim($item->tipo_produto)) === 'MEDICAMENTO' ? '20' : '19';
             $servicosExecutados->addChild('ans:codigoTabela', $codigoTabela);
-    
+
             $servicosExecutados->addChild('ans:codigoProcedimento', $item->material_id);
             $servicosExecutados->addChild('ans:quantidadeExecutada', $item->quantidade);
             $servicosExecutados->addChild('ans:unidadeMedida', $item->unidade_medida);
@@ -1697,7 +1702,7 @@ public function gerarZipGuiasadt($id, Request $request)
             'uf_profissional' => $request->input('uf_profissional'),
             'codigo_cbo_profissional' => $request->input('codigo_cbo_profissional'),
             'observacao' => $request->input('observacao') ?? 'N/A',
-            'identificador' => 'PENDENTE'
+            'identificador' => 'GERADO'
         ]);
 
         // Verifica se o conselho_profissional está no mapeamento e substitui pelo código numérico
@@ -1790,6 +1795,23 @@ public function gerarZipGuiasadt($id, Request $request)
         }
     }
 
+    public function editarGuia($id)
+    {
+        // Busca a guia com o relacionamento do profissional
+        $guia = GuiaSp::with('profissional')->find($id);
+
+        // Verifica se a guia foi encontrada
+        if (!$guia) {
+            return response()->json(['error' => 'Guia não encontrada.'], 404);
+        }
+
+        // Retorna os dados da guia e do profissional
+        return response()->json([
+            'success' => true,
+            'guia' => $guia,
+            'profissional' => $guia->profissional, // Inclui dados do profissional
+        ]);
+    }
     public function visualizarGuiaSADT($id)
     {
         // Buscar a agenda pelo ID
@@ -1844,36 +1866,205 @@ public function gerarZipGuiasadt($id, Request $request)
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, GuiaSp $guiasp)
-    {
-        // Validação dos dados
-        $validatedData = $request->validate([
-            'convenio_id' => 'required|exists:convenios,id',
-            'registro_ans' => 'required|string|max:255',
-            'numero_guia_prestador' => 'required|string|max:255',
-            'numero_carteira' => 'required|string|max:255',
-            'nome_beneficiario' => 'required|string|max:255',
-            'data_atendimento' => 'required|date',
-            'hora_inicio_atendimento' => 'required|date_format:H:i',
-            'tipo_consulta' => 'required|string|max:255',
-            'indicacao_acidente' => 'nullable|string|max:255',
-            'codigo_tabela' => 'required|string|max:255',
-            'codigo_procedimento' => 'required|string|max:255',
-            'valor_procedimento' => 'required|numeric|min:0',
-            'nome_profissional' => 'required|string|max:255',
-            'sigla_conselho' => 'required|string|max:10',
-            'conselho_1' => 'required|string|max:255',
-            'uf_conselho' => 'required|string|max:2',
-            'cbo' => 'required|string|max:255',
-            'observacao' => 'nullable|string',
-            'hash' => 'nullable|string|max:255',
+    public function atualizarGuia(Request $request, $id)
+{
+    try {
+        DB::beginTransaction();
+
+        // Busca a guia pelo ID
+        $guia = GuiaSp::findOrFail($id);
+
+        // Arrays de referência
+        $conselhos = [
+            'CRAS' => '01',
+            'COREN' => '02',
+            'CRF' => '03',
+            'CRFA' => '04',
+            'CREFITO' => '05',
+            'CRM' => '06',
+            'CRN' => '07',
+            'CRO' => '08',
+            'CRP' => '09',
+            'OUTROS' => '10'
+        ];
+
+        $ufs = [
+            'AC' => '12',
+            'AL' => '27',
+            'AP' => '16',
+            'AM' => '13',
+            'BA' => '29',
+            'CE' => '23',
+            'DF' => '53',
+            'ES' => '32',
+            'GO' => '52',
+            'MA' => '21',
+            'MT' => '51',
+            'MS' => '50',
+            'MG' => '31',
+            'PA' => '15',
+            'PB' => '25',
+            'PR' => '41',
+            'PE' => '26',
+            'PI' => '22',
+            'RJ' => '33',
+            'RN' => '24',
+            'RS' => '43',
+            'RO' => '11',
+            'RR' => '14',
+            'SC' => '42',
+            'SP' => '35',
+            'SE' => '28',
+            'TO' => '17'
+        ];
+
+        $horaInicioAtendimento = $request->input('hora_inicio_atendimento');
+        $horaFimAtendimento = $request->input('hora_fim_atendimento');
+
+        if (is_array($horaInicioAtendimento)) {
+            $horaInicioAtendimento = reset($horaInicioAtendimento);
+        }
+
+        if (is_array($horaFimAtendimento)) {
+            $horaFimAtendimento = reset($horaFimAtendimento);
+        }
+
+        // Atualizar os dados gerais da guia
+        $guia->update([
+            'agenda_id' => $request->input('agenda_id'),
+            'profissional_id' => $request->input('profissional_id'),
+            'paciente_id' => $request->input('paciente_id'),
+            'cns' => $request->input('cns'),
+            'atendimento_rn' => $request->input('atendimento_rn'),
+            'user_id' => $request->input('user_id'),
+            'nome_profissional_solicitante' => $request->input('nome_profissional_solicitante'),
+            'conselho_profissional' => $request->input('conselho_profissional'),
+            'codigo_cbo' => $request->input('codigo_cbo'),
+            'nome_contratado' => $request->input('nome_contratado'),
+            'codigo_cnes' => $request->input('codigo_cnes'),
+            'data_atendimento' => $request->input('data_solicitacao'),
+            'codigo_procedimento' => $request->input('codigo_procedimento'),
+            'validade_carteira' => $request->input('validade_carteira'),
+            'codigo_operadora' => $request->input('codigo_operadora'),
+            'codigo_operadora_executante' => $request->input('codigo_operadora_executante'),
+            'nome_social' => $request->input('nome_social'),
+            'uf_conselho' => $request->input('uf_conselho'),
+            'numero_conselho' => $request->input('numero_conselho'),
+            'registro_ans' => $request->input('registro_ans'),
+            'numero_carteira' => $request->input('numero_carteira'),
+            'nome_beneficiario' => $request->input('nome_beneficiario'),
+            'numero_guia_prestador' => $request->input('numero_guia_prestador'),
+            'hora_inicio_atendimento' => $horaInicioAtendimento,
+            'hora_fim_atendimento' => $horaFimAtendimento,
+            'data_autorizacao' => $request->input('data_solicitacao'),
+            'senha' => $request->input('senha'),
+            'validade_senha' => $request->input('validade_senha'),
+            'numero_guia_op' => $request->input('numero_guia_op'),
+            'carater_atendimento' => $request->input('carater_atendimento'),
+            'data_solicitacao' => $request->input('data_solicitacao'),
+            'indicacao_clinica' => $request->input('indicacao_clinica'),
+            'indicacao_cob_especial' => $request->input('indicacao_cob_especial'),
+            'nome_contratado_executante' => $request->input('nome_contratado_executante'),
+            'tipo_atendimento' => $request->input('tipo_atendimento'),
+            'indicacao_acidente' => $request->input('indicacao_acidente'),
+            'tipo_consulta' => $request->input('tipo_consulta'),
+            'motivo_encerramento' => $request->input('motivo_encerramento'),
+            'regime_atendimento' => $request->input('regime_atendimento'),
+            'saude_ocupacional' => $request->input('saude_ocupacional'),
+            'sequencia' => $request->input('sequencia'),
+            'grua' => $request->input('grau'),
+            'codigo_operadora_profissional' => $request->input('codigo_operadora_profissional'),
+            'nome_profissional' => $request->input('nome_profissional'),
+            'sigla_conselho' => $request->input('sigla_conselho'),
+            'numero_conselho_profissional' => $request->input('numero_conselho_profissional'),
+            'uf_profissional' => $request->input('uf_profissional'),
+            'codigo_cbo_profissional' => $request->input('codigo_cbo_profissional'),
+            'observacao' => $request->input('observacao') ?? 'N/A',
+            'identificador' => 'GERADO'
         ]);
 
-        // Atualizar a guia TISS
-        $guiasp->update($validatedData);
+        // Substituir valores de conselhos e UF por códigos
+        $conselhoProfissional = $request->input('sigla_conselho');
+        if (array_key_exists($conselhoProfissional, $conselhos)) {
+            $guia->sigla_conselho = $conselhos[$conselhoProfissional];
+        }
 
-        return redirect()->back()->with('success', 'Guia TISS atualizada com sucesso');
+        $ufConselho = $request->input('uf_profissional');
+        if (array_key_exists($ufConselho, $ufs)) {
+            $guia->uf_profissional = $ufs[$ufConselho];
+        }
+
+        $conselho_profissional = $request->input('conselho_profissional');
+        if (array_key_exists($conselho_profissional, $conselhos)) {
+            $guia->conselho_profissional = $conselhos[$conselho_profissional];
+        }
+
+        $uf_conselho = $request->input('uf_conselho');
+        if (array_key_exists($uf_conselho, $ufs)) {
+            $guia->uf_conselho = $ufs[$uf_conselho];
+        }
+
+        $guia->save();
+
+        // Atualizar exames na tabela `exames_sadt`
+        if ($request->has('descricao_procedimento')) {
+            ExamesSadt::where('guia_sps_id', $guia->id)->delete(); // Remove os exames antigos
+
+            foreach ($request->input('tabela') as $index => $tabela) {
+                ExamesSadt::create([
+                    'guia_sps_id' => $guia->id,
+                    'tabela' => $tabela,
+                    'codigo_procedimento_solicitado' => $request->input("codigo_procedimento_solicitado.$index"),
+                    'descricao_procedimento' => $request->input("descricao_procedimento.$index"),
+                    'qtd_sol' => $request->input("qtd_sol.$index"),
+                    'qtd_aut' => $request->input("qtd_aut.$index"),
+                ]);
+            }
+        }
+
+        // Atualizar procedimentos na tabela `exames_aut_sadt`
+        if ($request->has('descricao_procedimento_realizado')) {
+            ExamesAutSadt::where('guia_sps_id', $guia->id)->delete(); // Remove os procedimentos antigos
+
+            foreach ($request->input('data_real') as $index => $dataReal) {
+                ExamesAutSadt::create([
+                    'guia_sps_id' => $guia->id,
+                    'data_real' => $dataReal,
+                    'hora_inicio_atendimento' => $request->input("hora_inicio_atendimento.$index"),
+                    'hora_fim_atendimento' => $request->input("hora_fim_atendimento.$index"),
+                    'tabela' => $request->input("tabela.$index"),
+                    'codigo_procedimento_realizado' => $request->input("codigo_procedimento_realizado.$index"),
+                    'descricao_procedimento_realizado' => $request->input("descricao_procedimento_realizado.$index"),
+                    'quantidade_autorizada' => $request->input("quantidade_autorizada.$index"),
+                    'via' => $request->input("via.$index"),
+                    'tecnica' => $request->input("tecnica.$index"),
+                    'fator_red_acres' => $request->input("fator_red_acres.$index"),
+                    'valor_unitario' => $request->input("valor_unitario.$index"),
+                    'valor_total' => $request->input("valor_total.$index"),
+                ]);
+            }
+        }
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Guia SADT atualizada com sucesso!'
+        ]);
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => 'Erro ao atualizar a Guia SADT.',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
+
+
+
+
+
 
     /**
      * Remove the specified resource from storage.

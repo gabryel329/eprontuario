@@ -87,18 +87,18 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::get('convenios/{id}/edit', [ConvenioController::class, 'edit'])->name('convenio.edit');
 
         Route::get('/guia-consulta', [GuiaConsultaController::class, 'index'])->name('guiaconsulta.index');
+        Route::get('/guia-consulta/listar', [GuiaConsultaController::class, 'listarGuiasConsulta'])->name('guiasconsulta.listar');
+        Route::get('/guia-consulta/detalhes/{id}', [GuiaConsultaController::class, 'visualizarConsulta']);
         Route::get('/guia-tiss', [GuiaTissController::class, 'index'])->name('guiatiss.index');
         Route::get('/guia-honorario', [GuiaHonorarioController::class, 'index'])->name('guiahonorario.index');
         Route::get('/guia-sp', [GuiaSpController::class, 'index'])->name('guiasp.index');
 
-        Route::get('/guia-consulta/listar', [GuiaConsultaController::class, 'listarGuiasConsulta'])->name('guiasconsulta.listar');
 
         Route::get('/guia-tiss/listar', [GuiaTissController::class, 'listarGuiasTiss'])->name('guiastiss.listar');
         Route::get('/guia-honorario/listar', [GuiaHonorarioController::class, 'listarGuiasHonorario'])->name('guiahonorario.listar');
         Route::get('/guia-sp/listar', [GuiaSpController::class, 'listarGuiasSp'])->name('guiasp.listar');
 
         Route::get('/guia-honorario/detalhes/{id}', [GuiaHonorarioController::class, 'visualizarHonorario']);
-        Route::get('/guia-consulta/detalhes/{id}', [GuiaConsultaController::class, 'visualizarConsulta']);
         Route::get('/guia-tiss/detalhes/{id}', [GuiaTissController::class, 'visualizarTiss']);
         Route::get('/guia-sp/detalhes/{id}', [GuiaSpController::class, 'visualizarSp']);
 
@@ -124,6 +124,8 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::get('/agenda/{id}/guia-sadt', [GuiaSpController::class, 'gerarGuiaSadt'])->name('guia.sadt');
         Route::post('/guia-sadt/salvar', [GuiaSpController::class, 'salvarGuiaSADT'])->name('guia.sadt.salvar');
         Route::get('/visualizar-guia-sadt/{id}', [GuiaSpController::class, 'visualizarGuiaSadt'])->name('guia.sadt.visualizar');
+        Route::get('guia-sp/{id}/editar', [GuiaSpController::class, 'editarGuia'])->name('guia-sp.editar');
+        Route::post('/guia-sp/{id}/atualizar', [GuiaSpController::class, 'atualizarGuia'])->name('guia.sp.atualizar');
 
         Route::get('/gerar-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarGuiaConsultaMODAL'])->name('gerar.guia.consulta');
         Route::post('/salvar-guia-consulta', [GuiaConsultaController::class, 'salvarGuiaConsulta'])->name('salvar.guiaConsulta');
