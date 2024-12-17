@@ -65,6 +65,8 @@
                             <thead>
                                 <tr>
                                     <th><input type="checkbox" id="selectAll" /></th>
+                                    <th>#</th>
+                                    <th>Paciente</th>
                                     <th>Lote</th>
                                     <th>Data</th>
                                     <th>Ações</th>
@@ -274,7 +276,6 @@
             </div>
         </div>
     </div>
-    <!-- Modal para criar nova guia -->
     <!-- Modal para criar nova guia -->
     <div class="modal fade" id="novoGuiaModal" tabindex="-1" aria-labelledby="novoGuiaModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
@@ -511,7 +512,7 @@
 
                 // Função para verificar e solicitar numeração apenas se necessário
                 function verificarNumeracao() {
-                    return fetch(`/verificar-numeracao`, {
+                    return fetch(`/verificar-numeracao-consulta`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -541,7 +542,7 @@
 
                 // Função para gerar o XML em lote
                 function gerarXml() {
-                    return fetch("{{ route('guias.gerarXmlEmLote') }}", {
+                    return fetch("{{ route('guias.gerarXmlConsultaEmLote') }}", {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -578,7 +579,7 @@
 
                 // Função para gerar o ZIP em lote
                 function gerarZip() {
-                    return fetch("{{ route('guias.gerarZipEmLote') }}", {
+                    return fetch("{{ route('guias.gerarZipConsultaEmLote') }}", {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -650,6 +651,8 @@
 
                 html += '<tr>';
                 html += '<td><input type="checkbox" name="guiaCheckbox" value="' + guia.id + '" /></td>';
+                html += '<td>' + guia.id + '</td>';
+                html += '<td>' + guia.nome_beneficiario + '</td>';
                 html += '<td>' + guia.numeracao + '</td>';
                 html += '<td>' + dataFormatada + '</td>';
                 html += '<td>';
@@ -685,8 +688,8 @@
     }
 
     function listarGuiasConsulta() {
-        var convenio_id = $('#convenio_id').val(); 
-        var identificador = $('.nav-link.active').data('identificador'); 
+        var convenio_id = $('#convenio_id').val();
+        var identificador = $('.nav-link.active').data('identificador');
 
         if (convenio_id && identificador) {
             $.ajax({

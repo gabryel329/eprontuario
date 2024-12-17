@@ -113,7 +113,7 @@
         @endif
 
         @if (Auth::user()->permissoes->pluck('id')->intersect([3])->isNotEmpty())
-            <li class="treeview {{ request()->is('permisoes*', 'especialidades*', 'usuarios*','listausuarios*', 'profissional*','listaprofissional*', 'tipoprof*', 'convenio*', 'taxa*') ? 'is-expanded' : '' }}">
+            <li class="treeview {{ request()->is('permisoes*', 'especialidades*', 'usuarios*','listausuarios*', 'profissional*','listaprofissional*', 'tipoprof*', 'convenio','listaconvenio*', 'taxa*') ? 'is-expanded' : '' }}">
                 <a class="app-menu__item" href="#" data-toggle="treeview">
                     <i class="app-menu__icon bi bi bi-gear"></i>
                     <span class="app-menu__label">Cadastros</span>
@@ -146,7 +146,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="treeview-item {{ request()->is('convenio*') ? 'active' : '' }}" href="{{ route('convenio.index') }}">
+                        <a class="treeview-item {{ request()->is('convenio', 'listaconvenio*') ? 'active' : '' }}" href="{{ route('convenio.index') }}">
                             <i class="icon bi bi-building-fill-add"></i> Convenios
                         </a>
                     </li>
@@ -157,7 +157,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="treeview {{ request()->is('TabelaProcedimento*','honorario*', 'convenioProcedimento*', 'relatorioFinanceiro*', 'importar-excel*','convenios/procedures') ? 'is-expanded' : '' }}">
+            <li class="treeview {{ request()->is('TabelaProcedimento*','honorario*', 'convenioProcedimento*', 'relatorioFinanceiro*', 'importar-excel*','convenios/procedures', 'contasPagar', 'contasReceber', 'fornecedores*', 'listafornecedores*') ? 'is-expanded' : '' }}">
                 <a class="app-menu__item" href="#" data-toggle="treeview">
                     <i class="app-menu__icon bi bi-bank"></i>
                     <span class="app-menu__label">Financeiro</span>
@@ -201,11 +201,26 @@
                             </li>
                         </ul>
                     </li>
+                    <li>
+                        <a class="treeview-item {{ request()->is('contasPagar*') ? 'active' : '' }}" href="{{ route('contasPagar.index') }}">
+                            <i class="icon bi bi-cash-coin"></i> Contas a pagar
+                        </a>
+                    </li>
+                    <li>
+                        <a class="treeview-item {{ request()->is('contasReceber*') ? 'active' : '' }}" href="{{ route('contasReceber.index') }}">
+                            <i class="icon bi bi-credit-card-2-back-fill"></i> Contas a receber
+                        </a>
+                    </li>
+                    <li>
+                        <a class="treeview-item {{ request()->is('fornecedores*', 'listafornecedores*') ? 'active' : '' }}" href="{{ route('fornecedores.index') }}">
+                            <i class="icon bi bi-box-seam-fill"></i> Fornecedores
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li class="treeview {{ request()->is( 'produtos*', 'medicamentos*', 'listaprodutos*') ? 'is-expanded' : '' }}">
                 <a class="app-menu__item" href="#" data-toggle="treeview">
-                    <i class="app-menu__icon bi bi-box-seam"></i>
+                    <i class="app-menu__icon bi-house-gear-fill"></i>
                     <span class="app-menu__label">Estoque</span>
                     <i class="treeview-indicator bi bi-chevron-right"></i>
                 </a>

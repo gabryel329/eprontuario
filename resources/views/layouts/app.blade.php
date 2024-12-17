@@ -15,6 +15,7 @@
         href="{{ asset('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css') }}">
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/LOGO_01_VERDE.png') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
     <style>
         .image-container {
             display: flex;
@@ -167,6 +168,7 @@ $currentDate = date('Y-m-d');
     </script>
     <!-- Jquery Others Plugins -->
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.3/localization/messages_pt_BR.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
     <script>
         // $(document).ready(function() {
         //     $('#especialidade_id').select2({
@@ -186,13 +188,13 @@ $currentDate = date('Y-m-d');
         //         allowClear: true
         //     });
         // });
-        //  $(document).ready(function() {
-        //      $('.select2').select2({
-        //          placeholder: "Selecione",
-        //          allowClear: true,
-        //          closeOnSelect: true
-        //      });
-        //  });
+          $(document).ready(function() {
+              $('.select2').select2({
+                  placeholder: "Selecione",
+                  allowClear: true,
+                  closeOnSelect: true
+              });
+          });
 
         // Fun��o de valida��o de CPF
         function validarCPF(cpf) {

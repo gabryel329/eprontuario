@@ -65,6 +65,8 @@
                             <thead>
                                 <tr>
                                     <th><input type="checkbox" id="selectAll" /></th>
+                                    <th>#</th>
+                                    <th>Paciente</th>
                                     <th>Lote</th>
                                     <th>Data</th>
                                     <th>Ações</th>
@@ -787,6 +789,8 @@
 
             html += '<tr>';
             html += '<td><input type="checkbox" name="guiaCheckbox" value="' + guia.id + '" /></td>';
+            html += '<td>' + guia.id + '</td>';
+            html += '<td>' + guia.nome_beneficiario + '</td>';
             html += '<td>' + guia.numeracao + '</td>';
             html += '<td>' + dataFormatada + '</td>';
             html += '<td>';

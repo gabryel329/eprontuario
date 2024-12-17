@@ -1034,5 +1034,102 @@ class DatabaseSeeder extends Seeder
 
         // Insere os dados na tabela 'taxas'
         DB::table('taxas')->insert($taxas);
+
+        DB::table('naturezas_operacao')->insert([
+            [
+                'codigo_cfop' => '1101',
+                'descricao'   => 'Compra para Industrialização',
+            ],
+            [
+                'codigo_cfop' => '1102',
+                'descricao'   => 'Compra para Comercialização',
+            ],
+            [
+                'codigo_cfop' => '5101',
+                'descricao'   => 'Venda de Produção do Estabelecimento',
+            ],
+            [
+                'codigo_cfop' => '5202',
+                'descricao'   => 'Devolução de Compra',
+            ],
+            [
+                'codigo_cfop' => '6101',
+                'descricao'   => 'Venda de Produção para Outro Estado',
+            ],
+            [
+                'codigo_cfop' => '7101',
+                'descricao'   => 'Venda de Produção para o Exterior',
+            ],
+            [
+                'codigo_cfop' => '2102',
+                'descricao'   => 'Compra para Comercialização de Outro Estado',
+            ],
+            [
+                'codigo_cfop' => '9999',
+                'descricao'   => 'Outras Operações',
+            ],
+        ]);
+        DB::table('fornecedores')->insert([
+            [
+                'cnpj'               => '12.345.678/0001-90',
+                'cpf'                => '123.456.789-01',
+                'name'               => 'Fornecedor A',
+                'fantasia'           => 'Fantasia A',
+                'insc_est'           => '123456789',
+                'insc_municipal'     => '987654321',
+                'cep'                => '12345-678',
+                'rua'                => 'Rua Principal',
+                'numero'             => '123',
+                'bairro'             => 'Centro',
+                'cidade'             => 'São Paulo',
+                'uf'                 => 'SP',
+                'tipo'               => 'Prestador de Serviços',
+                'tipo_cf_a'          => 'Fornecedor',
+                'grupo'              => 'Serviços Médicos',
+                'site'               => 'www.fornecedora.com.br',
+                'contato_principal'  => 'Maria Silva',
+                'senha'              => bcrypt('123456'),
+                'prazo'              => '30 dias',
+                'email'              => 'contato@fornecedora.com.br',
+                'telefone'           => '(11) 98765-4321',
+                'valor_mensal'       => '5000.00',
+                'ultimo_reajuste'    => '2024-01-01',
+                'dia_vencimento'     => '2024-12-30',
+                'valido_ate'         => '2025-12-30',
+                'juros_dia'          => '0.05',
+                'multa'              => '2.00',
+                'multa_dia'          => '0.10',
+            ],
+            [
+                'cnpj'               => '98.765.432/0002-10',
+                'cpf'                => '987.654.321-01',
+                'name'               => 'Fornecedor B',
+                'fantasia'           => 'Fantasia B',
+                'insc_est'           => '654321987',
+                'insc_municipal'     => '123456987',
+                'cep'                => '98765-432',
+                'rua'                => 'Avenida Principal',
+                'numero'             => '456',
+                'bairro'             => 'Jardim Central',
+                'cidade'             => 'Rio de Janeiro',
+                'uf'                 => 'RJ',
+                'tipo'               => 'Distribuidor',
+                'tipo_cf_a'          => 'Varejista',
+                'grupo'              => 'Medicamentos',
+                'site'               => 'www.fornecedorb.com.br',
+                'contato_principal'  => 'João Souza',
+                'senha'              => bcrypt('senha123'),
+                'prazo'              => '60 dias',
+                'email'              => 'contato@fornecedorb.com.br',
+                'telefone'           => '(21) 98765-4321',
+                'valor_mensal'       => '8000.00',
+                'ultimo_reajuste'    => '2024-01-15',
+                'dia_vencimento'     => '2024-12-20',
+                'valido_ate'         => '2025-12-20',
+                'juros_dia'          => '0.07',
+                'multa'              => '3.00',
+                'multa_dia'          => '0.15',
+            ]
+        ]);
     }
 }

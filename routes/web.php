@@ -3,9 +3,11 @@
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\AnamneseController;
 use App\Http\Controllers\AtendimentosController;
+use App\Http\Controllers\ContasFinanceirasController;
 use App\Http\Controllers\ConvenioController;
 use App\Http\Controllers\EmpresasController;
 use App\Http\Controllers\EspecialidadeController;
+use App\Http\Controllers\FornecedoresController;
 use App\Http\Controllers\GenerateIAController;
 use App\Http\Controllers\GuiaConsultaController;
 use App\Http\Controllers\GuiaHonorarioController;
@@ -22,6 +24,7 @@ use App\Http\Controllers\TabelaController;
 use App\Http\Controllers\TaxaController;
 use App\Http\Controllers\TipoProfController;
 use App\Http\Controllers\UserController;
+use App\Models\Fornecedores;
 use App\Models\GuiaSp;
 use App\Models\Produtos;
 use Illuminate\Support\Facades\Auth;
@@ -132,8 +135,8 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::get('/agenda/{id}/guia-consulta', [GuiaConsultaController::class, 'gerarGuiaConsulta'])->name('guia.consulta2');
         #GuiaConsulta
         Route::post('/verificar-numeracao-consulta', [GuiaConsultaController::class, 'verificarNumeracao'])->name('guias.verificarNumeracaoConsulta');
-        Route::post('/gerar-zip-guia-consulta-em-lote', [GuiaConsultaController::class, 'gerarZipGuiaConsultaEmLote'])->name('guias.gerarZipEmLote');
-        Route::post('/gerar-xml-guia-consulta-em-lote', [GuiaConsultaController::class, 'gerarXmlGuiaConsultaEmLote'])->name('guias.gerarXmlEmLote');
+        Route::post('/gerar-zip-guia-consulta-em-lote', [GuiaConsultaController::class, 'gerarZipGuiaConsultaEmLote'])->name('guias.gerarZipConsultaEmLote');
+        Route::post('/gerar-xml-guia-consulta-em-lote', [GuiaConsultaController::class, 'gerarXmlGuiaConsultaEmLote'])->name('guias.gerarXmlConsultaEmLote');
         Route::post('/gerar-xml-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarXmlGuiaConsulta']);
         Route::post('/gerar-zip-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarZipGuiaConsulta']);
         #GuiaSadt
@@ -323,6 +326,21 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::post('taxa', [TaxaController::class, 'store'])->name('taxa.store'); // Salvar nova taxa
     Route::put('taxa/{id}', [TaxaController::class, 'update'])->name('taxa.update'); // Atualizar taxa
     Route::delete('taxa/{id}', [TaxaController::class, 'destroy'])->name('taxa.destroy'); // Excluir taxa
+    #Contas do Financeiro
+
+    Route::get('/contasPagar', [ContasFinanceirasController::class, 'indexContasPagar'])->name('contasPagar.index');
+    Route::get('/contasReceber', [ContasFinanceirasController::class, 'indexContasReceber'])->name('contasReceber.index');
+    Route::post('/contasFinanceiro', [ContasFinanceirasController::class, 'store'])->name('contas.store');
+    Route::put('/contasFinanceiro/{id}', [ContasFinanceirasController::class, 'update'])->name('contas.update');
+    Route::delete('/contas/{tipo}/{id}', [ContasFinanceirasController::class, 'destroy'])->name('contas.destroy');
+
+    #Fornecedores
+    Route::get('/listafornecedores', [FornecedoresController::class, 'index1'])->name('listafornecedores.index1');
+    Route::get('/fornecedores', [FornecedoresController::class, 'index'])->name('fornecedores.index');
+    Route::post('/fornecedores', [FornecedoresController::class, 'store'])->name('fornecedores.store');
+
+
+
 
     Route::middleware(['auth', 'check.question'])->group(function () {
         Route::post('/salvar-sala', [UserController::class, 'salvarSala']);

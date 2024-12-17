@@ -19,9 +19,9 @@ class ConvenioController extends Controller
     {
         $convenios = Convenio::all();
         $procedimentos = DB::select("
-            SELECT table_name 
-            FROM information_schema.tables 
-            WHERE table_schema = 'public' 
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
             AND (
                 table_name LIKE 'tab_amb%' OR
                 table_name LIKE 'tab_cbhpm%'
@@ -29,9 +29,9 @@ class ConvenioController extends Controller
         ");
 
         $materiais = DB::select("
-            SELECT table_name 
-            FROM information_schema.tables 
-            WHERE table_schema = 'public' 
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
             AND (
                 table_name LIKE 'tab_simpro%' OR
                 table_name LIKE 'tab_brasindice%'
@@ -39,9 +39,9 @@ class ConvenioController extends Controller
         ");
 
         $medicamentos = DB::select("
-            SELECT table_name 
-            FROM information_schema.tables 
-            WHERE table_schema = 'public' 
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
             AND (
                 table_name LIKE 'tab_simpro%' OR
                 table_name LIKE 'tab_brasindice%'
@@ -49,18 +49,18 @@ class ConvenioController extends Controller
         ");
 
         $portes = DB::select("
-            SELECT table_name 
-            FROM information_schema.tables 
-            WHERE table_schema = 'public' 
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
             AND (
                 table_name LIKE 'porte_%'
             );
         ");
 
         $ch = DB::select("
-            SELECT table_name 
-            FROM information_schema.tables 
-            WHERE table_schema = 'public' 
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
             AND (
                 table_name LIKE 'ch_%'
             );
@@ -149,9 +149,9 @@ class ConvenioController extends Controller
     {
         $convenios = Convenio::findOrFail($id);
         $procedimentos = DB::select("
-            SELECT table_name 
-            FROM information_schema.tables 
-            WHERE table_schema = 'public' 
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
             AND (
                 table_name LIKE 'tab_amb%' OR
                 table_name LIKE 'tab_cbhpm%'
@@ -159,9 +159,9 @@ class ConvenioController extends Controller
         ");
 
         $materiais = DB::select("
-            SELECT table_name 
-            FROM information_schema.tables 
-            WHERE table_schema = 'public' 
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
             AND (
                 table_name LIKE 'tab_simpro%' OR
                 table_name LIKE 'tab_brasindice%'
@@ -169,9 +169,9 @@ class ConvenioController extends Controller
         ");
 
         $medicamentos = DB::select("
-            SELECT table_name 
-            FROM information_schema.tables 
-            WHERE table_schema = 'public' 
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
             AND (
                 table_name LIKE 'tab_simpro%' OR
                 table_name LIKE 'tab_brasindice%'
@@ -179,18 +179,18 @@ class ConvenioController extends Controller
         ");
 
         $portes = DB::select("
-            SELECT table_name 
-            FROM information_schema.tables 
-            WHERE table_schema = 'public' 
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
             AND (
                 table_name LIKE 'porte_%'
             );
         ");
 
         $ch = DB::select("
-            SELECT table_name 
-            FROM information_schema.tables 
-            WHERE table_schema = 'public' 
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
             AND (
                 table_name LIKE 'ch_%'
             );
@@ -463,31 +463,31 @@ class ConvenioController extends Controller
                 $proceduresAMB = DB::table($tableProc)
                     ->select("codigo", "descricao as procedimento", "filme", "ch")
                     ->get();
-    
+
                 // Verifica se a tabela de CH existe
                 if (!Schema::hasTable($tableCh)) {
                     return response()->json(['error' => 'Tabela de CH não encontrada'], 404);
                 }
-    
+
                 // Cálculo para proceduresAMB
                 foreach ($proceduresAMB as $procedure) {
                     $valor = null; // Valor calculado do procedimento
-    
+
                     try {
                         // Obtém o valor da coluna `ch` e `fr` da tabela tableCh
                         $chValue = DB::table($tableCh)->select("ch", "fr")->where('id', 1)->first();
-    
+
                         if ($chValue) {
                             $valorChTableProc = (float) str_replace(',', '.', $procedure->ch);
                             $valorChTableCh = (float) str_replace(',', '.', $chValue->ch);
-    
+
                             // Cálculo base: ch (tableProc) * ch (tableCh)
                             $resultadoCh = $valorChTableProc * $valorChTableCh;
-    
+
                             if (!empty($procedure->filme)) {
                                 $valorFilme = (float) str_replace(',', '.', $procedure->filme);
                                 $valorFr = (float) str_replace(',', '.', $chValue->fr);
-    
+
                                 // Cálculo com `filme`: fr (tableCh) * filme (tableProc) + resultadoCh
                                 $valor = ($valorFr * $valorFilme) + $resultadoCh;
                             } else {
@@ -495,7 +495,7 @@ class ConvenioController extends Controller
                                 $valor = $resultadoCh;
                             }
                         }
-    
+
                         // Adiciona o resultado ao array final
                         $proceduresWithValues[] = [
                             'codigo' => $procedure->codigo,
