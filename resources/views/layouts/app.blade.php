@@ -188,13 +188,13 @@ $currentDate = date('Y-m-d');
         //         allowClear: true
         //     });
         // });
-          $(document).ready(function() {
-              $('.select2').select2({
-                  placeholder: "Selecione",
-                  allowClear: true,
-                  closeOnSelect: true
-              });
-          });
+        //   $(document).ready(function() {
+        //       $('.select2').select2({
+        //           placeholder: "Selecione",
+        //           allowClear: true,
+        //           closeOnSelect: true
+        //       });
+        //   });
 
         // Fun��o de valida��o de CPF
         function validarCPF(cpf) {

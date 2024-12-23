@@ -1131,5 +1131,49 @@ class DatabaseSeeder extends Seeder
                 'multa_dia'          => '0.15',
             ]
         ]);
+
+        DB::table('motivos_glosas')->insert([
+            [
+                'codigo' => '1001',
+                'descricao' => 'NÚMERO DA CARTEIRA INVÁLIDO',
+            ],
+            [
+                'codigo' => '1002',
+                'descricao' => 'NÚMERO DO CARTÃO NACIONAL DE SAÚDE INVÁLIDO',
+            ],
+            [
+                'codigo' => '1003',
+                'descricao' => 'A ADMISSÃO DO BENEFICIÁRIO NO PRESTADOR OCORREU ANTES DA INCLUSÃO DO BENEFICIÁRIO NA OPERADORA',
+            ],
+            [
+                'codigo' => '1004',
+                'descricao' => 'SOLICITAÇÃO ANTERIOR À INCLUSÃO DO BENEFICIÁRIO',
+            ],
+            [
+                'codigo' => '1005',
+                'descricao' => 'ATENDIMENTO ANTERIOR À INCLUSÃO DO BENEFICIÁRIO',
+            ],
+            [
+                'codigo' => '1006',
+                'descricao' => 'ATENDIMENTO APÓS O DESLIGAMENTO DO BENEFICIÁRIO',
+            ],
+            [
+                'codigo' => '1007',
+                'descricao' => 'ATENDIMENTO DENTRO DA CARÊNCIA DO BENEFICIÁRIO',
+            ],
+            [
+                'codigo' => '1008',
+                'descricao' => 'ASSINATURA DIVERGENTE',
+            ],
+            [
+                'codigo' => '1009',
+                'descricao' => 'BENEFICIÁRIO COM PAGAMENTO EM ABERTO',
+            ],
+            [
+                'codigo' => '1010',
+                'descricao' => 'ASSINATURA DO TITULAR / RESPONSÁVEL INEXISTENTE',
+            ],
+            // Adicione mais registros conforme necessário...
+        ]);
     }
 }

@@ -28,10 +28,14 @@ return new class extends Migration
             $table->string('centro_custos')->nullable();
             $table->string('natureza_operacao')->nullable();
             $table->string('historico')->nullable();
-
+            $table->string('tipo_pagamento')->nullable();
+            $table->string('valor_pagamento')->nullable();
+            $table->string('lote')->nullable();
+            $table->string('tipo_guia')->nullable();
             // Relacionamentos
+            $table->foreignId('convenio_id')->nullable()->constrained('convenios')->onDelete('cascade');
             $table->foreignId('fornecedor_id')->nullable()->constrained('fornecedores')->onDelete('cascade');
-
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             // Valores financeiros
             $table->decimal('valor')->nullable();
             $table->decimal('desconto')->nullable();

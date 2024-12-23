@@ -37,10 +37,12 @@
                             <!-- Cliente -->
                             <div class="mb-3 col-md-12">
                                 <label class="form-label"><strong>Cliente:</strong></label>
-                                <select class="form-control select2" id="fornecedor_id" name="fornecedor_id" required>
+                                <select class="form-control select2" id="convenio_id" name="convenio_id" required>
                                     <option value="" selected>Nada Selecionado</option>
-                                    @foreach ($convenios as $convenio)
-                                        <option value="{{ $convenio->id }}">{{ $convenio->nome }}</option>
+                                    @foreach ($clientes as $cliente)
+                                        <option value="{{ $cliente->id }}">
+                                            {{ $cliente->nome ?? $cliente->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -198,12 +200,12 @@
 
             <!-- Filtro de Fornecedor -->
             <div class="col-md-4">
-                <label for="pesquisa" class="form-label"><strong>Selecionar Fornecedor:</strong></label>
+                <label for="pesquisa" class="form-label"><strong>Selecionar o Cliente:</strong></label>
                 <select name="pesquisa" id="pesquisa" class="form-control select2">
-                    <option value="">Todos os Fornecedores</option>
-                    @foreach ($fornecedores as $fornecedor)
-                        <option value="{{ $fornecedor->name }}" {{ request('pesquisa') == $fornecedor->name ? 'selected' : '' }}>
-                            {{ $fornecedor->name }}
+                    <option value="">Todos os Clientes</option>
+                    @foreach ($clientes as $cliente)
+                        <option value="{{ $cliente->name }}" {{ request('pesquisa') == $cliente->name ? 'selected' : '' }}>
+                            {{ $cliente->name }}
                         </option>
                     @endforeach
                 </select>
@@ -228,7 +230,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Fornecedor</th>
+                        <th>Cliente</th>
                         <th>Data de Emissão</th>
                         <th>Data de Vencimento</th>
                         <th>Valor</th>
@@ -238,35 +240,56 @@
                 </thead>
                 <tbody>
                     @forelse ($contasReceber as $conta)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $conta->fornecedores->name ?? 'Nome Não Informado' }}</td>
-                            <td>{{ \Carbon\Carbon::parse($conta->data_emissao)->format('d/m/Y') }}</td>
-                            <td>{{ \Carbon\Carbon::parse($conta->data_vencimento)->format('d/m/Y') }}</td>
-                            <td>R$ {{ number_format($conta->valor, 2, ',', '.') }}</td>
-                            <td>
-                                <span class="badge
-                                    {{ $conta->status == 'Atrasado' ? 'bg-danger' : '' }}
-                                    {{ $conta->status == 'Pago' ? 'bg-success' : 'bg-warning' }}">
-                                    {{ ucfirst($conta->status ?? 'Pendente') }}
-                                </span>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#editModal{{ $conta->id }}">
-                                    Editar
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>
+                            @if($conta->tipo_guia === 'Consulta')
+                                Guia Consulta - Lote {{ $conta->referencia ?? 'N/A' }}
+                            @elseif($conta->tipo_guia === 'SP')
+                                Guia SADT - Lote {{ $conta->referencia ?? 'N/A' }}
+                            @else
+                                Conta Comum - {{ $conta->convenios->nome ?? 'Nome Não Informado' }}
+                            @endif
+                        </td>
+                        <td>{{ \Carbon\Carbon::parse($conta->data_emissao)->format('d/m/Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($conta->data_vencimento)->format('d/m/Y') }}</td>
+                        <td>
+                            R$ {{ number_format($conta->total, 2, ',', '.') }} /
+                            R$ {{ number_format($conta->valor, 2, ',', '.') }}
+                        </td>
+                        <td>
+                            <span class="badge
+                                {{ $conta->status == 'Atrasado' ? 'bg-danger' : '' }}
+                                {{ $conta->status == 'Pago' ? 'bg-success' : '' }}
+                                {{ $conta->status == 'Parcial' ? 'bg-info' : '' }}
+                                {{ in_array($conta->status, ['Atrasado', 'Pago', 'Parcial']) ? '' : 'bg-warning' }}">
+                                {{ ucfirst($conta->status ?? 'Pendente') }}
+                            </span>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ $conta->id }}">
+                                Editar
+                            </button>
+
+                            <form action="{{ route('contas.destroy', ['tipo' => 'Receber', 'id' => $conta->id]) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta conta?')">Excluir</button>
+                            </form>
+
+                            @if ($conta->status === 'Aberto')
+                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#baixaModal{{ $conta->id }}">
+                                    Dar Baixa
                                 </button>
-                                <form action="{{ route('contas.destroy', ['tipo' => 'receber', 'id' => $conta->id]) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta conta?')">Excluir</button>
-                                </form>
-                            </td>
-                        </tr>
+                            @endif
+                        </td>
+                    </tr>
                     @empty
-                        <tr>
-                            <td colspan="7" class="text-center">Nenhuma conta a receber encontrada.</td>
-                        </tr>
+                    <tr>
+                        <td colspan="7" class="text-center">Nenhuma conta a receber encontrada.</td>
+                    </tr>
                     @endforelse
+
                 </tbody>
                 <!-- Modal para edição -->
                     @foreach ($contasReceber as $conta)
@@ -311,6 +334,91 @@
                         </div>
                     </div>
                     @endforeach
+                    {{-- MODAL BAIXA --}}
+                    @foreach ($contasReceber as $conta)
+                    <div class="modal fade" id="baixaModal{{ $conta->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $conta->id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form method="POST" action="{{ route('baixas.store', $conta->id) }}">
+                                    @csrf
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Baixa de Conta</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label for="tipo_pagamento" class="form-label">Tipo de Pagamento</label>
+                                            <select class="form-control" id="tipo_pagamento_{{ $conta->id }}" name="tipo_pagamento" required>
+                                                <option value="Total">Total</option>
+                                                <option value="Parcial">Parcial</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3" id="valor_pagamento_div_{{ $conta->id }}" style="display: none;">
+                                            <label for="valor_pagamento" class="form-label">Valor que foi pago</label>
+                                            <input type="text" class="form-control" id="valor_pagamento_{{ $conta->id }}" name="valor_pagamento">
+                                        </div>
+
+                                        @if ($conta->tipo_guia)
+                                            <div class="mb-3 motivo-glosa-div" id="motivo_glosa_div_{{ $conta->id }}" style="display: none;">
+                                                <label for="motivo_glosa" class="form-label">Motivo da Glosa</label>
+                                                <select name="motivo_glosa" id="motivo_glosa_{{ $conta->id }}" class="form-select">
+                                                    <option value="" disabled selected>Selecione um motivo</option>
+                                                    @foreach ($motivosGlosa as $motivo)
+                                                        <option value="{{ $motivo->descricao }}">{{ $motivo->codigo }} - {{ $motivo->descricao }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        @endif
+
+
+                                        <div class="mb-3">
+                                            <label for="banco_id" class="form-label">Banco</label>
+                                            <select class="form-control" id="banco_id" name="banco_id">
+                                                <option value="">Selecione um Banco</option>
+                                                @foreach ($bancos as $banco)
+                                                <option value="{{ $banco->id }}">{{ $banco->nome }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="forma_pagamento" class="form-label">Forma de Pagamento</label>
+                                            <select class="form-control" id="forma_pagamento" name="forma_pagamento" required>
+                                                <option value="" selected disabled>Selecione uma opção</option>
+                                                <option value="PIX">PIX</option>
+                                                <option value="Boleto">Boleto</option>
+                                                <option value="Transferência">Transferência</option>
+                                                <option value="Dinheiro">Dinheiro</option>
+                                                <option value="Cartão de Crédito">Cartão de Crédito</option>
+                                                <option value="Cartão de Débito">Cartão de Débito</option>
+                                                <option value="Cheque">Cheque</option>
+                                                <option value="Outros">Outros</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="numero_documento" class="form-label">Número do Documento</label>
+                                            <input type="text" class="form-control" id="numero_documento" name="numero_documento" placeholder="Comprovante">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="observacao" class="form-label">Observação</label>
+                                            <textarea class="form-control" id="observacao" name="observacao" rows="3"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary">Registrar Baixa</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
                 </table>
             </div>
         </div>
@@ -318,6 +426,24 @@
 </main>
 
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+    @foreach ($contasReceber as $conta)
+    document.getElementById('tipo_pagamento_{{ $conta->id }}').addEventListener('change', function () {
+        let pagamentoDiv = document.getElementById('valor_pagamento_div_{{ $conta->id }}');
+        let motivoGlosaDiv = document.getElementById('motivo_glosa_div_{{ $conta->id }}');
+
+        if (this.value === 'Parcial') {
+            pagamentoDiv.style.display = 'block';
+            if ('{{ $conta->tipo_guia }}') {
+                motivoGlosaDiv.style.display = 'block';
+            }
+        } else {
+            pagamentoDiv.style.display = 'none';
+            motivoGlosaDiv.style.display = 'none';
+        }
+    });
+    @endforeach
+});
 document.addEventListener('DOMContentLoaded', function() {
     $('#data').datepicker({
         format: "yyyy-mm",

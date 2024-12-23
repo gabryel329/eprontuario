@@ -157,7 +157,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="treeview {{ request()->is('TabelaProcedimento*','honorario*', 'convenioProcedimento*', 'relatorioFinanceiro*', 'importar-excel*','convenios/procedures', 'contasPagar', 'contasReceber', 'fornecedores*', 'listafornecedores*') ? 'is-expanded' : '' }}">
+            <li class="treeview {{ request()->is('TabelaProcedimento*','honorario*', 'convenioProcedimento*', 'relatorioFinanceiro*', 'importar-excel*','convenios/procedures', 'contasPagar', 'contasReceber', 'fornecedores*', 'listafornecedores*', 'bancos*') ? 'is-expanded' : '' }}">
                 <a class="app-menu__item" href="#" data-toggle="treeview">
                     <i class="app-menu__icon bi bi-bank"></i>
                     <span class="app-menu__label">Financeiro</span>
@@ -212,6 +212,11 @@
                         </a>
                     </li>
                     <li>
+                        <a class="treeview-item {{ request()->is('bancos*') ? 'active' : '' }}" href="{{ route('bancos.index') }}">
+                            <i class="icon bi bi-piggy-bank-fill"></i> Bancos
+                        </a>
+                    </li>
+                    <li>
                         <a class="treeview-item {{ request()->is('fornecedores*', 'listafornecedores*') ? 'active' : '' }}" href="{{ route('fornecedores.index') }}">
                             <i class="icon bi bi-box-seam-fill"></i> Fornecedores
                         </a>
@@ -259,11 +264,16 @@
                             <i class="icon bi bi-file-earmark-break"></i> Guia de Consulta
                         </a>
                     </li>
-                    {{-- <li>
-                        <a class="treeview-item {{ request()->is('guiahonorario.index*') ? 'active' : '' }}" href="{{ route('guiahonorario.index') }}">
-                            <i class="icon bi bi-file-earmark-post"></i> Guia de Honorários
+                    <li>
+                        <a class="treeview-item {{ request()->is('faturamentoBaixas*') ? 'active' : '' }}" href="{{ route('faturamentoBaixas.index') }}">
+                            <i class="icon bi bi-piggy-bank-fill"></i> Lançamentos de Baixas
                         </a>
-                    </li> --}}
+                    </li>
+                    <li>
+                        <a class="treeview-item {{ request()->is('faturamentoGlosa*') ? 'active' : '' }}" href="{{ route('faturamentoGlosa.index') }}">
+                            <i class="icon bi bi-piggy-bank-fill"></i> Glosa das Guias
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li>

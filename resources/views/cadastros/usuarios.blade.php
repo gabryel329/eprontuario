@@ -48,7 +48,7 @@
                                         <option value="{{ $item->id }}">{{ $item->cargo }}</option>
                                     @endforeach
                                 </select>
-                            </div>                            
+                            </div>
                         </div>
                         <div class="row">
                             <div class="mb-3 col-md-4">
@@ -64,7 +64,7 @@
                                 <input class="form-control" type="file" name="imagem" disabled>
                             </div>
                         </div>
-                        
+
                         <div class="tile-footer">
                             <button class="btn btn-primary" type="submit" disabled id="submitBtn"><i class="bi bi-check-circle-fill me-2"></i>Salvar</button>
                         </div>
@@ -112,10 +112,17 @@
     </div>
 </div>
 <script>
+    $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: "Selecione",
+            allowClear: true,
+            closeOnSelect: true
+        });
+    });
     function showPassword() {
         var passwordField = document.getElementById('password');
         passwordField.type = 'text';
-    }   
+    }
 
     function hidePassword() {
         var passwordField = document.getElementById('password');

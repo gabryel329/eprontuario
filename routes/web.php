@@ -3,6 +3,8 @@
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\AnamneseController;
 use App\Http\Controllers\AtendimentosController;
+use App\Http\Controllers\BaixasController;
+use App\Http\Controllers\BancosController;
 use App\Http\Controllers\ContasFinanceirasController;
 use App\Http\Controllers\ConvenioController;
 use App\Http\Controllers\EmpresasController;
@@ -24,6 +26,7 @@ use App\Http\Controllers\TabelaController;
 use App\Http\Controllers\TaxaController;
 use App\Http\Controllers\TipoProfController;
 use App\Http\Controllers\UserController;
+use App\Models\Bancos;
 use App\Models\Fornecedores;
 use App\Models\GuiaSp;
 use App\Models\Produtos;
@@ -139,6 +142,8 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::post('/gerar-xml-guia-consulta-em-lote', [GuiaConsultaController::class, 'gerarXmlGuiaConsultaEmLote'])->name('guias.gerarXmlConsultaEmLote');
         Route::post('/gerar-xml-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarXmlGuiaConsulta']);
         Route::post('/gerar-zip-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarZipGuiaConsulta']);
+        Route::get('/guias-consulta/{guiaConsulta}/editar', [GuiaConsultaController::class, 'edit'])->name('guias-consulta.editar');
+        Route::put('/guias-consulta/{guiaConsulta}/update', [GuiaConsultaController::class, 'updateGuiaConsulta'])->name('guias-consulta.update');
         #GuiaSadt
         Route::post('/verificar-numeracao-sadt', [GuiaSpController::class, 'verificarNumeracao'])->name('guias.verificarNumeracaoSadt');
         Route::post('/gerar-zip-guia-sadt-em-lote', [GuiaSpController::class, 'gerarZipGuiasadtEmLote'])->name('guias.gerarZipEmLote');
@@ -338,7 +343,23 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::get('/listafornecedores', [FornecedoresController::class, 'index1'])->name('listafornecedores.index1');
     Route::get('/fornecedores', [FornecedoresController::class, 'index'])->name('fornecedores.index');
     Route::post('/fornecedores', [FornecedoresController::class, 'store'])->name('fornecedores.store');
+    Route::delete('/listafornecedores/{id}', [FornecedoresController::class, 'destroy'])->name('listafornecedores.destroy');
 
+    #Bancos
+    Route::get('/bancos', [BancosController::class, 'index'])->name('bancos.index');
+    Route::post('/bancos', [BancosController::class, 'store'])->name('bancos.store');
+    Route::put('/bancos/{id}', [BancosController::class, 'update'])->name('bancos.update');
+    Route::delete('/bancos/{id}', [BancosController::class, 'destroy'])->name('bancos.destroy');
+
+    #Baixas
+    Route::get('/faturamentoBaixas', [BaixasController::class, 'index'])->name('faturamentoBaixas.index');
+    Route::get('/baixas/filtrar-consulta', [BaixasController::class, 'filtrarConsulta'])->name('baixas.filtrarConsulta');
+    Route::get('/baixas/filtrar-sadt', [BaixasController::class, 'filtrarSadt'])->name('baixas.filtrarSadt');
+    Route::post('/baixas/{id}', [BaixasController::class, 'storeBaixa'])->name('baixas.store');
+
+    #Glosa/Baixa
+    Route::get('/contas-guias/{contaId}', [BaixasController::class, 'buscarGuiasPorConta']);
+    Route::get('/faturamentoGlosa', [BaixasController::class, 'indexGlosa'])->name('faturamentoGlosa.index');
 
 
 

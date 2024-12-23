@@ -26,6 +26,8 @@ class ContasFinanceiras extends Model
         'status',
         'tipo_conta',
         'fornecedor_id',
+        'convenio_id',
+        'user_id',
         'data_emissao',
         'competencia',
         'data_vencimento',
@@ -48,9 +50,19 @@ class ContasFinanceiras extends Model
         'irrf',
         'inss',
         'total',
+        'tipo_guia',
     ];
 
+    public function guia()
+    {
+        if ($this->tipo_guia === 'Consulta') {
+            return $this->belongsTo(GuiaConsulta::class, 'guia_id');
+        } elseif ($this->tipo_guia === 'SP') {
+            return $this->belongsTo(GuiaSp::class, 'guia_id');
+        }
 
+        return null; // Caso não seja nenhuma das opções
+    }
     /**
      * Define the relationship with the Paciente model.
      */
@@ -58,5 +70,15 @@ class ContasFinanceiras extends Model
     public function fornecedores()
     {
         return $this->belongsTo(Fornecedores::class, 'fornecedor_id');
+    }
+
+    public function convenios()
+    {
+        return $this->belongsTo(Convenio::class, 'convenio_id');
+    }
+
+    public function contaGuias()
+    {
+        return $this->hasMany(ContaGuia::class, 'conta_financeira_id');
     }
 }

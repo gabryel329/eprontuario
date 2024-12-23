@@ -53,7 +53,6 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Profissional::class, 'profissional_id');
     }
-
     public function painel()
     {
         return $this->belongsTo(Painel::class, 'user_id');

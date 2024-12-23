@@ -51,6 +51,10 @@
                                     <a class="nav-link" href="#honorario" data-bs-toggle="tab"
                                         data-identificador="GERADO">Guias Geradas</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#honorario" data-bs-toggle="tab"
+                                        data-identificador="GLOSADA">Guias Glosadas</a>
+                                </li>
                             </ul>
                         </div>
                     </div>

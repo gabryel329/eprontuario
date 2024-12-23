@@ -64,4 +64,9 @@ class Convenio extends Model
     {
         return $this->hasMany(Disponibilidade::class, 'convenio_id');
     }
+
+    public function contasfinanceiras()
+    {
+        return $this->hasMany(ContasFinanceiras::class, 'convenio_id');
+    }
 }

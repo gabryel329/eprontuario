@@ -109,7 +109,7 @@ class AtendimentosController extends Controller
             )
             ->orderBy('ag.data', 'asc')
             ->get();
-
+                
         return view('atendimentos.atendimentomedico', compact('agenda', 'cid', 'paciente', 'medicamento', 'procedimento', 'historico'));
     }
 

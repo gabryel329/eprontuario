@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agenda;
+use App\Models\ContaGuia;
+use App\Models\ContasFinanceiras;
 use App\Models\Convenio;
 use App\Models\Empresas;
 use App\Models\GuiaConsulta;
 use App\Models\GuiaTiss;
 use App\Models\Pacientes;
 use App\Models\Profissional;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -219,56 +222,56 @@ class GuiaConsultaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        $user_id = auth()->id();
+    // public function store(Request $request)
+    // {
+    //     $user_id = auth()->id();
 
-        $convenio_id = $request->input('convenio_id');
-        $registro_ans = $request->input('registro_ans');
-        $numero_guia_prestador = $request->input('numero_guia_prestador');
-        $numero_carteira = $request->input('numero_carteira');
-        $nome_beneficiario = $request->input('nome_beneficiario');
-        $data_atendimento = $request->input('data_atendimento');
-        $hora_inicio_atendimento = $request->input('hora_inicio_atendimento');
-        $tipo_consulta = $request->input('tipo_consulta');
-        $indicacao_acidente = $request->input('indicacao_acidente');
-        $codigo_tabela = $request->input('codigo_tabela');
-        $codigo_procedimento = $request->input('codigo_procedimento');
-        $valor_procedimento = $request->input('valor_procedimento');
-        $nome_profissional = $request->input('nome_profissional');
-        $sigla_conselho = $request->input('sigla_conselho');
-        $numero_conselho = $request->input('conselho_1');
-        $uf_conselho = $request->input('uf_conselho');
-        $cbo = $request->input('cbo');
-        $observacao = $request->input('observacao');
-        $hash = $request->input('hash');
+    //     $convenio_id = $request->input('convenio_id');
+    //     $registro_ans = $request->input('registro_ans');
+    //     $numero_guia_prestador = $request->input('numero_guia_prestador');
+    //     $numero_carteira = $request->input('numero_carteira');
+    //     $nome_beneficiario = $request->input('nome_beneficiario');
+    //     $data_atendimento = $request->input('data_atendimento');
+    //     $hora_inicio_atendimento = $request->input('hora_inicio_atendimento');
+    //     $tipo_consulta = $request->input('tipo_consulta');
+    //     $indicacao_acidente = $request->input('indicacao_acidente');
+    //     $codigo_tabela = $request->input('codigo_tabela');
+    //     $codigo_procedimento = $request->input('codigo_procedimento');
+    //     $valor_procedimento = $request->input('valor_procedimento');
+    //     $nome_profissional = $request->input('nome_profissional');
+    //     $sigla_conselho = $request->input('sigla_conselho');
+    //     $numero_conselho = $request->input('conselho_1');
+    //     $uf_conselho = $request->input('uf_conselho');
+    //     $cbo = $request->input('cbo');
+    //     $observacao = $request->input('observacao');
+    //     $hash = $request->input('hash');
 
 
-        $guiaConsulta = GuiaConsulta::create([
-            'user_id' => $user_id,
-            'convenio_id' => $convenio_id,
-            'registro_ans' => $registro_ans,
-            'numero_guia_prestador' => $numero_guia_prestador,
-            'numero_carteira' => $numero_carteira,
-            'nome_beneficiario' => $nome_beneficiario,
-            'data_atendimento' => $data_atendimento,
-            'hora_inicio_atendimento' => $hora_inicio_atendimento,
-            'tipo_consulta' => $tipo_consulta,
-            'indicacao_acidente' => $indicacao_acidente,
-            'codigo_tabela' => $codigo_tabela,
-            'codigo_procedimento' => $codigo_procedimento,
-            'valor_procedimento' => $valor_procedimento,
-            'nome_profissional' => $nome_profissional,
-            'sigla_conselho' => $sigla_conselho,
-            'conselho_1' => $numero_conselho,
-            'uf_conselho' => $uf_conselho,
-            'cbo' => $cbo,
-            'observacao' => $observacao,
-            'hash' => $hash,
-        ]);
+    //     $guiaConsulta = GuiaConsulta::create([
+    //         'user_id' => $user_id,
+    //         'convenio_id' => $convenio_id,
+    //         'registro_ans' => $registro_ans,
+    //         'numero_guia_prestador' => $numero_guia_prestador,
+    //         'numero_carteira' => $numero_carteira,
+    //         'nome_beneficiario' => $nome_beneficiario,
+    //         'data_atendimento' => $data_atendimento,
+    //         'hora_inicio_atendimento' => $hora_inicio_atendimento,
+    //         'tipo_consulta' => $tipo_consulta,
+    //         'indicacao_acidente' => $indicacao_acidente,
+    //         'codigo_tabela' => $codigo_tabela,
+    //         'codigo_procedimento' => $codigo_procedimento,
+    //         'valor_procedimento' => $valor_procedimento,
+    //         'nome_profissional' => $nome_profissional,
+    //         'sigla_conselho' => $sigla_conselho,
+    //         'conselho_1' => $numero_conselho,
+    //         'uf_conselho' => $uf_conselho,
+    //         'cbo' => $cbo,
+    //         'observacao' => $observacao,
+    //         'hash' => $hash,
+    //     ]);
 
-        return redirect()->back()->with('success', 'Guia TISS criada com sucesso')->with('guiaTiss', $guiaConsulta);
-    }
+    //     return redirect()->back()->with('success', 'Guia TISS criada com sucesso')->with('guiaTiss', $guiaConsulta);
+    // }
 
     /**
      * Display the specified resource.
@@ -432,10 +435,67 @@ class GuiaConsultaController extends Controller
             ], 422);
         }
 
-        foreach ($guias as $guia) {
-            if (is_null($guia->numeracao)) {
-                $guia->numeracao = $sequencialTransacao;
+        // Verifica se já existe uma conta financeira para esse lote
+        $contaExistente = ContaGuia::where('lote', $sequencialTransacao)->first();
+
+        if (!$contaExistente) {
+            // Atualiza as guias com a numeração correta
+            foreach ($guias as $guia) {
+                $guia->identificador = 'GERADO';
                 $guia->save();
+            }
+
+            // Calcula o valor total do lote
+            $valorTotal = $guias->sum('valor_procedimento');
+            $referencia = $sequencialTransacao;
+
+            // Cria a conta financeira
+            $conta = ContasFinanceiras::create([
+                'user_id' => auth()->id(),
+                'status' => 'Aberto',
+                'tipo_conta' => 'Receber',
+                'convenio_id' => $guias->first()->convenio_id,
+                'tipo_guia' => 'Consulta',
+                'parcelas' => '1/1',
+                'data_emissao' => Carbon::parse($guia->data_atendimento)->format('Y-m-d'),
+                'competencia' => Carbon::parse($guia->data_atendimento)->format('Y-m-d'),
+                'data_vencimento' => now()->addDays(30)->format('Y-m-d'),
+                'referencia' => $referencia,
+                'tipo_doc' => 'XML',
+                'centro_custos' => $guias->first()->nome_contratado ?? 'Desconhecido',
+                'documento' => 'lote_guias_consulta_' . $sequencialTransacao . '.xml',
+                'valor' => $valorTotal,
+                'historico' => 'Guia de Consulta - ' . $guia->data_atendimento,
+            ]);
+
+            // Salva o relacionamento na tabela `conta_guias`
+            foreach ($guias as $guia) {
+                ContaGuia::create([
+                    'conta_financeira_id' => $conta->id,
+                    'guia_id' => $guia->id,
+                    'tipo_guia' => 'Consulta',
+                    'lote' => $sequencialTransacao,
+                ]);
+            }
+        } else {
+            // Apenas atualiza as guias e registra o relacionamento se não existirem
+            foreach ($guias as $guia) {
+                $existeRelacionamento = ContaGuia::where('guia_id', $guia->id)
+                    ->where('tipo_guia', 'Consulta')
+                    ->exists();
+
+                if (!$existeRelacionamento) {
+                    $guia->numeracao = $sequencialTransacao;
+                    $guia->identificador = 'GERADO';
+                    $guia->save();
+
+                    ContaGuia::create([
+                        'conta_financeira_id' => $contaExistente->conta_financeira_id,
+                        'guia_id' => $guia->id,
+                        'tipo_guia' => 'Consulta',
+                        'lote' => $sequencialTransacao,
+                    ]);
+                }
             }
         }
 
@@ -548,10 +608,11 @@ class GuiaConsultaController extends Controller
         }
 
         // Salvar a numeração no guia
+        $guia->identificador = 'GERADO';
         $guia->save();
 
         // Criar o XML utilizando SimpleXMLElement
-        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas tissV4_01_00.xsd"></ans:mensagemTISS>');
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas http://www.ans.gov.br/padroes/tiss/schemas/tissV4_01_00.xsd"></ans:mensagemTISS>');
 
         // Cabeçalho
         $cabecalho = $xml->addChild('ans:cabecalho');
@@ -628,8 +689,40 @@ class GuiaConsultaController extends Controller
         $epilogo = $xml->addChild('ans:epilogo');
         $epilogo->addChild('ans:hash', $guia->hash);
 
-        $guia->identificador = 'GERADO';
-        $guia->save();
+        // Verificar se já existe uma conta financeira associada
+        $contaExistente = ContasFinanceiras::whereHas('contaGuias', function ($query) use ($guia) {
+            $query->where('guia_id', $guia->id)->where('tipo_guia', 'Consulta');
+        })->first();
+
+        if (!$contaExistente) {
+            // Criar nova conta financeira
+            $conta = ContasFinanceiras::create([
+                'user_id' => auth()->id(),
+                'status' => 'Aberto',
+                'tipo_conta' => 'Receber',
+                'convenio_id' => $guia->convenio_id,
+                'tipo_guia' => 'Consulta',
+                'parcelas' => '1/1',
+                'data_emissao' => Carbon::parse($guia->data_atendimento)->format('Y-m-d'),
+                'competencia' => Carbon::parse($guia->data_atendimento)->format('Y-m-d'),
+                'data_vencimento' => now()->addDays(30)->format('Y-m-d'),
+                'referencia' => $guia->numeracao,
+                'tipo_doc' => 'XML',
+                'centro_custos' => $guia->nome_contratado ?? 'Desconhecido',
+                'documento' => 'lote_guias_consulta_' . $guia->numercao . '.xml',
+                'valor' => $guia->valor_procedimento ?? 0,
+                'historico' => 'Guia de Consulta - ' . $guia->data_atendimento,
+            ]);
+
+            // Criar relacionamento em `conta_guias`
+            ContaGuia::create([
+                'conta_financeira_id' => $conta->id,
+                'guia_id' => $guia->id,
+                'tipo_guia' => 'Consulta',
+                'lote' => $guia->numeracao,
+            ]);
+        }
+
 
         // Retornar o XML como download
         return response($xml->asXML(), 200)
@@ -764,42 +857,93 @@ class GuiaConsultaController extends Controller
      */
     public function edit(GuiaConsulta $guiaConsulta)
     {
-        //
+        $conselhos = [
+            'CRAS' => '01', 'COREN' => '02', 'CRF' => '03', 'CRFA' => '04',
+            'CREFITO' => '05', 'CRM' => '06', 'CRN' => '07', 'CRO' => '08',
+            'CRP' => '09', 'OUTROS' => '10'
+        ];
+
+        $ufs = [
+            'AC' => '12', 'AL' => '27', 'AP' => '16', 'AM' => '13',
+            'BA' => '29', 'CE' => '23', 'DF' => '53', 'ES' => '32',
+            'GO' => '52', 'MA' => '21', 'MT' => '51', 'MS' => '50',
+            'MG' => '31', 'PA' => '15', 'PB' => '25', 'PR' => '41',
+            'PE' => '26', 'PI' => '22', 'RJ' => '33', 'RN' => '24',
+            'RS' => '43', 'RO' => '11', 'RR' => '14', 'SC' => '42',
+            'SP' => '35', 'SE' => '28', 'TO' => '17'
+        ];
+
+        return view('guias.consultaEditar', compact('guiaConsulta', 'conselhos', 'ufs'));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, GuiaConsulta $guiaConsulta)
-    {
-        // Validação dos dados
-        $validatedData = $request->validate([
-            'convenio_id' => 'required|exists:convenios,id',
-            'registro_ans' => 'required|string|max:255',
-            'numero_guia_prestador' => 'required|string|max:255',
-            'numero_carteira' => 'required|string|max:255',
-            'nome_beneficiario' => 'required|string|max:255',
-            'data_atendimento' => 'required|date',
-            'hora_inicio_atendimento' => 'required|date_format:H:i',
-            'tipo_consulta' => 'required|string|max:255',
-            'indicacao_acidente' => 'nullable|string|max:255',
-            'codigo_tabela' => 'required|string|max:255',
-            'codigo_procedimento' => 'required|string|max:255',
-            'valor_procedimento' => 'required|numeric|min:0',
-            'nome_profissional' => 'required|string|max:255',
-            'sigla_conselho' => 'required|string|max:10',
-            'conselho_1' => 'required|string|max:255',
-            'uf_conselho' => 'required|string|max:2',
-            'cbo' => 'required|string|max:255',
-            'observacao' => 'nullable|string',
-            'hash' => 'nullable|string|max:255',
-        ]);
+    public function updateGuiaConsulta(Request $request, GuiaConsulta $guiaConsulta)
+{
+    // Dados de apoio
+    $conselhos = [
+        'CRAS' => '01', 'COREN' => '02', 'CRF' => '03', 'CRFA' => '04',
+        'CREFITO' => '05', 'CRM' => '06', 'CRN' => '07', 'CRO' => '08',
+        'CRP' => '09', 'OUTROS' => '10'
+    ];
 
-        // Atualizar a guia TISS
-        $guiaConsulta->update($validatedData);
+    $ufs = [
+        'AC' => '12', 'AL' => '27', 'AP' => '16', 'AM' => '13',
+        'BA' => '29', 'CE' => '23', 'DF' => '53', 'ES' => '32',
+        'GO' => '52', 'MA' => '21', 'MT' => '51', 'MS' => '50',
+        'MG' => '31', 'PA' => '15', 'PB' => '25', 'PR' => '41',
+        'PE' => '26', 'PI' => '22', 'RJ' => '33', 'RN' => '24',
+        'RS' => '43', 'RO' => '11', 'RR' => '14', 'SC' => '42',
+        'SP' => '35', 'SE' => '28', 'TO' => '17'
+    ];
 
-        return redirect()->back()->with('success', 'Guia Consulta atualizada com sucesso');
-    }
+    // Atualizar a guia existente
+    $guiaConsulta->update($request->only([
+        'numero_guia_operadora',
+        'registro_ans',
+        'numero_carteira',
+        'validade_carteira',
+        'atendimento_rn',
+        'nome_social',
+        'nome_beneficiario',
+        'codigo_operadora',
+        'nome_contratado',
+        'codigo_cnes',
+        'nome_profissional_executante',
+        'numero_conselho',
+        'codigo_cbo',
+        'indicacao_acidente',
+        'indicacao_cobertura_especial',
+        'regime_atendimento',
+        'saude_ocupacional',
+        'data_atendimento',
+        'tipo_consulta',
+        'valor_procedimento',
+        'observacao',
+    ]) + [
+        'identificador' => 'GERADO',
+        'conselho_profissional' => array_key_exists($request->input('conselho_profissional'), $conselhos)
+            ? $conselhos[$request->input('conselho_profissional')]
+            : $request->input('conselho_profissional'),
+        'uf_conselho' => array_key_exists($request->input('uf_conselho'), $ufs)
+            ? $ufs[$request->input('uf_conselho')]
+            : $request->input('uf_conselho'),
+    ]);
+
+
+    // Obter o lote atual
+    $loteAtual = $guiaConsulta->numeracao;
+
+    // Criar uma nova guia com o lote incrementado
+    $novaGuia = $guiaConsulta->replicate();
+    $novaGuia->numeracao = $loteAtual + 1;
+    $novaGuia->identificador = 'GLOSADA';
+    $novaGuia->save();
+
+    return redirect()->route('faturamentoGlosa.index')->with('success', 'Guia de Consulta atualizada e nova guia criada com sucesso!');
+}
 
     /**
      * Remove the specified resource from storage.

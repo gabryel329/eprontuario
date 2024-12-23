@@ -344,7 +344,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <hr>
                             <div class="row">
                                 <input class="form-control" id="paciente_id" name="paciente_id" type="text"
