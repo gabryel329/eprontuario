@@ -196,7 +196,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'name' => 'Rafaela',
-                'email' => 'admin@eprontuario.com',
+                'email' => 'rafaela@eprontuario.com',
                 'profissional_id' => 1,
                 'password' => bcrypt('12345678'),
                 'imagem' => 'LOGO_01_VERDE.png',
