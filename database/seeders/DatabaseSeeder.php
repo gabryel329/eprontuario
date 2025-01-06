@@ -188,7 +188,15 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->insert([
             [
                 'name' => 'Admin',
-                'email' => 'admin@anb.com',
+                'email' => 'admin@eprontuario.com',
+                'profissional_id' => 1,
+                'password' => bcrypt('12345678'),
+                'imagem' => 'LOGO_01_VERDE.png',
+                'permisao_id' => 1,
+            ],
+            [
+                'name' => 'Rafaela',
+                'email' => 'admin@eprontuario.com',
                 'profissional_id' => 1,
                 'password' => bcrypt('12345678'),
                 'imagem' => 'LOGO_01_VERDE.png',
@@ -196,7 +204,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'name' => 'Medico',
-                'email' => 'medico@anb.com',
+                'email' => 'medico@eprontuario.com',
                 'profissional_id' => 1,
                 'password' => bcrypt('12345678'),
                 'imagem' => 'LOGO_01_VERDE.png',
@@ -204,7 +212,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'name' => 'Recepcao',
-                'email' => 'recepcao@anb.com',
+                'email' => 'recepcao@eprontuario.com',
                 'profissional_id' => 2,
                 'password' => bcrypt('12345678'),
                 'imagem' => 'LOGO_01_VERDE.png',
