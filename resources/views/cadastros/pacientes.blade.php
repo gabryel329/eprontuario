@@ -21,7 +21,7 @@
                             <div class="row">
                                 <div class="mb-3 col-md-6">
                                     <label class="form-label">Nome Completo:</label>
-                                    <input class="form-control" id="name" name="name" type="text"
+                                    <input class="form-control" placeholder="*" id="name" name="name" type="text"
                                         value="{{ old('name') }}">
                                 </div>
                                 <div class="mb-3 col-md-3">
@@ -41,9 +41,13 @@
                                     <input class="form-control" id="nasc" name="nasc" type="date"
                                         value="{{ old('nasc') }}" max="{{ date('Y-m-d') }}">
                                 </div>
+                                <div class="mb-3 col-md-1">
+                                    <label class="form-label">Idade:</label>
+                                    <input class="form-control" id="idade" name="idade" type="text" readonly>
+                                </div>
                                 <div class="mb-3 col-md-3">
                                     <label class="form-label">CPF: </label>
-                                    <input class="form-control" id="cpf" name="cpf" type="text"
+                                    <input class="form-control"  placeholder="*" id="cpf" name="cpf" type="text"
                                         value="{{ old('cpf') }}" required>
                                     <small id="cpfValidationMessage" style="color:red; display:none;">CPF inválido</small>
                                 </div>
@@ -62,7 +66,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="mb-3 col-md-3">
+                                <div class="mb-3 col-md-2">
                                     <label class="form-label">Foto</label>
                                     <br />
                                     <button type="button" class="btn btn-primary" id="openModalButton">Tirar Foto</button>
@@ -73,7 +77,7 @@
                             <div class="row">
                                 <div class="mb-3 col-md-4">
                                     <label class="form-label">RG</label>
-                                    <input class="form-control" id="rg" name="rg" type="text"
+                                    <input class="form-control" placeholder="*" id="rg" name="rg" type="text"
                                         value="{{ old('rg') }}" required>
                                 </div>
                                 <div class="mb-3 col-md-4">
@@ -162,7 +166,7 @@
                                     </select>
                                 </div>
                                 <div class="mb-3 col-md-4">
-                                    <label class="form-label">Étnia</label>
+                                    <label class="form-label">Etnia</label>
                                     <select class="form-control" id="cor" name="cor" required>
                                         <option disabled selected style="font-size:18px;color: black;">Escolha</option>
                                         <option value="Branco">Branco</option>
@@ -224,23 +228,23 @@
                             <div class="row">
                                 <div class="mb-3 col-md-3">
                                     <label class="form-label">CEP </label>
-                                    <input class="form-control" name="cep" type="text" id="cep"
+                                    <input class="form-control" placeholder="*" name="cep" type="text" id="cep"
                                         value="{{ old('cep') }}" size="10" maxlength="9"
                                         onblur="pesquisacep(this.value);" required>
                                 </div>
                                 <div class="mb-3 col-md-4">
                                     <label class="form-label">Rua </label>
-                                    <input class="form-control" name="rua" type="text" id="rua"
+                                    <input class="form-control" placeholder="*" name="rua" type="text" id="rua"
                                         size="60" value="{{ old('rua') }}" required>
                                 </div>
                                 <div class="mb-3 col-md-4">
                                     <label class="form-label">Bairro</label>
-                                    <input class="form-control" name="bairro" type="text" id="bairro"
+                                    <input class="form-control" placeholder="*" name="bairro" type="text" id="bairro"
                                         size="40" value="{{ old('bairro') }}" required>
                                 </div>
                                 <div class="mb-3 col-md-1">
                                     <label class="form-label">Estado</label>
-                                    <input class="form-control" name="uf" type="text" id="uf"
+                                    <input class="form-control" placeholder="*" name="uf" type="text" id="uf"
                                         size="2" value="{{ old('uf') }}" required>
                                 </div>
                             </div>
@@ -437,17 +441,6 @@
             $('#convenio-container2').hide();
         });
 
-
-        $(document).ready(function() {
-            $('#cpf').mask('000.000.000-00');
-            $('#telefone').mask('(00) 0000-0000');
-            $('#celular').mask('(00) 00000-0000');
-            $('#cep').mask('00000-000');
-            $('#rg').mask('00.000.000-0');
-            $('#certidao').mask('00.000.000-00');
-            $('#sus').mask('000.0000.0000.0000');
-        });
-
         function limpa_formulário_cep() {
             document.getElementById('rua').value = ("");
             document.getElementById('bairro').value = ("");
@@ -500,7 +493,6 @@
             $('#telefone').mask('(00) 0000-0000');
             $('#celular').mask('(00) 00000-0000');
             $('#cep').mask('00000-000');
-            $('#rg').mask('00.000.000-0');
             $('#certidao').mask('00.000.000-00');
             $('#sus').mask('000.0000.0000.0000');
 
@@ -528,6 +520,17 @@
                     alert('CPF inválido. Por favor, verifique o número informado.');
                 }
             });
+        });
+
+        document.getElementById('nasc').addEventListener('change', function() {
+            var nasc = new Date(this.value);
+            var today = new Date();
+            var age = today.getFullYear() - nasc.getFullYear();
+            var monthDifference = today.getMonth() - nasc.getMonth();
+            if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < nasc.getDate())) {
+                age--;
+            }
+            document.getElementById('idade').value = age;
         });
     </script>
 @endsection

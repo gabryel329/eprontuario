@@ -280,200 +280,188 @@
             </div>
         </div>
     </div>
-    <!-- Modal para criar nova guia -->
-    <div class="modal fade" id="novoGuiaModal" tabindex="-1" aria-labelledby="novoGuiaModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
+        <!-- Modal para Guia de Consulta -->
+        <div class="modal fade" id="modalConsulta" tabindex="-1" role="dialog" aria-labelledby="modalConsultaLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="modalConsultaLabel">Guia de Consulta</h5>
                 </div>
-                <div class="modal-body">
-                    <form action="{{ route('guiaconsulta.store') }}" method="POST" enctype="multipart/form-data"
-                        id="formNovaGuia">
-                        @csrf
-                        <input type="hidden" id="convenio_id_hidden" name="convenio_id">
-
-                        <h5><strong>Guia de Consulta</strong></h5>
+                <form id="guiaForm" method="POST" action="">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body">
+                        <input class="form-control" id="convenio_id" name="convenio_id" type="hidden">
+                        <input class="form-control" id="paciente_id" name="paciente_id" type="hidden">
+                        <input class="form-control" id="profissional_id" name="profissional_id" type="hidden">
+                        <input class="form-control" id="agenda_id" name="agenda_id" type="hidden">
                         <div class="row">
-                            <div class="mb-3 col-md-3">
-                                <label for="registro_ans" class="form-label"><strong>Registro ANS</strong></label>
+                            <div class="col-md-3">
+                                <label for="registro_ans" class="form-label">Registro ANS</label>
                                 <input class="form-control" id="registro_ans" name="registro_ans" type="text">
                             </div>
-                            <div class="mb-3 col-md-3">
-                                <label for="numero_guia_operadora" class="form-label"><strong>Nº Guia Atribuído pela
-                                        Operadora</strong></label>
+                            <div class="col-md-5">
+                                <label for="numero_guia_operadora" class="form-label">Nº Guia Atribuído pela
+                                    Operadora</label>
                                 <input class="form-control" id="numero_guia_operadora" name="numero_guia_operadora"
                                     type="text">
                             </div>
                         </div>
-
-                        <!-- Dados do Beneficiário -->
-                        <h5><strong>Dados do Beneficiário</strong></h5>
+                        <hr>
+                        <h5>Dados do Beneficiário</h5>
                         <div class="row">
-                            <div class="mb-3 col-md-3">
-                                <label for="numero_carteira" class="form-label"><strong>Número da
-                                        Carteira</strong></label>
-                                <input class="form-control" id="numero_carteira" name="numero_carteira" type="text">
+                            <div class="col-md-4">
+                                <label for="numero_carteira" class="form-label">Número da Carteira</label>
+                                <input class="form-control" id="numero_carteira" name="numero_carteira"
+                                    type="text">
                             </div>
-                            <div class="mb-3 col-md-3">
-                                <label for="validade_carteira" class="form-label"><strong>Validade da
-                                        Carteira</strong></label>
+                            <div class="col-md-4">
+                                <label for="validade_carteira" class="form-label">Validade da Carteira</label>
                                 <input class="form-control" id="validade_carteira" name="validade_carteira"
                                     type="date">
                             </div>
-                            <div class="mb-3 col-md-3">
-                                <label for="atendimento_rn" class="form-label"><strong>Atendimento RN</strong></label>
-                                <select class="form-select" id="atendimento_rn" name="atendimento_rn" readonly>
+                            <div class="col-md-4">
+                                <label for="atendimento_rn" class="form-label">Atendimento RN</label>
+                                <select class="form-select" id="atendimento_rn" name="atendimento_rn">
                                     <option selected disabled>Escolha</option>
                                     <option value="S">Sim</option>
                                     <option value="N">Não</option>
                                 </select>
                             </div>
-                            <div class="mb-3 col-md-3">
-                                <label for="nome_social" class="form-label"><strong>Nome Social</strong></label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="nome_social" class="form-label">Nome Social</label>
                                 <input class="form-control" id="nome_social" name="nome_social" type="text">
                             </div>
-                            <div class="mb-3 col-md-3">
-                                <label for="nome_beneficiario" class="form-label"><strong>Nome do
-                                        Beneficiário</strong></label>
+                            <div class="col-md-6">
+                                <label for="nome_beneficiario" class="form-label">Nome do Beneficiário</label>
                                 <input class="form-control" id="nome_beneficiario" name="nome_beneficiario"
                                     type="text">
                             </div>
                         </div>
-
-                        <!-- Dados do Contratado -->
-                        <h5><strong>Dados do Contratado</strong></h5>
+                        <hr>
+                        <h5>Dados do Contratado</h5>
                         <div class="row">
-                            <div class="mb-3 col-md-3">
-                                <label for="codigo_operadora" class="form-label"><strong>Código na
-                                        Operadora</strong></label>
+                            <div class="col-md-3">
+                                <label for="codigo_operadora" class="form-label">Código na Operadora</label>
                                 <input class="form-control" id="codigo_operadora" name="codigo_operadora"
                                     type="text">
                             </div>
-                            <div class="mb-3 col-md-3">
-                                <label for="nome_contratado" class="form-label"><strong>Nome do
-                                        Contratado</strong></label>
-                                <input class="form-control" id="nome_contratado" name="nome_contratado" type="text">
+                            <div class="col-md-6">
+                                <label for="nome_contratado" class="form-label">Nome do Contratado</label>
+                                <input class="form-control" id="nome_contratado" name="nome_contratado"
+                                    type="text">
                             </div>
-                            <div class="mb-3 col-md-3">
-                                <label for="codigo_cnes" class="form-label"><strong>Código CNES</strong></label>
-                                <input class="form-control" id="codigo_cnes" name="codigo_cnes" type="text">
+                            <div class="col-md-3">
+                                <label for="cnes" class="form-label">Código CNES</label>
+                                <input class="form-control" id="cnes" name="cnes" type="text">
                             </div>
                         </div>
-
-                        <!-- Dados do Profissional Executante -->
-                        <h5><strong>Dados do Profissional Executante</strong></h5>
                         <div class="row">
-                            <div class="mb-3 col-md-3">
-                                <label for="nome_profissional_executante" class="form-label"><strong>Nome do Profissional
-                                        Executante</strong></label>
+                            <div class="col-md-6">
+                                <label for="nome_profissional_executante" class="form-label">Nome do Profissional
+                                    Executante</label>
                                 <input class="form-control" id="nome_profissional_executante"
                                     name="nome_profissional_executante" type="text">
                             </div>
-                            <div class="mb-3 col-md-3">
-                                <label for="conselho_profissional" class="form-label"><strong>Conselho
-                                        Profissional</strong></label>
+                            <div class="col-md-1">
+                                <label for="conselho_profissional" class="form-label">Conselho</label>
                                 <input class="form-control" id="conselho_profissional" name="conselho_profissional"
                                     type="text">
                             </div>
-                            <div class="mb-3 col-md-3">
-                                <label for="numero_conselho" class="form-label"><strong>Número no
-                                        Conselho</strong></label>
-                                <input class="form-control" id="numero_conselho" name="numero_conselho" type="text">
+                            <div class="col-md-2">
+                                <label for="conselho_1" class="form-label">Nº Conselho</label>
+                                <input class="form-control" id="conselho_1" name="conselho_1" type="text">
                             </div>
-                            <div class="mb-3 col-md-3">
-                                <label for="uf_conselho" class="form-label"><strong>UF do Conselho</strong></label>
+                            <div class="col-md-1">
+                                <label for="uf_conselho" class="form-label">UF</label>
                                 <input class="form-control" id="uf_conselho" name="uf_conselho" type="text">
                             </div>
-                            <div class="mb-3 col-md-3">
-                                <label for="codigo_cbo" class="form-label"><strong>Código CBO</strong></label>
+                            <div class="col-md-2">
+                                <label for="codigo_cbo" class="form-label">Código CBO</label>
                                 <input class="form-control" id="codigo_cbo" name="codigo_cbo" type="text">
                             </div>
                         </div>
-
-                        <!-- Dados do Atendimento / Procedimento Realizado -->
-                        <h5><strong>Dados do Atendimento / Procedimento Realizado</strong></h5>
+                        <hr>
+                        <h5>Dados do Atendimento / Procedimento Realizado</h5>
                         <div class="row">
-                            <div class="mb-3 col-md-3">
-                                <label for="indicacao_acidente" class="form-label"><strong>Indicação de
-                                        Acidente</strong></label>
-                                <select class="form-select" id="indicacao_acidente" name="indicacao_acidente" readonly>
+                            <div class="col-md-3">
+                                <label for="indicacao_acidente" class="form-label">Indicação de Acidente</label>
+                                <select class="form-select" id="indicacao_acidente" name="indicacao_acidente">
                                     <option selected disabled>Escolha</option>
                                     <option value="1">Sim</option>
                                     <option value="2">Não</option>
                                 </select>
                             </div>
-                            <div class="mb-3 col-md-3">
-                                <label for="indicacao_cobertura_especial" class="form-label"><strong>Indicação de
-                                        Cobertura Especial</strong></label>
+                            <div class="col-md-3">
+                                <label for="indicacao_cobertura_especial" class="form-label">Indicação de Cobertura
+                                    Especial</label>
                                 <select class="form-select" id="indicacao_cobertura_especial"
-                                    name="indicacao_cobertura_especial" readonly>
+                                    name="indicacao_cobertura_especial">
                                     <option selected disabled>Escolha</option>
                                     <option value="1">Sim</option>
                                     <option value="2">Não</option>
                                 </select>
                             </div>
-                            <div class="mb-3 col-md-3">
-                                <label for="regime_atendimento" class="form-label"><strong>Regime de
-                                        Atendimento</strong></label>
-                                <input class="form-control" id="regime_atendimento" name="regime_atendimento"
-                                    type="text">
+                            <div class="col-md-3">
+                                <label for="regime_atendimento" class="form-label">Regime de Atendimento</label>
+                                <select class="form-select" id="regime_atendimento" name="regime_atendimento">
+                                    <option selected disabled>Escolha</option>
+                                    <option value="01">Ambulatórial</option>
+                                    <option value="02">Emergência</option>
+                                </select>
                             </div>
-                            <div class="mb-3 col-md-3">
-                                <label for="saude_ocupacional" class="form-label"><strong>Saúde
-                                        Ocupacional</strong></label>
-                                <select class="form-select" id="saude_ocupacional" name="saude_ocupacional" readonly>
+                            <div class="col-md-3">
+                                <label for="saude_ocupacional" class="form-label">Saúde Ocupacional</label>
+                                <select class="form-select" id="saude_ocupacional" name="saude_ocupacional">
                                     <option selected disabled>Escolha</option>
                                     <option value="1">Sim</option>
                                     <option value="2">Não</option>
                                 </select>
                             </div>
-                            <div class="mb-3 col-md-3">
-                                <label for="data_atendimento" class="form-label"><strong>Data do
-                                        Atendimento</strong></label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="data_atendimento" class="form-label">Data do Atendimento</label>
                                 <input class="form-control" id="data_atendimento" name="data_atendimento"
                                     type="date">
                             </div>
-                            <div class="mb-3 col-md-3">
-                                <label for="tipo_consulta" class="form-label"><strong>Tipo de Consulta</strong></label>
-                                <select class="form-select" id="tipo_consulta" name="tipo_consulta" readonly>
+                            <div class="col-md-3">
+                                <label for="tipo_consulta" class="form-label">Tipo de Consulta</label>
+                                <select class="form-select" id="tipo_consulta" name="tipo_consulta">
                                     <option selected disabled>Escolha</option>
-                                    <option value="1">Consulta de rotina</option>
-                                    <option value="2">Consulta de urgência</option>
-                                    <option value="3">Consulta de especialidade</option>
+                                    @foreach ($tiposConsultas as $tipo)
+                                        <option value="{{ $tipo->id }}">{{ $tipo->atendimento }}</option>
+                                    @endforeach
                                 </select>
                             </div>
-                            <div class="mb-3 col-md-3">
-                                <label for="codigo_tabela" class="form-label"><strong>Código da Tabela</strong></label>
-                                <input class="form-control" id="codigo_tabela" name="codigo_tabela" type="text">
-                            </div>
-                            <div class="mb-3 col-md-3">
-                                <label for="codigo_procedimento" class="form-label"><strong>Código do
-                                        Procedimento</strong></label>
+                            <div class="col-md-3">
+                                <label for="codigo_procedimento" class="form-label">Código do Procedimento</label>
                                 <input class="form-control" id="codigo_procedimento" name="codigo_procedimento"
-                                    type="text">
+                                    type="text" readonly>
                             </div>
-                            <div class="mb-3 col-md-3">
-                                <label for="valor_procedimento" class="form-label"><strong>Valor do
-                                        Procedimento</strong></label>
+                            <div class="col-md-3">
+                                <label for="valor_procedimento" class="form-label">Valor do Procedimento</label>
                                 <input class="form-control" id="valor_procedimento" name="valor_procedimento"
-                                    type="text">
+                                    type="text" readonly>
                             </div>
                         </div>
-
-                        <!-- Observações e Assinaturas -->
-                        <h5><strong>Observações</strong></h5>
-                        <div class="mb-3 col-md-12">
-                            <textarea class="form-control" id="observacao" name="observacao"></textarea>
+                        <hr>
+                        <h5>Observações</h5>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <textarea class="form-control" id="observacao" name="observacao"></textarea>
+                            </div>
                         </div>
-
-                        <div class="modal-footer">
-                            <button class="btn btn-primary" type="submit">
-                                <i class="bi bi-check-circle-fill me-2"></i>Salvar
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="saveButton" class="btn btn-primary" type="submit">
+                            <i class="bi bi-check-circle-fill me-2"></i>Salvar
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -660,15 +648,64 @@
                 html += '<td>' + guia.numeracao + '</td>';
                 html += '<td>' + dataFormatada + '</td>';
                 html += '<td>';
-                html += '<button type="button" class="btn btn-success btnVisualizarImprimir" data-id="' + guia.id + '" title="Visualizar">';
-                html += '<i class="bi bi-eye"></i></button>';
+                html += '<button type="button" class="btn btn-primary btnEditarGuia" data-id="' + guia.id + '" title="Editar" data-bs-toggle="modal" data-bs-target="#modalConsulta">';
+                html += '<i class="bi bi-pencil"></i></button>';
+                $(document).on('click', '.btnEditarGuia', function() {
+                    var guiaId = $(this).data('id');
+
+                    // Update the form action URL with the correct guiaConsulta ID
+                    $('#guiaForm').attr('action', '/guias-consulta/' + guiaId);
+
+                    // Fazer a requisição AJAX para buscar os detalhes da guia com o ID correto
+                    $.ajax({
+                        url: '/guia-consulta/detalhes/' + guiaId,
+                        type: 'GET',
+                        success: function(response) {
+                            // Preencher os campos do formulário com os dados da guia
+                            $('#modalConsulta #convenio_id').val(response.convenio_id);
+                            $('#modalConsulta #paciente_id').val(response.paciente_id);
+                            $('#modalConsulta #profissional_id').val(response.profissional_id);
+                            $('#modalConsulta #agenda_id').val(response.agenda_id);
+                            $('#modalConsulta #registro_ans').val(response.registro_ans);
+                            $('#modalConsulta #numero_guia_operadora').val(response.numero_guia_operadora);
+                            $('#modalConsulta #numero_carteira').val(response.numero_carteira);
+                            $('#modalConsulta #validade_carteira').val(response.validade_carteira);
+                            $('#modalConsulta #atendimento_rn').val(response.atendimento_rn);
+                            $('#modalConsulta #nome_social').val(response.nome_social);
+                            $('#modalConsulta #nome_beneficiario').val(response.nome_beneficiario);
+                            $('#modalConsulta #codigo_operadora').val(response.codigo_operadora);
+                            $('#modalConsulta #nome_contratado').val(response.nome_contratado);
+                            $('#modalConsulta #cnes').val(response.codigo_cnes);
+                            $('#modalConsulta #nome_profissional_executante').val(response.nome_profissional_executante);
+                            $('#modalConsulta #conselho_profissional').val(response.conselho_profissional);
+                            $('#modalConsulta #conselho_1').val(response.numero_conselho);
+                            $('#modalConsulta #uf_conselho').val(response.uf_conselho);
+                            $('#modalConsulta #codigo_cbo').val(response.codigo_cbo);
+                            $('#modalConsulta #indicacao_acidente').val(response.indicacao_acidente);
+                            $('#modalConsulta #indicacao_cobertura_especial').val(response.indicacao_cobertura_especial);
+                            $('#modalConsulta #regime_atendimento').val(response.regime_atendimento);
+                            $('#modalConsulta #saude_ocupacional').val(response.saude_ocupacional);
+                            $('#modalConsulta #data_atendimento').val(response.data_atendimento);
+                            $('#modalConsulta #tipo_consulta').val(response.tipo_consulta);
+                            $('#modalConsulta #codigo_procedimento').val(response.codigo_procedimento);
+                            $('#modalConsulta #valor_procedimento').val(response.valor_procedimento);
+                            $('#modalConsulta #observacao').val(response.observacao);
+
+                            // Abrir o modal
+                            $('#modalConsulta').modal('show');
+                        },
+                        error: function() {
+                            alert('Erro ao buscar os detalhes da guia.');
+                        }
+                    });
+                });
                 html += '<button type="button" class="btn btn-danger ms-2" title="Gerar XML e ZIP" onclick="baixarArquivosConsulta(' + guia.id + ')">';
                 html += '<i class="bi bi-filetype-xml"></i></button>';
                 html += '</td>';
                 html += '</tr>';
             });
         } else {
-            html = '<tr><td colspan="4">Nenhuma guia encontrada.</td></tr>';
+            html = '<tr><td colspan="6">Nenhuma guia encontrada.</td></tr>';
         }
         $('#listaGuias').html(html);
     }
@@ -718,7 +755,7 @@
                 }
             });
         } else {
-            $('#listaGuias').html('<tr><td colspan="4">Por favor, selecione um convênio e uma aba para ver as guias.</td></tr>');
+            $('#listaGuias').html('<tr><td colspan="6">Nenhuma guia encontrada.</td></tr>');
         }
     }
 

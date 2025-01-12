@@ -11,6 +11,7 @@ use App\Models\GuiaConsulta;
 use App\Models\GuiaTiss;
 use App\Models\Pacientes;
 use App\Models\Profissional;
+use App\Models\TipoAtendimento;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +26,8 @@ class GuiaConsultaController extends Controller
     {
         $guiaConsulta = GuiaConsulta::all();
         $convenios = Convenio::all();
-        return view('guias.guia_consulta', compact('guiaConsulta', 'convenios'));
+        $tiposConsultas = TipoAtendimento::all();
+        return view('guias.guia_consulta', compact('guiaConsulta', 'convenios', 'tiposConsultas'));
     }
 
     /**
@@ -216,62 +218,6 @@ class GuiaConsultaController extends Controller
             'message' => 'Guia Consulta criada com sucesso!'
         ]);
     }
-
-
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    // public function store(Request $request)
-    // {
-    //     $user_id = auth()->id();
-
-    //     $convenio_id = $request->input('convenio_id');
-    //     $registro_ans = $request->input('registro_ans');
-    //     $numero_guia_prestador = $request->input('numero_guia_prestador');
-    //     $numero_carteira = $request->input('numero_carteira');
-    //     $nome_beneficiario = $request->input('nome_beneficiario');
-    //     $data_atendimento = $request->input('data_atendimento');
-    //     $hora_inicio_atendimento = $request->input('hora_inicio_atendimento');
-    //     $tipo_consulta = $request->input('tipo_consulta');
-    //     $indicacao_acidente = $request->input('indicacao_acidente');
-    //     $codigo_tabela = $request->input('codigo_tabela');
-    //     $codigo_procedimento = $request->input('codigo_procedimento');
-    //     $valor_procedimento = $request->input('valor_procedimento');
-    //     $nome_profissional = $request->input('nome_profissional');
-    //     $sigla_conselho = $request->input('sigla_conselho');
-    //     $numero_conselho = $request->input('conselho_1');
-    //     $uf_conselho = $request->input('uf_conselho');
-    //     $cbo = $request->input('cbo');
-    //     $observacao = $request->input('observacao');
-    //     $hash = $request->input('hash');
-
-
-    //     $guiaConsulta = GuiaConsulta::create([
-    //         'user_id' => $user_id,
-    //         'convenio_id' => $convenio_id,
-    //         'registro_ans' => $registro_ans,
-    //         'numero_guia_prestador' => $numero_guia_prestador,
-    //         'numero_carteira' => $numero_carteira,
-    //         'nome_beneficiario' => $nome_beneficiario,
-    //         'data_atendimento' => $data_atendimento,
-    //         'hora_inicio_atendimento' => $hora_inicio_atendimento,
-    //         'tipo_consulta' => $tipo_consulta,
-    //         'indicacao_acidente' => $indicacao_acidente,
-    //         'codigo_tabela' => $codigo_tabela,
-    //         'codigo_procedimento' => $codigo_procedimento,
-    //         'valor_procedimento' => $valor_procedimento,
-    //         'nome_profissional' => $nome_profissional,
-    //         'sigla_conselho' => $sigla_conselho,
-    //         'conselho_1' => $numero_conselho,
-    //         'uf_conselho' => $uf_conselho,
-    //         'cbo' => $cbo,
-    //         'observacao' => $observacao,
-    //         'hash' => $hash,
-    //     ]);
-
-    //     return redirect()->back()->with('success', 'Guia TISS criada com sucesso')->with('guiaTiss', $guiaConsulta);
-    // }
 
     /**
      * Display the specified resource.
@@ -951,5 +897,60 @@ class GuiaConsultaController extends Controller
     public function destroy(GuiaConsulta $guiaConsulta)
     {
         //
+    }
+
+    public function update(Request $request, $id)
+    {
+        $guiaConsulta = GuiaConsulta::findOrFail($id);
+
+        $conselhos = [
+            'CRAS' => '01', 'COREN' => '02', 'CRF' => '03', 'CRFA' => '04',
+
+            'CREFITO' => '05', 'CRM' => '06', 'CRN' => '07', 'CRO' => '08',
+            'CRP' => '09', 'OUTROS' => '10'
+        ];
+
+        $ufs = [
+            'AC' => '12', 'AL' => '27', 'AP' => '16', 'AM' => '13',
+            'BA' => '29', 'CE' => '23', 'DF' => '53', 'ES' => '32',
+            'GO' => '52', 'MA' => '21', 'MT' => '51', 'MS' => '50',
+            'MG' => '31', 'PA' => '15', 'PB' => '25', 'PR' => '41',
+            'PE' => '26', 'PI' => '22', 'RJ' => '33', 'RN' => '24',
+            'RS' => '43', 'RO' => '11', 'RR' => '14', 'SC' => '42',
+            'SP' => '35', 'SE' => '28', 'TO' => '17'
+        ];
+
+        $guiaConsulta->update($request->only([
+            'numero_guia_operadora',
+            'registro_ans',
+            'numero_carteira',
+            'validade_carteira',
+            'atendimento_rn',
+            'nome_social',
+            'nome_beneficiario',
+            'codigo_operadora',
+            'nome_contratado',
+            'codigo_cnes',
+            'nome_profissional_executante',
+            'numero_conselho',
+            'codigo_cbo',
+            'indicacao_acidente',
+            'indicacao_cobertura_especial',
+            'regime_atendimento',
+            'saude_ocupacional',
+            'data_atendimento',
+            'tipo_consulta',
+            'valor_procedimento',
+            'observacao',
+        ]) + [
+            'conselho_profissional' => array_key_exists($request->input('conselho_profissional'), $conselhos)
+                ? $conselhos[$request->input('conselho_profissional')]
+                : $request->input('conselho_profissional'),
+            'uf_conselho' => array_key_exists($request->input('uf_conselho'), $ufs)
+                ? $ufs[$request->input('uf_conselho')]
+                : $request->input('uf_conselho'),
+        ]);
+
+        return redirect()->route('guiaconsulta.index')->with('success', 'Guia de Consulta atualizada com sucesso!');
     }
 }

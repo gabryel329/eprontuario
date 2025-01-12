@@ -757,7 +757,7 @@
                         criarPaginacao(); // Cria os botões de paginação
                     } else {
                         $('#listaGuias').html(
-                            '<tr><td colspan="4">Nenhuma guia encontrada para este convênio e aba selecionados.</td></tr>'
+                            '<tr><td colspan="6">Nenhuma guia encontrada.</td></tr>'
                         );
                         $('#paginacao').html(''); // Limpa a paginação
                     }
@@ -768,7 +768,7 @@
             });
         } else {
             $('#listaGuias').html(
-                '<tr><td colspan="4">Por favor, selecione um convênio e uma aba para ver as guias.</td></tr>'
+                '<tr><td colspan="6">Por favor, selecione um convênio e uma aba para ver as guias.</td></tr>'
             );
         }
     }

@@ -1,27 +1,3 @@
-@php
-    use Carbon\Carbon;
-
-    // Obtemos a data de licen�a e a data atual
-    $empresa = \App\Models\Empresas::first();
-    $dataLicenca = $empresa ? Carbon::parse($empresa->licenca)->startOfDay() : null;
-    $dataAtual = Carbon::now()->startOfDay(); // Usamos apenas a data, sem o hor�rio
-
-    // Calculamos a diferen�a de dias entre a data atual e a data de licen�a
-    $diasRestantes = $dataLicenca ? $dataAtual->diffInDays($dataLicenca, false) : null;
-@endphp
-<style>
-    .license-message {
-        position: fixed;
-        right: 20px;
-        bottom: 20px;
-        background-color: #f8d7da;
-        color: #721c24;
-        padding: 10px;
-        border-radius: 5px;
-        font-size: 14px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-</style>
 <header class="app-header">
     <a class="app-header__logo" href="/home">
         <img src="{{ asset('images/LOGO_01_HORIZONTAL.png') }}" alt="ePRONTUARIO" style="height: 35px;">
@@ -32,22 +8,16 @@
     <ul class="app-nav">
         <!--Notification Menu-->
         <!-- User Menu-->
-        {{-- <li class="app-search">
-            <input class="app-search__input" type="search" placeholder="Search">
-            <button class="app-search__button"><i class="bi bi-search"></i></button>
-        </li> --}}
-        <li class="dropdown">
+        <li class="dropdown d-flex align-items-center">
+            <!-- Exibe a data e hora -->
+            <span id="current-date-time" class="me-3 text-white"></span>
             <a class="app-nav__item" href="#" data-bs-toggle="dropdown" aria-label="Open Profile Menu">
                 <i class="bi bi-person fs-4"></i>
             </a>
             <ul class="dropdown-menu settings-menu dropdown-menu-right">
-                {{-- <li><a class="dropdown-item" href="page-user.html"><i class="bi bi-gear me-2 fs-5"></i> Settings</a></li> --}}
-                {{-- <li><a class="dropdown-item" href="page-user.html"><i class="bi bi-person me-2 fs-5"></i> Perfil</a></li> --}}
-                <li><a class="dropdown-item" href="http://esuporte.com.br:8090"><i class="bi bi-headset"></i>
-                        Suporte</a></li>
+                <li><a class="dropdown-item" href="http://esuporte.com.br:8090"><i class="bi bi-headset"></i> Suporte</a></li>
                 @if (Auth::user()->permissoes->contains('id', 3))
-                    <li><a type="button" onclick="abrirNovaJanela1();" class="dropdown-item"><i
-                                class="bi bi-person-vcard"></i> Tela de Chamado</a></li>
+                    <li><a type="button" onclick="abrirNovaJanela1();" class="dropdown-item"><i class="bi bi-person-vcard"></i> Tela de Chamado</a></li>
                 @endif
                 <li>
                     <a class="dropdown-item" href="{{ route('logout') }}"
@@ -61,25 +31,37 @@
             </ul>
         </li>
     </ul>
-    <!-- Verifica as condi��es e exibe a mensagem -->
-    @if ($dataLicenca && $diasRestantes !== null)
-        @if ($diasRestantes > 2)
-            <!-- N�o exibe mensagem, data futura -->
-        @elseif ($diasRestantes <= 2 && $diasRestantes >= 0)
-            <div class="license-message">
-                Sua licença expira em {{ $dataLicenca->format('d/m/Y') }}.
-            </div>
-        @elseif ($diasRestantes < 0)
-            <div class="license-message">
-                Sua licença expirou em {{ $dataLicenca->format('d/m/Y') }}.
-            </div>
-        @endif
-    @endif
-    <script>
-        function abrirNovaJanela1() {
-            // Abrir uma nova janela popup com o ID da consulta
-            window.open('/consultorio/', '_blank',
-                'toolbar=no,scrollbars=yes,resizable=yes,width=1000,height=800');
-        }
-    </script>
 </header>
+
+<script>
+    // Função para formatar a data e hora de forma mais limpa
+    function updateDateTime() {
+        const dateTimeElement = document.getElementById('current-date-time');
+        const now = new Date();
+
+        // Formata a data e hora de forma dinâmica
+        const day = String(now.getDate()).padStart(2, '0'); // Dia com dois dígitos
+        const month = String(now.getMonth() + 1).padStart(2, '0'); // Mês com dois dígitos
+        const year = now.getFullYear(); // Ano completo
+        const hours = String(now.getHours()).padStart(2, '0'); // Hora com dois dígitos
+        const minutes = String(now.getMinutes()).padStart(2, '0'); // Minutos com dois dígitos
+
+        // Exibição no formato: 10/01/2025 - 14:36
+        const formattedDate = `${day}/${month}/${year}`;
+        const formattedTime = `${hours}:${minutes}`;
+
+        dateTimeElement.textContent = `${formattedDate} - ${formattedTime}`;
+    }
+
+    // Atualiza a cada segundo
+    setInterval(updateDateTime, 1000);
+    updateDateTime(); // Atualiza imediatamente ao carregar a página
+</script>
+
+<style>
+    #current-date-time {
+        color: white; /* Define o texto em branco */
+        font-size: 14px; /* Ajusta o tamanho do texto */
+    }
+</style>
+''

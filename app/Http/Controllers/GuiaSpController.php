@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agenda;
+use App\Models\ContaGuia;
+use App\Models\ContasFinanceiras;
 use App\Models\Convenio;
 use App\Models\Empresas;
 use App\Models\Exames;
@@ -276,6 +278,40 @@ class GuiaSpController extends Controller
     // Epílogo
     $epilogo = $xml->addChild('ans:epilogo');
     $epilogo->addChild('ans:hash', $guia->hash);
+
+    // Verificar se já existe uma conta financeira associada
+    $contaExistente = ContasFinanceiras::whereHas('contaGuias', function ($query) use ($guia) {
+        $query->where('guia_id', $guia->id)->where('tipo_guia', 'SADT');
+    })->first();
+
+    if (!$contaExistente) {
+        // Criar nova conta financeira
+        $conta = ContasFinanceiras::create([
+            'user_id' => auth()->id(),
+            'status' => 'Aberto',
+            'tipo_conta' => 'Receber',
+            'convenio_id' => $guia->convenio_id,
+            'tipo_guia' => 'SADT',
+            'parcelas' => '1/1',
+            'data_emissao' => Carbon::parse($guia->data_realizacao)->format('Y-m-d'),
+            'competencia' => Carbon::parse($guia->data_realizacao)->format('Y-m-d'),
+            'data_vencimento' => now()->addDays(30)->format('Y-m-d'),
+            'referencia' => $guia->numeracao,
+            'tipo_doc' => 'XML',
+            'centro_custos' => $guia->nome_contratado ?? 'Desconhecido',
+            'documento' => 'lote_guias_sadt_' . $guia->numeracao . '.xml',
+            'valor' => $guia->valor_total ?? 0,
+            'historico' => 'Guia SADT - ' . $guia->data_realizacao,
+        ]);
+
+        // Criar relacionamento em `conta_guias`
+        ContaGuia::create([
+            'conta_financeira_id' => $conta->id,
+            'guia_id' => $guia->id,
+            'tipo_guia' => 'SADT',
+            'lote' => $guia->numeracao,
+        ]);
+    }
 
     // Retornar o XML como resposta para download
     return response($xml->asXML(), 200)
@@ -785,13 +821,73 @@ public function gerarZipGuiaSp($id)
     $valorTotal->addChild('ans:valorOPME', number_format($valorOPME, 2, '.', ''));
     $valorTotal->addChild('ans:valorTotalGeral', number_format($valorTotalGeral, 2, '.', ''));
 
-
     // Epílogo
     $epilogo = $xml->addChild('ans:epilogo');
     $epilogo->addChild('ans:hash', md5($xml->asXML()));
 
-    $guia->identificador = 'GERADO';
-    $guia->save();
+    // Verifica se já existe uma conta financeira para esse lote
+    $contaExistente = ContaGuia::where('lote', $sequencialTransacao)->first();
+
+    if (!$contaExistente) {
+        // Atualiza as guias com a numeração correta
+        foreach ($guias as $guia) {
+            $guia->identificador = 'GERADO';
+            $guia->save();
+        }
+
+        // Calcula o valor total do lote
+        $valorTotal = $guias->sum('valor_total');
+        $referencia = $sequencialTransacao;
+
+        // Cria a conta financeira
+        $conta = ContasFinanceiras::create([
+            'user_id' => auth()->id(),
+            'status' => 'Aberto',
+            'tipo_conta' => 'Receber',
+            'convenio_id' => $guias->first()->convenio_id,
+            'tipo_guia' => 'SADT',
+            'parcelas' => '1/1',
+            'data_emissao' => Carbon::parse($guia->data_realizacao)->format('Y-m-d'),
+            'competencia' => Carbon::parse($guia->data_realizacao)->format('Y-m-d'),
+            'data_vencimento' => now()->addDays(30)->format('Y-m-d'),
+            'referencia' => $referencia,
+            'tipo_doc' => 'XML',
+            'centro_custos' => $guias->first()->nome_contratado ?? 'Desconhecido',
+            'documento' => 'lote_guias_sadt_' . $sequencialTransacao . '.xml',
+            'valor' => $valorTotal,
+            'historico' => 'Guia SADT - ' . $guia->data_realizacao,
+        ]);
+
+        // Salva o relacionamento na tabela `conta_guias`
+        foreach ($guias as $guia) {
+            ContaGuia::create([
+                'conta_financeira_id' => $conta->id,
+                'guia_id' => $guia->id,
+                'tipo_guia' => 'SADT',
+                'lote' => $sequencialTransacao,
+            ]);
+        }
+    } else {
+        // Apenas atualiza as guias e registra o relacionamento se não existirem
+        foreach ($guias as $guia) {
+            $existeRelacionamento = ContaGuia::where('guia_id', $guia->id)
+                ->where('tipo_guia', 'SADT')
+                ->exists();
+
+            if (!$existeRelacionamento) {
+                $guia->numeracao = $sequencialTransacao;
+                $guia->identificador = 'GERADO';
+                $guia->save();
+
+                ContaGuia::create([
+                    'conta_financeira_id' => $contaExistente->conta_financeira_id,
+                    'guia_id' => $guia->id,
+                    'tipo_guia' => 'SADT',
+                    'lote' => $sequencialTransacao,
+                ]);
+            }
+        }
+    }
 
     // Retorna o XML como download
     $fileName = 'lote_guias_sadt.xml';
