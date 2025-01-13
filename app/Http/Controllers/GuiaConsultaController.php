@@ -552,11 +552,9 @@ class GuiaConsultaController extends Controller
                 ], 422);
             }
         }
-
         // Salvar a numeração no guia
         $guia->identificador = 'GERADO';
         $guia->save();
-
         // Criar o XML utilizando SimpleXMLElement
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas http://www.ans.gov.br/padroes/tiss/schemas/tissV4_01_00.xsd"></ans:mensagemTISS>');
 
@@ -639,7 +637,6 @@ class GuiaConsultaController extends Controller
         $contaExistente = ContasFinanceiras::whereHas('contaGuias', function ($query) use ($guia) {
             $query->where('guia_id', $guia->id)->where('tipo_guia', 'Consulta');
         })->first();
-
         if (!$contaExistente) {
             // Criar nova conta financeira
             $conta = ContasFinanceiras::create([
@@ -672,8 +669,8 @@ class GuiaConsultaController extends Controller
 
         // Retornar o XML como download
         return response($xml->asXML(), 200)
-            ->header('Content-Type', 'application/xml')
-            ->header('Content-Disposition', 'attachment; filename="guia_consulta_' . $guia->id . '.xml"');
+        ->header('Content-Type', 'application/xml')
+        ->header('Content-Disposition', 'attachment; filename="guia_consulta_' . $guia->id . '.xml"');
     }
 
     public function gerarZipGuiaConsulta($id)

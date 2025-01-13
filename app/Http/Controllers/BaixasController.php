@@ -149,9 +149,6 @@ class BaixasController extends Controller
 }
 
 
-
-
-
 public function buscarGuiasPorConta($contaId)
 {
     Log::info("Buscando guias para conta financeira ID: $contaId");
@@ -170,7 +167,7 @@ public function buscarGuiasPorConta($contaId)
 
         if ($contaGuia->tipo_guia === 'Consulta') {
             $guia = GuiaConsulta::find($contaGuia->guia_id);
-        } elseif ($contaGuia->tipo_guia === 'SP') {
+        } elseif ($contaGuia->tipo_guia === 'SADT') {
             $guia = GuiaSp::find($contaGuia->guia_id);
         }
 

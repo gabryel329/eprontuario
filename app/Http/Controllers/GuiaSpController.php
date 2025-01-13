@@ -279,39 +279,32 @@ class GuiaSpController extends Controller
     $epilogo = $xml->addChild('ans:epilogo');
     $epilogo->addChild('ans:hash', $guia->hash);
 
-    // Verificar se já existe uma conta financeira associada
-    $contaExistente = ContasFinanceiras::whereHas('contaGuias', function ($query) use ($guia) {
-        $query->where('guia_id', $guia->id)->where('tipo_guia', 'SADT');
-    })->first();
+    // Criar nova conta financeira
+    $conta = ContasFinanceiras::create([
+        'user_id' => auth()->id(),
+        'status' => 'Aberto',
+        'tipo_conta' => 'Receber',
+        'convenio_id' => $guia->convenio_id,
+        'tipo_guia' => 'SADT', // Altere conforme necessário
+        'parcelas' => '1/1',
+        'data_emissao' => Carbon::parse($guia->data_atendimento)->format('Y-m-d'),
+        'competencia' => Carbon::parse($guia->data_atendimento)->format('Y-m-d'),
+        'data_vencimento' => now()->addDays(30)->format('Y-m-d'),
+        'referencia' => $guia->numeracao,
+        'tipo_doc' => 'XML',
+        'centro_custos' => $guia->nome_contratado_executante ?? 'Desconhecido',
+        'documento' => 'lote_guias_SADT_' . $guia->numeracao . '.xml',
+        'valor' => $guia->valor_procedimento ?? 0,
+        'historico' => 'Guia de SADT - ' . $guia->data_atendimento,
+    ]);
 
-    if (!$contaExistente) {
-        // Criar nova conta financeira
-        $conta = ContasFinanceiras::create([
-            'user_id' => auth()->id(),
-            'status' => 'Aberto',
-            'tipo_conta' => 'Receber',
-            'convenio_id' => $guia->convenio_id,
-            'tipo_guia' => 'SADT',
-            'parcelas' => '1/1',
-            'data_emissao' => Carbon::parse($guia->data_realizacao)->format('Y-m-d'),
-            'competencia' => Carbon::parse($guia->data_realizacao)->format('Y-m-d'),
-            'data_vencimento' => now()->addDays(30)->format('Y-m-d'),
-            'referencia' => $guia->numeracao,
-            'tipo_doc' => 'XML',
-            'centro_custos' => $guia->nome_contratado ?? 'Desconhecido',
-            'documento' => 'lote_guias_sadt_' . $guia->numeracao . '.xml',
-            'valor' => $guia->valor_total ?? 0,
-            'historico' => 'Guia SADT - ' . $guia->data_realizacao,
-        ]);
-
-        // Criar relacionamento em `conta_guias`
-        ContaGuia::create([
-            'conta_financeira_id' => $conta->id,
-            'guia_id' => $guia->id,
-            'tipo_guia' => 'SADT',
-            'lote' => $guia->numeracao,
-        ]);
-    }
+    // Criar relacionamento em `conta_guias`
+    ContaGuia::create([
+        'conta_financeira_id' => $conta->id,
+        'guia_id' => $guia->id,
+        'tipo_guia' => 'SADT', // Altere conforme necessário
+        'lote' => $guia->numeracao,
+    ]);
 
     // Retornar o XML como resposta para download
     return response($xml->asXML(), 200)
@@ -1798,7 +1791,7 @@ public function gerarZipGuiasadt($id, Request $request)
             'uf_profissional' => $request->input('uf_profissional'),
             'codigo_cbo_profissional' => $request->input('codigo_cbo_profissional'),
             'observacao' => $request->input('observacao') ?? 'N/A',
-            'identificador' => 'GERADO'
+            'identificador' => 'PENDENTE'
         ]);
 
         // Verifica se o conselho_profissional está no mapeamento e substitui pelo código numérico
@@ -1954,9 +1947,119 @@ public function gerarZipGuiasadt($id, Request $request)
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(GuiaSp $guiasp)
+    public function edit(Guiasp $guiaSadt)
     {
-        //
+        $profissionals = Profissional::all();
+        $conselhos = [
+            'CRAS' => '01', 'COREN' => '02', 'CRF' => '03', 'CRFA' => '04',
+            'CREFITO' => '05', 'CRM' => '06', 'CRN' => '07', 'CRO' => '08',
+            'CRP' => '09', 'OUTROS' => '10'
+        ];
+
+        $ufs = [
+            'AC' => '12', 'AL' => '27', 'AP' => '16', 'AM' => '13',
+            'BA' => '29', 'CE' => '23', 'DF' => '53', 'ES' => '32',
+            'GO' => '52', 'MA' => '21', 'MT' => '51', 'MS' => '50',
+            'MG' => '31', 'PA' => '15', 'PB' => '25', 'PR' => '41',
+            'PE' => '26', 'PI' => '22', 'RJ' => '33', 'RN' => '24',
+            'RS' => '43', 'RO' => '11', 'RR' => '14', 'SC' => '42',
+            'SP' => '35', 'SE' => '28', 'TO' => '17'
+        ];
+
+        return view('guias.sadtEditar', compact('guiaSadt', 'conselhos', 'ufs', 'profissionals'));
+    }
+
+    public function updateGuiaSadt(Request $request, GuiaSp $guiaSadt)
+    {
+        // Dados de apoio
+        $conselhos = [
+            'CRAS' => '01', 'COREN' => '02', 'CRF' => '03', 'CRFA' => '04',
+            'CREFITO' => '05', 'CRM' => '06', 'CRN' => '07', 'CRO' => '08',
+            'CRP' => '09', 'OUTROS' => '10'
+        ];
+
+        $ufs = [
+            'AC' => '12', 'AL' => '27', 'AP' => '16', 'AM' => '13',
+            'BA' => '29', 'CE' => '23', 'DF' => '53', 'ES' => '32',
+            'GO' => '52', 'MA' => '21', 'MT' => '51', 'MS' => '50',
+            'MG' => '31', 'PA' => '15', 'PB' => '25', 'PR' => '41',
+            'PE' => '26', 'PI' => '22', 'RJ' => '33', 'RN' => '24',
+            'RS' => '43', 'RO' => '11', 'RR' => '14', 'SC' => '42',
+            'SP' => '35', 'SE' => '28', 'TO' => '17'
+        ];
+
+        // Atualizar a guia existente
+        $guiaSadt->update($request->only([
+            'agenda_id',
+            'profissional_id',
+            'convenio_id',
+            'paciente_id',
+            'cns',
+            'atendimento_rn',
+            'user_id',
+            'nome_profissional_solicitante',
+            'conselho_profissional',
+            'codigo_cbo',
+            'nome_contratado',
+            'codigo_cnes',
+            'data_atendimento',
+            'codigo_procedimento',
+            'validade_carteira',
+            'codigo_operadora',
+            'codigo_operadora_executante',
+            'nome_social',
+            'uf_conselho',
+            'numero_conselho',
+            'registro_ans',
+            'numero_carteira',
+            'nome_beneficiario',
+            'numero_guia_prestador',
+            'hora_inicio_atendimento',
+            'hora_fim_atendimento',
+            'data_autorizacao',
+            'senha',
+            'validade_senha',
+            'numero_guia_op',
+            'carater_atendimento',
+            'data_solicitacao',
+            'indicacao_clinica',
+            'indicacao_cob_especial',
+            'nome_contratado_executante',
+            'tipo_atendimento',
+            'indicacao_acidente',
+            'tipo_consulta',
+            'motivo_encerramento',
+            'regime_atendimento',
+            'saude_ocupacional',
+            'sequencia',
+            'grua',
+            'codigo_operadora_profissional',
+            'nome_profissional',
+            'sigla_conselho',
+            'numero_conselho_profissional',
+            'uf_profissional',
+            'codigo_cbo_profissional',
+            'observacao'
+        ]) + [
+            'identificador' => 'GERADO',
+            'conselho_profissional' => array_key_exists($request->input('conselho_profissional'), $conselhos)
+                ? $conselhos[$request->input('conselho_profissional')]
+                : $request->input('conselho_profissional'),
+            'uf_conselho' => array_key_exists($request->input('uf_conselho'), $ufs)
+                ? $ufs[$request->input('uf_conselho')]
+                : $request->input('uf_conselho'),
+        ]);
+
+        // Obter o lote atual
+        $loteAtual = $guiaSadt->numeracao;
+
+        // Criar uma nova guia com o lote incrementado
+        $novaGuia = $guiaSadt->replicate();
+        $novaGuia->numeracao = $loteAtual + 1;
+        $novaGuia->identificador = 'GLOSADA';
+        $novaGuia->save();
+
+        return redirect()->route('faturamentoGlosa.index')->with('success', 'Guia SADT atualizada e nova guia criada com sucesso!');
     }
 
     /**

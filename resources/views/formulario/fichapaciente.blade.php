@@ -162,7 +162,7 @@
         </tr>
         <tr>
             <td class="equal-width">Gênero: {{ $paciente->genero ?? '-' }}</td>
-            <td class="equal-width">Cor: {{ $paciente->cor ?? '-' }}</td>
+            <td class="equal-width">Etnia: {{ $paciente->cor ?? '-' }}</td>
         </tr>
         <tr>
             <td class="equal-width">Nome do Pai: {{ $paciente->nome_pai ?? '-' }}</td>
@@ -190,7 +190,7 @@
     </tbody>
 </table>
 
-    </div>  
+    </div>
 </body>
 <script>
     // window.onload = function() {

@@ -245,7 +245,7 @@
                         <td>
                             @if($conta->tipo_guia === 'Consulta')
                                 Guia Consulta - Lote {{ $conta->referencia ?? 'N/A' }}
-                            @elseif($conta->tipo_guia === 'SP')
+                            @elseif($conta->tipo_guia === 'SADT')
                                 Guia SADT - Lote {{ $conta->referencia ?? 'N/A' }}
                             @else
                                 Conta Comum - {{ $conta->convenios->nome ?? 'Nome Não Informado' }}

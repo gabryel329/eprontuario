@@ -57,7 +57,7 @@ class ContasFinanceiras extends Model
     {
         if ($this->tipo_guia === 'Consulta') {
             return $this->belongsTo(GuiaConsulta::class, 'guia_id');
-        } elseif ($this->tipo_guia === 'SP') {
+        } elseif ($this->tipo_guia === 'SADT') {
             return $this->belongsTo(GuiaSp::class, 'guia_id');
         }
 
