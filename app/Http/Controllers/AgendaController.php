@@ -139,7 +139,7 @@ class AgendaController extends Controller
                 ->orderBy('id')
                 ->get();
 
-                
+
         }
 
         $pacientes = Pacientes::join('agendas', 'pacientes.id', '=', 'agendas.paciente_id')
@@ -959,7 +959,7 @@ class AgendaController extends Controller
 
         $examesSolicitados = Exames::all();
 
-        $proce = Procedimentos::all();             
+        $proce = Procedimentos::all();
 
         $profissionals = Profissional::join('especialidade_profissional', 'profissionals.id', '=', 'especialidade_profissional.profissional_id')
             ->leftJoin('especialidades', 'especialidade_profissional.especialidade_id', '=', 'especialidades.id')
@@ -1131,7 +1131,7 @@ class AgendaController extends Controller
     public function consultaAgenda()
     {
         $especialidades = Especialidade::all();
-        $profissionais = Profissional::all();
+        $profissionais = Profissional::whereNotNull('conselho_1')->get();
 
         return view('agenda.rel_agenda', compact(['especialidades', 'profissionais']));
     }
@@ -1186,9 +1186,14 @@ class AgendaController extends Controller
             return response()->json(['error' => 'Por favor, selecione pelo menos um profissional ou uma especialidade.'], 400);
         }
 
+
         // Buscar as agendas ordenadas por hora
         $agendas = $query->orderBy('data', 'asc')->orderBy('hora', 'asc')->get();
 
+        // Adicionar o nome do paciente a cada agenda
+        foreach ($agendas as $agenda) {
+            $agenda->paciente_nome = $agenda->paciente ? $agenda->paciente->name : 'Paciente não encontrado';
+        }
         // Retornar os resultados
         return response()->json([
             'disponibilidades' => $disponibilidades,

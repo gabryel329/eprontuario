@@ -138,7 +138,7 @@
             </div>
         </div>
     </div>
-    
+
 
 
     <!-- Scripts do FullCalendar -->
@@ -289,25 +289,24 @@
 
         function renderHorariosTable(horarios, convenios, procedimentos, isToday, currentHour, currentMinute) {
             var table = `
-        <div class="table-responsive">
-            <table class="table table-bordered" style="font-size: 12px; min-width: 1200px;">
-                <thead>
-                    <tr>
-                        <th>Hora</th>
-                        <th class="col-3">Paciente</th>
-                        <th>Contato</th>
-                        <th>Convênio</th>
-                        <th>Matricula</th>
-                        <th>Consulta</th>
-                        <th>Código</th>
-                        <th>Valor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${horarios.map(horario => renderTableRow(horario, convenios, procedimentos, isToday, currentHour, currentMinute)).join('')}
-                </tbody>
-            </table>
-        </div>
+            <div class="table-responsive">
+                <table class="table table-bordered" style="font-size: 12px; min-width: 500px;">
+                    <thead>
+                        <tr>
+                            <th class="col-1">Hora</th>
+                            <th class="col-2">Paciente</th>
+                            <th class="col-1">Contato</th>
+                            <th class="col-1">Convênio</th>
+                            <th class="col-1">Consulta</th>
+                            <th class="col-1">Código</th>
+                            <th class="col-1">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${horarios.map(horario => renderTableRow(horario, convenios, procedimentos, isToday, currentHour, currentMinute)).join('')}
+                    </tbody>
+                </table>
+            </div>
     `;
             return table;
         }
@@ -326,14 +325,15 @@
 
             return `
         <tr>
-            <td><input type="text" readonly name="hora[${horario}]" value="${horario.hora ?? ''}" class="form-control" ${isDisabled}></td>
-            <td class="col-3"><input type="text" name="paciente[${horario}]" value="${horario.name ?? ''}" class="form-control" ${isDisabled}></td>
-            <td><input type="text" name="celular[${horario}]" value="${horario.celular ?? ''}" class="form-control" ${isDisabled}></td>
-            <td>${renderConvenioSelect(horario, convenios, isDisabled)}</td>
-            <td><input type="text" name="matricula[${horario}]" value="${horario.matricula ?? ''}" class="form-control" ${isDisabled}></td>
-            <td>${renderProcedimentoInput(horario, procedimentos, isDisabled)}</td>
-            <td><input type="text"name="codigo[${horario.hora}]" id="codigo${horario.hora}" value="${horario.codigo ?? ''}" class="form-control" readonly ${isDisabled}></td>
-            <td><input type="text"name="valor_proc[${horario.hora}]" id="valor_proc${horario.hora}" value="${horario.valor_proc ?? ''}" class="form-control" ${isDisabled}></td>
+            <td class="col-1"><input type="text" readonly name="hora[${horario}]" value="${horario.hora ?? ''}" class="form-control" ${isDisabled}></td>
+            <td class="col-2"><input type="text" name="paciente[${horario}]" value="${horario.name ?? ''}" class="form-control" ${isDisabled}></td>
+            <td class="col-1"><input type="text" name="celular[${horario}]" value="${horario.celular ?? ''}" class="form-control" ${isDisabled}></td>
+            <td class="col-1">${renderConvenioSelect(horario, convenios, isDisabled)}</td>
+            <td class="col-1">${renderProcedimentoInput(horario, procedimentos, isDisabled)}</td>
+            <td class="col-1"><input type="text" name="codigo[${horario.hora}]" id="codigo${horario.hora}" value="${horario.codigo ?? ''}" class="form-control" readonly ${isDisabled}></td>
+            <td class="col-1"><input type="text" name="valor_proc[${horario.hora}]" id="valor_proc${horario.hora}" value="${horario.valor_proc ?? ''}" class="form-control" ${isDisabled}></td>
+            <input type="hidden" id="procedimento_id${horario.hora}" name="procedimento_id[${horario.hora}]" value="${horario.procedimento_id ?? ''}">
+            <input type="hidden" id="procedimento_nome${horario.hora}" name="procedimento_nome[${horario.hora}]" value="${horario.procedimento_nome ?? ''}">
 
         </tr>
     `;
@@ -343,22 +343,16 @@
 
         function renderProcedimentoInput(horario, procedimentos, isDisabled) {
             return `
-        <input 
-            type="text" 
-            class="form-control" 
-            name="procedimento_nome[${horario.hora}]" 
-            id="procedimento_nome${horario.hora}" 
-            value="${horario.procedimento_id ?? ''}"
-            placeholder="Selecione o Procedimento" 
-            title="${horario.procedimento_id ?? ''}"
-            readonly 
-            onclick="abrirModalProcedimento('${horario.hora}')"
-            ${isDisabled}>
-        <input 
-            type="hidden" 
-            name="procedimento_id[${horario.hora}]" 
-            id="procedimento_id${horario.hora}">
-    `;
+        <button
+        type="button"
+        class="btn btn-primary form-control"
+        data-bs-toggle="modal"
+        data-bs-target="#procedimentoModal"
+        onclick="abrirModalProcedimento('${horario.hora}')"
+        ${isDisabled}>
+        <i class="bi bi-list"></i>
+        </button>
+        `;
         }
 
 
@@ -392,7 +386,7 @@
         function renderConvenioSelect(horario, convenios, isDisabled) {
             return `
                 <select id="convenioProc" name="convenio[${horario}]" class="select2 form-control" ${isDisabled}>
-                    <option value="">${horario.convenio_id ? '' : 'Selecione um Convênio'}</option>
+                    <option value="">${horario.convenio_id ? '' : 'Convênio'}</option>
                     ${convenios.map(convenio => `
                                                         <option value="${convenio.id}" ${horario.convenio_id == convenio.id ? 'selected' : ''}>
                                                             ${convenio.nome}

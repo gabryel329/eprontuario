@@ -25,16 +25,16 @@
         </li>
 
         @if (Auth::user()->permissoes->pluck('id')->intersect([2, 3])->isNotEmpty())
-            <li class="treeview {{ request()->is('marcacao*', 'agenda.consulta*', 'rel-agenda*') ? 'is-expanded' : '' }}">
+            <li class="treeview {{ request()->is('lista', 'pacientes*', 'listapacientes*', 'agenda', 'marcacao*', 'agenda.consulta*', 'rel-agenda*') ? 'is-expanded' : '' }}">
                 <a class="app-menu__item" href="#" data-toggle="treeview">
                     <i class="app-menu__icon bi bi-telephone-outbound"></i>
-                    <span class="app-menu__label">Call-Center</span>
+                    <span class="app-menu__label">Recepção</span>
                     <i class="treeview-indicator bi bi-chevron-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <li>
                         <a class="treeview-item {{ request()->is('marcacao*') ? 'active' : '' }}" href="\marcacao">
-                            <i class="icon bi bi-plus-square"></i> Marcação de Consultas
+                            <i class="icon bi bi-plus-square"></i> Marcar Consultas
                         </a>
                     </li>
                     <li>
@@ -43,32 +43,15 @@
                         </a>
                     </li>
                     <li>
-                        <a class="treeview-item {{ request()->is('rel-agenda*') ? 'active' : '' }}" href="{{ route('agenda.consulta') }}">
-                            <i class="icon bi bi-person-lines-fill"></i> Consultar Agenda
-                        </a>
-                    </li>
-                </ul>
-            </li>
-        @endif
-
-        @if (Auth::user()->permissoes->pluck('id')->intersect([2, 3])->isNotEmpty())
-            <li class="treeview {{ request()->is('lista', 'pacientes*', 'listapacientes*', 'agenda') ? 'is-expanded' : '' }}">
-                <a class="app-menu__item" href="#" data-toggle="treeview">
-                    <i class="app-menu__icon bi bi-person-workspace"></i>
-                    <span class="app-menu__label">Recepção</span>
-                    <i class="treeview-indicator bi bi-chevron-right"></i>
-                </a>
-                <ul class="treeview-menu">
-                    <li>
                         <a class="treeview-item {{ request()->is('lista') ? 'active' : '' }}" href="{{ route('agenda.index1') }}">
                             <i class="icon bi bi-search"></i> Consultas
                         </a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a class="treeview-item {{ request()->is('agenda*') ? 'active' : '' }}" href="{{ route('agenda.index') }}">
                             <i class="icon bi bi-calendar-plus"></i> Agenda Recepção
                         </a>
-                    </li>
+                    </li> --}}
                     <li>
                         <a class="treeview-item {{ request()->is('pacientes*', 'listapacientes*') ? 'active' : '' }}" href="{{ route('paciente.index') }}">
                             <i class="icon bi bi-person-add"></i> Pacientes
@@ -85,6 +68,11 @@
                                 </a>
                             </li>
                         </ul>
+                    </li>
+                    <li>
+                        <a class="treeview-item {{ request()->is('rel-agenda*') ? 'active' : '' }}" href="{{ route('agenda.consulta') }}">
+                            <i class="icon bi bi-person-lines-fill"></i> Consultar Agenda
+                        </a>
                     </li>
                 </ul>
             </li>

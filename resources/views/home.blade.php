@@ -6,6 +6,9 @@
     @endphp
 
     <style>
+        body {
+            background-color: #E5E5E5 !important;
+        }
         .app-content {
             min-height: calc(100vh - 50px);
             margin-top: 50px;
@@ -16,11 +19,6 @@
             background-size: 20%;
             background-position: center;
             background-repeat: no-repeat;
-            @if($empresa && $empresa->imagem)
-                background-image: url('{{ asset('images/' . $empresa->imagem) }}');
-            @else
-                background-image: url('https://randomuser.me/api/portraits/men/1.jpg');
-            @endif
         }
         .content {
             position: relative;
@@ -35,11 +33,87 @@
     <main class="app-content">
         <div id="messageContainer"></div>
         <div class="content">
-            @if ($empresa)
-                <h1>{{ $empresa->name }}</h1>
-            @else
-                <h1>Empresa não encontrada</h1>
-            @endif
+            <div class="container py-5">
+                <h2 class="mb-4 border-start border-3 border-primary ps-3">Atalhos Rápidos</h2>
+                <div class="row g-4">
+                    <!-- Card Agenda do Dia -->
+                    <div class="col-md-6 col-lg-3">
+                        <a
+                            class="card text-center shadow-sm h-100 text-decoration-none"
+                            href="{{ url('/lista?_token=' . csrf_token() . '&data=' . now()->format('Y-m-d')) }}"
+                        >
+                            <div class="card-body">
+                                <i class="bi bi-calendar-check fs-1 text-primary"></i>
+                                <p class="card-text mt-3 text-dark">Agenda do Dia</p>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card text-center shadow-sm h-100">
+                            <div class="card-body">
+                                <i class="bi bi-car-front fs-1 text-primary"></i>
+                                <p class="card-text mt-3">Transporte e veículos</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card text-center shadow-sm h-100">
+                            <div class="card-body">
+                                <i class="bi bi-briefcase fs-1 text-primary"></i>
+                                <p class="card-text mt-3">Emprego e previdência</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card text-center shadow-sm h-100">
+                            <div class="card-body">
+                                <i class="bi bi-cash-stack fs-1 text-primary"></i>
+                                <p class="card-text mt-3">Impostos e registros empresariais</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 5 -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card text-center shadow-sm h-100">
+                            <div class="card-body">
+                                <i class="bi bi-balance-scale fs-1 text-primary"></i>
+                                <p class="card-text mt-3">Justiça e cidadania</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 6 -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card text-center shadow-sm h-100">
+                            <div class="card-body">
+                                <i class="bi bi-house fs-1 text-primary"></i>
+                                <p class="card-text mt-3">Moradia e serviços sociais</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 7 -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card text-center shadow-sm h-100">
+                            <div class="card-body">
+                                <i class="bi bi-droplet fs-1 text-primary"></i>
+                                <p class="card-text mt-3">Água e esgoto</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 8 -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card text-center shadow-sm h-100">
+                            <div class="card-body">
+                                <i class="bi bi-mortarboard fs-1 text-primary"></i>
+                                <p class="card-text mt-3">Educação</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
         <div class="modal fade" id="saveModal" tabindex="-1" aria-labelledby="saveModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -74,10 +148,10 @@
     if (pergunta) {
         // Define a pergunta no modal
         $('#saveModal .modal-header h5').text(pergunta);
-        
+
         // Exibe o modal
         $('#saveModal').modal('show');
-        
+
         // Adiciona o evento de salvar quando o botão de salvar for clicado
         $('#saveModal .btn-primary').off('click').on('click', function() {
             var resposta = $('#saveModal input[name="sala"]').val();

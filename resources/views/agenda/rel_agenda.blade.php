@@ -90,7 +90,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
     $(document).ready(function() {
         $('#filtrar-btn').on('click', function() {
@@ -133,10 +132,16 @@
 
                     // Mostrar as agendas filtradas em tabela
                     let agendaHtml = '<h4>Resultados da Agenda:</h4>';
-                    agendaHtml += '<table class="table table-bordered"><thead><tr><th>Data</th><th>Hora</th><th>Profissional</th></tr></thead><tbody>';
+                    agendaHtml += '<table class="table table-bordered"><thead><tr><th>Data</th><th>Hora</th><th>Paciente</th></tr></thead><tbody>';
                     if (response.agendas.length > 0) {
                         response.agendas.forEach(function(agenda) {
-                            agendaHtml += '<tr><td>' + agenda.data + '</td><td>' + agenda.hora + '</td><td>' + agenda.profissional_id + '</td></tr>';
+                            const dataFormatada = new Date(agenda.data).toLocaleDateString('pt-BR', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric'
+                            });
+                            const pacienteNome = agenda.paciente_nome ? agenda.paciente_nome : 'Paciente não encontrado';
+                            agendaHtml += '<tr><td>' + dataFormatada + '</td><td>' + agenda.hora + '</td><td>' + pacienteNome + '</td></tr>';
                         });
                     } else {
                         agendaHtml += '<tr><td colspan="3">Nenhuma agenda encontrada.</td></tr>';

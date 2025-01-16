@@ -40,7 +40,7 @@
 $currentDate = date('Y-m-d');
 ?>
 
-<body class="app sidebar-mini">
+<body class="app sidebar-mini sidenav-toggled">
     @php
         @session_start();
     @endphp

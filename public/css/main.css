@@ -14881,46 +14881,45 @@ textarea.form-control-lg {
 .user .user-settings label {
   color: #666;
 }
+/* Estilo do Select2 para se parecer com o campo da imagem */
+.select2-container--default .select2-selection--single {
+    height: 38px;
+    /* Ajusta a altura conforme necessário */
+    display: flex;
+    align-items: center;
+    padding: 0 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ced4da;
+    /* Cor da borda */
+    border-radius: 4px;
+    /* Borda arredondada */
+    background-color: #fff;
+    /* Fundo branco */
+    box-shadow: none;
+    /* Remove sombras */
+    font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
 
-        /* Estilo do Select2 para se parecer com o campo da imagem */
-        .select2-container--default .select2-selection--single {
-            height: 38px;
-            /* Ajusta a altura conforme necessário */
-            display: flex;
-            align-items: center;
-            padding: 0 0.75rem;
-            font-size: 1rem;
-            border: 1px solid #ced4da;
-            /* Cor da borda */
-            border-radius: 4px;
-            /* Borda arredondada */
-            background-color: #fff;
-            /* Fundo branco */
-            box-shadow: none;
-            /* Remove sombras */
-            font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
+/* Remove a seta */
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    display: none;
+}
 
-        /* Remove a seta */
-        .select2-container--default .select2-selection--single .select2-selection__arrow {
-            display: none;
-        }
+/* Centraliza o texto no meio verticalmente e aplica a fonte */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    /* Alinhado à esquerda */
+    padding: 0;
+    color: #495057;
+    /* Cor do texto */
+    text-align: left;
+    font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
 
-        /* Centraliza o texto no meio verticalmente e aplica a fonte */
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: left;
-            /* Alinhado à esquerda */
-            padding: 0;
-            color: #495057;
-            /* Cor do texto */
-            text-align: left;
-            font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
-
-        /* Remove o botão de limpar (X) */
-        .select2-container--default .select2-selection--single .select2-selection__clear {
-            display: none;
-        }
+/* Remove o botão de limpar (X) */
+.select2-container--default .select2-selection--single .select2-selection__clear {
+    display: none;
+}

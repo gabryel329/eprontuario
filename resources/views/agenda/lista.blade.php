@@ -126,16 +126,7 @@
                                 $data = session('data');
                                 $formattedDate = $data ? \Carbon\Carbon::parse($data)->format('d/m/Y') : 'N/A';
                             @endphp
-                            Data: {{ $formattedDate }} -
-                            Dr(a):
-                            @if (session('profissional_id'))
-                                @php
-                                    $profissional = $profissionals->firstWhere('id', session('profissional_id'));
-                                @endphp
-                                {{ $profissional ? $profissional->name : 'N/A' }}
-                            @else
-                                N/A
-                            @endif
+                            Data: {{ $formattedDate }}
                             <input type="hidden" id="dataSessao" name="dataSessao"
                                 value="{{ $data ? \Carbon\Carbon::parse($data)->format('Y-m-d') : '' }}">
                         @else
@@ -145,22 +136,22 @@
                     {{-- <iframe id="detalhesConsultaIframe" style="width:100%; height:400px; display:none;"
                         frameborder="0"></iframe> --}}
                     <div class="table-scroll-wrapper">
-                        <div class="table-responsive" style="overflow-x: auto;">
+                        <div class="table-responsive">
                             <table class="table table-striped"
-                                style="text-align: center; white-space: nowrap; font-size: 12px; min-width: 1800px; vertical-align: middle;">
+                                style="text-align: center; white-space: nowrap; font-size: 12px; min-width: 500px; vertical-align: middle;">
                                 <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>Hora</th>
                                         <th>Nome</th>
+                                        <th>CPF</th>
+                                        <th>Contato</th>
                                         <th>Consulta</th>
                                         <th>Medico</th>
                                         <th>Guias</th>
                                         <th>Status</th>
                                         <th>Editar</th>
                                         <th>Chamar</th>
-                                        <th>CPF</th>
-                                        <th>Contato</th>
                                         <th>Excluir</th>
                                     </tr>
                                 </thead>
@@ -175,6 +166,8 @@
                                             </td>
                                             <td>{{ $item->hora }}</td>
                                             <td>{{ optional($item->paciente)->name ?? $item->name }}</td>
+                                            <td>{{ optional($item->paciente)->cpf ?? 'PACIENTE SEM CPF' }}</td>
+                                            <td>{{ $item->celular ?? optional($item->paciente)->celular }}</td>
                                             <td>{{ $item->procedimento_id }}</td>
                                             <td>{{ optional($item->profissional)->name ?? '-' }}</td>
                                             <td>
@@ -183,13 +176,11 @@
                                                     {{ is_null($item->paciente_id) ? 'disabled' : '' }}>
                                                     <option selected disabled>Selecione a Guia</option>
                                                     <option value="consulta">Guia de Consulta</option>
-                                                    <option value="sadt">Guia SADT</option>
-                                                    {{-- <option value="sadt">Guia de Consulta</option>
                                                     @if ($examesSolicitados instanceof \Illuminate\Support\Collection)
                                                         <option
-                                                            {{ $examesSolicitados->contains('agenda_id', $item->id) ? '' : 'disabled' }}
-                                                            value="sadt">Guia SADT</option>
-                                                    @endif --}}
+                                                        {{ $examesSolicitados->contains('agenda_id', $item->id) ? '' : 'disabled' }}
+                                                        value="sadt">Guia SADT</option>
+                                                        @endif
                                                 </select>
                                             </td>
                                             <td>
@@ -225,8 +216,6 @@
                                                     <i class="bi bi-volume-up"></i>
                                                 </a>
                                             </td>
-                                            <td>{{ optional($item->paciente)->cpf ?? 'PACIENTE SEM CPF' }}</td>
-                                            <td>{{ $item->celular ?? optional($item->paciente)->celular }}</td>
                                             <td>
                                                 <button {{ $item->status == 'FINALIZADO' ? 'disabled' : '' }}
                                                     type="button" class="btn btn-danger" data-bs-toggle="modal"
@@ -1954,8 +1943,8 @@
             const target = event.target;
 
             // Verifica se o campo alterado é quantidade, valor ou fator
-            if (target.classList.contains('quantidade') || 
-                target.classList.contains('valor') || 
+            if (target.classList.contains('quantidade') ||
+                target.classList.contains('valor') ||
                 target.classList.contains('fator')) {
                 calcularValorTotal(target);
             }
@@ -1969,8 +1958,8 @@
             const target = event.target;
 
             // Verifica se o campo alterado é quantidade, valor ou fator
-            if (target.classList.contains('quantidade') || 
-                target.classList.contains('valor') || 
+            if (target.classList.contains('quantidade') ||
+                target.classList.contains('valor') ||
                 target.classList.contains('fator')) {
                 calcularValorTotal(target);
             }
