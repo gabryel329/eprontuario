@@ -183,11 +183,13 @@
                                                     {{ is_null($item->paciente_id) ? 'disabled' : '' }}>
                                                     <option selected disabled>Selecione a Guia</option>
                                                     <option value="consulta">Guia de Consulta</option>
+                                                    <option value="sadt">Guia SADT</option>
+                                                    {{-- <option value="sadt">Guia de Consulta</option>
                                                     @if ($examesSolicitados instanceof \Illuminate\Support\Collection)
                                                         <option
                                                             {{ $examesSolicitados->contains('agenda_id', $item->id) ? '' : 'disabled' }}
                                                             value="sadt">Guia SADT</option>
-                                                    @endif
+                                                    @endif --}}
                                                 </select>
                                             </td>
                                             <td>
@@ -610,8 +612,7 @@
                                 value="{{ $item->convenio_id ?? '' }}">
                             <input type="hidden" id="agenda_id" name="agenda_id" value="{{ old('agenda_id') }}">
                             <input type="hidden" id="paciente_id" name="paciente_id" value="{{ $item->paciente_id }}">
-                            <input type="hidden" id="profissional_id" name="profissional_id"
-                                value="{{ $item->profissional_id }}">
+                            <input type="hidden" id="profissional_id" name="profissional_id" value="{{ $item->profissional_id }}">
 
                             <div class="row">
                                 <div class="col-md-3">
@@ -789,16 +790,16 @@
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
+                                                <th>Adicionar</th>
                                                 <th>24 - Tabela</th>
                                                 <th>25 - Código</th>
                                                 <th>26 - Descrição</th>
                                                 <th>27 - Qtde Sol.</th>
                                                 <th>28 - Qtde Aut.</th>
-                                                <th>Excluir</th>
+                                                <th colspan="2">Ação</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="exame-table-body">
-                                        </tbody>
+                                        <tbody id="exame-table-body"></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -1181,10 +1182,50 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="modalProcedimento1" tabindex="-1" aria-labelledby="modalProcedimentoLabel1"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalProcedimentoLabel1">Selecione o Procedimento</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <input class="form-control" id="procSearch" type="text"
+                                placeholder="Pesquisar por Código ou Procedimento...">
+                        </div>
+                        <table class="table table-hover" id="procTable">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Procedimento</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($proce as $p)
+                                    <tr>
+                                        <td>{{ $p->codigo }}</td>
+                                        <td>{{ $p->procedimento }}</td>
+                                        <td>
+                                            <button class="btn btn-primary" type="button"
+                                            onclick="selectProcedimento1('{{ $p->id }}', '{{ $p->codigo }}', '{{ $p->procedimento }}')">Selecionar</button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     @endforeach
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+
         function abrirNovaJanela(id) {
             // Abrir uma nova janela popup com o ID da consulta
             window.open('/detalhesConsulta/' + id, '_blank',
@@ -1380,25 +1421,117 @@
                             // Limpar o corpo da tabela para evitar duplicação
                             $('#exame-table-body').empty();
 
-                            // Iterar sobre cada exame e preencher a tabela
-                            response.exames.forEach(function(exame) {
-                                const exameRow = `
+                            // Verifica se existem exames para iterar
+                            if (response.exames && response.exames.length > 0) {
+                                // Iterar sobre cada exame e preencher a tabela
+                                response.exames.forEach(function(exame) {
+                                    const exameRow = `
+                                    <tr style="text-align: center;">
+                                        <td>
+                                            <button type="button" class="btn btn-primary form-control" data-bs-toggle="modal" data-bs-target="#modalProcedimento1" onclick="setRowContext(this)">
+                                                <i class="bi bi-list"></i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <input class="form-control" style="text-align: center;" name="id2[]" type="hidden" value="${exame.id || ''}" readonly>
+                                            <input class="form-control" style="text-align: center;" name="agenda_id2[]" type="hidden" value="${exame.agenda_id || ''}" readonly>
+                                            <input class="form-control" style="text-align: center;" name="tabela[]" type="text" value="${exame.tabela || ''}" readonly>
+                                        </td>
+                                        <td><input class="form-control" id="codigo_procedimento_solicitado" name="codigo_procedimento_solicitado[]" type="text" value="${exame.codigo || ''}" readonly></td>
+                                        <td><input class="form-control" id="descricao_procedimento" name="descricao_procedimento[]" type="text" value="${exame.procedimento || ''}" readonly></td>
+                                        <td><input class="form-control" style="text-align: center;" name="qtd_sol[]" type="number" value="${exame.qtd_sol || ''}"></td>
+                                        <td><input class="form-control" style="text-align: center;" name="qtd_aut[]" type="number" value="${exame.qtd_aut || ''}"></td>
+                                        <td><button type="button" class="btn btn-danger btn-sm" onclick="excluirLinha(this)"><i class="icon bi bi-trash"></i></button></td>
+                                        <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha()">+</button></td>
+                                        <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha(this)">-</button></td>
+                                    </tr>
+                                    `;
+                                    $('#exame-table-body').append(exameRow);
+                                });
+                            } else {
+                                // Caso não haja exames, insira a linha padrão
+                                const defaultRow = `
                                 <tr>
-                                    <td><input class="form-control" name="tabela[]" type="text" value="${exame.tabela || ''}" readonly></td>
-                                    <td><input class="form-control" name="codigo_procedimento_solicitado[]" type="text" value="${exame.codigo || ''}" readonly></td>
-                                    <td><input class="form-control" name="descricao_procedimento[]" type="text" value="${exame.procedimento || ''}" readonly></td>
-                                    <td><input class="form-control" name="qtd_sol[]" type="text" value="${exame.qtd_sol || ''}"></td>
-                                    <td><input class="form-control" name="qtd_aut[]" type="number" value="${exame.qtd_aut || ''}"></td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary form-control" data-bs-toggle="modal" data-bs-target="#modalProcedimento1" onclick="setRowContext(this)">
+                                            <i class="bi bi-list"></i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <input type="hidden" id="agenda_id" name="agenda_id2[]" value="{{ old('agenda_id') }}">
+                                        <input type="hidden" id="paciente_id2" name="paciente_id2[]" value="{{ $item->paciente_id }}">
+                                        <input type="hidden" id="profissional_id2" name="profissional_id2[]" value="{{ $item->profissional_id }}">
+                                        <input class="form-control" style="text-align: center;" id="proce_id" name="proce_id[]" type="hidden" value="" readonly>
+                                        <input class="form-control" style="text-align: center;" name="tabela[]" type="text" value="22" readonly>
+                                    </td>
+                                    <td><input class="form-control" id="codigo_procedimento_solicitado" name="codigo_procedimento_solicitado[]" type="text" value="" readonly></td>
+                                    <td><input class="form-control" id="descricao_procedimento" name="descricao_procedimento[]" type="text" value="" readonly></td>
+                                    <td><input class="form-control" style="text-align: center;" name="qtd_sol[]" type="number" value=""></td>
+                                    <td><input class="form-control" style="text-align: center;" name="qtd_aut[]" type="number" value=""></td>
                                     <td><button type="button" class="btn btn-danger btn-sm" onclick="excluirLinha(this)"><i class="icon bi bi-trash"></i></button></td>
+                                    <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha()">+</button></td>
+                                    <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha(this)">-</button></td>
                                 </tr>
-                            `;
-                                $('#exame-table-body').append(exameRow);
-                            });
-
-                            window.excluirLinha = function(button) {
-                                // Encontra a linha do botão clicado e remove-a
-                                $(button).closest('tr').remove();
+                                `;
+                                $('#exame-table-body').append(defaultRow);
                             }
+
+                            // Função para excluir uma linha
+                            window.excluirLinha = function(button) {
+                                // Captura a tabela e conta o número de linhas
+                                const tabela = $(button).closest('table'); // Localiza a tabela
+                                const totalLinhas = tabela.find('tbody tr').length; // Conta o número de linhas no tbody
+
+                                if (totalLinhas > 1) {
+                                    // Captura a linha clicada
+                                    const row = $(button).closest('tr');
+
+                                    // Captura os valores relevantes da linha
+                                    const codigo = row.find('input[name="codigo_procedimento_solicitado[]"]').val();
+                                    const procedimento = row.find('input[name="descricao_procedimento[]"]').val();
+                                    const qtdSol = row.find('input[name="qtd_sol[]"]').val();
+                                    const agendaId = row.find('input[name="agenda_id2[]"]').val();
+                                    const Id = row.find('input[name="id2[]"]').val();
+
+                                    // Confirmação opcional
+                                    if (!confirm('Tem certeza que deseja excluir esta linha e os registros correspondentes?')) {
+                                        return;
+                                    }
+
+                                    // Envia os dados para o backend
+                                    $.ajax({
+                                        url: '/excluir-exame', // Defina a rota correta
+                                        type: 'POST',
+                                        data: {
+                                            _token: $('meta[name="csrf-token"]').attr('content'),
+                                            codigo: codigo,
+                                            procedimento: procedimento,
+                                            qtd_sol: qtdSol,
+                                            agenda_id: agendaId,
+                                            id: Id,
+                                        },
+                                        success: function(response) {
+                                            if (response.success) {
+                                                // Remove a linha da tabela no front-end
+                                                row.remove();
+                                                alert(response.message);
+                                            } else {
+                                                alert('Erro ao excluir o registro: ' + response.message);
+                                            }
+                                        },
+                                        error: function(xhr) {
+                                            console.error('Erro ao excluir o registro:', xhr.responseText);
+                                            alert('Erro ao excluir o registro.');
+                                        }
+                                    });
+                                } else {
+                                    // Exibe um alerta caso haja apenas uma linha restante
+                                    alert('A tabela deve ter pelo menos uma linha.');
+                                }
+                            };
+
+
+
 
                             if (!response || !response.procedimentos) {
                                 alert(
@@ -1646,6 +1779,22 @@
                 event.preventDefault(); // Previne envio padrão
 
                 var formData = $(this).serialize(); // Serializa os dados do formulário
+                // Coleta os dados de #exame-table-body
+                var exameData = [];
+                $('#exame-table-body tr').each(function () {
+                    var linha = {
+                        tabela: $(this).find('input[name="tabela"]').val(),
+                        codigo_procedimento_solicitado: $(this).find('input[name="codigo_procedimento_solicitado"]').val(),
+                        descricao_procedimento: $(this).find('input[name="descricao_procedimento"]').val(),
+                        qtd_sol: $(this).find('input[name="qtd_sol"]').val(),
+                        qtd_aut: $(this).find('input[name="qtd_aut"]').val()
+                    };
+                    exameData.push(linha);
+                });
+
+                // Adiciona os dados coletados ao console para depuração
+                console.log('Dados enviados (form):', formData);
+                console.log('Dados enviados (exame-table-body):', exameData);
 
                 $.ajax({
                     url: '{{ route('guia.sadt.salvar') }}', // Rota para salvar guia SADT
@@ -1976,6 +2125,90 @@
             }, 500); // ajuste o delay se necessário
         }
 
+        function selectProcedimento1(id, codigo, procedimento) {
+            if (activeRow) {
+                // Preenche os campos da linha ativa pelos IDs
+                activeRow.find('#proce_id').val(id);
+                activeRow.find('#codigo_procedimento_solicitado').val(codigo);
+                activeRow.find('#descricao_procedimento').val(procedimento);
+
+                // Fecha o modal
+                const modalProcedimento1 = bootstrap.Modal.getInstance(document.getElementById('modalProcedimento1'));
+                modalProcedimento1.hide();
+
+                // Opcional: Reabre outro modal, se necessário
+                setTimeout(() => {
+                    const modalSADT = new bootstrap.Modal(document.getElementById('modalSADT'));
+                    modalSADT.show();
+                }, 500);
+            } else {
+                console.error('Nenhuma linha ativa encontrada para preencher os campos.');
+            }
+        }
+
+
+
+        $('[id^=procSearch]').on('keyup', function() {
+            var inputId = $(this).attr('id');
+            var inputValue = $(this).val().toLowerCase();
+            var tableId = inputId.replace('Search', 'Table');
+            var rows = $('#' + tableId + ' tbody tr');
+
+            rows.each(function() {
+                var codigo = $(this).find('td').eq(0).text().toLowerCase();
+                var procedimento = $(this).find('td').eq(2).text().toLowerCase();
+                if (codigo.indexOf(inputValue) > -1 || procedimento.indexOf(inputValue) > -1) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+
+        // Função para adicionar uma nova linha
+        function adicionarLinha() {
+            const novaLinha = `
+                <tr>
+                                    <td>
+                                        <button type="button" class="btn btn-primary form-control" data-bs-toggle="modal" data-bs-target="#modalProcedimento1" onclick="setRowContext(this)">
+                                            <i class="bi bi-list"></i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <input type="hidden" id="agenda_id" name="agenda_id2[]" value="{{ $item->id }}">
+                                        <input type="hidden" id="paciente_id2" name="paciente_id2[]" value="{{ $item->paciente_id }}">
+                                        <input type="hidden" id="profissional_id2" name="profissional_id2[]" value="{{ $item->profissional_id }}">
+                                        <input class="form-control" style="text-align: center;" id="proce_id" name="proce_id[]" type="hidden" value="" readonly>
+                                        <input class="form-control" style="text-align: center;" name="tabela[]" type="text" value="22" readonly>
+                                    </td>
+                                    <td><input class="form-control" id="codigo_procedimento_solicitado" name="codigo_procedimento_solicitado[]" type="text" value="" readonly></td>
+                                    <td><input class="form-control" id="descricao_procedimento" name="descricao_procedimento[]" type="text" value="" readonly></td>
+                                    <td><input class="form-control" style="text-align: center;" name="qtd_sol[]" type="number" value=""></td>
+                                    <td><input class="form-control" style="text-align: center;" name="qtd_aut[]" type="number" value=""></td>
+                                    <td><button type="button" class="btn btn-danger btn-sm" onclick="excluirLinha(this)"><i class="icon bi bi-trash"></i></button></td>
+                                    <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha()">+</button></td>
+                                    <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha(this)">-</button></td>
+                                </tr>`;
+            $('#exame-table-body').append(novaLinha);
+        }
+
+        // Função para remover uma linha
+        function removerLinha(button) {
+            const tabela = $(button).closest('table'); // Localiza a tabela
+            const totalLinhas = tabela.find('tbody tr').length; // Conta o número de linhas no tbody
+
+            if (totalLinhas > 1) {
+                // Remove a linha correspondente ao botão clicado
+                $(button).closest('tr').remove();
+            } else {
+                // Exibe um alerta caso haja apenas uma linha restante
+                alert('A tabela deve ter pelo menos uma linha.');
+            }
+        }
+
+
+
+
         document.querySelectorAll('.chamar-btn').forEach(button => {
             button.addEventListener('click', function(event) {
                 event.preventDefault(); // Impede o comportamento padrão do botão
@@ -2011,6 +2244,14 @@
                     });
             });
         });
+
+        let activeRow = null;
+
+        function setRowContext(button) {
+            // Identifica a linha correspondente ao botão clicado
+            activeRow = $(button).closest('tr');
+        }
+
 
         function showAdditionalFields() {
             var data = document.getElementById('data').value;

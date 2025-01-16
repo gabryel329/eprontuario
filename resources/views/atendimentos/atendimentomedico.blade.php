@@ -461,7 +461,7 @@
                                                                     <input type="text" class="form-control codigo" name="codigo[]" placeholder="Código" readonly>
                                                                 </td>
                                                                 <td>
-                                                                    <select class="form-control procedimento_id" name="procedimento_id[]" onchange="updateCodigo(this)">
+                                                                    <select class="form-control procedimento_id select2" name="procedimento_id[]" onchange="updateCodigo(this)">
                                                                         <option value="">Selecione o Procedimento</option>
                                                                         @foreach ($procedimento as $item)
                                                                             <option value="{{ $item->id }}" data-codigo="{{ $item->codigo }}">
@@ -524,7 +524,7 @@
                                                         <tbody id="prescricao-table-body">
                                                             <tr class="prescricao-row">
                                                                 <td>
-                                                                    <select class="form-control medicamento_id"
+                                                                    <select class="form-control medicamento_id select2" 
                                                                         name="medicamento_id[]">
                                                                         <option value="">Selecione um medicamento
                                                                         </option>

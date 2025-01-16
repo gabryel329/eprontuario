@@ -20,6 +20,7 @@ class ExamesSadt extends Model
          'descricao_procedimento',
          'qtd_sol',
          'qtd_aut',
+         'agenda_id',
      ];
  
      // Relacionamento com GuiaSps

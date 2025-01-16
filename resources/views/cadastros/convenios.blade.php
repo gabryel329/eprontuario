@@ -233,7 +233,7 @@
                                                 </select>
                                             </div>
 
-                                            <div class="mb-3 col-md-2">
+                                            {{-- <div class="mb-3 col-md-2">
                                                 <label class="form-label">Taxa</label>
                                                 <select class="form-control" id="tab_taxa_id" name="tab_taxa_id">
                                                     <option value="">Selecione uma Taxa</option>
@@ -241,7 +241,7 @@
                                                         <option value="{{ $taxa->table_name }}">{{ $taxa->table_name }}</option>
                                                     @endforeach
                                                 </select>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>

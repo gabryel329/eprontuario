@@ -221,7 +221,7 @@
                                                                 <div class="mb-3 col-md-2">
                                                                     <label class="form-label">Validade</label>
                                                                     <input class="form-control" name="validade" type="date"
-                                                                        value="{{ old('validade', \Carbon\Carbon::parse($item->validade)->format('d-Y-m')) }}">
+                                                                        value="{{ old('validade', $item->validade) }}">
                                                                 </div>
 
                                                                 <div class="mb-3 col-md-2">

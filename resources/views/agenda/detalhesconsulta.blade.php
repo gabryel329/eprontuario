@@ -183,14 +183,10 @@
             <div class="row">
                 <div class="col-md-12">
                     <ul class="nav nav-tabs user-tabs">
-                        <li class="nav-item"><a class="nav-link active" href="#procedimentos"
-                                data-bs-toggle="tab">Procedimentos</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#Medicamentos"
-                                data-bs-toggle="tab">Medicamentos</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#Material" data-bs-toggle="tab">Material</a>
-                        </li>
-                        <li class="nav-item"><a class="nav-link" href="#Taxa" data-bs-toggle="tab">Taxa</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link active" href="#procedimentos" data-bs-toggle="tab">Procedimentos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#Medicamentos" data-bs-toggle="tab">Medicamentos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#Material" data-bs-toggle="tab">Material</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#Taxa" data-bs-toggle="tab">Taxa</a></li>
                     </ul>
                 </div>
                 <div class="col-md-12">

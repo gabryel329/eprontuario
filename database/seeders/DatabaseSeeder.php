@@ -190,7 +190,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Admin',
                 'email' => 'admin@eprontuario.com',
                 'profissional_id' => 1,
-                'password' => bcrypt('12345678'),
+                'password' => bcrypt('87654321'),
                 'imagem' => 'LOGO_01_VERDE.png',
                 'permisao_id' => 1,
             ],

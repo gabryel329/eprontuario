@@ -1680,199 +1680,283 @@ public function gerarZipGuiasadt($id, Request $request)
     }
 
     public function salvarGuiaSADT(Request $request)
-{
-    try {
-        DB::beginTransaction();
+    {   
+        Log::info('Dados recebidos no request:', $request->all());
+        try {
+            DB::beginTransaction();
+            
+            $horaInicioAtendimento = $request->input('hora_inicio_atendimento');
+            $horaFimAtendimento = $request->input('hora_fim_atendimento');
 
-        $horaInicioAtendimento = $request->input('hora_inicio_atendimento');
-        $horaFimAtendimento = $request->input('hora_fim_atendimento');
+            if (is_array($horaInicioAtendimento)) {
+                $horaInicioAtendimento = reset($horaInicioAtendimento); // Pega o primeiro valor do array
+            }
 
-        if (is_array($horaInicioAtendimento)) {
-            $horaInicioAtendimento = reset($horaInicioAtendimento); // Pega o primeiro valor do array
-        }
+            if (is_array($horaFimAtendimento)) {
+                $horaFimAtendimento = reset($horaFimAtendimento); // Pega o primeiro valor do array
+            }
 
-        if (is_array($horaFimAtendimento)) {
-            $horaFimAtendimento = reset($horaFimAtendimento); // Pega o primeiro valor do array
-        }
+            // Arrays de referência
+            $conselhos = [
+                'CRAS' => '01',
+                'COREN' => '02',
+                'CRF' => '03',
+                'CRFA' => '04',
+                'CREFITO' => '05',
+                'CRM' => '06',
+                'CRN' => '07',
+                'CRO' => '08',
+                'CRP' => '09',
+                'OUTROS' => '10'
+            ];
 
-        // Arrays de referência
-        $conselhos = [
-            'CRAS' => '01',
-            'COREN' => '02',
-            'CRF' => '03',
-            'CRFA' => '04',
-            'CREFITO' => '05',
-            'CRM' => '06',
-            'CRN' => '07',
-            'CRO' => '08',
-            'CRP' => '09',
-            'OUTROS' => '10'
-        ];
+            $ufs = [
+                'AC' => '12',
+                'AL' => '27',
+                'AP' => '16',
+                'AM' => '13',
+                'BA' => '29',
+                'CE' => '23',
+                'DF' => '53',
+                'ES' => '32',
+                'GO' => '52',
+                'MA' => '21',
+                'MT' => '51',
+                'MS' => '50',
+                'MG' => '31',
+                'PA' => '15',
+                'PB' => '25',
+                'PR' => '41',
+                'PE' => '26',
+                'PI' => '22',
+                'RJ' => '33',
+                'RN' => '24',
+                'RS' => '43',
+                'RO' => '11',
+                'RR' => '14',
+                'SC' => '42',
+                'SP' => '35',
+                'SE' => '28',
+                'TO' => '17'
+            ];
 
-        $ufs = [
-            'AC' => '12',
-            'AL' => '27',
-            'AP' => '16',
-            'AM' => '13',
-            'BA' => '29',
-            'CE' => '23',
-            'DF' => '53',
-            'ES' => '32',
-            'GO' => '52',
-            'MA' => '21',
-            'MT' => '51',
-            'MS' => '50',
-            'MG' => '31',
-            'PA' => '15',
-            'PB' => '25',
-            'PR' => '41',
-            'PE' => '26',
-            'PI' => '22',
-            'RJ' => '33',
-            'RN' => '24',
-            'RS' => '43',
-            'RO' => '11',
-            'RR' => '14',
-            'SC' => '42',
-            'SP' => '35',
-            'SE' => '28',
-            'TO' => '17'
-        ];
+            // Salvar os dados gerais na tabela guia_sps
+            $guiaSps = GuiaSp::create([
+                'agenda_id' => $request->input('agenda_id'),
+                'profissional_id' => $request->input('profissional_id'),
+                'convenio_id' => $request->input('convenio_id'),
+                'paciente_id' => $request->input('paciente_id'),
+                'cns' => $request->input('cns'),
+                'atendimento_rn' => $request->input('atendimento_rn'),
+                'user_id' => $request->input('user_id'),
+                'nome_profissional_solicitante' => $request->input('nome_profissional_solicitante'),
+                'conselho_profissional' => $request->input('conselho_profissional'),
+                'codigo_cbo' => $request->input('codigo_cbo'),
+                'nome_contratado' => $request->input('nome_contratado'),
+                'codigo_cnes' => $request->input('codigo_cnes'),
+                'data_atendimento' => $request->input('data_solicitacao'),
+                'codigo_procedimento' => $request->input('codigo_procedimento'),
+                'validade_carteira' => $request->input('validade_carteira'),
+                'codigo_operadora' => $request->input('codigo_operadora'),
+                'codigo_operadora_executante' => $request->input('codigo_operadora_executante'),
+                'nome_social' => $request->input('nome_social'),
+                'uf_conselho' => $request->input('uf_conselho'),
+                'numero_conselho' => $request->input('numero_conselho'),
+                'registro_ans' => $request->input('registro_ans'),
+                'numero_carteira' => $request->input('numero_carteira'),
+                'nome_beneficiario' => $request->input('nome_beneficiario'),
+                'numero_guia_prestador' => $request->input('numero_guia_prestador'),
+                'hora_inicio_atendimento' => $horaInicioAtendimento,
+                'hora_fim_atendimento' => $horaFimAtendimento,
+                'data_autorizacao' => $request->input('data_solicitacao'),
+                'senha' => $request->input('senha'),
+                'validade_senha' => $request->input('validade_senha'),
+                'numero_guia_op' => $request->input('numero_guia_op'),
+                'carater_atendimento' => $request->input('carater_atendimento'),
+                'data_solicitacao' => $request->input('data_solicitacao'),
+                'indicacao_clinica' => $request->input('indicacao_clinica'),
+                'indicacao_cob_especial' => $request->input('indicacao_cob_especial'),
+                'nome_contratado_executante' => $request->input('nome_contratado_executante'),
+                'tipo_atendimento' => $request->input('tipo_atendimento'),
+                'indicacao_acidente' => $request->input('indicacao_acidente'),
+                'tipo_consulta' => $request->input('tipo_consulta'),
+                'motivo_encerramento' => $request->input('motivo_encerramento'),
+                'regime_atendimento' => $request->input('regime_atendimento'),
+                'saude_ocupacional' => $request->input('saude_ocupacional'),
+                'sequencia' => $request->input('sequencia'),
+                'grua' => $request->input('grau'),
+                'codigo_operadora_profissional' => $request->input('codigo_operadora_profissional'),
+                'nome_profissional' => $request->input('nome_profissional'),
+                'sigla_conselho' => $request->input('sigla_conselho'),
+                'numero_conselho_profissional' => $request->input('numero_conselho_profissional'),
+                'uf_profissional' => $request->input('uf_profissional'),
+                'codigo_cbo_profissional' => $request->input('codigo_cbo_profissional'),
+                'observacao' => $request->input('observacao') ?? 'N/A',
+                'identificador' => 'PENDENTE'
+            ]);
 
-        // Salvar os dados gerais na tabela guia_sps
-        $guiaSps = GuiaSp::create([
-            'agenda_id' => $request->input('agenda_id'),
-            'profissional_id' => $request->input('profissional_id'),
-            'convenio_id' => $request->input('convenio_id'),
-            'paciente_id' => $request->input('paciente_id'),
-            'cns' => $request->input('cns'),
-            'atendimento_rn' => $request->input('atendimento_rn'),
-            'user_id' => $request->input('user_id'),
-            'nome_profissional_solicitante' => $request->input('nome_profissional_solicitante'),
-            'conselho_profissional' => $request->input('conselho_profissional'),
-            'codigo_cbo' => $request->input('codigo_cbo'),
-            'nome_contratado' => $request->input('nome_contratado'),
-            'codigo_cnes' => $request->input('codigo_cnes'),
-            'data_atendimento' => $request->input('data_solicitacao'),
-            'codigo_procedimento' => $request->input('codigo_procedimento'),
-            'validade_carteira' => $request->input('validade_carteira'),
-            'codigo_operadora' => $request->input('codigo_operadora'),
-            'codigo_operadora_executante' => $request->input('codigo_operadora_executante'),
-            'nome_social' => $request->input('nome_social'),
-            'uf_conselho' => $request->input('uf_conselho'),
-            'numero_conselho' => $request->input('numero_conselho'),
-            'registro_ans' => $request->input('registro_ans'),
-            'numero_carteira' => $request->input('numero_carteira'),
-            'nome_beneficiario' => $request->input('nome_beneficiario'),
-            'numero_guia_prestador' => $request->input('numero_guia_prestador'),
-            'hora_inicio_atendimento' => $horaInicioAtendimento,
-            'hora_fim_atendimento' => $horaFimAtendimento,
-            'data_autorizacao' => $request->input('data_solicitacao'),
-            'senha' => $request->input('senha'),
-            'validade_senha' => $request->input('validade_senha'),
-            'numero_guia_op' => $request->input('numero_guia_op'),
-            'carater_atendimento' => $request->input('carater_atendimento'),
-            'data_solicitacao' => $request->input('data_solicitacao'),
-            'indicacao_clinica' => $request->input('indicacao_clinica'),
-            'indicacao_cob_especial' => $request->input('indicacao_cob_especial'),
-            'nome_contratado_executante' => $request->input('nome_contratado_executante'),
-            'tipo_atendimento' => $request->input('tipo_atendimento'),
-            'indicacao_acidente' => $request->input('indicacao_acidente'),
-            'tipo_consulta' => $request->input('tipo_consulta'),
-            'motivo_encerramento' => $request->input('motivo_encerramento'),
-            'regime_atendimento' => $request->input('regime_atendimento'),
-            'saude_ocupacional' => $request->input('saude_ocupacional'),
-            'sequencia' => $request->input('sequencia'),
-            'grua' => $request->input('grau'),
-            'codigo_operadora_profissional' => $request->input('codigo_operadora_profissional'),
-            'nome_profissional' => $request->input('nome_profissional'),
-            'sigla_conselho' => $request->input('sigla_conselho'),
-            'numero_conselho_profissional' => $request->input('numero_conselho_profissional'),
-            'uf_profissional' => $request->input('uf_profissional'),
-            'codigo_cbo_profissional' => $request->input('codigo_cbo_profissional'),
-            'observacao' => $request->input('observacao') ?? 'N/A',
-            'identificador' => 'PENDENTE'
-        ]);
+            // Verifica se o conselho_profissional está no mapeamento e substitui pelo código numérico
+            $conselhoProfissional = $request->input('sigla_conselho');
+            if (array_key_exists($conselhoProfissional, $conselhos)) {
+                $guiaSps->sigla_conselho = $conselhos[$conselhoProfissional];
+            }
 
-        // Verifica se o conselho_profissional está no mapeamento e substitui pelo código numérico
-        $conselhoProfissional = $request->input('sigla_conselho');
-        if (array_key_exists($conselhoProfissional, $conselhos)) {
-            $guiaSps->sigla_conselho = $conselhos[$conselhoProfissional];
-        }
+            // Verifica se o uf_conselho está no mapeamento e substitui pelo código numérico
+            $ufConselho = $request->input('uf_profissional');
+            if (array_key_exists($ufConselho, $ufs)) {
+                $guiaSps->uf_profissional = $ufs[$ufConselho];
+            }
 
-        // Verifica se o uf_conselho está no mapeamento e substitui pelo código numérico
-        $ufConselho = $request->input('uf_profissional');
-        if (array_key_exists($ufConselho, $ufs)) {
-            $guiaSps->uf_profissional = $ufs[$ufConselho];
-        }
+            $conselho_profissional = $request->input('conselho_profissional');
+            if (array_key_exists($conselho_profissional, $conselhos)) {
+                $guiaSps->conselho_profissional = $conselhos[$conselho_profissional];
+            }
 
-        $conselho_profissional = $request->input('conselho_profissional');
-        if (array_key_exists($conselho_profissional, $conselhos)) {
-            $guiaSps->conselho_profissional = $conselhos[$conselho_profissional];
-        }
+            $uf_conselho = $request->input('uf_conselho');
+            if (array_key_exists($uf_conselho, $ufs)) {
+                $guiaSps->uf_conselho = $ufs[$uf_conselho];
+            }
 
-        $uf_conselho = $request->input('uf_conselho');
-        if (array_key_exists($uf_conselho, $ufs)) {
-            $guiaSps->uf_conselho = $ufs[$uf_conselho];
-        }
+            // Salva as mudanças no banco de dados
+            $guiaSps->save();
+            $agendaId = $request->input('agenda_id2.0');
+            if ($request->has('tabela') && $request->has('descricao_procedimento')) {
+                foreach ($request->input('tabela') as $index => $tabela) {
+                    $codigoProcedimentoSolicitado = $request->input("codigo_procedimento_solicitado.$index");
+                    $descricaoProcedimento = $request->input("descricao_procedimento.$index");
+                    $qtdSol = $request->input("qtd_sol.$index");
+                    $qtdAut = $request->input("qtd_aut.$index");
+            
+                    // Verifique se os valores existem antes de salvar
+                    if ($tabela && $descricaoProcedimento && $qtdSol && $qtdAut) {
+                        ExamesSadt::create([
+                            'guia_sps_id' => $guiaSps->id,
+                            'tabela' => $tabela,
+                            'codigo_procedimento_solicitado' => $codigoProcedimentoSolicitado,
+                            'descricao_procedimento' => $descricaoProcedimento,
+                            'qtd_sol' => $qtdSol,
+                            'qtd_aut' => $qtdAut,
+                            'agenda_id' => $agendaId,
+                        ]);
+                    } else {
+                        Log::warning("Exame $index não foi salvo devido a dados incompletos", [
+                            'tabela' => $tabela,
+                            'codigo_procedimento_solicitado' => $codigoProcedimentoSolicitado,
+                            'descricao_procedimento' => $descricaoProcedimento,
+                            'qtd_sol' => $qtdSol,
+                            'qtd_aut' => $qtdAut,
+                        ]);
+                    }
+                }
+            }
 
-        // Salva as mudanças no banco de dados
-        $guiaSps->save();
+            Log::info($request->input("codigo_procedimento_solicitado.$index"));
+            // Salvar na tabela exames
+            // Captura o valor do primeiro índice de agenda_id2
+            
+            log::info($agendaId);
 
-        // Salvar os exames na tabela exames_sadt
-        if ($request->has('descricao_procedimento')) {
+            // Itera sobre as tabelas e utiliza o mesmo agenda_id
             foreach ($request->input('tabela') as $index => $tabela) {
-                ExamesSadt::create([
-                    'guia_sps_id' => $guiaSps->id,
+                Exames::create([
+                    'profissional_id' => $request->input("profissional_id2.$index"),
                     'tabela' => $tabela,
-                    'codigo_procedimento_solicitado' => $request->input("codigo_procedimento_solicitado.$index"),
-                    'descricao_procedimento' => $request->input("descricao_procedimento.$index"),
+                    'paciente_id' => $request->input("paciente_id2.$index"),
+                    'procedimento_id' => $request->input("proce_id.$index"),
                     'qtd_sol' => $request->input("qtd_sol.$index"),
-                    'qtd_aut' => $request->input("qtd_aut.$index"),
+                    'agenda_id' => $agendaId, // Usa o valor do primeiro índice
                 ]);
             }
-        }
 
-        Log::info($request->input("codigo_procedimento_solicitado.$index"));
 
-        // Salvar os procedimentos na tabela exames_aut_sadt
-        if ($request->has('descricao_procedimento_realizado')) {
-            foreach ($request->input('data_real') as $index => $dataReal) {
-                ExamesAutSadt::create([
-                    'guia_sps_id' => $guiaSps->id,
-                    'data_real' => $dataReal,
-                    'hora_inicio_atendimento' => $request->input("hora_inicio_atendimento.$index"),
-                    'hora_fim_atendimento' => $request->input("hora_fim_atendimento.$index"),
-                    'tabela' => $request->input("tabela.$index"),
-                    'codigo_procedimento_realizado' => $request->input("codigo_procedimento_realizado.$index"),
-                    'descricao_procedimento_realizado' => $request->input("descricao_procedimento_realizado.$index"),
-                    'quantidade_autorizada' => $request->input("quantidade_autorizada.$index"),
-                    'via' => $request->input("via.$index"),
-                    'tecnica' => $request->input("tecnica.$index"),
-                    'fator_red_acres' => $request->input("fator_red_acres.$index"),
-                    'valor_unitario' => $request->input("valor_unitario.$index"),
-                    'valor_total' => $request->input("valor_total.$index"),
-                ]);
+            // Salvar os procedimentos na tabela exames_aut_sadt
+            if ($request->has('descricao_procedimento_realizado')) {
+                foreach ($request->input('data_real') as $index => $dataReal) {
+                    ExamesAutSadt::create([
+                        'guia_sps_id' => $guiaSps->id,
+                        'data_real' => $dataReal,
+                        'hora_inicio_atendimento' => $request->input("hora_inicio_atendimento.$index"),
+                        'hora_fim_atendimento' => $request->input("hora_fim_atendimento.$index"),
+                        'tabela' => $request->input("tabela.$index"),
+                        'codigo_procedimento_realizado' => $request->input("codigo_procedimento_realizado.$index"),
+                        'descricao_procedimento_realizado' => $request->input("descricao_procedimento_realizado.$index"),
+                        'quantidade_autorizada' => $request->input("quantidade_autorizada.$index"),
+                        'via' => $request->input("via.$index"),
+                        'tecnica' => $request->input("tecnica.$index"),
+                        'fator_red_acres' => $request->input("fator_red_acres.$index"),
+                        'valor_unitario' => $request->input("valor_unitario.$index"),
+                        'valor_total' => $request->input("valor_total.$index"),
+                    ]);
+                }
             }
+
+            Log::info($request->input("descricao_procedimento_realizado.$index"));
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Guia SADT salva com sucesso!'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao salvar a Guia SADT.',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        Log::info($request->input("descricao_procedimento_realizado.$index"));
-
-        DB::commit();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Guia SADT salva com sucesso!'
-        ]);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json([
-            'success' => false,
-            'message' => 'Erro ao salvar a Guia SADT.',
-            'error' => $e->getMessage()
-        ], 500);
     }
-}
+
+    public function excluirExame(Request $request)
+    {
+        try {
+            // Valida os dados recebidos
+            $request->validate([
+                'codigo' => 'required|string',
+                'procedimento' => 'required|string',
+                'qtd_sol' => 'required|integer',
+                'agenda_id' => 'required|integer',
+                'id' => 'required|integer',
+            ]);
+
+            // Excluir o primeiro registro correspondente na tabela exames
+            DB::transaction(function () use ($request) {
+                // Excluir o primeiro registro em `exames`
+                $exame = DB::table('exames')
+                    ->where([
+                        ['qtd_sol', '=', $request->qtd_sol],
+                        ['agenda_id', '=', $request->agenda_id],
+                        ['id', '=', $request->id],
+                    ])
+                    ->first();
+
+                if ($exame) {
+                    DB::table('exames')->where('id', $exame->id)->delete();
+                }
+
+                // Excluir o primeiro registro em `exames_sadt`
+                $exameSadt = DB::table('exames_sadt')
+                    ->where([
+                        ['codigo_procedimento_solicitado', '=', $request->codigo],
+                        ['descricao_procedimento', '=', $request->procedimento],
+                        ['qtd_sol', '=', $request->qtd_sol],
+                        ['agenda_id', '=', $request->agenda_id],
+                    ])
+                    ->first();
+
+                if ($exameSadt) {
+                    DB::table('exames_sadt')->where('id', $exameSadt->id)->delete();
+                }
+            });
+
+            return response()->json(['success' => true, 'message' => 'Registro excluído com sucesso.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Erro ao excluir o registro.', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+
 
     public function visualizarSp($id)
     {

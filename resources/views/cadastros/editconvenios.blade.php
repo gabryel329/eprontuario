@@ -199,7 +199,7 @@
                                     <h3 class="tile-title">Tabelas</h3>
                                     <div class="tile-body">
                                         <div class="row">
-                                            <div class="mb-3 col-md-2">
+                                            <div class="mb-3 col-md-4">
                                                 <label class="form-label">Procedimentos</label>
                                                 <select class="form-control" id="tab_proc_id" name="tab_proc_id">
                                                     <option value="">{{ old('tab_proc_id', $convenios->tab_proc_id ?? '') }}</option>
@@ -249,7 +249,7 @@
                                                 </select>
                                             </div>
 
-                                            <div class="mb-3 col-md-2">
+                                            {{-- <div class="mb-3 col-md-2">
                                                 <label class="form-label">Taxa</label>
                                                 <select class="form-control" id="tab_taxa_id" name="tab_taxa_id">
                                                     <option value="">{{ old('tab_taxa_id', $convenios->tab_taxa_id ?? '') }}</option>
@@ -257,7 +257,7 @@
                                                         <option value="{{ $taxa->table_name }}">{{ $taxa->table_name }}</option>
                                                     @endforeach
                                                 </select>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>

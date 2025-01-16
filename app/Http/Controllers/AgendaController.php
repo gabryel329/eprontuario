@@ -8,6 +8,7 @@ use App\Models\Disponibilidade;
 use App\Models\Especialidade;
 use App\Models\Exames;
 use App\Models\ExamesSadt;
+use Illuminate\Support\Collection;
 use App\Models\Feriado;
 use App\Models\MatAgenda;
 use App\Models\MedAgenda;
@@ -78,6 +79,7 @@ class AgendaController extends Controller
             if ($tabelaProcedimentos === null) {
                 $agendas->procedimento_lista = DB::table('procedimentos')
                     ->select('id', 'procedimento', 'codigo', 'valor_proc')
+                    ->orderBy('id', 'asc')
                     ->get();
             } elseif (Schema::hasTable($tabelaProcedimentos)) {
                 if (str_starts_with($tabelaProcedimentos, 'tab_amb92') || str_starts_with($tabelaProcedimentos, 'tab_amb96')) {
@@ -111,7 +113,7 @@ class AgendaController extends Controller
                 ]);
             }
         }
-
+        // dd($agendas->procedimento_lista);
         if ($agendas->paciente->convenio) {
             $tabelaMedicamentos = $agendas->paciente->convenio->tab_med_id;
 
@@ -126,19 +128,18 @@ class AgendaController extends Controller
 
                 $agendas->medicamentos = $query->get();
             } else {
-                $agendas->medicamentos = collect([
-                    (object) [
-                        'id' => null,
-                        'medicamento' => 'Tabela de medicamentos não encontrada',
-                        'preco' => null
-                    ]
-                ]);
+                $agendas->medicamentos = DB::table('medicamentos')
+                ->select('id', 'nome as medicamento', DB::raw('NULL as codigo'), DB::raw('NULL as unid'), DB::raw('NULL as preco')) // Define codigo como NULL
+                ->orderBy('id')
+                ->get();
             }
         } else {
             $agendas->medicamentos = DB::table('medicamentos')
                 ->select('id', 'nome as medicamento')
                 ->orderBy('id')
                 ->get();
+
+                
         }
 
         $pacientes = Pacientes::join('agendas', 'pacientes.id', '=', 'agendas.paciente_id')
@@ -166,14 +167,10 @@ class AgendaController extends Controller
                 $agendas->materias = $query->get();
             } else {
                 // Caso a tabela não exista
-                $agendas->materias = collect([
-                    (object) [
-                        'id' => null,
-                        'medicamento' => 'Tabela de materias não encontrada',
-                        'preco' => null,
-                        'codigo' => null, // Garante que a propriedade codigo existe
-                    ]
-                ]);
+                $agendas->materias = DB::table('medicamentos')
+                ->select('id', 'nome as medicamento', DB::raw('NULL as codigo'), DB::raw('NULL as unid'), DB::raw('NULL as preco')) // Define codigo como NULL
+                ->orderBy('id')
+                ->get();
             }
         } else {
             // Caso não exista um convenio
@@ -185,6 +182,7 @@ class AgendaController extends Controller
 
 
         $taxas = Taxa::all();
+
         return view('agenda.detalhesconsulta', compact('agendas', 'pacientes', 'taxas'));
     }
 
@@ -515,7 +513,7 @@ class AgendaController extends Controller
                     }
                 } else {
                     // Caso tab_proc_id seja null, usa a tabela padrão 'procedimentos'
-                    $procedimentos = DB::table('procedimentos')->select('id', 'procedimento', 'codigo')->get();
+                    $procedimentos = DB::table('procedimentos')->select('id', 'procedimento', 'codigo', 'valor_proc')->orderBy('id', 'asc')->get();
                 }
 
                 return response()->json($procedimentos);
@@ -961,6 +959,8 @@ class AgendaController extends Controller
 
         $examesSolicitados = Exames::all();
 
+        $proce = Procedimentos::all();             
+
         $profissionals = Profissional::join('especialidade_profissional', 'profissionals.id', '=', 'especialidade_profissional.profissional_id')
             ->leftJoin('especialidades', 'especialidade_profissional.especialidade_id', '=', 'especialidades.id')
             ->select(
@@ -1063,7 +1063,7 @@ class AgendaController extends Controller
             session()->forget(['data', 'profissional_id']);
         }
 
-        return view('agenda.lista', compact('profissionals', 'agendas', 'pacientes', 'tiposConsultas', 'examesSolicitados'));
+        return view('agenda.lista', compact('profissionals', 'proce','agendas', 'pacientes', 'tiposConsultas', 'examesSolicitados'));
     }
 
 
