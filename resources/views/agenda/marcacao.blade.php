@@ -122,8 +122,6 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nome</th>
-                                    <th>Código</th>
-                                    <th>Valor</th>
                                     <th>Ação</th>
                                 </tr>
                             </thead>
