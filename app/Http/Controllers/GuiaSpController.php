@@ -528,11 +528,41 @@ public function gerarZipGuiaSp($id)
 
         $ExameAuts = ExamesAutSadt::where('guia_sps_id', $agenda->id)->get();
 
-        $exames = DB::table('exames')
-        ->join('procedimentos', 'exames.procedimento_id', '=', 'procedimentos.id')
-        ->where('exames.agenda_id', $agenda->id)
-        ->select('exames.*', 'procedimentos.procedimento as procedimento', 'procedimentos.codigo as codigo')
-        ->get();
+        if ($agenda && $agenda->paciente && $agenda->paciente->convenio) {
+            $tabelaProcedimentos = $agenda->paciente->convenio->tab_proc_id;
+    
+            if ($tabelaProcedimentos === null) {
+                $exames = DB::table('exames')
+                    ->join('procedimentos', 'exames.procedimento_id', '=', 'procedimentos.id')
+                    ->where('exames.agenda_id', $agenda->id)
+                    ->select('exames.*', 'procedimentos.procedimento as procedimento', 'procedimentos.codigo as codigo')
+                    ->orderBy('exames.id', 'asc')
+                    ->get();
+            } elseif (Schema::hasTable($tabelaProcedimentos)) {
+                if (str_starts_with($tabelaProcedimentos, 'tab_amb92') || str_starts_with($tabelaProcedimentos, 'tab_amb96')) {
+                    $exames = DB::table('exames')
+                        ->join($tabelaProcedimentos, 'exames.procedimento_id', '=', "$tabelaProcedimentos.id")
+                        ->where('exames.agenda_id', $agenda->id)
+                        ->select('exames.*', "$tabelaProcedimentos.descricao as procedimento", "$tabelaProcedimentos.codigo as codigo")
+                        ->orderBy('exames.id', 'asc')
+                        ->get();
+                } elseif (str_starts_with($tabelaProcedimentos, 'tab_cbhpm')) {
+                    $exames = DB::table('exames')
+                        ->join($tabelaProcedimentos, 'exames.procedimento_id', '=', "$tabelaProcedimentos.id")
+                        ->where('exames.agenda_id', $agenda->id)
+                        ->select('exames.*', "$tabelaProcedimentos.procedimento as procedimento", "$tabelaProcedimentos.codigo_anatomico as codigo")
+                        ->orderBy('exames.id', 'asc')
+                        ->get();
+                } else {
+                    $exames = collect();
+                }
+            } else {
+                $exames = collect();
+            }
+        } else {
+            $exames = collect();
+        }
+
             // Buscar paciente pelo ID associado à agenda
         $paciente = Pacientes::find($agenda->paciente_id);
 
