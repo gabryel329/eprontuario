@@ -1167,19 +1167,16 @@
             </div>
         </div>
 
-        
-        <div class="modal fade" id="modalProcedimento1" tabindex="-1" aria-labelledby="modalProcedimentoLabel1"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
+        <div class="modal fade" id="modalProcedimento1" tabindex="-1" aria-labelledby="modalProcedimentoLabel1" aria-hidden="true">
+            <div class="modal-dialog modal-lg" style="max-width: 50%; margin: 1.75rem auto;">
+                <div class="modal-content" style="max-height: calc(100vh - 3.5rem); overflow-y: auto; overflow-x: hidden;">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalProcedimentoLabel1">Selecione o Procedimento</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" style="overflow-y: auto; max-height: 70vh;">
                         <div class="mb-3">
-                            <input class="form-control" id="procSearch" type="text"
-                                placeholder="Pesquisar por Código ou Procedimento...">
+                            <input class="form-control" id="procSearch" type="text" placeholder="Pesquisar por Código ou Procedimento...">
                         </div>
                         <input type="hidden" id="hiddenAgendaId" name="agendaId">
                         <table class="table table-hover" id="procTable">
@@ -1195,9 +1192,11 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="modal-footer"></div>
                 </div>
             </div>
         </div>
+        
     @endforeach
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -2157,24 +2156,25 @@
             }
         }
 
-
-
         $('[id^=procSearch]').on('keyup', function() {
-            var inputId = $(this).attr('id');
-            var inputValue = $(this).val().toLowerCase();
-            var tableId = inputId.replace('Search', 'Table');
-            var rows = $('#' + tableId + ' tbody tr');
+            var inputId = $(this).attr('id'); // Obtém o ID do campo de busca
+            var inputValue = $(this).val().toLowerCase().trim(); // Valor da busca em minúsculas e sem espaços extras
+            var tableId = inputId.replace('Search', 'Table'); // Mapeia o ID da tabela correspondente
+            var rows = $('#' + tableId + ' tbody tr'); // Seleciona todas as linhas da tabela
 
             rows.each(function() {
-                var codigo = $(this).find('td').eq(0).text().toLowerCase();
-                var procedimento = $(this).find('td').eq(2).text().toLowerCase();
-                if (codigo.indexOf(inputValue) > -1 || procedimento.indexOf(inputValue) > -1) {
-                    $(this).show();
+                var codigo = $(this).find('td').eq(0).text().toLowerCase().trim(); // Código da linha
+                var procedimento = $(this).find('td').eq(1).text().toLowerCase().trim(); // Procedimento da linha
+
+                // Verifica se o código ou procedimento contém o valor digitado
+                if (codigo.includes(inputValue) || procedimento.includes(inputValue)) {
+                    $(this).show(); // Exibe a linha
                 } else {
-                    $(this).hide();
+                    $(this).hide(); // Esconde a linha
                 }
             });
         });
+
 
         document.querySelectorAll('.chamar-btn').forEach(button => {
             button.addEventListener('click', function(event) {
