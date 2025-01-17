@@ -56,8 +56,8 @@
                     </div>
                     <div class="tile-title d-flex justify-content-between align-items-center">
                         <label class="form-label"></label>
-                        <button type="button" class="btn btn-success" id="btnGerarGuias" disabled>
-                            <i class="bi bi-file-earmark-zip"></i> Gerar Guias Selecionadas
+                        <button type="button" class="btn btn-danger" id="btnGerarGuias" disabled>
+                            <i class="bi bi-filetype-xml"></i> Gerar Guias Selecionadas
                         </button>
                     </div>
                     <div class="table-responsive">
@@ -805,12 +805,12 @@
                     guia.id + '" title="Editar">';
                 html += '<i class="bi bi-pencil-square"></i></button>';
             }
-            html +=
-                '<button type="button" class="btn btn-danger ms-2" title="Gerar XML e ZIP" onclick="baixarArquivosSadt(' +
-                guia.id + ')">';
-            html += '<i class="bi bi-filetype-xml"></i></button>';
-            html += '</td>';
-            html += '</tr>';
+            // html +=
+            //     '<button type="button" class="btn btn-danger ms-2" title="Gerar XML e ZIP" onclick="baixarArquivosSadt(' +
+            //     guia.id + ')">';
+            // html += '<i class="bi bi-filetype-xml"></i></button>';
+            // html += '</td>';
+            // html += '</tr>';
         });
 
         $('#listaGuias').html(html);
