@@ -172,15 +172,10 @@
                                             <td>{{ optional($item->profissional)->name ?? '-' }}</td>
                                             <td>
                                                 <select class="form-control guia-select" data-id="{{ $item->id }}"
-                                                    data-paciente-id="{{ $item->paciente_id }}"
-                                                    {{ is_null($item->paciente_id) ? 'disabled' : '' }}>
+                                                    data-paciente-id="{{ $item->paciente_id }}" data-agenda-id="{{ $item->id }}" {{ is_null($item->paciente_id) ? 'disabled' : '' }}>
                                                     <option selected disabled>Selecione a Guia</option>
                                                     <option value="consulta">Guia de Consulta</option>
-                                                    @if ($examesSolicitados instanceof \Illuminate\Support\Collection)
-                                                        <option
-                                                        {{ $examesSolicitados->contains('agenda_id', $item->id) ? '' : 'disabled' }}
-                                                        value="sadt">Guia SADT</option>
-                                                        @endif
+                                                    <option value="sadt">Guia SADT</option>
                                                 </select>
                                             </td>
                                             <td>
@@ -393,7 +388,7 @@
 
         {{-- MODALS DE GUIAS --}}
         <!-- Modal para Guia de Consulta -->
-        <div class="modal fade" id="modalConsulta" tabindex="-1" role="dialog" aria-labelledby="modalConsultaLabel"
+        <div class="modal fade" id="modalConsulta" data-agenda-id="{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="modalConsultaLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
@@ -586,7 +581,7 @@
             </div>
         </div>
         {{-- MODAL SADT --}}
-        <div class="modal fade" id="modalSADT" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        <div class="modal fade" id="modalSADT" data-agenda-id="{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
@@ -599,7 +594,7 @@
                             <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
                             <input type="hidden" id="convenio_id" name="convenio_id"
                                 value="{{ $item->convenio_id ?? '' }}">
-                            <input type="hidden" id="agenda_id" name="agenda_id" value="{{ old('agenda_id') }}">
+                            <input type="hidden" id="agenda_id" name="agenda_id" value="{{ $item->id }}">
                             <input type="hidden" id="paciente_id" name="paciente_id" value="{{ $item->paciente_id }}">
                             <input type="hidden" id="profissional_id" name="profissional_id" value="{{ $item->profissional_id }}">
 
@@ -1172,6 +1167,7 @@
             </div>
         </div>
 
+        
         <div class="modal fade" id="modalProcedimento1" tabindex="-1" aria-labelledby="modalProcedimentoLabel1"
             aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -1185,6 +1181,7 @@
                             <input class="form-control" id="procSearch" type="text"
                                 placeholder="Pesquisar por Código ou Procedimento...">
                         </div>
+                        <input type="hidden" id="hiddenAgendaId" name="agendaId">
                         <table class="table table-hover" id="procTable">
                             <thead>
                                 <tr>
@@ -1193,17 +1190,8 @@
                                     <th>Ação</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                @foreach ($proce as $p)
-                                    <tr>
-                                        <td>{{ $p->codigo }}</td>
-                                        <td>{{ $p->procedimento }}</td>
-                                        <td>
-                                            <button class="btn btn-primary" type="button"
-                                            onclick="selectProcedimento1('{{ $p->id }}', '{{ $p->codigo }}', '{{ $p->procedimento }}')">Selecionar</button>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                            <tbody id="procTableBody">
+                                <!-- Procedimentos serão carregados aqui -->
                             </tbody>
                         </table>
                     </div>
@@ -1401,9 +1389,7 @@
                             console.log('Dados recebidos:', response);
 
                             if (!response || !response.exames) {
-                                alert(
-                                    'Erro: Não foi possível carregar os dados ou nenhum exame foi encontrado.'
-                                );
+                                alert('Erro: Não foi possível carregar os dados ou nenhum exame foi encontrado.');
                                 return;
                             }
 
@@ -1412,84 +1398,82 @@
 
                             // Verifica se existem exames para iterar
                             if (response.exames && response.exames.length > 0) {
-                                // Iterar sobre cada exame e preencher a tabela
                                 response.exames.forEach(function(exame) {
                                     const exameRow = `
-                                    <tr style="text-align: center;">
+                                        <tr style="text-align: center;">
+                                            <td>
+                                                <button type="button" class="btn btn-primary form-control" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#modalProcedimento1" 
+                                                        data-agenda-id="${agendaId}" 
+                                                        onclick="setRowContext(this)">
+                                                    <i class="bi bi-list"></i>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <input class="form-control" style="text-align: center;" name="id2[]" type="hidden" value="${exame.id || ''}" readonly>
+                                                <input class="form-control" style="text-align: center;" name="agenda_id2[]" type="hidden" value="${exame.agenda_id || ''}" readonly>
+                                                <input class="form-control" style="text-align: center;" name="tabela[]" type="text" value="${exame.tabela || ''}" readonly>
+                                            </td>
+                                            <td><input class="form-control" id="codigo_procedimento_solicitado" name="codigo_procedimento_solicitado[]" type="text" value="${exame.codigo || ''}" readonly></td>
+                                            <td><input class="form-control" id="descricao_procedimento" name="descricao_procedimento[]" type="text" value="${exame.procedimento || ''}" readonly></td>
+                                            <td><input class="form-control" style="text-align: center;" name="qtd_sol[]" type="number" value="${exame.qtd_sol || ''}"></td>
+                                            <td><input class="form-control" style="text-align: center;" name="qtd_aut[]" type="number" value="${exame.qtd_aut || ''}"></td>
+                                            <td><button type="button" class="btn btn-danger btn-sm" onclick="excluirLinha(this)"><i class="icon bi bi-trash"></i></button></td>
+                                            <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha(${agendaId})">+</button></td>
+                                            <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha(this)">-</button></td>
+                                        </tr>`;
+                                    $('#exame-table-body').append(exameRow);
+                                });
+                            } else {
+                                const defaultRow = `
+                                    <tr>
                                         <td>
-                                            <button type="button" class="btn btn-primary form-control" data-bs-toggle="modal" data-bs-target="#modalProcedimento1" onclick="setRowContext(this)">
+                                            <button type="button" class="btn btn-primary form-control" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#modalProcedimento1" 
+                                                    data-agenda-id="${agendaId}" 
+                                                    onclick="setRowContext(this)">
                                                 <i class="bi bi-list"></i>
                                             </button>
                                         </td>
                                         <td>
-                                            <input class="form-control" style="text-align: center;" name="id2[]" type="hidden" value="${exame.id || ''}" readonly>
-                                            <input class="form-control" style="text-align: center;" name="agenda_id2[]" type="hidden" value="${exame.agenda_id || ''}" readonly>
-                                            <input class="form-control" style="text-align: center;" name="tabela[]" type="text" value="${exame.tabela || ''}" readonly>
+                                            <input type="hidden" id="agenda_id" name="agenda_id2[]" value="{{ old('agenda_id') }}">
+                                            <input type="hidden" id="paciente_id2" name="paciente_id2[]" value="{{ $item->paciente_id }}">
+                                            <input type="hidden" id="profissional_id2" name="profissional_id2[]" value="{{ $item->profissional_id }}">
+                                            <input class="form-control" style="text-align: center;" id="proce_id" name="proce_id[]" type="hidden" value="" readonly>
+                                            <input class="form-control" style="text-align: center;" name="tabela[]" type="text" value="22" readonly>
                                         </td>
-                                        <td><input class="form-control" id="codigo_procedimento_solicitado" name="codigo_procedimento_solicitado[]" type="text" value="${exame.codigo || ''}" readonly></td>
-                                        <td><input class="form-control" id="descricao_procedimento" name="descricao_procedimento[]" type="text" value="${exame.procedimento || ''}" readonly></td>
-                                        <td><input class="form-control" style="text-align: center;" name="qtd_sol[]" type="number" value="${exame.qtd_sol || ''}"></td>
-                                        <td><input class="form-control" style="text-align: center;" name="qtd_aut[]" type="number" value="${exame.qtd_aut || ''}"></td>
+                                        <td><input class="form-control" id="codigo_procedimento_solicitado" name="codigo_procedimento_solicitado[]" type="text" value="" readonly></td>
+                                        <td><input class="form-control" id="descricao_procedimento" name="descricao_procedimento[]" type="text" value="" readonly></td>
+                                        <td><input class="form-control" style="text-align: center;" name="qtd_sol[]" type="number" value=""></td>
+                                        <td><input class="form-control" style="text-align: center;" name="qtd_aut[]" type="number" value=""></td>
                                         <td><button type="button" class="btn btn-danger btn-sm" onclick="excluirLinha(this)"><i class="icon bi bi-trash"></i></button></td>
-                                        <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha()">+</button></td>
+                                        <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha(${agendaId})">+</button></td>
                                         <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha(this)">-</button></td>
-                                    </tr>
-                                    `;
-                                    $('#exame-table-body').append(exameRow);
-                                });
-                            } else {
-                                // Caso não haja exames, insira a linha padrão
-                                const defaultRow = `
-                                <tr>
-                                    <td>
-                                        <button type="button" class="btn btn-primary form-control" data-bs-toggle="modal" data-bs-target="#modalProcedimento1" onclick="setRowContext(this)">
-                                            <i class="bi bi-list"></i>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <input type="hidden" id="agenda_id" name="agenda_id2[]" value="{{ old('agenda_id') }}">
-                                        <input type="hidden" id="paciente_id2" name="paciente_id2[]" value="{{ $item->paciente_id }}">
-                                        <input type="hidden" id="profissional_id2" name="profissional_id2[]" value="{{ $item->profissional_id }}">
-                                        <input class="form-control" style="text-align: center;" id="proce_id" name="proce_id[]" type="hidden" value="" readonly>
-                                        <input class="form-control" style="text-align: center;" name="tabela[]" type="text" value="22" readonly>
-                                    </td>
-                                    <td><input class="form-control" id="codigo_procedimento_solicitado" name="codigo_procedimento_solicitado[]" type="text" value="" readonly></td>
-                                    <td><input class="form-control" id="descricao_procedimento" name="descricao_procedimento[]" type="text" value="" readonly></td>
-                                    <td><input class="form-control" style="text-align: center;" name="qtd_sol[]" type="number" value=""></td>
-                                    <td><input class="form-control" style="text-align: center;" name="qtd_aut[]" type="number" value=""></td>
-                                    <td><button type="button" class="btn btn-danger btn-sm" onclick="excluirLinha(this)"><i class="icon bi bi-trash"></i></button></td>
-                                    <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha()">+</button></td>
-                                    <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha(this)">-</button></td>
-                                </tr>
-                                `;
+                                    </tr>`;
                                 $('#exame-table-body').append(defaultRow);
                             }
 
                             // Função para excluir uma linha
                             window.excluirLinha = function(button) {
-                                // Captura a tabela e conta o número de linhas
-                                const tabela = $(button).closest('table'); // Localiza a tabela
-                                const totalLinhas = tabela.find('tbody tr').length; // Conta o número de linhas no tbody
+                                const tabela = $(button).closest('table');
+                                const totalLinhas = tabela.find('tbody tr').length;
 
                                 if (totalLinhas > 1) {
-                                    // Captura a linha clicada
                                     const row = $(button).closest('tr');
-
-                                    // Captura os valores relevantes da linha
                                     const codigo = row.find('input[name="codigo_procedimento_solicitado[]"]').val();
                                     const procedimento = row.find('input[name="descricao_procedimento[]"]').val();
                                     const qtdSol = row.find('input[name="qtd_sol[]"]').val();
                                     const agendaId = row.find('input[name="agenda_id2[]"]').val();
                                     const Id = row.find('input[name="id2[]"]').val();
 
-                                    // Confirmação opcional
                                     if (!confirm('Tem certeza que deseja excluir esta linha e os registros correspondentes?')) {
                                         return;
                                     }
 
-                                    // Envia os dados para o backend
                                     $.ajax({
-                                        url: '/excluir-exame', // Defina a rota correta
+                                        url: '/excluir-exame',
                                         type: 'POST',
                                         data: {
                                             _token: $('meta[name="csrf-token"]').attr('content'),
@@ -1501,7 +1485,6 @@
                                         },
                                         success: function(response) {
                                             if (response.success) {
-                                                // Remove a linha da tabela no front-end
                                                 row.remove();
                                                 alert(response.message);
                                             } else {
@@ -1514,13 +1497,52 @@
                                         }
                                     });
                                 } else {
-                                    // Exibe um alerta caso haja apenas uma linha restante
                                     alert('A tabela deve ter pelo menos uma linha.');
                                 }
                             };
 
+                            // Função para adicionar uma nova linha
+                            window.adicionarLinha = function(agendaId) {
+                                const novaLinha = `
+                                    <tr>
+                                        <td>
+                                            <button type="button" class="btn btn-primary form-control" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#modalProcedimento1" 
+                                                    data-agenda-id="${agendaId}" 
+                                                    onclick="setRowContext(this)">
+                                                <i class="bi bi-list"></i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <input type="hidden" id="agenda_id" name="agenda_id2[]" value="${agendaId}">
+                                            <input type="hidden" id="paciente_id2" name="paciente_id2[]" value="">
+                                            <input type="hidden" id="profissional_id2" name="profissional_id2[]" value="">
+                                            <input class="form-control" style="text-align: center;" id="proce_id" name="proce_id[]" type="hidden" value="" readonly>
+                                            <input class="form-control" style="text-align: center;" name="tabela[]" type="text" value="22" readonly>
+                                        </td>
+                                        <td><input class="form-control" id="codigo_procedimento_solicitado" name="codigo_procedimento_solicitado[]" type="text" value="" readonly></td>
+                                        <td><input class="form-control" id="descricao_procedimento" name="descricao_procedimento[]" type="text" value="" readonly></td>
+                                        <td><input class="form-control" style="text-align: center;" name="qtd_sol[]" type="number" value=""></td>
+                                        <td><input class="form-control" style="text-align: center;" name="qtd_aut[]" type="number" value=""></td>
+                                        <td><button type="button" class="btn btn-danger btn-sm" onclick="excluirLinha(this)"><i class="icon bi bi-trash"></i></button></td>
+                                        <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha(${agendaId})">+</button></td>
+                                        <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha(this)">-</button></td>
+                                    </tr>`;
+                                $('#exame-table-body').append(novaLinha);
+                            };
 
+                            // Função para remover uma linha
+                            window.removerLinha = function(button) {
+                                const tabela = $(button).closest('table');
+                                const totalLinhas = tabela.find('tbody tr').length;
 
+                                if (totalLinhas > 1) {
+                                    $(button).closest('tr').remove();
+                                } else {
+                                    alert('A tabela deve ter pelo menos uma linha.');
+                                }
+                            };
 
                             if (!response || !response.procedimentos) {
                                 alert(
@@ -2154,50 +2176,6 @@
             });
         });
 
-        // Função para adicionar uma nova linha
-        function adicionarLinha() {
-            const novaLinha = `
-                <tr>
-                                    <td>
-                                        <button type="button" class="btn btn-primary form-control" data-bs-toggle="modal" data-bs-target="#modalProcedimento1" onclick="setRowContext(this)">
-                                            <i class="bi bi-list"></i>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <input type="hidden" id="agenda_id" name="agenda_id2[]" value="{{ $item->id }}">
-                                        <input type="hidden" id="paciente_id2" name="paciente_id2[]" value="{{ $item->paciente_id }}">
-                                        <input type="hidden" id="profissional_id2" name="profissional_id2[]" value="{{ $item->profissional_id }}">
-                                        <input class="form-control" style="text-align: center;" id="proce_id" name="proce_id[]" type="hidden" value="" readonly>
-                                        <input class="form-control" style="text-align: center;" name="tabela[]" type="text" value="22" readonly>
-                                    </td>
-                                    <td><input class="form-control" id="codigo_procedimento_solicitado" name="codigo_procedimento_solicitado[]" type="text" value="" readonly></td>
-                                    <td><input class="form-control" id="descricao_procedimento" name="descricao_procedimento[]" type="text" value="" readonly></td>
-                                    <td><input class="form-control" style="text-align: center;" name="qtd_sol[]" type="number" value=""></td>
-                                    <td><input class="form-control" style="text-align: center;" name="qtd_aut[]" type="number" value=""></td>
-                                    <td><button type="button" class="btn btn-danger btn-sm" onclick="excluirLinha(this)"><i class="icon bi bi-trash"></i></button></td>
-                                    <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha()">+</button></td>
-                                    <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha(this)">-</button></td>
-                                </tr>`;
-            $('#exame-table-body').append(novaLinha);
-        }
-
-        // Função para remover uma linha
-        function removerLinha(button) {
-            const tabela = $(button).closest('table'); // Localiza a tabela
-            const totalLinhas = tabela.find('tbody tr').length; // Conta o número de linhas no tbody
-
-            if (totalLinhas > 1) {
-                // Remove a linha correspondente ao botão clicado
-                $(button).closest('tr').remove();
-            } else {
-                // Exibe um alerta caso haja apenas uma linha restante
-                alert('A tabela deve ter pelo menos uma linha.');
-            }
-        }
-
-
-
-
         document.querySelectorAll('.chamar-btn').forEach(button => {
             button.addEventListener('click', function(event) {
                 event.preventDefault(); // Impede o comportamento padrão do botão
@@ -2239,6 +2217,50 @@
         function setRowContext(button) {
             // Identifica a linha correspondente ao botão clicado
             activeRow = $(button).closest('tr');
+
+            var pacienteId = $(button).data('agenda-id');
+    
+            // Definir o valor no modal, por exemplo, em um campo hidden ou exibindo na interface
+            $('#modalProcedimento1').find('#hiddenAgendaId').val(pacienteId); // Para campos hidden
+            $('#modalProcedimento1').find('.agenda-display').text(pacienteId);
+
+            if (!pacienteId) {
+                alert('Paciente ID não encontrado!');
+                return;
+            }
+
+            fetch(`/api/get-procedimentos/${pacienteId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById('procTableBody');
+                    tableBody.innerHTML = '';
+
+                    if (data.length > 0) {
+                        data.forEach(procedimento => {
+                            const row = `
+                                <tr>
+                                    <td>${procedimento.codigo}</td>
+                                    <td>${procedimento.procedimento}</td>
+                                    <td>
+                                        <button class="btn btn-primary" type="button"
+                                        onclick="selectProcedimento1('${procedimento.id}', '${procedimento.codigo}', '${procedimento.procedimento}')">Selecionar</button>
+                                    </td>
+                                </tr>
+                            `;
+                            tableBody.insertAdjacentHTML('beforeend', row);
+                        });
+                    } else {
+                        tableBody.innerHTML = `
+                            <tr>
+                                <td colspan="3" class="text-center">Nenhum procedimento disponível.</td>
+                            </tr>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar procedimentos:', error);
+                    alert('Erro ao buscar procedimentos!');
+                });
         }
 
 

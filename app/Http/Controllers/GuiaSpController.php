@@ -591,6 +591,43 @@ public function gerarZipGuiaSp($id)
         ]);
     }
 
+    public function getProcedimentos($pacienteId)
+    {
+        $agendas = Agenda::where('id', $pacienteId)->first();
+
+        if ($agendas && $agendas->paciente && $agendas->paciente->convenio) {
+            $tabelaProcedimentos = $agendas->paciente->convenio->tab_proc_id;
+
+            if ($tabelaProcedimentos === null) {
+                $procedimentos = DB::table('procedimentos')
+                    ->select('id', 'procedimento', 'codigo', 'valor_proc')
+                    ->orderBy('id', 'asc')
+                    ->get();
+            } elseif (Schema::hasTable($tabelaProcedimentos)) {
+                if (str_starts_with($tabelaProcedimentos, 'tab_amb92') || str_starts_with($tabelaProcedimentos, 'tab_amb96')) {
+                    $procedimentos = DB::table($tabelaProcedimentos)
+                        ->select('id', 'descricao as procedimento', 'codigo', 'valor_proc')
+                        ->orderBy('id', 'asc')
+                        ->get();
+                } elseif (str_starts_with($tabelaProcedimentos, 'tab_cbhpm')) {
+                    $procedimentos = DB::table($tabelaProcedimentos)
+                        ->select('id', 'procedimento', 'codigo_anatomico as codigo', 'valor_proc')
+                        ->orderBy('id', 'asc')
+                        ->get();
+                } else {
+                    $procedimentos = [];
+                }
+            } else {
+                $procedimentos = [];
+            }
+        } else {
+            $procedimentos = [];
+        }
+
+        return response()->json($procedimentos);
+    }
+
+
     public function gerarXmlGuiasadtEmLote(Request $request)
 {
     $guiaIds = $request->input('guia_ids');
