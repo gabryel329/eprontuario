@@ -665,6 +665,7 @@ public function gerarZipGuiaSp($id)
 
     $guias = GuiaSp::with('profissional', 'paciente.convenio')->whereIn('id', $guiaIds)->get();
 
+    $exameSadtAut = ExamesAutSadt::whereIn('guia_sps_id', $guiaIds)->get();
     // Verificar a presença de `numeracao`
     $sequencialTransacao = $numeracao ?? $guias->firstWhere('numeracao', '!=', null)->numeracao;
 
@@ -896,7 +897,8 @@ public function gerarZipGuiaSp($id)
         }
 
         // Calcula o valor total do lote
-        $valorTotal = $guias->sum('valor_total');
+        $valorTotal = $exameSadtAut->sum('valor_total');
+
         $referencia = $sequencialTransacao;
 
         // Cria a conta financeira
@@ -1203,6 +1205,7 @@ public function gerarZipGuiasadtEmLote(Request $request)
     // Verificar se a guia existe
     $guia = GuiaSp::with('profissional')->findOrFail($id);
 
+    $exameSadtAut = ExamesAutSadt::whereIn('guia_sps_id', $id)->get();
     // Verificar se a numeração é fornecida na requisição ou já existe na guia
     if ($request->has('numeracao')) {
         $guia->numeracao = $request->input('numeracao');
@@ -1430,6 +1433,72 @@ public function gerarZipGuiasadtEmLote(Request $request)
     $guia->identificador = 'GERADO';
     $guia->save();
 
+    // Verifica se já existe uma conta financeira para esse lote
+    $contaExistente = ContaGuia::where('lote', $guia->numeracao)->first();
+    
+    if (!$contaExistente) {
+        // Atualiza as guias com a numeração correta
+        foreach ($guia as $g) {
+            $g->identificador = 'GERADO';
+            $g->save();
+        }
+
+        // Calcula o valor total do lote
+        $valorTotal = $exameSadtAut->sum('valor_total');
+
+        $referencia = $guia->numeracao;
+
+        // Cria a conta financeira
+        $conta = ContasFinanceiras::create([
+            'user_id' => auth()->id(),
+            'status' => 'Aberto',
+            'tipo_conta' => 'Receber',
+            'convenio_id' => $guia->first()->convenio_id,
+            'tipo_guia' => 'SADT',
+            'parcelas' => '1/1',
+            'data_emissao' => Carbon::parse($guia->data_autorizacao)->format('Y-m-d'),
+            'competencia' => Carbon::parse($guia->data_autorizacao)->format('Y-m-d'),
+            'data_vencimento' => now()->addDays(30)->format('Y-m-d'),
+            'referencia' => $referencia,
+            'tipo_doc' => 'XML',
+            'centro_custos' => $guia->first()->nome_contratado ?? 'Desconhecido',
+            'documento' => 'lote_guias_sadt_' . $guia->numeracao . '.xml',
+            'valor' => $valorTotal,
+            'historico' => 'Guia SADT - ' . $guia->data_autorizacao,
+        ]);
+        Log::info("message");
+        // Salva o relacionamento na tabela `conta_guias`
+        foreach ($guia as $g) {
+            ContaGuia::create([
+                'conta_financeira_id' => $conta->id,
+                'guia_id' => $g->id,
+                'tipo_guia' => 'SADT',
+                'lote' => $guia->numeracao,
+            ]);
+        }
+    } else {
+        // Apenas atualiza as guias e registra o relacionamento se não existirem
+        foreach ($guia as $g) {
+            $existeRelacionamento = ContaGuia::where('guia_id', $g->id)
+                ->where('tipo_guia', 'SADT')
+                ->exists();
+
+            if (!$existeRelacionamento) {
+                $g->numeracao = $guia->numeracao;
+                $g->identificador = 'GERADO';
+                $g->save();
+
+                ContaGuia::create([
+                    'conta_financeira_id' => $contaExistente->conta_financeira_id,
+                    'guia_id' => $g->id,
+                    'tipo_guia' => 'SADT',
+                    'lote' => $g->numeracao,
+                ]);
+            }
+        }
+    }
+
+
     // Retornar o XML como download
     return response($xml->asXML(), 200)
         ->header('Content-Type', 'application/xml')
@@ -1438,6 +1507,7 @@ public function gerarZipGuiasadtEmLote(Request $request)
 
 public function gerarZipGuiasadt($id, Request $request)
 {
+
     // Buscar a guia com todos os relacionamentos necessários
     $guia = GuiaSp::with('profissional')->findOrFail($id);
 
@@ -1887,6 +1957,8 @@ public function gerarZipGuiasadt($id, Request $request)
             // Salva as mudanças no banco de dados
             $guiaSps->save();
             $agendaId = $request->input('agenda_id2.0');
+            $profId = $request->input('profissional_id2.0');
+            $pacId = $request->input('paciente_id2.0');
             if ($request->has('tabela') && $request->has('descricao_procedimento')) {
                 foreach ($request->input('tabela') as $index => $tabela) {
                     $codigoProcedimentoSolicitado = $request->input("codigo_procedimento_solicitado.$index");
@@ -1925,20 +1997,29 @@ public function gerarZipGuiasadt($id, Request $request)
 
             // Itera sobre as tabelas e utiliza o mesmo agenda_id
             foreach ($request->input('tabela') as $index => $tabela) {
-                Exames::create([
-                    'profissional_id' => $request->input("profissional_id2.$index"),
-                    'tabela' => $tabela,
-                    'paciente_id' => $request->input("paciente_id2.$index"),
-                    'procedimento_id' => $request->input("proce_id.$index"),
-                    'qtd_sol' => $request->input("qtd_sol.$index"),
-                    'agenda_id' => $agendaId, // Usa o valor do primeiro índice
-                ]);
+                // Verifica se o procedimento_id está preenchido
+                if ($request->filled("proce_id.$index")) {
+                    Exames::create([
+                        'profissional_id' => $profId,
+                        'tabela' => $tabela,
+                        'paciente_id' => $pacId,
+                        'procedimento_id' => $request->input("proce_id.$index"),
+                        'qtd_sol' => $request->input("qtd_sol.$index"),
+                        'agenda_id' => $agendaId, // Usa o valor do primeiro índice
+                    ]);
+                }
             }
+            
 
 
             // Salvar os procedimentos na tabela exames_aut_sadt
             if ($request->has('descricao_procedimento_realizado')) {
+                $valorTotal = 0; // Inicializa a variável para soma
+            
                 foreach ($request->input('data_real') as $index => $dataReal) {
+                    $valorTotalItem = $request->input("valor_total.$index");
+                    $valorTotal += $valorTotalItem; // Acumula os valores
+            
                     ExamesAutSadt::create([
                         'guia_sps_id' => $guiaSps->id,
                         'data_real' => $dataReal,
@@ -1952,10 +2033,16 @@ public function gerarZipGuiasadt($id, Request $request)
                         'tecnica' => $request->input("tecnica.$index"),
                         'fator_red_acres' => $request->input("fator_red_acres.$index"),
                         'valor_unitario' => $request->input("valor_unitario.$index"),
-                        'valor_total' => $request->input("valor_total.$index"),
+                        'valor_total' => $valorTotalItem,
                     ]);
                 }
+            
+                // Atualiza a tabela guia_sps com a soma total dos valores
+                GuiaSp::where('id', $guiaSps->id)->update([
+                    'valor_total' => $valorTotal
+                ]);
             }
+            
 
             Log::info($request->input("descricao_procedimento_realizado.$index"));
 
@@ -2101,6 +2188,18 @@ public function gerarZipGuiasadt($id, Request $request)
     public function edit(Guiasp $guiaSadt)
     {
         $profissionals = Profissional::all();
+        
+        // Obtém um único registro usando first()
+        $guia = GuiaSp::where('id', $guiaSadt->id)->first();
+
+        // Verifica se o guia foi encontrado antes de acessar a propriedade id
+        if (!$guia) {
+            return redirect()->back()->with('error', 'Guia não encontrada.');
+        }
+
+        $exameSoli = ExamesSadt::where('guia_sps_id', $guia->id)->get();
+        $exameAut = ExamesAutSadt::where('guia_sps_id', $guia->id)->get();
+
         $conselhos = [
             'CRAS' => '01', 'COREN' => '02', 'CRF' => '03', 'CRFA' => '04',
             'CREFITO' => '05', 'CRM' => '06', 'CRN' => '07', 'CRO' => '08',
@@ -2117,7 +2216,7 @@ public function gerarZipGuiasadt($id, Request $request)
             'SP' => '35', 'SE' => '28', 'TO' => '17'
         ];
 
-        return view('guias.sadtEditar', compact('guiaSadt', 'conselhos', 'ufs', 'profissionals'));
+        return view('guias.sadtEditar', compact('guiaSadt', 'conselhos', 'ufs', 'exameSoli', 'exameAut', 'profissionals'));
     }
 
     public function updateGuiaSadt(Request $request, GuiaSp $guiaSadt)

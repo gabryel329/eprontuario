@@ -171,8 +171,13 @@
                                             <td>{{ $item->procedimento_id }}</td>
                                             <td>{{ optional($item->profissional)->name ?? '-' }}</td>
                                             <td>
-                                                <select class="form-control guia-select" data-id="{{ $item->id }}"
-                                                    data-paciente-id="{{ $item->paciente_id }}" data-agenda-id="{{ $item->id }}" {{ is_null($item->paciente_id) ? 'disabled' : '' }}>
+                                                <select class="form-control guia-select" 
+                                                        data-id="{{ $item->id }}" 
+                                                        data-paciente-id="{{ $item->paciente_id }}" 
+                                                        data-profissional-id="{{ $item->profissional_id }}" 
+                                                        data-agenda-id="{{ $item->id }}" 
+                                                        data-convenio-id="{{ $item->convenio_id ?? '' }}" 
+                                                        {{ is_null($item->paciente_id) ? 'disabled' : '' }}>
                                                     <option selected disabled>Selecione a Guia</option>
                                                     <option value="consulta">Guia de Consulta</option>
                                                     <option value="sadt">Guia SADT</option>
@@ -592,11 +597,10 @@
                         <form id="guiaForm2">
                             @csrf
                             <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
-                            <input type="hidden" id="convenio_id" name="convenio_id"
-                                value="{{ $item->convenio_id ?? '' }}">
                             <input type="hidden" id="agenda_id" name="agenda_id" value="{{ $item->id }}">
-                            <input type="hidden" id="paciente_id" name="paciente_id" value="{{ $item->paciente_id }}">
-                            <input type="hidden" id="profissional_id" name="profissional_id" value="{{ $item->profissional_id }}">
+                            <input type="hidden" id="modal_paciente_id" name="paciente_id">
+                            <input type="hidden" id="modal_convenio_id" name="convenio_id">
+                            <input type="hidden" id="modal_profissional_id" name="profissional_id">
 
                             <div class="row">
                                 <div class="col-md-3">
@@ -972,8 +976,9 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td><input class="form-control" name="sequencia" type="text"
-                                                        value="1" readonly></< /td>
+                                                <td>
+                                                    <input class="form-control" name="sequencia" type="text"
+                                                        value="1" readonly></td>
                                                 <td>
                                                     <select id="grau" name="grau" class="form-control">
                                                         <option value="">
@@ -1012,26 +1017,90 @@
                                                         id="codigo_cbo_profissional" type="text" value=""
                                                         readonly></< /td>
                                             </tr>
-                                            {{-- <tr>
-                                                <td><input class="form-control" name="sequencia1" type="text" value="" readonly></</td>
-                                                <td><input class="form-control" name="grau1" type="text" value="" readonly></</td>
-                                                <td><input class="form-control" name="codigo_operadora_profissional1" type="text" value="" readonly></</td>
-                                                <td><input class="form-control" name="nome_profissional1" type="text" value="" readonly></</td>
-                                                <td><input class="form-control" name="sigla_conselho1" type="text" value="" readonly></</td>
-                                                <td><input class="form-control" name="numero_conselho_profissional1" type="text" value="" readonly></</td>
-                                                <td><input class="form-control" name="uf_profissional1" type="text" value="" readonly></</td>
-                                                <td><input class="form-control" name="codigo_cbo_profissional1" type="text" value="" readonly></</td>
+                                            <tr>
+                                                <td>
+                                                    <input class="form-control" name="sequencia1" type="text"
+                                                        value="2" readonly></td>
+                                                <td>
+                                                    <select id="grau1" name="grau1" class="form-control">
+                                                        <option value="">
+                                                            {{ old('grau1') ? 'selected' : 'Selecione' }}
+                                                        <option value="12">Médico principal ou responsável pelo
+                                                            procedimento</option>
+                                                        <option value="13">Assistente</option>
+                                                        <option value="14">Anestesista</option>
+                                                        <option value="15">Cirurgião Auxiliar</option>
+                                                        <option value="16">Técnico em Enfermagem</option>
+                                                        <option value="17">Fisioterapeuta</option>
+                                                        <option value="18">Outro Profissional</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-primary form-control"
+                                                        data-bs-toggle="modal" data-bs-target="#modalProfissional2">
+                                                        <i class="bi bi-list"></i>
+                                                    </button>
+                                                </td>
+                                                <td><input class="form-control" name="codigo_operadora_profissional1"
+                                                        id="codigo_operadora_profissional1" type="text" value=""
+                                                        readonly></< /td>
+                                                <td><input class="form-control" id="nome_profissional1"
+                                                        name="nome_profissional1" type="text" value="" readonly>
+                                                    </< /td>
+                                                <td><input class="form-control" name="sigla_conselho1" id="sigla_conselho1"
+                                                        type="text" value="" readonly></< /td>
+                                                <td><input class="form-control" name="numero_conselho_profissional1"
+                                                        id="numero_conselho_profissional1" type="text" value=""
+                                                        readonly></< /td>
+                                                <td><input class="form-control" name="uf_profissional1"
+                                                        id="uf_profissional1" type="text" value="" readonly></<
+                                                        /td>
+                                                <td><input class="form-control" name="codigo_cbo_profissional1"
+                                                        id="codigo_cbo_profissional1" type="text" value=""
+                                                        readonly></< /td>
                                             </tr>
                                             <tr>
-                                                <td><input class="form-control" name="sequencia2" type="text" value="" readonly></</td>
-                                                <td><input class="form-control" name="grau2" type="text" value="" readonly></</td>
-                                                <td><input class="form-control" name="codigo_operadora_profissional2" type="text" value="" readonly></</td>
-                                                <td><input class="form-control" name="nome_profissional2" type="text" value="" readonly></</td>
-                                                <td><input class="form-control" name="sigla_conselho2" type="text" value="" readonly></</td>
-                                                <td><input class="form-control" name="numero_conselho_profissional2" type="text" value="" readonly></</td>
-                                                <td><input class="form-control" name="uf_profissional2" type="text" value="" readonly></</td>
-                                                <td><input class="form-control" name="codigo_cbo_profissional2" type="text" value="" readonly></</td>
-                                            </tr> --}}
+                                                <td>
+                                                    <input class="form-control" name="sequencia2" type="text"
+                                                        value="3" readonly></td>
+                                                <td>
+                                                    <select id="grau2" name="grau2" class="form-control">
+                                                        <option value="">
+                                                            {{ old('grau2') ? 'selected' : 'Selecione' }}
+                                                        <option value="12">Médico principal ou responsável pelo
+                                                            procedimento</option>
+                                                        <option value="13">Assistente</option>
+                                                        <option value="14">Anestesista</option>
+                                                        <option value="15">Cirurgião Auxiliar</option>
+                                                        <option value="16">Técnico em Enfermagem</option>
+                                                        <option value="17">Fisioterapeuta</option>
+                                                        <option value="18">Outro Profissional</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-primary form-control"
+                                                        data-bs-toggle="modal" data-bs-target="#modalProfissional3">
+                                                        <i class="bi bi-list"></i>
+                                                    </button>
+                                                </td>
+                                                <td><input class="form-control" name="codigo_operadora_profissional2"
+                                                        id="codigo_operadora_profissional2" type="text" value=""
+                                                        readonly></< /td>
+                                                <td><input class="form-control" id="nome_profissional2"
+                                                        name="nome_profissional2" type="text" value="" readonly>
+                                                    </< /td>
+                                                <td><input class="form-control" name="sigla_conselho2" id="sigla_conselho2"
+                                                        type="text" value="" readonly></< /td>
+                                                <td><input class="form-control" name="numero_conselho_profissional2"
+                                                        id="numero_conselho_profissional2" type="text" value=""
+                                                        readonly></< /td>
+                                                <td><input class="form-control" name="uf_profissional2"
+                                                        id="uf_profissional2" type="text" value="" readonly></<
+                                                        /td>
+                                                <td><input class="form-control" name="codigo_cbo_profissional2"
+                                                        id="codigo_cbo_profissional2" type="text" value=""
+                                                        readonly></< /td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -1166,6 +1235,86 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="modalProfissional2" tabindex="-1" aria-labelledby="modalProfissionalLabel2"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalProfissionalLabel2">Selecione o Profissional</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <input class="form-control" id="profSearch" type="text"
+                                placeholder="Pesquisar por nome ou CPF...">
+                        </div>
+                        <table class="table table-hover" id="profTable">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>CPF</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($profissionals as $p)
+                                    <tr>
+                                        <td>{{ $p->name }}</td>
+                                        <td>{{ $p->cpf }}</td>
+                                        <td>
+                                            <button class="btn btn-primary" type="button"
+                                                onclick="selectProfissional2('{{ $p->name }}', '{{ $p->cbo }}', '{{ $p->conselho_1 }}', '{{ $p->uf_conselho_1 }}', '{{ $p->cpf }}', '{{ $p->conselho_profissional }}')">Selecionar</button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalProfissional3" tabindex="-1" aria-labelledby="modalProfissionalLabel3"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalProfissionalLabel3">Selecione o Profissional</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <input class="form-control" id="profSearch" type="text"
+                                placeholder="Pesquisar por nome ou CPF...">
+                        </div>
+                        <table class="table table-hover" id="profTable">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>CPF</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($profissionals as $p)
+                                    <tr>
+                                        <td>{{ $p->name }}</td>
+                                        <td>{{ $p->cpf }}</td>
+                                        <td>
+                                            <button class="btn btn-primary" type="button"
+                                                onclick="selectProfissional3('{{ $p->name }}', '{{ $p->cbo }}', '{{ $p->conselho_1 }}', '{{ $p->uf_conselho_1 }}', '{{ $p->cpf }}', '{{ $p->conselho_profissional }}')">Selecionar</button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
 
         <div class="modal fade" id="modalProcedimento1" tabindex="-1" aria-labelledby="modalProcedimentoLabel1" aria-hidden="true">
             <div class="modal-dialog modal-lg" style="max-width: 50%; margin: 1.75rem auto;">
@@ -1379,7 +1528,15 @@
             $('.guia-select').on('change', function() {
                 var selectedValue = $(this).val();
                 var agendaId = $(this).data('id');
+                var pacienteId = $(this).data('paciente-id');
+                var profissionalId = $(this).data('profissional-id');
+                var convenioId = $(this).data('convenio-id');
 
+                // Atribuir valores aos inputs dentro do modal
+                $('#modal_paciente_id').val(pacienteId);
+                $('#modal_profissional_id').val(profissionalId);
+                $('#modal_convenio_id').val(convenioId);
+                $('#modal_agenda_id').val(agendaId);
                 if (selectedValue === 'sadt') {
                     $.ajax({
                         url: `/gerar-guia-sadt/${agendaId}`,
@@ -1771,6 +1928,48 @@
                             $('#modalSADT #codigo_cbo_profissional').val(response.guia
                                 ?.codigo_cbo_profissional ||
                                 '');
+                            $('#modalSADT #sequencia1').val(response.guia?.sequencia1 ||
+                            '');
+                            $('#modalSADT #grau1').val(response.guia?.grau1 ||
+                                '');
+                            $('#modalSADT #codigo_operadora_profissional1').val(response.guia
+                                ?.codigo_operadora_profissional1 ||
+                                '');
+                            $('#modalSADT #nome_profissional1').val(response.guia
+                                ?.nome_profissional1 ||
+                                '');
+                            $('#modalSADT #sigla_conselho1').val(response.guia?.sigla_conselho1 ||
+                                '');
+                            $('#modalSADT #numero_conselho_profissional1').val(response.guia
+                                ?.numero_conselho_profissional1 ||
+                                '');
+                            $('#modalSADT #uf_profissional1').val(response.guia
+                                ?.uf_profissional1 ||
+                                '');
+                            $('#modalSADT #codigo_cbo_profissional1').val(response.guia
+                                ?.codigo_cbo_profissional1 ||
+                                '');
+                                $('#modalSADT #sequencia2').val(response.guia?.sequencia2 ||
+                                '');
+                            $('#modalSADT #grau2').val(response.guia?.grau2 ||
+                                '');
+                            $('#modalSADT #codigo_operadora_profissional2').val(response.guia
+                                ?.codigo_operadora_profissional2 ||
+                                '');
+                            $('#modalSADT #nome_profissional2').val(response.guia
+                                ?.nome_profissional2 ||
+                                '');
+                            $('#modalSADT #sigla_conselho2').val(response.guia?.sigla_conselho2 ||
+                                '');
+                            $('#modalSADT #numero_conselho_profissional2').val(response.guia
+                                ?.numero_conselho_profissional2 ||
+                                '');
+                            $('#modalSADT #uf_profissional2').val(response.guia
+                                ?.uf_profissional2 ||
+                                '');
+                            $('#modalSADT #codigo_cbo_profissional2').val(response.guia
+                                ?.codigo_cbo_profissional2 ||
+                                '');
                             $('#modalSADT #observacao').val(response.guia?.observacao ||
                                 '');
                             // Exibir o modal após preencher os dados
@@ -2134,6 +2333,47 @@
                 modalSADT.show();
             }, 500); // ajuste o delay se necessário
         }
+
+        function selectProfissional2(name, cbo, conselho_1, uf_conselho_1, cpf, conselho_profissional) {
+            // Preenche o campo com o nome selecionado
+            document.getElementById('nome_profissional1').value = name;
+            document.getElementById('sigla_conselho1').value = conselho_profissional;
+            document.getElementById('numero_conselho_profissional1').value = conselho_1;
+            document.getElementById('codigo_cbo_profissional1').value = cbo;
+            document.getElementById('uf_profissional1').value = uf_conselho_1;
+            document.getElementById('codigo_operadora_profissional1').value = cpf;
+
+            // Fecha o modal de seleção de profissional
+            const modalProfissional2 = bootstrap.Modal.getInstance(document.getElementById('modalProfissional2'));
+            modalProfissional2.hide();
+
+            // Reabre o modal SADT após um pequeno delay para garantir o fechamento do anterior
+            setTimeout(() => {
+                const modalSADT = new bootstrap.Modal(document.getElementById('modalSADT'));
+                modalSADT.show();
+            }, 500); // ajuste o delay se necessário
+        }
+
+        function selectProfissional3(name, cbo, conselho_1, uf_conselho_1, cpf, conselho_profissional) {
+            // Preenche o campo com o nome selecionado
+            document.getElementById('nome_profissional2').value = name;
+            document.getElementById('sigla_conselho2').value = conselho_profissional;
+            document.getElementById('numero_conselho_profissional2').value = conselho_1;
+            document.getElementById('codigo_cbo_profissional2').value = cbo;
+            document.getElementById('uf_profissional2').value = uf_conselho_1;
+            document.getElementById('codigo_operadora_profissional2').value = cpf;
+
+            // Fecha o modal de seleção de profissional
+            const modalProfissional3 = bootstrap.Modal.getInstance(document.getElementById('modalProfissional3'));
+            modalProfissional3.hide();
+
+            // Reabre o modal SADT após um pequeno delay para garantir o fechamento do anterior
+            setTimeout(() => {
+                const modalSADT = new bootstrap.Modal(document.getElementById('modalSADT'));
+                modalSADT.show();
+            }, 500); // ajuste o delay se necessário
+        }
+
 
         function selectProcedimento1(id, codigo, procedimento) {
             if (activeRow) {
