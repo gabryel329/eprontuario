@@ -1,4 +1,4 @@
-@extends('layouts.app')
+{{-- @extends('layouts.app')
 @section('content')
     <main class="app-content">
         <div class="app-title">
@@ -165,4 +165,4 @@ $(document).ready(function() {
     });
 });
 </script>
-@endsection
+@endsection --}}

@@ -625,6 +625,7 @@ class AgendaController extends Controller
             $horariosDisponiveis[] = [
                 'hora' => $disponibilidade->hora,
                 'data' => $disponibilidade->data,
+                'paciente_nome' => $disponibilidade->name,
                 'procedimento_id' => $disponibilidade->procedimento_id,
                 'name' => $disponibilidade->name,
                 'celular' => $disponibilidade->celular,
@@ -656,15 +657,15 @@ class AgendaController extends Controller
             $hora = $agendamentoData['horario'];
             $profissionalId = $agendamentoData['profissionalId'];
             $especialidadeId = $agendamentoData['especialidadeId'];
-            $procedimentoId = $agendamentoData['procedimento'];
+            $procedimentoId = $agendamentoData['procedimento_id'];
             $paciente = $agendamentoData['paciente'];
+            $pacienteId = $agendamentoData['paciente_id']; // Verifica se o paciente_id foi enviado
             $celular = $agendamentoData['celular'];
             $matricula = $agendamentoData['matricula'];
             $codigo = $agendamentoData['codigo'];
             $valor_proc = $agendamentoData['valor_proc'];
             $convenioId = $agendamentoData['convenio'];
 
-            // Verifica se já existe uma agenda com a mesma data, hora, profissional e especialidade
             $existeAgenda = Agenda::where('data', $data)
                 ->where('hora', $hora)
                 ->where('profissional_id', $profissionalId)
@@ -675,6 +676,7 @@ class AgendaController extends Controller
                 $existeAgenda->procedimento_id = $procedimentoId;
                 $existeAgenda->status = "MARCADO";
                 $existeAgenda->name = $paciente;
+                $existeAgenda->paciente_id = $pacienteId;
                 $existeAgenda->celular = $celular;
                 $existeAgenda->matricula = $matricula;
                 $existeAgenda->convenio_id = $convenioId;
@@ -690,6 +692,7 @@ class AgendaController extends Controller
                 $novoAgendamento->procedimento_id = $procedimentoId;
                 $novoAgendamento->status = "MARCADO";
                 $novoAgendamento->name = $paciente;
+                $novoAgendamento->paciente_id = $pacienteId;
                 $novoAgendamento->celular = $celular;
                 $novoAgendamento->matricula = $matricula;
                 $novoAgendamento->profissional_id = $profissionalId;
@@ -975,18 +978,29 @@ class AgendaController extends Controller
         if ($request->has('data') || $request->has('profissional_id')) {
             $query = Agenda::query();
 
-            if ($request->has('data')) {
-                session(['data' => $request->data]);
-                $query->where('data', $request->data);
+            if ($request->has('selecionar_pelo_medico') && $request->selecionar_pelo_medico == 1) {
+                // Buscar apenas pelo médico
+                if ($request->has('profissional_id')) {
+                    session(['profissional_id' => $request->profissional_id]);
+                    $query->where('profissional_id', $request->profissional_id);
+                } else {
+                    session()->forget('profissional_id');
+                }
             } else {
-                session()->forget('data');
-            }
+                // Buscar por data e/ou médico
+                if ($request->has('data')) {
+                    session(['data' => $request->data]);
+                    $query->where('data', $request->data);
+                } else {
+                    session()->forget('data');
+                }
 
-            if ($request->has('profissional_id')) {
-                session(['profissional_id' => $request->profissional_id]);
-                $query->where('profissional_id', $request->profissional_id);
-            } else {
-                session()->forget('profissional_id');
+                if ($request->has('profissional_id')) {
+                    session(['profissional_id' => $request->profissional_id]);
+                    $query->where('profissional_id', $request->profissional_id);
+                } else {
+                    session()->forget('profissional_id');
+                }
             }
 
             $agendas = $query->orderBy('hora', 'asc')->get();

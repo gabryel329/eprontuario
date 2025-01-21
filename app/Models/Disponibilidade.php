@@ -10,6 +10,7 @@ class Disponibilidade extends Model
     protected $fillable = [
         'profissional_id',
         'especialidade_id',
+        'paciente_id',
         'porcentagem',
         'valor',
         'material',
@@ -47,6 +48,12 @@ class Disponibilidade extends Model
     {
         return $this->belongsTo(Especialidade::class, 'especialidade_id');
     }
+
+    public function procedimento()
+    {
+        return $this->belongsTo(Procedimentos::class, 'procedimento_id');
+    }
+
 
     public function convenio()
     {

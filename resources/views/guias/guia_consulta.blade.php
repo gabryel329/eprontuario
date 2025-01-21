@@ -440,12 +440,12 @@
                             <div class="col-md-3">
                                 <label for="codigo_procedimento" class="form-label">Código do Procedimento</label>
                                 <input class="form-control" id="codigo_procedimento" name="codigo_procedimento"
-                                    type="text" readonly>
+                                    type="number">
                             </div>
                             <div class="col-md-3">
                                 <label for="valor_procedimento" class="form-label">Valor do Procedimento</label>
                                 <input class="form-control" id="valor_procedimento" name="valor_procedimento"
-                                    type="text" readonly>
+                                    type="number">
                             </div>
                         </div>
                         <hr>
@@ -648,7 +648,11 @@
                 html += '<td>' + guia.numeracao + '</td>';
                 html += '<td>' + dataFormatada + '</td>';
                 html += '<td>';
-                html += '<button type="button" class="btn btn-primary btnEditarGuia" data-id="' + guia.id + '" title="Editar" data-bs-toggle="modal" data-bs-target="#modalConsulta">';
+                html +=
+                    '<button type="button" class="btn btn-primary ms-2 btnVisualizarImprimir" data-id="' +
+                    guia.id + '" title="Visualizar">';
+                html += '<i class="bi bi-eye"></i></button>';
+                html += '<button type="button" class="btn btn-warning ms-2 btnEditarGuia" data-id="' + guia.id + '" title="Editar" data-bs-toggle="modal" data-bs-target="#modalConsulta">';
                 html += '<i class="bi bi-pencil"></i></button>';
                 $(document).on('click', '.btnEditarGuia', function() {
                     var guiaId = $(this).data('id');
@@ -832,7 +836,7 @@
 
             // Abrir a URL em uma nova janela popup e iniciar a impressão
             var newWindow = window.open(url, '_blank',
-                'toolbar=no,scrollbars=yes,resizable=yes,width=1000,height=800');
+                'toolbar=no,scrollbars=yes,resizable=yes,width=1500,height=1200');
 
             newWindow.onload = function() {
                 newWindow.print();

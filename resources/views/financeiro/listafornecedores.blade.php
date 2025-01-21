@@ -1,13 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<style>
-    .larger-checkbox {
-        transform: scale(1.5); /* Ajuste o valor para o tamanho desejado */
-        margin: 0;
-        cursor: pointer;
-    }
-</style>
 
 <main class="app-content">
     <div class="app-title d-flex justify-content-between align-items-center">

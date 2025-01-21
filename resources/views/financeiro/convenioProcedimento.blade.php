@@ -1,4 +1,4 @@
-    @extends('layouts.app')
+    {{-- @extends('layouts.app')
 
     @section('content')
     <style>
@@ -64,23 +64,25 @@
                                                         @csrf
                                                         <div id="procedimentos-container-{{ $item->id }}">
                                                             <!-- Existing Records -->
-                                                            @foreach ($item->convenioProcedimentos as $convenioProcedimento)
+                                                            @if(is_object($item->convenioProcedimentos))
+                                                                @foreach ($item->convenioProcedimentos as $convenioProcedimento)
                                                             <div class="row mb-3" data-id="{{ $convenioProcedimento->id }}">
                                                                 <input type="text" hidden name="convenio_id[]" value="{{ $item->id }}" class="form-control" readonly>
-                                                                
+
                                                                 <div class="col-1 d-flex justify-content-center align-items-center">
                                                                     <input type="checkbox" class="select-item larger-checkbox" placeholder="selecione" value="{{ $convenioProcedimento->id }}" />
                                                                 </div>
-                                                                
+
                                                                 <div class="col-md-2 d-flex justify-content-center align-items-center ">
                                                                     <input type="text" name="codigo[]" value="{{ $convenioProcedimento->codigo }}" class="form-control" readonly>
                                                                 </div>
-                                                                
+
                                                                 <div class="col-md-4 d-flex justify-content-center align-items-center">
                                                                     <select name="procedimento_id[]" class="form-select" onchange="updateCodigo(this)">
                                                                         <option value="">Escolha o procedimento</option>
                                                                         @foreach ($procedimentos as $procedimento)
-                                                                            <option value="{{ $procedimento->id }}" data-codigo="{{ $procedimento->codigo }}" {{ $procedimento->id == $convenioProcedimento->procedimento_id ? 'selected' : '' }}>{{ $procedimento->procedimento }}</option>
+                                                                            @endforeach
+                                                                        @endif
                                                                         @endforeach
                                                                     </select>
                                                                 </div>
@@ -95,11 +97,11 @@
                                                                         <option value="%">%</option>
                                                                     </select>
                                                                 </div>
-                                                                
+
                                                                 <div class="col-md-1 d-flex justify-content-center align-items-center">
                                                                     <input type="text" placeholder="Valor" name="valor[]" value="{{ $convenioProcedimento->valor }}" class="form-control">
                                                                 </div>
-                                                                
+
                                                                 <div class="col-md-2 d-flex justify-content-center align-items-center">
                                                                     <div>
                                                                         <button type="button" class="btn btn-success" onclick="addLancamento({{ $item->id }})"><i class="icon bi bi-plus-circle"></i></button>
@@ -316,4 +318,4 @@ function submitForm(convenioId) {
     tempForm.submit();
 }
 </script>
-@endsection
+@endsection --}}

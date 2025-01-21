@@ -17,15 +17,15 @@ class BaixasController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $baixa = Baixas::all();
-        $convenios = Convenio::all();
-        $guiaConsulta = GuiaConsulta::all();
-        $guiasp = GuiaSp::all();
-        $bancos = Bancos::all();
-        return view('guias.faturamentoBaixas', compact('baixa', 'convenios', 'guiaConsulta', 'guiasp', 'bancos'));
-    }
+    // public function index()
+    // {
+    //     $baixa = Baixas::all();
+    //     $convenios = Convenio::all();
+    //     $guiaConsulta = GuiaConsulta::all();
+    //     $guiasp = GuiaSp::all();
+    //     $bancos = Bancos::all();
+    //     return view('guias.faturamentoBaixas', compact('baixa', 'convenios', 'guiaConsulta', 'guiasp', 'bancos'));
+    // }
 
     public function indexGlosa()
     {
@@ -153,7 +153,7 @@ public function buscarGuiasPorConta($contaId)
 {
     Log::info("Buscando guias para conta financeira ID: $contaId");
 
-    $contasGuias = ContaGuia::where('conta_financeira_id', $contaId)->get();
+    $contasGuias = ContaGuia::where('conta_financeira_id', $contaId)->get('valor');
 
     Log::info("Registros encontrados em contas_guias: ", $contasGuias->toArray());
 

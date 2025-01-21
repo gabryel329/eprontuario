@@ -358,7 +358,7 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::delete('/bancos/{id}', [BancosController::class, 'destroy'])->name('bancos.destroy');
 
     #Baixas
-    Route::get('/faturamentoBaixas', [BaixasController::class, 'index'])->name('faturamentoBaixas.index');
+    // Route::get('/faturamentoBaixas', [BaixasController::class, 'index'])->name('faturamentoBaixas.index');
     Route::get('/baixas/filtrar-consulta', [BaixasController::class, 'filtrarConsulta'])->name('baixas.filtrarConsulta');
     Route::get('/baixas/filtrar-sadt', [BaixasController::class, 'filtrarSadt'])->name('baixas.filtrarSadt');
     Route::post('/baixas/{id}', [BaixasController::class, 'storeBaixa'])->name('baixas.store');

@@ -4,11 +4,11 @@
     @php
         $empresa = \App\Models\Empresas::first();
     @endphp
-
     <style>
         body {
             background-color: #E5E5E5 !important;
         }
+
         .app-content {
             min-height: calc(100vh - 50px);
             margin-top: 50px;
@@ -19,7 +19,13 @@
             background-size: 20%;
             background-position: center;
             background-repeat: no-repeat;
+            @if($empresa && $empresa->imagem)
+                background-image: url('{{ asset('images/' . $empresa->imagem) }}');
+            @else
+                background-image: url('https://randomuser.me/api/portraits/men/1.jpg');
+            @endif
         }
+
         .content {
             position: relative;
             z-index: 1;
@@ -28,8 +34,20 @@
             align-items: center;
             height: 100%;
         }
-    </style>
 
+        /* Estilo do card padrão */
+        .hover-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        /* Estilo ao passar o mouse */
+        .hover-card:hover {
+            transform: translateY(-10px); /* Move o card para cima */
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2); /* Aumenta a sombra */
+        }
+    </style>
     <main class="app-content">
         <div id="messageContainer"></div>
         <div class="content">
@@ -38,10 +56,8 @@
                 <div class="row g-4">
                     <!-- Card Agenda do Dia -->
                     <div class="col-md-6 col-lg-3">
-                        <a
-                            class="card text-center shadow-sm h-100 text-decoration-none"
-                            href="{{ url('/lista?_token=' . csrf_token() . '&data=' . now()->format('Y-m-d')) }}"
-                        >
+                        <a class="card hover-card text-center shadow-sm h-100 text-decoration-none"
+                            href="{{ url('/lista?_token=' . csrf_token() . '&data=' . now()->format('Y-m-d')) }}">
                             <div class="card-body">
                                 <i class="bi bi-calendar-check fs-1 text-primary"></i>
                                 <p class="card-text mt-3 text-dark">Agenda do Dia</p>
@@ -50,70 +66,36 @@
                     </div>
                     <!-- Card 2 -->
                     <div class="col-md-6 col-lg-3">
-                        <div class="card text-center shadow-sm h-100">
+                        <a class="card hover-card text-center shadow-sm h-100 text-decoration-none"
+                            href="{{ route('contasReceber.index') }}">
                             <div class="card-body">
-                                <i class="bi bi-car-front fs-1 text-primary"></i>
-                                <p class="card-text mt-3">Transporte e veículos</p>
+                                <i class="bi bi-wallet2 fs-1 text-primary"></i>
+                                <p class="card-text mt-3 text-dark">Contas a Receber</p>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     <!-- Card 3 -->
                     <div class="col-md-6 col-lg-3">
-                        <div class="card text-center shadow-sm h-100">
+                        <a class="card hover-card text-center shadow-sm h-100 text-decoration-none"
+                            href="{{ route('guiaconsulta.index') }}">
                             <div class="card-body">
-                                <i class="bi bi-briefcase fs-1 text-primary"></i>
-                                <p class="card-text mt-3">Emprego e previdência</p>
+                                <i class="bi bi-file-earmark-medical fs-1 text-primary"></i>
+                                <p class="card-text mt-3 text-dark">Guia Consulta</p>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     <!-- Card 4 -->
                     <div class="col-md-6 col-lg-3">
-                        <div class="card text-center shadow-sm h-100">
+                        <a class="card hover-card text-center shadow-sm h-100 text-decoration-none"
+                            href="{{ route('guiasp.index') }}">
                             <div class="card-body">
-                                <i class="bi bi-cash-stack fs-1 text-primary"></i>
-                                <p class="card-text mt-3">Impostos e registros empresariais</p>
+                                <i class="bi bi-file-earmark-text fs-1 text-primary"></i>
+                                <p class="card-text mt-3 text-dark">Guia Sadt</p>
                             </div>
-                        </div>
-                    </div>
-                    <!-- Card 5 -->
-                    <div class="col-md-6 col-lg-3">
-                        <div class="card text-center shadow-sm h-100">
-                            <div class="card-body">
-                                <i class="bi bi-balance-scale fs-1 text-primary"></i>
-                                <p class="card-text mt-3">Justiça e cidadania</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Card 6 -->
-                    <div class="col-md-6 col-lg-3">
-                        <div class="card text-center shadow-sm h-100">
-                            <div class="card-body">
-                                <i class="bi bi-house fs-1 text-primary"></i>
-                                <p class="card-text mt-3">Moradia e serviços sociais</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Card 7 -->
-                    <div class="col-md-6 col-lg-3">
-                        <div class="card text-center shadow-sm h-100">
-                            <div class="card-body">
-                                <i class="bi bi-droplet fs-1 text-primary"></i>
-                                <p class="card-text mt-3">Água e esgoto</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Card 8 -->
-                    <div class="col-md-6 col-lg-3">
-                        <div class="card text-center shadow-sm h-100">
-                            <div class="card-body">
-                                <i class="bi bi-mortarboard fs-1 text-primary"></i>
-                                <p class="card-text mt-3">Educação</p>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
-
         </div>
         <div class="modal fade" id="saveModal" tabindex="-1" aria-labelledby="saveModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -136,67 +118,69 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-    function verificarUsuario(user_id, permisao_id) {
-    var pergunta;
+        function verificarUsuario(user_id, permisao_id) {
+            var pergunta;
 
-    if (permisao_id === 1) {
-        pergunta = "Qual o consultório?";
-    } else if (permisao_id === 2) {
-        pergunta = "Qual o guichê?";
-    }
+            if (permisao_id === 1) {
+                pergunta = "Qual o consultório?";
+            } else if (permisao_id === 2) {
+                pergunta = "Qual o guichê?";
+            }
 
-    if (pergunta) {
-        // Define a pergunta no modal
-        $('#saveModal .modal-header h5').text(pergunta);
+            if (pergunta) {
+                // Define a pergunta no modal
+                $('#saveModal .modal-header h5').text(pergunta);
 
-        // Exibe o modal
-        $('#saveModal').modal('show');
+                // Exibe o modal
+                $('#saveModal').modal('show');
 
-        // Adiciona o evento de salvar quando o botão de salvar for clicado
-        $('#saveModal .btn-primary').off('click').on('click', function() {
-            var resposta = $('#saveModal input[name="sala"]').val();
+                // Adiciona o evento de salvar quando o botão de salvar for clicado
+                $('#saveModal .btn-primary').off('click').on('click', function() {
+                    var resposta = $('#saveModal input[name="sala"]').val();
 
-            if (resposta) {
-                $.ajax({
-                    url: '/salvar-sala',
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        user_id: user_id,
-                        sala: resposta
-                    },
-                    success: function(response) {
-                        // Esconde o modal
-                        $('#saveModal').modal('hide');
+                    if (resposta) {
+                        $.ajax({
+                            url: '/salvar-sala',
+                            type: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                user_id: user_id,
+                                sala: resposta
+                            },
+                            success: function(response) {
+                                // Esconde o modal
+                                $('#saveModal').modal('hide');
 
-                        // Exibe a mensagem de sucesso no frontend
-                        $('#messageContainer').html(`
+                                // Exibe a mensagem de sucesso no frontend
+                                $('#messageContainer').html(`
                             <div class="alert alert-success">
                                 ${response.message}
                             </div>
                         `);
-                    },
-                    error: function(xhr, status, error) {
-                        // Esconde o modal
-                        $('#saveModal').modal('hide');
+                            },
+                            error: function(xhr, status, error) {
+                                // Esconde o modal
+                                $('#saveModal').modal('hide');
 
-                        // Exibe a mensagem de erro no frontend
-                        $('#messageContainer').html(`
+                                // Exibe a mensagem de erro no frontend
+                                $('#messageContainer').html(`
                             <div class="alert alert-warning">
                                 Ocorreu um erro ao salvar a resposta.
                             </div>
                         `);
+                            }
+                        });
                     }
                 });
             }
-        });
-    }
-}
+        }
 
-$(document).ready(function() {
-    @if (session('question_asked') == false && auth()->check() && (auth()->user()->permisao_id == 1 || auth()->user()->permisao_id == 2))
-        verificarUsuario({{ auth()->user()->id }}, {{ auth()->user()->permisao_id }});
-    @endif
-});
+        $(document).ready(function() {
+            @if (session('question_asked') == false &&
+                    auth()->check() &&
+                    (auth()->user()->permisao_id == 1 || auth()->user()->permisao_id == 2))
+                verificarUsuario({{ auth()->user()->id }}, {{ auth()->user()->permisao_id }});
+            @endif
+        });
     </script>
 @endsection

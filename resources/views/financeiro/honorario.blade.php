@@ -118,7 +118,7 @@
                                                                         <option value="">Escolha o Procedimento
                                                                         </option>
                                                                         @foreach ($procedimentos as $procedimento)
-                                                                            <option value="{{ $procedimento->id }}"
+                                                                            <option value="{{ is_object($procedimento) ? $procedimento->id : '' }}"
                                                                                 data-codigo="{{ $procedimento->codigo }}">
                                                                                 {{ $procedimento->procedimento }}</option>
                                                                         @endforeach

@@ -252,11 +252,11 @@
                             <i class="icon bi bi-file-earmark-break"></i> Guia de Consulta
                         </a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a class="treeview-item {{ request()->is('faturamentoBaixas*') ? 'active' : '' }}" href="{{ route('faturamentoBaixas.index') }}">
                             <i class="icon bi bi-piggy-bank-fill"></i> Lançamentos de Baixas
                         </a>
-                    </li>
+                    </li> --}}
                     <li>
                         <a class="treeview-item {{ request()->is('faturamentoGlosa*') ? 'active' : '' }}" href="{{ route('faturamentoGlosa.index') }}">
                             <i class="icon bi bi-piggy-bank-fill"></i> Glosa das Guias
