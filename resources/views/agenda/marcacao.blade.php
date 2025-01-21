@@ -122,8 +122,6 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nome</th>
-                                    <th>Código</th>
-                                    <th>Valor</th>
                                     <th>Ação</th>
                                 </tr>
                             </thead>
@@ -298,8 +296,7 @@
                             <th class="col-1">Contato</th>
                             <th class="col-1">Convênio</th>
                             <th class="col-1">Consulta</th>
-                            <th class="col-1">Código</th>
-                            <th class="col-1">Valor</th>
+                            <th class="col-1">Procedimento</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -330,10 +327,10 @@
             <td class="col-1"><input type="text" name="celular[${horario}]" value="${horario.celular ?? ''}" class="form-control" ${isDisabled}></td>
             <td class="col-1">${renderConvenioSelect(horario, convenios, isDisabled)}</td>
             <td class="col-1">${renderProcedimentoInput(horario, procedimentos, isDisabled)}</td>
-            <td class="col-1"><input type="text" name="codigo[${horario.hora}]" id="codigo${horario.hora}" value="${horario.codigo ?? ''}" class="form-control" readonly ${isDisabled}></td>
-            <td class="col-1"><input type="text" name="valor_proc[${horario.hora}]" id="valor_proc${horario.hora}" value="${horario.valor_proc ?? ''}" class="form-control" ${isDisabled}></td>
+            <input type="hidden" name="codigo[${horario.hora}]" id="codigo${horario.hora}" value="${horario.codigo ?? ''}" class="form-control" readonly ${isDisabled}>
+            <input type="hidden" name="valor_proc[${horario.hora}]" id="valor_proc${horario.hora}" value="${horario.valor_proc ?? ''}" class="form-control" ${isDisabled}>
             <input type="hidden" id="procedimento_id${horario.hora}" name="procedimento_id[${horario.hora}]" value="${horario.procedimento_id ?? ''}">
-            <input type="hidden" id="procedimento_nome${horario.hora}" name="procedimento_nome[${horario.hora}]" value="${horario.procedimento_nome ?? ''}">
+            <td class="col-1"><input type="text" id="procedimento_nome${horario.hora}" class="form-control" name="procedimento_nome[${horario.hora}]" value="${horario.procedimento_nome ?? ''}" ${isDisabled}></td>
 
         </tr>
     `;
@@ -419,8 +416,6 @@
                             <tr>
                                 <td>${procedimento.id}</td>
                                 <td>${procedimento.descricao || procedimento.procedimento}</td>
-                                <td>${procedimento.codigo || procedimento.codigo_anatomico}</td>
-                                <td>${procedimento.valor_proc}</td>
                                 <td>
                                     <button class="btn btn-primary" type="button"
                                         onclick="selectProcedimento('${procedimento.id}', '${procedimento.descricao || procedimento.procedimento}', '${procedimento.codigo || procedimento.codigo_anatomico}','${procedimento.valor_proc}')">

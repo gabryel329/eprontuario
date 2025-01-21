@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('paciente_id')->nullable();
             $table->foreign('paciente_id')->references('id')->on('pacientes')->onDelete('cascade');
-            $table->integer('procedimento_id')->nullable();
-            $table->foreign('procedimento_id')->references('id')->on('procedimentos')->onDelete('cascade');
+            $table->unsignedBigInteger('procedimento_id')->nullable()->after('id');
             $table->integer('agenda_id')->nullable();
             $table->foreign('agenda_id')->references('id')->on('agendas')->onDelete('cascade');
             $table->integer('profissional_id')->nullable();

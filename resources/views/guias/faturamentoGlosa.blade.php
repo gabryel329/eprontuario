@@ -225,8 +225,8 @@
                                     <td>${index + 1}</td>
                                     <td>${guia.nome_beneficiario ?? 'N/A'}</td>
                                     <td>${tipoGuia}</td>
-                                    <td>${guia.data_atendimento ?? 'N/A'}</td>
-                                    <td>R$ ${parseFloat(guia.valor_procedimento).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                                    <td>${guia.data_autorizacao ?? 'N/A'}</td>
+                                    <td>R$ ${parseFloat(guia.valor_total).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
                                     <td>
                                         <a href="${editarURL}" class="btn btn-sm btn-primary">Editar</a>
                                     </td>

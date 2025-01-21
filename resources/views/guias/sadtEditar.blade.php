@@ -25,7 +25,7 @@
                         <div class="col-md-3">
                             <label for="numero_guia_prestador" class="form-label">3- Nº Guia Principal</label>
                             <input class="form-control" id="numero_guia_prestador" name="numero_guia_prestador"
-                                type="text" value="{{ old('numero_guia_prestador') }}">
+                                type="text" value="{{ old('numero_guia_prestador', $guiaSadt->numero_guia_prestador) }}">
                         </div>
                     </div>
 
@@ -33,23 +33,23 @@
                         <div class="col-md-3">
                             <label for="data_autorizacao" class="form-label">4- Data da Autorização</label>
                             <input class="form-control" id="data_autorizacao" name="data_autorizacao"
-                                type="date" value="{{ old('data_autorizacao') }}">
+                                type="date" value="{{ old('data_autorizacao', $guiaSadt->data_autorizacao) }}">
                         </div>
                         <div class="col-md-3">
                             <label for="senha" class="form-label">5- Senha</label>
                             <input class="form-control" id="senha" name="senha" type="text"
-                                value="{{ old('senha') }}">
+                                value="{{ old('senha', $guiaSadt->senha) }}">
                         </div>
                         <div class="col-md-3">
                             <label for="validade_senha" class="form-label">6- Data de Validade da Senha</label>
                             <input class="form-control" id="validade_senha" name="validade_senha" type="date"
-                                value="{{ old('validade_senha') }}">
+                                value="{{ old('validade_senha', $guiaSadt->validade_senha) }}">
                         </div>
                         <div class="col-md-3">
                             <label for="numero_guia_op" class="form-label">7- Nº da Guia Atribuído pela
                                 Operadora</label>
                             <input class="form-control" id="numero_guia_op" name="numero_guia_op" type="text"
-                                value="{{ old('numero_guia_op') }}">
+                                value="{{ old('numero_guia_op', $guiaSadt->numero_guia_op) }}">
                         </div>
                     </div>
                     <hr>
@@ -58,29 +58,29 @@
                         <div class="col-md-2">
                             <label for="numero_carteira" class="form-label">8 - Nº da Carteira</label>
                             <input class="form-control" id="numero_carteira" name="numero_carteira"
-                                type="text" value="{{ old('numero_carteira') }}">
+                                type="text" value="{{ old('numero_carteira', $guiaSadt->numero_carteira) }}">
                         </div>
                         <div class="col-md-2">
                             <label for="validade_carteira" class="form-label">9 - Validade da Carteira</label>
                             <input class="form-control" id="validade_carteira" name="validade_carteira"
-                                type="date" value="{{ old('validade_carteira') }}">
+                                type="date" value="{{ old('validade_carteira', $guiaSadt->validade_carteira) }}">
                         </div>
                         <div class="col-md-4">
                             <label for="nome_beneficiario" class="form-label">10 - Nome</label>
                             <input class="form-control" id="nome_beneficiario" name="nome_beneficiario"
-                                type="text" value="{{ old('nome_beneficiario') }}">
+                                type="text" value="{{ old('nome_beneficiario', $guiaSadt->nome_beneficiario) }}">
                         </div>
                         <div class="col-md-2">
                             <label for="nome_social" class="form-label">11 - CNS</label>
                             <input class="form-control" id="cns" name="cns" type="text"
-                                value="{{ old('cns') }}">
+                                value="{{ old('cns', $guiaSadt->cns) }}">
                         </div>
                         <div class="col-md-2">
                             <label for="atendimento_rn" class="form-label">12 - Atendimento RN</label>
                             <select class="form-select" id="atendimento_rn" name="atendimento_rn">
-                                <option value="N" {{ old('atendimento_rn') == '1' ? 'selected' : '' }}>Não
+                                <option value="N" {{ old('atendimento_rn', $guiaSadt->atendimento_rn) == '1' ? 'selected' : '' }}>Não
                                 </option>
-                                <option value="S" {{ old('atendimento_rn') == '2' ? 'selected' : '' }}>Sim
+                                <option value="S" {{ old('atendimento_rn', $guiaSadt->atendimento_rn) == '2' ? 'selected' : '' }}>Sim
                                 </option>
                             </select>
                         </div>
@@ -91,12 +91,12 @@
                         <div class="col-md-3">
                             <label for="codigo_operadora" class="form-label">13 - Código Operadora</label>
                             <input class="form-control" id="codigo_operadora" name="codigo_operadora"
-                                type="text" value="{{ old('codigo_operadora') }}">
+                                type="text" value="{{ old('codigo_operadora', $guiaSadt->codigo_operadora) }}">
                         </div>
                         <div class="col-md-9">
                             <label for="nome_contratado" class="form-label">14 - Nome Contratado</label>
                             <input class="form-control" id="nome_contratado" name="nome_contratado"
-                                type="text" value="{{ old('nome_contratado') }}">
+                                type="text" value="{{ old('nome_contratado', $guiaSadt->nome_contratado) }}">
                         </div>
                     </div>
                     <div class="row md-3">
@@ -105,27 +105,27 @@
                                 Solicitante</label>
                             <input class="form-control" id="nome_profissional_solicitante"
                                 name="nome_profissional_solicitante" type="text"
-                                value="{{ old('nome_profissional_solicitante') }}">
+                                value="{{ old('nome_profissional_solicitante', $guiaSadt->nome_profissional_solicitante) }}">
                         </div>
                         <div class="col-md-2">
                             <label for="conselho_profissional" class="form-label">16- Conselho</label>
                             <input class="form-control" id="conselho_profissional" name="conselho_profissional"
-                                type="text" value="{{ old('conselho_profissional') }}">
+                                type="text" value="{{ old('conselho_profissional', $guiaSadt->conselho_profissional) }}">
                         </div>
                         <div class="col-md-2">
                             <label for="numero_conselho" class="form-label">17- Nº Conselho</label>
                             <input class="form-control" id="numero_conselho" name="numero_conselho"
-                                type="text" value="{{ old('numero_conselho') }}">
+                                type="text" value="{{ old('numero_conselho', $guiaSadt->numero_conselho) }}">
                         </div>
                         <div class="col-md-1">
                             <label for="uf_conselho" class="form-label">18- UF</label>
                             <input class="form-control" id="uf_conselho" name="uf_conselho" type="text"
-                                value="{{ old('uf_conselho') }}">
+                                value="{{ old('uf_conselho', $guiaSadt->uf_conselho) }}">
                         </div>
                         <div class="col-md-2">
                             <label for="codigo_cbo" class="form-label">19- Código CBO</label>
                             <input class="form-control" id="codigo_cbo" name="codigo_cbo" type="text"
-                                value="{{ old('codigo_cbo') }}">
+                                value="{{ old('codigo_cbo', $guiaSadt->codigo_cbo) }}">
                         </div>
                     </div>
                     <hr>
@@ -136,10 +136,10 @@
                                 Atendimento</label>
                             <select class="form-select" id="carater_atendimento" name="carater_atendimento">
                                 <option value="">Selecione</option>
-                                <option value="1" {{ old('carater_atendimento') == '1' ? 'selected' : '' }}>
+                                <option value="1" {{ old('carater_atendimento', $guiaSadt->carater_atendimento) == '1' ? 'selected' : '' }}>
                                     Eletivo
                                 </option>
-                                <option value="2" {{ old('carater_atendimento') == '2' ? 'selected' : '' }}>
+                                <option value="2" {{ old('carater_atendimento', $guiaSadt->carater_atendimento) == '2' ? 'selected' : '' }}>
                                     Urgência/Emergência
                                 </option>
                             </select>
@@ -147,13 +147,12 @@
                         <div class="col-md-2">
                             <label for="data_solicitacao" class="form-label">22 - Data/Hora Solicitação</label>
                             <input class="form-control" id="data_solicitacao" name="data_solicitacao"
-                                type="date" value="{{ old('data_solicitacao') }}">
+                                type="date" value="{{ old('data_solicitacao', $guiaSadt->data_solicitacao) }}">
                         </div>
                         <div class="col-md-4">
                             <label for="indicacao_clinica" class="form-label">23 - Indicação Clínica</label>
                             <select class="form-select" id="indicacao_clinica" name="indicacao_clinica">
-                                <option value="">{{ old('indicacao_clinica') ? 'selected' : 'Selecione' }}
-                                </option>
+                                <option value="">{{ old('indicacao_clinica', $guiaSadt->indicacao_clinica) ? old('indicacao_clinica', $guiaSadt->indicacao_clinica) : 'Selecione' }}</option>
                                 <option value="DOR ABDOMINAL">Dor Abdominal</option>
                                 <option value="DOR DE CABEÇA FREQUENTE">Dor de Cabeça Frequente</option>
                                 <option value="FADIGA">Fadiga</option>
@@ -178,10 +177,10 @@
                                 name="indicacao_cob_especial">
                                 <option value="">Selecione</option>
                                 <option value="0"
-                                    {{ old('indicacao_cob_especial') == '0' ? 'selected' : '' }}>Não
+                                    {{ old('indicacao_cob_especial', $guiaSadt->indicacao_cob_especial) == '0' ? 'selected' : '' }}>Não
                                 </option>
                                 <option value="1"
-                                    {{ old('indicacao_cob_especial') == '1' ? 'selected' : '' }}>Sim
+                                    {{ old('indicacao_cob_especial', $guiaSadt->indicacao_cob_especial) == '1' ? 'selected' : '' }}>Sim
                                 </option>
                             </select>
                         </div>
@@ -192,15 +191,39 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
+                                        <th>Adicionar</th>
                                         <th>24 - Tabela</th>
                                         <th>25 - Código</th>
                                         <th>26 - Descrição</th>
                                         <th>27 - Qtde Sol.</th>
                                         <th>28 - Qtde Aut.</th>
-                                        <th>Excluir</th>
+                                        <th colspan="3" style="text-align: center;">Ação</th>
                                     </tr>
                                 </thead>
                                 <tbody id="exame-table-body">
+                                    @foreach ($exameSoli as $item)
+                                        <tr style="text-align: center;">
+                                            <td>
+                                                <button type="button" class="btn btn-primary form-control" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#modalProcedimento1" 
+                                                        onclick="setRowContext(this)">
+                                                    <i class="bi bi-list"></i>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <input class="form-control" style="text-align: center;" name="agenda_id2[]" type="hidden" value="{{$item->agenda_id}}" readonly>
+                                                <input class="form-control" style="text-align: center;" name="tabela[]" type="text" value="{{$item->tabela}}" readonly>
+                                            </td>
+                                            <td><input class="form-control" id="codigo_procedimento_solicitado" name="codigo_procedimento_solicitado[]" type="text" value="{{$item->codigo_procedimento_solicitado}}" readonly></td>
+                                            <td><input class="form-control" id="descricao_procedimento" name="descricao_procedimento[]" type="text" value="{{$item->descricao_procedimento}}" readonly></td>
+                                            <td><input class="form-control" style="text-align: center;" name="qtd_sol[]" type="number" value="{{$item->qtd_sol}}"></td>
+                                            <td><input class="form-control" style="text-align: center;" name="qtd_aut[]" type="number" value="{{$item->qtd_aut}}"></td>
+                                            <td><button type="button" class="btn btn-danger btn-sm" onclick="excluirLinha(this)"><i class="icon bi bi-trash"></i></button></td>
+                                            <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha()">+</button></td>
+                                            <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha(this)">-</button></td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -213,19 +236,19 @@
                                 Operadora</label>
                             <input class="form-control" id="codigo_operadora_executante"
                                 name="codigo_operadora_executante" type="text"
-                                value="{{ old('codigo_operadora_executante') }}">
+                                value="{{ old('codigo_operadora_executante', $guiaSadt->codigo_operadora_executante) }}">
                         </div>
                         <div class="col-md-6">
                             <label for="nome_contratado_executante" class="form-label">30 - Nome do
                                 Contratado</label>
                             <input class="form-control" id="nome_contratado_executante"
                                 name="nome_contratado_executante" type="text"
-                                value="{{ old('nome_contratado_executante') }}">
+                                value="{{ old('nome_contratado_executante', $guiaSadt->nome_contratado_executante) }}">
                         </div>
                         <div class="col-md-3">
                             <label for="codigo_cnes" class="form-label">31 - Código CNES</label>
                             <input class="form-control" id="codigo_cnes" name="codigo_cnes" type="text"
-                                value="{{ old('codigo_cnes') }}">
+                                value="{{ old('codigo_cnes', $guiaSadt->codigo_cnes) }}">
                         </div>
                     </div>
                     <hr>
@@ -234,8 +257,7 @@
                         <div class="col-md-2">
                             <label for="tipo_atendimento" class="form-label">32 - Tipo de Atendimento</label>
                             <select class="form-select" id="tipo_atendimento" name="tipo_atendimento">
-                                <option value="">{{ old('tipo_atendimento') ? 'selected' : 'Selecione' }}
-                                </option>
+                                <option value="">{{ old('tipo_atendimento', $guiaSadt->tipo_atendimento) ? old('tipo_atendimento', $guiaSadt->tipo_atendimento) : 'Selecione' }}</option>
                                 <option value="01">Remoção</option>
                                 <option value="02">Pequena Cirurgia</option>
                                 <option value="03">Outras Terapias</option>
@@ -261,8 +283,7 @@
                         <div class="col-md-2">
                             <label for="indicacao_acidente" class="form-label">33 - Indicação de Acidente</label>
                             <select class="form-select" id="indicacao_acidente" name="indicacao_acidente">
-                                <option value="">{{ old('indicacao_acidente') ? 'selected' : 'Selecione' }}
-                                </option>
+                                <option value="">{{ old('indicacao_acidente', $guiaSadt->indicacao_acidente) ? old('indicacao_acidente', $guiaSadt->indicacao_acidente) : 'Selecione' }}</option>
                                 <option value="1">Sim</option>
                                 <option value="2">Não</option>
                             </select>
@@ -270,7 +291,7 @@
                         <div class="col-md-2">
                             <label for="tipo_consulta" class="form-label">34 - Tipo de Consulta</label>
                             <select class="form-select" id="tipo_consulta" name="tipo_consulta">
-                                <option value="">{{ old('tipo_consulta') ? 'selected' : 'Selecione' }}
+                                    <option value="">{{ old('tipo_consulta', $guiaSadt->tipo_consulta) ? old('tipo_consulta', $guiaSadt->tipo_consulta) : 'Selecione' }}</option>
                                 <option value="1">Primeira Consulta</option>
                                 <option value="2">Retorno</option>
                                 <option value="3">Pré-natal</option>
@@ -280,8 +301,7 @@
                         <div class="col-md-2">
                             <label for="motivo_encerramento" class="form-label">35 - Encerramento Atend.</label>
                             <select class="form-select" id="motivo_encerramento" name="motivo_encerramento">
-                                <option value="">
-                                    {{ old('motivo_encerramento') ? 'selected' : 'Selecione' }}
+                                <option value="">{{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) ? old('motivo_encerramento', $guiaSadt->motivo_encerramento) : 'Selecione' }}</option>
                                 <option value="11">Alta Curado</option>
                                 <option value="12">Alta Melhorado</option>
                                 <option value="14">Alta a pedido</option>
@@ -321,7 +341,7 @@
                         <div class="col-md-2">
                             <label for="regime_atendimento" class="form-label">91 - Regime Atendimento</label>
                             <select class="form-select" id="regime_atendimento" name="regime_atendimento">
-                                <option value="">{{ old('regime_atendimento') ? 'selected' : 'Selecione' }}
+                                <option value="">{{ old('regime_atendimento', $guiaSadt->regime_atendimento) ? old('regime_atendimento', $guiaSadt->regime_atendimento) : 'Selecione' }}</option>
                                 <option value="01">Ambulatórial</option>
                                 <option value="02">Emergência</option>
                             </select>
@@ -329,7 +349,7 @@
                         <div class="col-md-2">
                             <label for="saude_ocupacional" class="form-label">92 - Saúde Ocupacional</label>
                             <select class="form-select" id="saude_ocupacional" name="saude_ocupacional">
-                                <option selected disabled>Escolha</option>
+                                <option value="">{{ old('saude_ocupacional', $guiaSadt->saude_ocupacional) ? old('saude_ocupacional', $guiaSadt->saude_ocupacional) : 'Selecione' }}</option>
                                 <option value="1">Sim</option>
                                 <option value="2">Não</option>
                             </select>
@@ -358,6 +378,39 @@
                                     </tr>
                                 </thead>
                                 <tbody id="procedimento-table-body">
+                                    @foreach ($exameAut as $item)
+                                        <tr>
+                                            <td><input class="form-control" id="data_real" name="data_real[]" type="date"  value="{{$item->data_real}}"></td>
+                                            <td><input class="form-control" id="hora_inicio_atendimento" name="hora_inicio_atendimento[]" type="text"  value="{{$item->hora_inicio_atendimento}}"></td>
+                                            <td><input class="form-control" id="hora_fim_atendimento" name="hora_fim_atendimento[]" type="text"  value="{{$item->hora_fim_atendimento}}"></td>
+                                            <td><input class="form-control" id="tabela" name="tabela[]" type="text"  value="22"></td>
+                                            <td><input class="form-control" id="codigo_procedimento_realizado" name="codigo_procedimento_realizado[]"  type="text" value="{{$item->codigo_procedimento_realizado}}"></td>
+                                            <td><input class="form-control" id="descricao_procedimento_realizado" name="descricao_procedimento_realizado[]"  type="text" value="{{$item->descricao_procedimento_realizado}}"></td>
+                                            <td><input class="form-control quantidade_autorizada" id="quantidade_autorizada" name="quantidade_autorizada[]" value="{{$item->quantidade_autorizada}}" type="number" oninput="calcularValorTotal(this)" placeholder="Qtd"></td>
+                                            <td>
+                                                <select class="form-control" id="via" name="via[]">
+                                                    <option value="">{{ old('via',$item->via) ? 'selected' : 'Selecione' }}
+                                                    <option value="1">Unidade</option>
+                                                    <option value="2">Múltiplo</option>
+                                                </select>
+                                            </td>
+        
+                                            <td>
+                                                <select class="form-control" id="tecnica" name="tecnica[]">
+                                                    <option value="">{{ old('tecnica',$item->tecnica) ? 'selected' : 'Selecione' }}
+                                                    <option value="U">Unilateral</option>
+                                                    <option value="B">Bilateral</option>
+                                                    <option value="M">Múltiplo</option>
+                                                    <option value="S">Simples</option>
+                                                    <option value="C">Complexo</option>
+                                                    <option value="A">Avançado</option>
+                                                </select>
+                                            </td>
+                                            <td><input class="form-control" name="fator_red_acres[]" id="fator_red_acres" type="text" oninput="calcularValorTotal(this)" placeholder="EX:1,00" value="{{$item->fator_red_acres}}"></td>
+                                            <td><input class="form-control valor_unitario" id="valor_unitario" oninput="calcularValorTotal(this)" name="valor_unitario[]" type="text" value="{{$item->valor_unitario}}"></td>
+                                            <td><input class="form-control valor_total" id="valor_total" name="valor_total[]" type="text" value="{{$item->valor_total}}" placeholder="Valor Total"></td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -383,12 +436,12 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td><input class="form-control" name="sequencia" type="text"
-                                                value="1" readonly></< /td>
+                                        <td>
+                                            <input class="form-control" name="sequencia" type="text"
+                                                value="1" readonly></td>
                                         <td>
                                             <select id="grau" name="grau" class="form-control">
-                                                <option value="">
-                                                    {{ old('grau') ? 'selected' : 'Selecione' }}
+                                                    <option value="">{{ old('grau', $guiaSadt->grau) ? old('grau', $guiaSadt->grau) : 'Selecione' }}</option>
                                                 <option value="12">Médico principal ou responsável pelo
                                                     procedimento</option>
                                                 <option value="13">Assistente</option>
@@ -406,21 +459,102 @@
                                             </button>
                                         </td>
                                         <td><input class="form-control" name="codigo_operadora_profissional"
-                                                id="codigo_operadora_profissional" type="text" value=""
+                                                id="codigo_operadora_profissional" type="text" value="{{$guiaSadt->codigo_operadora_profissional}}"
                                                 readonly></< /td>
                                         <td><input class="form-control" id="nome_profissional"
-                                                name="nome_profissional" type="text" value="" readonly>
+                                                name="nome_profissional" type="text" value="{{$guiaSadt->nome_profissional}}" readonly>
                                             </< /td>
                                         <td><input class="form-control" name="sigla_conselho" id="sigla_conselho"
-                                                type="text" value="" readonly></< /td>
+                                                type="text" value="{{$guiaSadt->sigla_conselho}}" readonly></< /td>
                                         <td><input class="form-control" name="numero_conselho_profissional"
-                                                id="numero_conselho_profissional" type="text" value=""
+                                                id="numero_conselho_profissional" type="text" value="{{$guiaSadt->numero_conselho_profissional}}"
                                                 readonly></< /td>
                                         <td><input class="form-control" name="uf_profissional"
-                                                id="uf_profissional" type="text" value="" readonly></<
+                                                id="uf_profissional" type="text" value="{{$guiaSadt->uf_profissional}}" readonly></<
                                                 /td>
                                         <td><input class="form-control" name="codigo_cbo_profissional"
-                                                id="codigo_cbo_profissional" type="text" value=""
+                                                id="codigo_cbo_profissional" type="text" value="{{$guiaSadt->codigo_cbo_profissional}}"
+                                                readonly></< /td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input class="form-control" name="sequencia1" type="text"
+                                                value="2" readonly></td>
+                                        <td>
+                                            <select id="grau1" name="grau1" class="form-control">
+                                                    <option value="">{{ old('grau1', $guiaSadt->grau1) ? old('grau1', $guiaSadt->grau1) : 'Selecione' }}</option>
+                                                <option value="12">Médico principal ou responsável pelo
+                                                    procedimento</option>
+                                                <option value="13">Assistente</option>
+                                                <option value="14">Anestesista</option>
+                                                <option value="15">Cirurgião Auxiliar</option>
+                                                <option value="16">Técnico em Enfermagem</option>
+                                                <option value="17">Fisioterapeuta</option>
+                                                <option value="18">Outro Profissional</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary form-control"
+                                                data-bs-toggle="modal" data-bs-target="#modalProfissional2">
+                                                <i class="bi bi-list"></i>
+                                            </button>
+                                        </td>
+                                        <td><input class="form-control" name="codigo_operadora_profissional1"
+                                                id="codigo_operadora_profissional1" type="text" value="{{$guiaSadt->codigo_operadora_profissional1}}"
+                                                readonly></< /td>
+                                        <td><input class="form-control" id="nome_profissional1"
+                                                name="nome_profissional1" type="text" value="{{$guiaSadt->nome_profissional1}}" readonly>
+                                            </< /td>
+                                        <td><input class="form-control" name="sigla_conselho1" id="sigla_conselho1"
+                                                type="text" value="{{$guiaSadt->sigla_conselho1}}" readonly></< /td>
+                                        <td><input class="form-control" name="numero_conselho_profissional1"
+                                                id="numero_conselho_profissional1" type="text" value="{{$guiaSadt->numero_conselho_profissional1}}"
+                                                readonly></< /td>
+                                        <td><input class="form-control" name="uf_profissional1"
+                                                id="uf_profissional1" type="text" value="{{$guiaSadt->uf_profissional1}}" readonly></<
+                                                /td>
+                                        <td><input class="form-control" name="codigo_cbo_profissional1"
+                                                id="codigo_cbo_profissional1" type="text" value="{{$guiaSadt->codigo_cbo_profissional1}}"
+                                                readonly></< /td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input class="form-control" name="sequencia2" type="text"
+                                                value="3" readonly></td>
+                                        <td>
+                                            <select id="grau2" name="grau2" class="form-control">
+                                                <option value="">{{ old('grau2', $guiaSadt->grau2) ? old('grau2', $guiaSadt->grau2) : 'Selecione' }}</option>
+                                                <option value="12">Médico principal ou responsável pelo procedimento</option>
+                                                <option value="13">Assistente</option>
+                                                <option value="14">Anestesista</option>
+                                                <option value="15">Cirurgião Auxiliar</option>
+                                                <option value="16">Técnico em Enfermagem</option>
+                                                <option value="17">Fisioterapeuta</option>
+                                                <option value="18">Outro Profissional</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary form-control"
+                                                data-bs-toggle="modal" data-bs-target="#modalProfissional3">
+                                                <i class="bi bi-list"></i>
+                                            </button>
+                                        </td>
+                                        <td><input class="form-control" name="codigo_operadora_profissional2"
+                                                id="codigo_operadora_profissional2" type="text" value="{{$guiaSadt->codigo_operadora_profissional2}}"
+                                                readonly></< /td>
+                                        <td><input class="form-control" id="nome_profissional2"
+                                                name="nome_profissional2" type="text" value="{{$guiaSadt->nome_profissional2}}" readonly>
+                                            </< /td>
+                                        <td><input class="form-control" name="sigla_conselho2" id="sigla_conselho2"
+                                                type="text" value="{{$guiaSadt->sigla_conselho2}}" readonly></< /td>
+                                        <td><input class="form-control" name="numero_conselho_profissional2"
+                                                id="numero_conselho_profissional2" type="text" value="{{$guiaSadt->numero_conselho_profissional2}}"
+                                                readonly></< /td>
+                                        <td><input class="form-control" name="uf_profissional2"
+                                                id="uf_profissional2" type="text" value="{{$guiaSadt->uf_profissional2}}" readonly></<
+                                                /td>
+                                        <td><input class="form-control" name="codigo_cbo_profissional2"
+                                                id="codigo_cbo_profissional2" type="text" value="{{$guiaSadt->codigo_cbo_profissional2}}"
                                                 readonly></< /td>
                                     </tr>
                                 </tbody>
@@ -460,7 +594,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label for="observacao" class="form-label">58- Observação / Justificativa</label>
-                            <textarea class="form-control" id="observacao" name="observacao">{{ old('observacao') }}</textarea>
+                            <textarea class="form-control" id="observacao" name="observacao">{{ old('observacao', $guiaSadt->observacao) }}</textarea>
                         </div>
                     </div>
 
@@ -478,4 +612,185 @@
         </div>
     </div>
 </main>
+
+<div class="modal fade" id="modalProfissional1" tabindex="-1" aria-labelledby="modalProfissionalLabel1"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalProfissionalLabel1">Selecione o Profissional</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <input class="form-control" id="profSearch" type="text"
+                                placeholder="Pesquisar por nome ou CPF...">
+                        </div>
+                        <table class="table table-hover" id="profTable">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>CPF</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($profissionals as $p)
+                                    <tr>
+                                        <td>{{ $p->name }}</td>
+                                        <td>{{ $p->cpf }}</td>
+                                        <td>
+                                            <button class="btn btn-primary" type="button"
+                                                onclick="selectProfissional1('{{ $p->name }}', '{{ $p->cbo }}', '{{ $p->conselho_1 }}', '{{ $p->uf_conselho_1 }}', '{{ $p->cpf }}', '{{ $p->conselho_profissional }}')">Selecionar</button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalProfissional2" tabindex="-1" aria-labelledby="modalProfissionalLabel2"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalProfissionalLabel2">Selecione o Profissional</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <input class="form-control" id="profSearch" type="text"
+                                placeholder="Pesquisar por nome ou CPF...">
+                        </div>
+                        <table class="table table-hover" id="profTable">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>CPF</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($profissionals as $p)
+                                    <tr>
+                                        <td>{{ $p->name }}</td>
+                                        <td>{{ $p->cpf }}</td>
+                                        <td>
+                                            <button class="btn btn-primary" type="button"
+                                                onclick="selectProfissional2('{{ $p->name }}', '{{ $p->cbo }}', '{{ $p->conselho_1 }}', '{{ $p->uf_conselho_1 }}', '{{ $p->cpf }}', '{{ $p->conselho_profissional }}')">Selecionar</button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalProfissional3" tabindex="-1" aria-labelledby="modalProfissionalLabel3"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalProfissionalLabel3">Selecione o Profissional</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <input class="form-control" id="profSearch" type="text"
+                                placeholder="Pesquisar por nome ou CPF...">
+                        </div>
+                        <table class="table table-hover" id="profTable">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>CPF</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($profissionals as $p)
+                                    <tr>
+                                        <td>{{ $p->name }}</td>
+                                        <td>{{ $p->cpf }}</td>
+                                        <td>
+                                            <button class="btn btn-primary" type="button"
+                                                onclick="selectProfissional3('{{ $p->name }}', '{{ $p->cbo }}', '{{ $p->conselho_1 }}', '{{ $p->uf_conselho_1 }}', '{{ $p->cpf }}', '{{ $p->conselho_profissional }}')">Selecionar</button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $('[id^=profSearch]').on('keyup', function() {
+            var inputId = $(this).attr('id');
+            var inputValue = $(this).val().toLowerCase();
+            var tableId = inputId.replace('Search', 'Table');
+            var rows = $('#' + tableId + ' tbody tr');
+
+            rows.each(function() {
+                var name = $(this).find('td').eq(0).text().toLowerCase();
+                var cpf = $(this).find('td').eq(2).text().toLowerCase();
+                if (name.indexOf(inputValue) > -1 || cpf.indexOf(inputValue) > -1) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+
+        function selectProfissional1(name, cbo, conselho_1, uf_conselho_1, cpf, conselho_profissional) {
+            // Preenche o campo com o nome selecionado
+            document.getElementById('nome_profissional').value = name;
+            document.getElementById('sigla_conselho').value = conselho_profissional;
+            document.getElementById('numero_conselho_profissional').value = conselho_1;
+            document.getElementById('codigo_cbo_profissional').value = cbo;
+            document.getElementById('uf_profissional').value = uf_conselho_1;
+            document.getElementById('codigo_operadora_profissional').value = cpf;
+
+            // Fecha o modal de seleção de profissional
+            const modalProfissional1 = bootstrap.Modal.getInstance(document.getElementById('modalProfissional1'));
+            modalProfissional1.hide();
+
+        }
+
+        function selectProfissional2(name, cbo, conselho_1, uf_conselho_1, cpf, conselho_profissional) {
+            // Preenche o campo com o nome selecionado
+            document.getElementById('nome_profissional1').value = name;
+            document.getElementById('sigla_conselho1').value = conselho_profissional;
+            document.getElementById('numero_conselho_profissional1').value = conselho_1;
+            document.getElementById('codigo_cbo_profissional1').value = cbo;
+            document.getElementById('uf_profissional1').value = uf_conselho_1;
+            document.getElementById('codigo_operadora_profissional1').value = cpf;
+
+            // Fecha o modal de seleção de profissional
+            const modalProfissional2 = bootstrap.Modal.getInstance(document.getElementById('modalProfissional2'));
+            modalProfissional2.hide();
+
+        }
+
+        function selectProfissional3(name, cbo, conselho_1, uf_conselho_1, cpf, conselho_profissional) {
+            // Preenche o campo com o nome selecionado
+            document.getElementById('nome_profissional2').value = name;
+            document.getElementById('sigla_conselho2').value = conselho_profissional;
+            document.getElementById('numero_conselho_profissional2').value = conselho_1;
+            document.getElementById('codigo_cbo_profissional2').value = cbo;
+            document.getElementById('uf_profissional2').value = uf_conselho_1;
+            document.getElementById('codigo_operadora_profissional2').value = cpf;
+
+            // Fecha o modal de seleção de profissional
+            const modalProfissional3 = bootstrap.Modal.getInstance(document.getElementById('modalProfissional3'));
+            modalProfissional3.hide();
+
+        }
+        </script>
 @endsection

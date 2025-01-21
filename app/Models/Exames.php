@@ -35,9 +35,4 @@ class Exames extends Model
     {
         return $this->belongsTo(Profissional::class, 'profissional_id');
     }
-
-    public function procedimento()
-    {
-        return $this->hasMany(Procedimentos::class, 'procedimento_id');
-    }
 }
