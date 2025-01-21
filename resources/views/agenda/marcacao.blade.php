@@ -122,6 +122,8 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nome</th>
+                                    <th>Código</th>
+                                    <th>Valor</th>
                                     <th>Ação</th>
                                 </tr>
                             </thead>
@@ -136,6 +138,50 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="pacienteModal" tabindex="-1" aria-labelledby="pacienteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pacienteModalLabel">Selecione o Paciente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body custom-modal-body">
+                    <div class="mb-3">
+                        <input class="form-control" id="pacienteSearch" type="text" placeholder="Pesquisar por nome ou CPF...">
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="pacienteTable">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>CPF</th>
+                                    <th>Nome Social</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($pacientes as $p)
+                                    <tr>
+                                        <td>{{ $p->name }}</td>
+                                        <td>{{ $p->cpf }}</td>
+                                        <td>{{ $p->nome_social }}</td>
+                                        <td>
+                                            <button class="btn btn-primary" type="button"
+                                                onclick="selectPaciente('{{ $p->id }}', '{{ $p->name }}', '{{ $p->cpf }}')">
+                                                Selecionar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 
 
@@ -146,6 +192,30 @@
     <script src="{{ asset('js/jquery-3.7.0.min.js') }}"></script>
 
     <script>
+        function abrirModalPaciente(horario) {
+            console.log('Horário selecionado:', horario); // Para depuração
+            $('#pacienteModal').data('horario', horario).modal('show');
+        }
+
+        function selectPaciente(id, name) {
+            const horario = $('#pacienteModal').data('horario'); // Recupera o horário associado ao modal
+
+            // Preenche o nome e o ID do paciente nos campos correspondentes
+            document.getElementById(`paciente_nome${horario}`).value = name; // Nome do paciente
+            document.getElementById(`paciente_id${horario}`).value = id; // ID do paciente
+
+            $('#pacienteModal').modal('hide'); // Fecha o modal
+        }
+
+
+        document.getElementById('pacienteSearch').addEventListener('keyup', function() {
+            const value = this.value.toLowerCase();
+            document.querySelectorAll('#pacienteTable tbody tr').forEach(function(row) {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(value) ? '' : 'none';
+            });
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
 
@@ -296,7 +366,8 @@
                             <th class="col-1">Contato</th>
                             <th class="col-1">Convênio</th>
                             <th class="col-1">Consulta</th>
-                            <th class="col-1">Procedimento</th>
+                            <th class="col-1">Código</th>
+                            <th class="col-1">Valor</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -310,32 +381,51 @@
 
 
         function renderTableRow(horario, convenios, procedimentos, isToday, currentHour, currentMinute) {
-            // Extrai a hora e os minutos do horário
             var [horaHorario, minutoHorario] = horario.hora.split(':').map(Number);
 
-            // Verifica se a linha deve ser desabilitada
             var isDisabled = '';
             if (isToday && (horaHorario < currentHour || (horaHorario === currentHour && minutoHorario < currentMinute))) {
                 isDisabled = 'disabled="disabled"';
             }
 
-
             return `
-        <tr>
-            <td class="col-1"><input type="text" readonly name="hora[${horario}]" value="${horario.hora ?? ''}" class="form-control" ${isDisabled}></td>
-            <td class="col-2"><input type="text" name="paciente[${horario}]" value="${horario.name ?? ''}" class="form-control" ${isDisabled}></td>
-            <td class="col-1"><input type="text" name="celular[${horario}]" value="${horario.celular ?? ''}" class="form-control" ${isDisabled}></td>
-            <td class="col-1">${renderConvenioSelect(horario, convenios, isDisabled)}</td>
-            <td class="col-1">${renderProcedimentoInput(horario, procedimentos, isDisabled)}</td>
-            <input type="hidden" name="codigo[${horario.hora}]" id="codigo${horario.hora}" value="${horario.codigo ?? ''}" class="form-control" readonly ${isDisabled}>
-            <input type="hidden" name="valor_proc[${horario.hora}]" id="valor_proc${horario.hora}" value="${horario.valor_proc ?? ''}" class="form-control" ${isDisabled}>
-            <input type="hidden" id="procedimento_id${horario.hora}" name="procedimento_id[${horario.hora}]" value="${horario.procedimento_id ?? ''}">
-            <td class="col-1"><input type="text" id="procedimento_nome${horario.hora}" class="form-control" name="procedimento_nome[${horario.hora}]" value="${horario.procedimento_nome ?? ''}" ${isDisabled}></td>
-
-        </tr>
-    `;
+                <tr>
+                    <td class="col-1"><input type="text" readonly name="hora[${horario.hora}]" value="${horario.hora}" class="form-control" ${isDisabled}></td>
+                    <td class="col-2">
+                        <div class="d-flex align-items-center">
+                            <input type="text" id="paciente_nome${horario.hora}" name="paciente_nome[${horario.hora}]"
+                                value="${horario.paciente_nome || ''}" class="form-control me-2" ${isDisabled}>
+                            <button type="button" class="btn btn-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#pacienteModal"
+                                    onclick="abrirModalPaciente('${horario.hora}')"
+                                    ${isDisabled}>
+                                <i class="bi bi-person"></i>
+                            </button>
+                        </div>
+                        <input type="hidden" id="paciente_id${horario.hora}" name="paciente_id[${horario.hora}]" value="${horario.paciente_id || ''}">
+                    </td>
+                    <td class="col-1"><input type="text" name="celular[${horario.hora}]" value="${horario.celular || ''}" class="form-control" ${isDisabled}></td>
+                    <td class="col-1">${renderConvenioSelect(horario, convenios, isDisabled)}</td>
+                    <td class="col-1">
+                        <div class="d-flex align-items-center">
+                            <input type="text" id="procedimento_nome${horario.hora}" name="procedimento_nome[${horario.hora}]"
+                                value="${horario.procedimento_nome || ''}" class="form-control me-2" ${isDisabled}>
+                            <button type="button" class="btn btn-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#procedimentoModal"
+                                    onclick="abrirModalProcedimento('${horario.hora}')"
+                                    ${isDisabled}>
+                                <i class="bi bi-list"></i>
+                            </button>
+                        </div>
+                        <input type="hidden" id="procedimento_id${horario.hora}" name="procedimento_id[${horario.hora}]" value="${horario.procedimento_id || ''}">
+                    </td>
+                    <td class="col-1"><input type="text" name="codigo[${horario.hora}]" id="codigo${horario.hora}" value="${horario.codigo || ''}" class="form-control" readonly ${isDisabled}></td>
+                    <td class="col-1"><input type="text" name="valor_proc[${horario.hora}]" id="valor_proc${horario.hora}" value="${horario.valor_proc || ''}" class="form-control" ${isDisabled}></td>
+                </tr>
+            `;
         }
-
 
 
         function renderProcedimentoInput(horario, procedimentos, isDisabled) {
@@ -360,14 +450,17 @@
 
 
         function selectProcedimento(id, procedimento, codigo, valor_proc) {
-            const horario = $('#procedimentoModal').data('horario');
-            document.getElementById(`procedimento_id${horario}`).value = id;
-            document.getElementById(`procedimento_nome${horario}`).value = procedimento;
+            const horario = $('#procedimentoModal').data('horario'); // Recupera o horário associado ao modal
+
+            // Atualiza os campos na tabela
+            document.getElementById(`procedimento_id${horario}`).value = id; // Salva o ID no campo hidden
+            document.getElementById(`procedimento_nome${horario}`).value = procedimento; // Exibe o nome no campo visível
             document.getElementById(`codigo${horario}`).value = codigo;
             document.getElementById(`valor_proc${horario}`).value = valor_proc;
 
-            $('#procedimentoModal').modal('hide');
+            $('#procedimentoModal').modal('hide'); // Fecha o modal
         }
+
 
 
         document.getElementById('procedimentoSearch').addEventListener('keyup', function() {
@@ -416,6 +509,8 @@
                             <tr>
                                 <td>${procedimento.id}</td>
                                 <td>${procedimento.descricao || procedimento.procedimento}</td>
+                                <td>${procedimento.codigo || procedimento.codigo_anatomico}</td>
+                                <td>${procedimento.valor_proc}</td>
                                 <td>
                                     <button class="btn btn-primary" type="button"
                                         onclick="selectProcedimento('${procedimento.id}', '${procedimento.descricao || procedimento.procedimento}', '${procedimento.codigo || procedimento.codigo_anatomico}','${procedimento.valor_proc}')">
@@ -458,68 +553,71 @@
                 alert('Por favor, selecione uma data.');
                 return; // Interrompe a execução se a data não for selecionada
             }
-            var horariosRows = document.querySelectorAll(
-                '#horariosDisponiveis tbody tr'); // Seleciona todas as linhas da tabela
+
+            var horariosRows = document.querySelectorAll('#horariosDisponiveis tbody tr'); // Seleciona todas as linhas da tabela
             var todosHorariosDados = []; // Array para armazenar os dados de todas as linhas
 
-            horariosRows.forEach(row => {
-                // Capturar os valores de todos os inputs da linha
-                var paciente = row.querySelector('input[name^="paciente"]')?.value || '';
-                var hora = row.querySelector('input[name^="hora"]')?.value || '';
-                var celular = row.querySelector('input[name^="celular"]')?.value || '';
-                var matricula = row.querySelector('input[name^="matricula"]')?.value || '';
-                var convenio = row.querySelector('select[name^="convenio"]')?.value || '';
-                var procedimento = row.querySelector('input[name^="procedimento_nome"]')?.value || '';
-                var codigo = row.querySelector('input[name^="codigo"]')?.value || '';
-                var valor_proc = row.querySelector('input[name^="valor_proc"]')?.value || '';
+        horariosRows.forEach(row => {
+            var paciente = row.querySelector('input[name^="paciente_nome"]')?.value || '';
+            var pacienteId = row.querySelector('input[name^="paciente_id"]')?.value || null;
+            var celular = row.querySelector('input[name^="celular"]')?.value || '';
+            var hora = row.querySelector('input[name^="hora"]')?.value || '';
+            var matricula = row.querySelector('input[name^="matricula"]')?.value || '';
+            var convenio = row.querySelector('select[name^="convenio"]')?.value || '';
+            var procedimentoId = row.querySelector('input[name^="procedimento_id"]')?.value || null;
+            var codigo = row.querySelector('input[name^="codigo"]')?.value || '';
+            var valorProc = row.querySelector('input[name^="valor_proc"]')?.value || '';
 
-                var selectedDate = document.getElementById('displaySelectedData').textContent;
-                var profissionalId = document.getElementById('profissionais').value;
-                var especialidadeId = document.getElementById('especialidade').value;
+            var profissionalId = document.getElementById('profissionais').value;
+            var especialidadeId = document.getElementById('especialidade').value;
 
-                // Só adiciona ao array se o campo "procedimento" não estiver vazio
-                if (procedimento !== '') {
-                    // Coletar todos os dados em um objeto
-                    var dadosHorario = {
-                        paciente: paciente,
-                        celular: celular,
-                        convenio: convenio,
-                        matricula: matricula,
-                        procedimento: procedimento,
-                        codigo: codigo,
-                        valor_proc: valor_proc,
-                        horario: hora,
-                        data: selectedDate,
-                        profissionalId: profissionalId,
-                        especialidadeId: especialidadeId
-                    };
+            if (procedimentoId) {
+                todosHorariosDados.push({
+                    paciente: paciente,
+                    paciente_id: pacienteId,
+                    celular: celular,
+                    matricula: matricula,
+                    convenio: convenio,
+                    procedimento_id: procedimentoId, // Envie o ID do procedimento
+                    codigo: codigo,
+                    valor_proc: valorProc,
+                    horario: hora,
+                    data: selectedDate,
+                    profissionalId: profissionalId,
+                    especialidadeId: especialidadeId,
+                });
+            }
+        });
 
-                    // Adicionar os dados ao array
-                    todosHorariosDados.push(dadosHorario);
-                }
-            });
 
-            // Mostrar o array de dados no console
-            console.log('Todos os dados:', todosHorariosDados);
 
-            // Enviar os dados se nenhum horário estiver inválido
-            fetch('/agendar', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify(todosHorariosDados)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Dados atulizados com sucesso!');
-                    } else {
-                        alert('Erro ao enviar dados: ' + (data.message || 'Falha desconhecida'));
-                    }
-                })
+    if (todosHorariosDados.length === 0) {
+        alert('Nenhum dado para salvar. Verifique os campos obrigatórios.');
+        return;
+    }
 
-        }
-    </script>
+    // Enviar os dados para o backend
+    fetch('/agendar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify(todosHorariosDados)
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Dados salvos com sucesso!');
+                location.reload(); // Recarrega a página ou atualiza os dados, conforme necessário
+            } else {
+                alert('Erro ao salvar os dados: ' + (data.message || 'Erro desconhecido.'));
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao salvar os dados:', error);
+            alert('Erro ao salvar os dados. Consulte o console para mais detalhes.');
+        });
+}
+</script>
 @endsection
