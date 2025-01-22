@@ -374,6 +374,7 @@
             var isDisabled = '';
             if (isToday && (horaHorario < currentHour || (horaHorario === currentHour && minutoHorario <= currentMinute))) {
                 isDisabled = '';
+                //isDisabled = 'disabled';
             }
 
             return `
