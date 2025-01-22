@@ -229,6 +229,7 @@
                 },
                 validRange: {
                     start: today // Desabilita datas anteriores ao dia atual
+                    //start:null
                 },
                 dateClick: function(info) {
                     var selectedDate = info.dateStr;
@@ -372,7 +373,7 @@
 
             var isDisabled = '';
             if (isToday && (horaHorario < currentHour || (horaHorario === currentHour && minutoHorario <= currentMinute))) {
-                isDisabled = 'disabled="disabled"';
+                isDisabled = '';
             }
 
             return `
@@ -398,8 +399,8 @@
                         </div>
                         <input type="hidden" id="procedimento_id${horario.hora}" name="procedimento_id[${horario.hora}]" value="${horario.procedimento_id || ''}">
                     </td>
-                    <td class="col-1"><input type="text" name="codigo[${horario.hora}]" id="codigo${horario.hora}" value="${horario.codigo || ''}" class="form-control" readonly ${isDisabled}></td>
-                    <input type="hidden" name="valor_proc[${horario.hora}]" id="valor_proc${horario.hora}" value="${horario.valor_proc || ''}" class="form-control" ${isDisabled}>
+                    <td class="col-1"><input type="text" name="codigo[${horario.hora}]" id="codigo${horario.hora}" value="${horario.codigo || ''}" class="form-control" readonly ${isDisabled}>
+                    <input type="hidden" name="valor_proc[${horario.hora}]" id="valor_proc${horario.hora}" value="${horario.valor_proc || ''}" class="form-control" ${isDisabled}></td>
                 </tr>
             `;
         }

@@ -631,7 +631,9 @@ class AgendaController extends Controller
                 'celular' => $disponibilidade->celular,
                 'matricula' => $disponibilidade->matricula,
                 'codigo' => $disponibilidade->codigo,
-                'convenio_id' => $disponibilidade->convenio_id
+                'convenio_id' => $disponibilidade->convenio_id,
+                'paciente_id' => $disponibilidade->paciente_id,
+                'valor_proc' => $disponibilidade->valor_proc,
             ];
         }
 
@@ -753,6 +755,7 @@ class AgendaController extends Controller
                         'codigo' => $codigo,
                         'valor_proc' => $valor_proc,
                         'convenio_id' => $convenioId,
+                        'paciente_id' => $pacienteId,
                     ]);
             } else {
                 return response()->json(['success' => false, 'message' => 'Disponibilidade não encontrada para o dia da semana.']);
