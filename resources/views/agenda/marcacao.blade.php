@@ -167,7 +167,7 @@
                                         <td>{{ $p->nome_social }}</td>
                                         <td>
                                             <button class="btn btn-primary" type="button"
-                                                onclick="selectPaciente('{{ $p->id }}', '{{ $p->name }}', '{{ $p->cpf }}')">
+                                                onclick="selectPaciente('{{ $p->id }}', '{{ $p->name }}', '{{ $p->celular }}')">
                                                 Selecionar
                                             </button>
                                         </td>
@@ -197,16 +197,15 @@
             $('#pacienteModal').data('horario', horario).modal('show');
         }
 
-        function selectPaciente(id, name) {
+        function selectPaciente(id, name, celular) {
             const horario = $('#pacienteModal').data('horario'); // Recupera o horário associado ao modal
 
             // Preenche o nome e o ID do paciente nos campos correspondentes
             document.getElementById(`paciente_nome${horario}`).value = name; // Nome do paciente
             document.getElementById(`paciente_id${horario}`).value = id; // ID do paciente
-
+            document.querySelector(`[name="celular[${horario}]"]`).value = celular; // Celular do paciente
             $('#pacienteModal').modal('hide'); // Fecha o modal
         }
-
 
         document.getElementById('pacienteSearch').addEventListener('keyup', function() {
             const value = this.value.toLowerCase();
@@ -218,7 +217,6 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
-
             var today = new Date(); // Captura a data atual
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -244,8 +242,7 @@
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                    .getAttribute('content')
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                             },
                             body: JSON.stringify({
                                 data: selectedDate
@@ -259,8 +256,7 @@
                                 alert('Essa data é feriado e não pode ser selecionada.');
                             } else {
                                 // Exibir a data no formato dd/mm/YYYY
-                                document.getElementById('displaySelectedData').textContent =
-                                    formattedDate;
+                                document.getElementById('displaySelectedData').textContent = formattedDate;
                                 fetchHorariosDisponiveis(selectedDate);
                             }
                         })
@@ -268,7 +264,6 @@
                             console.error('Erro ao verificar feriado ou domingo:', error);
                         });
                 }
-
             });
 
             calendar.render();
@@ -280,9 +275,6 @@
                 }
             });
         });
-
-
-
 
         function fetchProfissionais(especialidadeId) {
             fetch(`/get-profissionais/${especialidadeId}`)
@@ -335,16 +327,13 @@
                         // Inserir a tabela na div 'displayDiasDisponiveis'
                         document.getElementById('displayDiasDisponiveis').innerHTML = tabelaDiasDisponiveis;
 
-
                         var today = new Date();
-                        var isToday = selectedDate === today.toISOString().split('T')[
-                            0]; // Verifica se a data selecionada é o dia atual
+                        var isToday = selectedDate === today.toISOString().split('T')[0]; // Verifica se a data selecionada é o dia atual
                         var currentHour = today.getHours(); // Pega a hora atual
                         var currentMinute = today.getMinutes(); // Pega os minutos atuais
 
                         if (data.horarios && data.horarios.length > 0) {
-                            horariosContainer.innerHTML = renderHorariosTable(data.horarios, data.convenios, data
-                                .procedimentos, isToday, currentHour, currentMinute);
+                            horariosContainer.innerHTML = renderHorariosTable(data.horarios, data.convenios, data.procedimentos, isToday, currentHour, currentMinute);
                         } else {
                             horariosContainer.innerHTML = 'Nenhum horário disponível para a data selecionada.';
                         }
@@ -357,34 +346,32 @@
 
         function renderHorariosTable(horarios, convenios, procedimentos, isToday, currentHour, currentMinute) {
             var table = `
-            <div class="table-responsive">
-                <table class="table table-bordered" style="font-size: 12px; min-width: 500px;">
-                    <thead>
-                        <tr>
-                            <th class="col-1">Hora</th>
-                            <th class="col-2">Paciente</th>
-                            <th class="col-1">Contato</th>
-                            <th class="col-1">Convênio</th>
-                            <th class="col-1">Consulta</th>
-                            <th class="col-1">Código</th>
-                            <th class="col-1">Valor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${horarios.map(horario => renderTableRow(horario, convenios, procedimentos, isToday, currentHour, currentMinute)).join('')}
-                    </tbody>
-                </table>
-            </div>
-    `;
+                <div class="table-responsive">
+                    <table class="table table-bordered" style="font-size: 12px; min-width: 500px;">
+                        <thead>
+                            <tr>
+                                <th class="col-1">Hora</th>
+                                <th class="col-2">Paciente</th>
+                                <th class="col-1">Contato</th>
+                                <th class="col-1">Convênio</th>
+                                <th class="col-2">Consulta</th>
+                                <th class="col-1">Código</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${horarios.map(horario => renderTableRow(horario, convenios, procedimentos, isToday, currentHour, currentMinute)).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
             return table;
         }
-
 
         function renderTableRow(horario, convenios, procedimentos, isToday, currentHour, currentMinute) {
             var [horaHorario, minutoHorario] = horario.hora.split(':').map(Number);
 
             var isDisabled = '';
-            if (isToday && (horaHorario < currentHour || (horaHorario === currentHour && minutoHorario < currentMinute))) {
+            if (isToday && (horaHorario < currentHour || (horaHorario === currentHour && minutoHorario <= currentMinute))) {
                 isDisabled = 'disabled="disabled"';
             }
 
@@ -393,13 +380,8 @@
                     <td class="col-1"><input type="text" readonly name="hora[${horario.hora}]" value="${horario.hora}" class="form-control" ${isDisabled}></td>
                     <td class="col-2">
                         <div class="d-flex align-items-center">
-                            <input type="text" id="paciente_nome${horario.hora}" name="paciente_nome[${horario.hora}]"
-                                value="${horario.paciente_nome || ''}" class="form-control me-2" ${isDisabled}>
-                            <button type="button" class="btn btn-primary"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#pacienteModal"
-                                    onclick="abrirModalPaciente('${horario.hora}')"
-                                    ${isDisabled}>
+                            <input type="text" id="paciente_nome${horario.hora}" title="${horario.paciente_nome || ''}" name="paciente_nome[${horario.hora}]" value="${horario.paciente_nome || ''}" class="form-control me-2" ${isDisabled}>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pacienteModal" onclick="abrirModalPaciente('${horario.hora}')" ${isDisabled}>
                                 <i class="bi bi-person"></i>
                             </button>
                         </div>
@@ -409,45 +391,23 @@
                     <td class="col-1">${renderConvenioSelect(horario, convenios, isDisabled)}</td>
                     <td class="col-1">
                         <div class="d-flex align-items-center">
-                            <input type="text" id="procedimento_nome${horario.hora}" name="procedimento_nome[${horario.hora}]"
-                                value="${horario.procedimento_nome || ''}" class="form-control me-2" ${isDisabled}>
-                            <button type="button" class="btn btn-primary"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#procedimentoModal"
-                                    onclick="abrirModalProcedimento('${horario.hora}')"
-                                    ${isDisabled}>
+                            <input type="text" id="procedimento_nome${horario.hora}" title="${horario.procedimento_id || ''}" name="procedimento_nome[${horario.hora}]" value="${horario.procedimento_id || ''}" class="form-control me-2" ${isDisabled}>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#procedimentoModal" onclick="abrirModalProcedimento('${horario.hora}')" ${isDisabled}>
                                 <i class="bi bi-list"></i>
                             </button>
                         </div>
                         <input type="hidden" id="procedimento_id${horario.hora}" name="procedimento_id[${horario.hora}]" value="${horario.procedimento_id || ''}">
                     </td>
                     <td class="col-1"><input type="text" name="codigo[${horario.hora}]" id="codigo${horario.hora}" value="${horario.codigo || ''}" class="form-control" readonly ${isDisabled}></td>
-                    <td class="col-1"><input type="text" name="valor_proc[${horario.hora}]" id="valor_proc${horario.hora}" value="${horario.valor_proc || ''}" class="form-control" ${isDisabled}></td>
+                    <input type="hidden" name="valor_proc[${horario.hora}]" id="valor_proc${horario.hora}" value="${horario.valor_proc || ''}" class="form-control" ${isDisabled}>
                 </tr>
             `;
         }
-
-
-        function renderProcedimentoInput(horario, procedimentos, isDisabled) {
-            return `
-        <button
-        type="button"
-        class="btn btn-primary form-control"
-        data-bs-toggle="modal"
-        data-bs-target="#procedimentoModal"
-        onclick="abrirModalProcedimento('${horario.hora}')"
-        ${isDisabled}>
-        <i class="bi bi-list"></i>
-        </button>
-        `;
-        }
-
 
         function abrirModalProcedimento(horario) {
             console.log('Horário selecionado:', horario); // Verificar o horário selecionado
             $('#procedimentoModal').data('horario', horario).modal('show');
         }
-
 
         function selectProcedimento(id, procedimento, codigo, valor_proc) {
             const horario = $('#procedimentoModal').data('horario'); // Recupera o horário associado ao modal
@@ -461,91 +421,79 @@
             $('#procedimentoModal').modal('hide'); // Fecha o modal
         }
 
-
-
         document.getElementById('procedimentoSearch').addEventListener('keyup', function() {
             const value = this.value.toLowerCase();
             document.querySelectorAll('#procedimentoTable tbody tr').forEach(function(row) {
                 const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(value) ? '' :
-                    'none'; // Correção de 'procedimento' para 'none'
+                row.style.display = text.includes(value) ? '' : 'none';
             });
         });
 
-
         function renderConvenioSelect(horario, convenios, isDisabled) {
             return `
-                <select id="convenioProc" name="convenio[${horario}]" class="select2 form-control" ${isDisabled}>
+                <select id="convenioProc" name="convenio[${horario.hora}]" class="select2 form-control" ${isDisabled}>
                     <option value="">${horario.convenio_id ? '' : 'Convênio'}</option>
                     ${convenios.map(convenio => `
-                                                        <option value="${convenio.id}" ${horario.convenio_id == convenio.id ? 'selected' : ''}>
-                                                            ${convenio.nome}
-                                                        </option>
-                                                    `).join('')}
+                        <option value="${convenio.id}" ${horario.convenio_id == convenio.id ? 'selected' : ''}>
+                            ${convenio.nome}
+                        </option>
+                    `).join('')}
                 </select>
             `;
         }
 
         $(document).on('change', '#convenioProc', function() {
-    const convenioId = $(this).val(); // Pega o ID do convênio selecionado
+            const convenioId = $(this).val(); // Pega o ID do convênio selecionado
 
-    if (convenioId) {
-        $.ajax({
-            url: '{{ route('get.procedimentos') }}', // URL correta para o controlador
-            type: 'POST',
-            data: {
-                convenio_id: convenioId,
-                _token: '{{ csrf_token() }}' // Token CSRF para segurança
-            },
-            success: function(data) {
-                // Limpa o conteúdo atual da tabela
-                const tbody = $('#procedimentoTable tbody');
-                tbody.empty();
+            if (convenioId) {
+                $.ajax({
+                    url: '{{ route('get.procedimentos') }}', // URL correta para o controlador
+                    type: 'POST',
+                    data: {
+                        convenio_id: convenioId,
+                        _token: '{{ csrf_token() }}' // Token CSRF para segurança
+                    },
+                    success: function(data) {
+                        // Limpa o conteúdo atual da tabela
+                        const tbody = $('#procedimentoTable tbody');
+                        tbody.empty();
 
-                // Verifica se há procedimentos retornados
-                if (data.length > 0) {
-                    data.forEach(function(procedimento) {
-                        const row = `
-                            <tr>
-                                <td>${procedimento.id}</td>
-                                <td>${procedimento.descricao || procedimento.procedimento}</td>
-                                <td>${procedimento.codigo || procedimento.codigo_anatomico}</td>
-                                <td>${procedimento.valor_proc}</td>
-                                <td>
-                                    <button class="btn btn-primary" type="button"
-                                        onclick="selectProcedimento('${procedimento.id}', '${procedimento.descricao || procedimento.procedimento}', '${procedimento.codigo || procedimento.codigo_anatomico}','${procedimento.valor_proc}')">
-                                        Selecionar
-                                    </button>
-                                </td>
-                            </tr>
-                        `;
-                        tbody.append(row);
-                    });
-                } else {
-                    const emptyRow = `
-                        <tr>
-                            <td colspan="4" class="text-center">Nenhum procedimento encontrado</td>
-                        </tr>
-                    `;
-                    tbody.append(emptyRow);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Erro ao buscar procedimentos:', error);
+                        // Verifica se há procedimentos retornados
+                        if (data.length > 0) {
+                            data.forEach(function(procedimento) {
+                                const row = `
+                                    <tr>
+                                        <td>${procedimento.id}</td>
+                                        <td>${procedimento.descricao || procedimento.procedimento}</td>
+                                        <td>${procedimento.codigo || procedimento.codigo_anatomico}</td>
+                                        <td>${procedimento.valor_proc}</td>
+                                        <td>
+                                            <button class="btn btn-primary" type="button"
+                                                onclick="selectProcedimento('${procedimento.id}', '${procedimento.descricao || procedimento.procedimento}', '${procedimento.codigo || procedimento.codigo_anatomico}','${procedimento.valor_proc}')">
+                                                Selecionar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `;
+                                tbody.append(row);
+                            });
+                        } else {
+                            const emptyRow = `
+                                <tr>
+                                    <td colspan="4" class="text-center">Nenhum procedimento encontrado</td>
+                                </tr>
+                            `;
+                            tbody.append(emptyRow);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Erro ao buscar procedimentos:', error);
+                    }
+                });
+            } else {
+                console.log('Nenhum convênio selecionado');
             }
         });
-    } else {
-        console.log('Nenhum convênio selecionado');
-    }
-});
-
-
-        // function updateCodigo(selectElement) {
-        //     var selectedOption = selectElement.options[selectElement.selectedIndex];
-        //     var codigoInput = selectElement.closest('tr').querySelector('input[name^="codigo"]');
-        //     codigoInput.value = selectedOption.getAttribute('data-codigo');
-        // }
-
 
         function enviarTodosDados() {
             var selectedDate = document.getElementById('displaySelectedData').textContent;
@@ -557,67 +505,65 @@
             var horariosRows = document.querySelectorAll('#horariosDisponiveis tbody tr'); // Seleciona todas as linhas da tabela
             var todosHorariosDados = []; // Array para armazenar os dados de todas as linhas
 
-        horariosRows.forEach(row => {
-            var paciente = row.querySelector('input[name^="paciente_nome"]')?.value || '';
-            var pacienteId = row.querySelector('input[name^="paciente_id"]')?.value || null;
-            var celular = row.querySelector('input[name^="celular"]')?.value || '';
-            var hora = row.querySelector('input[name^="hora"]')?.value || '';
-            var matricula = row.querySelector('input[name^="matricula"]')?.value || '';
-            var convenio = row.querySelector('select[name^="convenio"]')?.value || '';
-            var procedimentoId = row.querySelector('input[name^="procedimento_id"]')?.value || null;
-            var codigo = row.querySelector('input[name^="codigo"]')?.value || '';
-            var valorProc = row.querySelector('input[name^="valor_proc"]')?.value || '';
+            horariosRows.forEach(row => {
+                var paciente = row.querySelector('input[name^="paciente_nome"]')?.value || '';
+                var pacienteId = row.querySelector('input[name^="paciente_id"]')?.value || null;
+                var celular = row.querySelector('input[name^="celular"]')?.value || '';
+                var hora = row.querySelector('input[name^="hora"]')?.value || '';
+                var matricula = row.querySelector('input[name^="matricula"]')?.value || '';
+                var convenio = row.querySelector('select[name^="convenio"]')?.value || '';
+                var procedimentoId = row.querySelector('input[name^="procedimento_nome"]')?.value || null;
+                var codigo = row.querySelector('input[name^="codigo"]')?.value || '';
+                var valorProc = row.querySelector('input[name^="valor_proc"]')?.value || '';
 
-            var profissionalId = document.getElementById('profissionais').value;
-            var especialidadeId = document.getElementById('especialidade').value;
+                var profissionalId = document.getElementById('profissionais').value;
+                var especialidadeId = document.getElementById('especialidade').value;
 
-            if (procedimentoId) {
-                todosHorariosDados.push({
-                    paciente: paciente,
-                    paciente_id: pacienteId,
-                    celular: celular,
-                    matricula: matricula,
-                    convenio: convenio,
-                    procedimento_id: procedimentoId, // Envie o ID do procedimento
-                    codigo: codigo,
-                    valor_proc: valorProc,
-                    horario: hora,
-                    data: selectedDate,
-                    profissionalId: profissionalId,
-                    especialidadeId: especialidadeId,
-                });
+                if (procedimentoId) {
+                    todosHorariosDados.push({
+                        paciente: paciente,
+                        paciente_id: pacienteId,
+                        celular: celular,
+                        matricula: matricula,
+                        convenio: convenio,
+                        procedimento_id: procedimentoId, // Envie o ID do procedimento
+                        codigo: codigo,
+                        valor_proc: valorProc,
+                        horario: hora,
+                        data: selectedDate,
+                        profissionalId: profissionalId,
+                        especialidadeId: especialidadeId,
+                    });
+                }
+            });
+
+            if (todosHorariosDados.length === 0) {
+                alert('Nenhum dado para salvar. Verifique os campos obrigatórios.');
+                return;
             }
-        });
 
-
-
-    if (todosHorariosDados.length === 0) {
-        alert('Nenhum dado para salvar. Verifique os campos obrigatórios.');
-        return;
-    }
-
-    // Enviar os dados para o backend
-    fetch('/agendar', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify(todosHorariosDados)
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Dados salvos com sucesso!');
-                location.reload(); // Recarrega a página ou atualiza os dados, conforme necessário
-            } else {
-                alert('Erro ao salvar os dados: ' + (data.message || 'Erro desconhecido.'));
-            }
-        })
-        .catch(error => {
-            console.error('Erro ao salvar os dados:', error);
-            alert('Erro ao salvar os dados. Consulte o console para mais detalhes.');
-        });
-}
-</script>
+            // Enviar os dados para o backend
+            fetch('/agendar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify(todosHorariosDados)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Dados salvos com sucesso!');
+                    location.reload(); // Recarrega a página ou atualiza os dados, conforme necessário
+                } else {
+                    alert('Erro ao salvar os dados: ' + (data.message || 'Erro desconhecido.'));
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao salvar os dados:', error);
+                alert('Erro ao salvar os dados. Consulte o console para mais detalhes.');
+            });
+        }
+    </script>
 @endsection
