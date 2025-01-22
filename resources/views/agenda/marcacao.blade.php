@@ -556,7 +556,7 @@
             .then(data => {
                 if (data.success) {
                     alert('Dados salvos com sucesso!');
-                    location.reload(); // Recarrega a página ou atualiza os dados, conforme necessário
+                    //location.reload(); // Recarrega a página ou atualiza os dados, conforme necessário
                 } else {
                     alert('Erro ao salvar os dados: ' + (data.message || 'Erro desconhecido.'));
                 }
