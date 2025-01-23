@@ -153,7 +153,7 @@ public function buscarGuiasPorConta($contaId)
 {
     Log::info("Buscando guias para conta financeira ID: $contaId");
 
-    $contasGuias = ContaGuia::where('conta_financeira_id', $contaId)->get('valor');
+    $contasGuias = ContaGuia::where('conta_financeira_id', $contaId)->get();
 
     Log::info("Registros encontrados em contas_guias: ", $contasGuias->toArray());
 

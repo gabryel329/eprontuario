@@ -8,12 +8,13 @@
 
     <div class="card">
         <div class="card-body">
-            <form method="POST" action="{{ route('guias-sadt.update', $guiaSadt->id) }}">
+            <form method="POST" action="{{ route('guia.sp.atualizar') }}">
                 @csrf
-                @method('PUT')
+                @method('POST')
 
                 {{-- SADT Form --}}
                 <div>
+                    <input type="hidden" name="convenio_id" value="{{ $guiaSadt->convenio_id }}">
                     <h5 class="modal-title">Guia SADT</h5>
                     @csrf
                     <div class="row">
@@ -109,8 +110,15 @@
                         </div>
                         <div class="col-md-2">
                             <label for="conselho_profissional" class="form-label">16- Conselho</label>
-                            <input class="form-control" id="conselho_profissional" name="conselho_profissional"
-                                type="text" value="{{ old('conselho_profissional', $guiaSadt->conselho_profissional) }}">
+                            <select name="conselho_profissional" id="conselho_profissional" class="form-select">
+                                <option value="" disabled selected>Selecione</option>
+                                @foreach ($conselhos as $sigla => $codigo)
+                                    <option value="{{ $codigo }}"
+                                        {{ old('conselho_profissional', $guiaSadt->conselho_profissional) == $codigo ? 'selected' : '' }}>
+                                        {{ $sigla }} <!-- Exibe a sigla -->
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="col-md-2">
                             <label for="numero_conselho" class="form-label">17- Nº Conselho</label>
@@ -119,8 +127,15 @@
                         </div>
                         <div class="col-md-1">
                             <label for="uf_conselho" class="form-label">18- UF</label>
-                            <input class="form-control" id="uf_conselho" name="uf_conselho" type="text"
-                                value="{{ old('uf_conselho', $guiaSadt->uf_conselho) }}">
+                            <select name="uf_conselho" id="uf_conselho" class="form-select">
+                                <option selected disabled>Selecione</option>
+                                @foreach ($ufs as $uf => $codigo)
+                                    <option value="{{ $codigo }}"
+                                        {{ old('uf_conselho', $guiaSadt->uf_conselho) == $codigo ? 'selected' : '' }}>
+                                        {{ $uf }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="col-md-2">
                             <label for="codigo_cbo" class="form-label">19- Código CBO</label>
@@ -202,27 +217,25 @@
                                 </thead>
                                 <tbody id="exame-table-body">
                                     @foreach ($exameSoli as $item)
-                                        <tr style="text-align: center;">
-                                            <td>
-                                                <button type="button" class="btn btn-primary form-control" 
-                                                        data-bs-toggle="modal" 
-                                                        data-bs-target="#modalProcedimento1" 
-                                                        onclick="setRowContext(this)">
-                                                    <i class="bi bi-list"></i>
-                                                </button>
-                                            </td>
-                                            <td>
-                                                <input class="form-control" style="text-align: center;" name="agenda_id2[]" type="hidden" value="{{$item->agenda_id}}" readonly>
-                                                <input class="form-control" style="text-align: center;" name="tabela[]" type="text" value="{{$item->tabela}}" readonly>
-                                            </td>
-                                            <td><input class="form-control" id="codigo_procedimento_solicitado" name="codigo_procedimento_solicitado[]" type="text" value="{{$item->codigo_procedimento_solicitado}}" readonly></td>
-                                            <td><input class="form-control" id="descricao_procedimento" name="descricao_procedimento[]" type="text" value="{{$item->descricao_procedimento}}" readonly></td>
-                                            <td><input class="form-control" style="text-align: center;" name="qtd_sol[]" type="number" value="{{$item->qtd_sol}}"></td>
-                                            <td><input class="form-control" style="text-align: center;" name="qtd_aut[]" type="number" value="{{$item->qtd_aut}}"></td>
-                                            <td><button type="button" class="btn btn-danger btn-sm" onclick="excluirLinha(this)"><i class="icon bi bi-trash"></i></button></td>
-                                            <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha()">+</button></td>
-                                            <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha(this)">-</button></td>
-                                        </tr>
+                                    <tr style="text-align: center;">
+                                    <td>
+                                        <button type="button" class="btn btn-primary form-control"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalProcedimento1"
+                                                onclick="setRowContext(this, '{{ $guiaSadt->paciente_id }}')">
+                                            <i class="bi bi-list"></i>
+                                        </button>
+                                    </td>
+                                        <td>
+                                            <input class="form-control" style="text-align: center;" name="agenda_id2[]" type="hidden" value="{{$item->agenda_id}}" readonly>
+                                            <input class="form-control" style="text-align: center;" name="tabela[]" type="text" value="{{$item->tabela}}" readonly>
+                                        </td>
+                                        <td><input class="form-control" id="codigo_procedimento_solicitado" name="codigo_procedimento_solicitado[]" type="text" value="{{$item->codigo_procedimento_solicitado}}" readonly></td>
+                                        <td><input class="form-control" id="descricao_procedimento" name="descricao_procedimento[]" type="text" value="{{$item->descricao_procedimento}}" readonly></td>
+                                        <td><input class="form-control" style="text-align: center;" name="qtd_sol[]" type="number" value="{{$item->qtd_sol}}"></td>
+                                        <td><input class="form-control" style="text-align: center;" name="qtd_aut[]" type="number" value="{{$item->qtd_aut}}"></td>
+                                        <td><button type="button" class="btn btn-danger btn-sm" onclick="excluirLinha(this)"><i class="icon bi bi-trash"></i></button></td>
+                                        <td><button type="button" class="btn btn-success" onclick="adicionarNovaLinha()">+</button> </td>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -257,101 +270,118 @@
                         <div class="col-md-2">
                             <label for="tipo_atendimento" class="form-label">32 - Tipo de Atendimento</label>
                             <select class="form-select" id="tipo_atendimento" name="tipo_atendimento">
-                                <option value="">{{ old('tipo_atendimento', $guiaSadt->tipo_atendimento) ? old('tipo_atendimento', $guiaSadt->tipo_atendimento) : 'Selecione' }}</option>
-                                <option value="01">Remoção</option>
-                                <option value="02">Pequena Cirurgia</option>
-                                <option value="03">Outras Terapias</option>
-                                <option value="04">Consulta</option>
-                                <option value="05">Exame Ambulatorial</option>
-                                <option value="06">Atendimento Domiciliar</option>
-                                <option value="07">Internação</option>
-                                <option value="08">Quimioterapia</option>
-                                <option value="09">Radioterapia</option>
-                                <option value="10">Terapia Renal Substitutiva (TRS)</option>
-                                <option value="11">Pronto Socorro</option>
-                                <option value="13">Pequeno atendimento (sutura, gesso e outros)</option>
-                                <option value="14">Saúde Ocupacional - Admissional</option>
-                                <option value="15">Saúde Ocupacional - Demissional</option>
-                                <option value="16">Saúde Ocupacional - Periódico</option>
-                                <option value="17">Saúde Ocupacional - Retorno ao trabalho</option>
-                                <option value="18">Saúde Ocupacional - Mudança de função</option>
-                                <option value="19">Saúde Ocupacional - Promoção à saúde</option>
-                                <option value="20">Saúde Ocupacional - Beneficiário novo</option>
-                                <option value="21">Saúde Ocupacional - Assistência a demitidos</option>
+                                <option value="" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) ? '' : 'selected' }}>Selecione</option>
+                                <option value="01" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '01' ? 'selected' : '' }}>Remoção</option>
+                                <option value="02" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '02' ? 'selected' : '' }}>Pequena Cirurgia</option>
+                                <option value="03" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '03' ? 'selected' : '' }}>Outras Terapias</option>
+                                <option value="04" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '04' ? 'selected' : '' }}>Consulta</option>
+                                <option value="05" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '05' ? 'selected' : '' }}>Exame Ambulatorial</option>
+                                <option value="06" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '06' ? 'selected' : '' }}>Atendimento Domiciliar</option>
+                                <option value="07" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '07' ? 'selected' : '' }}>Internação</option>
+                                <option value="08" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '08' ? 'selected' : '' }}>Quimioterapia</option>
+                                <option value="09" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '09' ? 'selected' : '' }}>Radioterapia</option>
+                                <option value="10" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '10' ? 'selected' : '' }}>Terapia Renal Substitutiva (TRS)</option>
+                                <option value="11" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '11' ? 'selected' : '' }}>Pronto Socorro</option>
+                                <option value="13" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '13' ? 'selected' : '' }}>Pequeno atendimento (sutura, gesso e outros)</option>
+                                <option value="14" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '14' ? 'selected' : '' }}>Saúde Ocupacional - Admissional</option>
+                                <option value="15" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '15' ? 'selected' : '' }}>Saúde Ocupacional - Demissional</option>
+                                <option value="16" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '16' ? 'selected' : '' }}>Saúde Ocupacional - Periódico</option>
+                                <option value="17" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '17' ? 'selected' : '' }}>Saúde Ocupacional - Retorno ao trabalho</option>
+                                <option value="18" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '18' ? 'selected' : '' }}>Saúde Ocupacional - Mudança de função</option>
+                                <option value="19" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '19' ? 'selected' : '' }}>Saúde Ocupacional - Promoção à saúde</option>
+                                <option value="20" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '20' ? 'selected' : '' }}>Saúde Ocupacional - Beneficiário novo</option>
+                                <option value="21" {{ old('tipo_atendimento', $guiaSadt->tipo_consulta) == '21' ? 'selected' : '' }}>Saúde Ocupacional - Assistência a demitidos</option>
                             </select>
                         </div>
                         <div class="col-md-2">
                             <label for="indicacao_acidente" class="form-label">33 - Indicação de Acidente</label>
                             <select class="form-select" id="indicacao_acidente" name="indicacao_acidente">
-                                <option value="">{{ old('indicacao_acidente', $guiaSadt->indicacao_acidente) ? old('indicacao_acidente', $guiaSadt->indicacao_acidente) : 'Selecione' }}</option>
-                                <option value="1">Sim</option>
-                                <option value="2">Não</option>
+                                <option value="" {{ old('indicacao_acidente', $guiaSadt->tipo_consulta) ? '' : 'selected' }}>Selecione</option>
+                                <option value="1" {{ old('indicacao_acidente', $guiaSadt->tipo_consulta) == '1' ? 'selected' : '' }}>Sim</option>
+                                <option value="2" {{ old('indicacao_acidente', $guiaSadt->tipo_consulta) == '2' ? 'selected' : '' }}>Não</option>
                             </select>
                         </div>
                         <div class="col-md-2">
                             <label for="tipo_consulta" class="form-label">34 - Tipo de Consulta</label>
                             <select class="form-select" id="tipo_consulta" name="tipo_consulta">
-                                    <option value="">{{ old('tipo_consulta', $guiaSadt->tipo_consulta) ? old('tipo_consulta', $guiaSadt->tipo_consulta) : 'Selecione' }}</option>
-                                <option value="1">Primeira Consulta</option>
-                                <option value="2">Retorno</option>
-                                <option value="3">Pré-natal</option>
-                                <option value="4">Por encaminhamento</option>
+                                <option value="" {{ old('tipo_consulta', $guiaSadt->tipo_consulta) ? '' : 'selected' }}>Selecione</option>
+                                <option value="1" {{ old('tipo_consulta', $guiaSadt->tipo_consulta) == '1' ? 'selected' : '' }}>Primeira Consulta</option>
+                                <option value="2" {{ old('tipo_consulta', $guiaSadt->tipo_consulta) == '2' ? 'selected' : '' }}>Retorno</option>
+                                <option value="3" {{ old('tipo_consulta', $guiaSadt->tipo_consulta) == '3' ? 'selected' : '' }}>Pré-natal</option>
+                                <option value="4" {{ old('tipo_consulta', $guiaSadt->tipo_consulta) == '4' ? 'selected' : '' }}>Por encaminhamento</option>
                             </select>
                         </div>
                         <div class="col-md-2">
                             <label for="motivo_encerramento" class="form-label">35 - Encerramento Atend.</label>
                             <select class="form-select" id="motivo_encerramento" name="motivo_encerramento">
-                                <option value="">{{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) ? old('motivo_encerramento', $guiaSadt->motivo_encerramento) : 'Selecione' }}</option>
-                                <option value="11">Alta Curado</option>
-                                <option value="12">Alta Melhorado</option>
-                                <option value="14">Alta a pedido</option>
-                                <option value="15">Alta com previsão de retorno para acompanhamento do paciente
+                                <!-- Verificação se o valor está vazio e se deve exibir "Selecione" -->
+                                <option value="" disabled {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) ? '' : 'selected' }}>
+                                    Selecione
                                 </option>
-                                <option value="16">Alta por Evasão</option>
-                                <option value="18">Alta por outros motivos</option>
-                                <option value="21">Permanência, por características próprias da doença</option>
-                                <option value="22">Permanência, por intercorrência</option>
-                                <option value="23">Permanência, por impossibilidade sócio-familiar</option>
-                                <option value="24">Permanência, por processo de doação de órgãos, tecidos e
-                                    células - doador vivo</option>
-                                <option value="25">Permanência, por processo de doação de órgãos, tecidos e
-                                    células - doador morto</option>
-                                <option value="26">Permanência, por mudança de procedimento</option>
-                                <option value="27">Permanência, por reoperação</option>
-                                <option value="28">Permanência, outros motivos</option>
-                                <option value="31">Transferido para outro estabelecimento</option>
-                                <option value="32">Transferência para internação domiciliar</option>
-                                <option value="41">Óbito com declaração de óbito fornecida pelo médico
-                                    assistente</option>
-                                <option value="42">Óbito com declaração de óbito fornecida pelo Instituto
-                                    Médico Legal (IML)</option>
-                                <option value="43">Óbito com declaração de óbito fornecida pelo Serviço de
-                                    Verificação de Óbito (SVO)</option>
-                                <option value="51">Encerramento Administrativo</option>
-                                <option value="61">Alta da mãe/puérpera e do recém-nascido</option>
-                                <option value="62">Alta da mãe/puérpera e permanência do recém-nascido</option>
-                                <option value="63">Alta da mãe/puérpera e óbito do recém-nascido</option>
-                                <option value="64">Alta da mãe/puérpera com óbito fetal</option>
-                                <option value="65">Óbito da gestante e do concepto</option>
-                                <option value="66">Óbito da mãe/puérpera e alta do recém-nascido</option>
-                                <option value="67">Óbito da mãe/puérpera e permanência do recém-nascido
+                                <!-- Verificação de cada opção com base no valor vindo do banco ou do 'old()' -->
+                                <option value="11" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '11' ? 'selected' : '' }}>Alta Curado</option>
+                                <option value="12" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '12' ? 'selected' : '' }}>Alta Melhorado</option>
+                                <option value="14" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '14' ? 'selected' : '' }}>Alta a pedido</option>
+                                <option value="15" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '15' ? 'selected' : '' }}>
+                                    Alta com previsão de retorno para acompanhamento do paciente
                                 </option>
+                                <option value="16" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '16' ? 'selected' : '' }}>Alta por Evasão</option>
+                                <option value="18" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '18' ? 'selected' : '' }}>Alta por outros motivos</option>
+                                <option value="21" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '21' ? 'selected' : '' }}>
+                                    Permanência, por características próprias da doença
+                                </option>
+                                <option value="22" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '22' ? 'selected' : '' }}>Permanência, por intercorrência</option>
+                                <option value="23" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '23' ? 'selected' : '' }}>
+                                    Permanência, por impossibilidade sócio-familiar
+                                </option>
+                                <option value="24" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '24' ? 'selected' : '' }}>
+                                    Permanência, por processo de doação de órgãos, tecidos e células - doador vivo
+                                </option>
+                                <option value="25" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '25' ? 'selected' : '' }}>
+                                    Permanência, por processo de doação de órgãos, tecidos e células - doador morto
+                                </option>
+                                <option value="26" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '26' ? 'selected' : '' }}>Permanência, por mudança de procedimento</option>
+                                <option value="27" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '27' ? 'selected' : '' }}>Permanência, por reoperação</option>
+                                <option value="28" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '28' ? 'selected' : '' }}>Permanência, outros motivos</option>
+                                <option value="31" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '31' ? 'selected' : '' }}>Transferido para outro estabelecimento</option>
+                                <option value="32" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '32' ? 'selected' : '' }}>Transferência para internação domiciliar</option>
+                                <option value="41" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '41' ? 'selected' : '' }}>
+                                    Óbito com declaração de óbito fornecida pelo médico assistente
+                                </option>
+                                <option value="42" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '42' ? 'selected' : '' }}>
+                                    Óbito com declaração de óbito fornecida pelo Instituto Médico Legal (IML)
+                                </option>
+                                <option value="43" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '43' ? 'selected' : '' }}>
+                                    Óbito com declaração de óbito fornecida pelo Serviço de Verificação de Óbito (SVO)
+                                </option>
+                                <option value="51" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '51' ? 'selected' : '' }}>Encerramento Administrativo</option>
+                                <option value="61" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '61' ? 'selected' : '' }}>Alta da mãe/puérpera e do recém-nascido</option>
+                                <option value="62" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '62' ? 'selected' : '' }}>Alta da mãe/puérpera e permanência do recém-nascido</option>
+                                <option value="63" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '63' ? 'selected' : '' }}>Alta da mãe/puérpera e óbito do recém-nascido</option>
+                                <option value="64" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '64' ? 'selected' : '' }}>Alta da mãe/puérpera com óbito fetal</option>
+                                <option value="65" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '65' ? 'selected' : '' }}>Óbito da gestante e do concepto</option>
+                                <option value="66" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '66' ? 'selected' : '' }}>Óbito da mãe/puérpera e alta do recém-nascido</option>
+                                <option value="67" {{ old('motivo_encerramento', $guiaSadt->motivo_encerramento) == '67' ? 'selected' : '' }}>Óbito da mãe/puérpera e permanência do recém-nascido</option>
                             </select>
                         </div>
                         <div class="col-md-2">
                             <label for="regime_atendimento" class="form-label">91 - Regime Atendimento</label>
                             <select class="form-select" id="regime_atendimento" name="regime_atendimento">
-                                <option value="">{{ old('regime_atendimento', $guiaSadt->regime_atendimento) ? old('regime_atendimento', $guiaSadt->regime_atendimento) : 'Selecione' }}</option>
-                                <option value="01">Ambulatórial</option>
-                                <option value="02">Emergência</option>
+                                <option value="" disabled {{ old('regime_atendimento', $guiaSadt->regime_atendimento) ? '' : 'selected' }}>
+                                    Selecione
+                                </option>
+                                <option value="01" {{ old('regime_atendimento', $guiaSadt->regime_atendimento) == '01' ? 'selected' : '' }}>Ambulatórial</option>
+                                <option value="02" {{ old('regime_atendimento', $guiaSadt->regime_atendimento) == '02' ? 'selected' : '' }}>Emergência</option>
                             </select>
                         </div>
                         <div class="col-md-2">
                             <label for="saude_ocupacional" class="form-label">92 - Saúde Ocupacional</label>
                             <select class="form-select" id="saude_ocupacional" name="saude_ocupacional">
-                                <option value="">{{ old('saude_ocupacional', $guiaSadt->saude_ocupacional) ? old('saude_ocupacional', $guiaSadt->saude_ocupacional) : 'Selecione' }}</option>
-                                <option value="1">Sim</option>
-                                <option value="2">Não</option>
+                                <option value="" disabled {{ old('saude_ocupacional', $guiaSadt->saude_ocupacional) ? '' : 'selected' }}>
+                                    Selecione
+                                </option>
+                                <option value="1" {{ old('saude_ocupacional', $guiaSadt->saude_ocupacional) == '1' ? 'selected' : '' }}>Sim</option>
+                                <option value="2" {{ old('saude_ocupacional', $guiaSadt->saude_ocupacional) == '2' ? 'selected' : '' }}>Não</option>
                             </select>
                         </div>
                     </div>
@@ -394,7 +424,6 @@
                                                     <option value="2">Múltiplo</option>
                                                 </select>
                                             </td>
-        
                                             <td>
                                                 <select class="form-control" id="tecnica" name="tecnica[]">
                                                     <option value="">{{ old('tecnica',$item->tecnica) ? 'selected' : 'Selecione' }}
@@ -419,8 +448,7 @@
                     <h5>Identificação do(s) profissional(is) Executante(s)</h5>
                     <div class="row">
                         <div class="table-responsive" style="overflow-x: auto;">
-                            <table class="table table-striped"
-                                style="text-align: center; white-space: nowrap; font-size: 12px; min-width: 1800px; vertical-align: middle;">
+                            <table class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th>48 - Seq. Ref</th>
@@ -462,16 +490,33 @@
                                                 id="codigo_operadora_profissional" type="text" value="{{$guiaSadt->codigo_operadora_profissional}}"
                                                 readonly></< /td>
                                         <td><input class="form-control" id="nome_profissional"
-                                                name="nome_profissional" type="text" value="{{$guiaSadt->nome_profissional}}" readonly>
-                                            </< /td>
-                                        <td><input class="form-control" name="sigla_conselho" id="sigla_conselho"
-                                                type="text" value="{{$guiaSadt->sigla_conselho}}" readonly></< /td>
+                                                name="nome_profissional" type="text" value="{{$guiaSadt->nome_profissional}}" readonly title="{{$guiaSadt->nome_profissional}}">
+                                            </td>
+                                        <td>
+                                            <select name="sigla_conselho" id="sigla_conselho" class="form-select">
+                                                <option value="" disabled selected>Selecione</option>
+                                                @foreach ($conselhos as $sigla => $codigo)
+                                                    <option value="{{ $codigo }}"
+                                                        {{ old('sigla_conselho', $guiaSadt->sigla_conselho) == $codigo ? 'selected' : '' }}>
+                                                        {{ $sigla }} <!-- Exibe a sigla -->
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
                                         <td><input class="form-control" name="numero_conselho_profissional"
                                                 id="numero_conselho_profissional" type="text" value="{{$guiaSadt->numero_conselho_profissional}}"
-                                                readonly></< /td>
-                                        <td><input class="form-control" name="uf_profissional"
-                                                id="uf_profissional" type="text" value="{{$guiaSadt->uf_profissional}}" readonly></<
-                                                /td>
+                                                readonly></td>
+                                        <td>
+                                            <select name="uf_profissional" id="uf_profissional" class="form-select">
+                                                <option value="" disabled selected>Selecione</option>
+                                                @foreach ($ufs as $uf => $codigo)
+                                                    <option value="{{ $codigo }}"
+                                                        {{ old('uf_profissional', $guiaSadt->uf_profissional) == $codigo ? 'selected' : '' }}>
+                                                        {{ $uf }} <!-- Exibe a sigla -->
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
                                         <td><input class="form-control" name="codigo_cbo_profissional"
                                                 id="codigo_cbo_profissional" type="text" value="{{$guiaSadt->codigo_cbo_profissional}}"
                                                 readonly></< /td>
@@ -502,17 +547,34 @@
                                         <td><input class="form-control" name="codigo_operadora_profissional1"
                                                 id="codigo_operadora_profissional1" type="text" value="{{$guiaSadt->codigo_operadora_profissional1}}"
                                                 readonly></< /td>
-                                        <td><input class="form-control" id="nome_profissional1"
-                                                name="nome_profissional1" type="text" value="{{$guiaSadt->nome_profissional1}}" readonly>
-                                            </< /td>
-                                        <td><input class="form-control" name="sigla_conselho1" id="sigla_conselho1"
-                                                type="text" value="{{$guiaSadt->sigla_conselho1}}" readonly></< /td>
+                                        <td>
+                                            <input class="form-control" id="nome_profissional1"
+                                                name="nome_profissional1" type="text" value="{{$guiaSadt->nome_profissional1}}" readonly title="{{$guiaSadt->nome_profissional1}}">
+                                        </td>
+                                        <td>
+                                            <select name="sigla_conselho1" id="sigla_conselho1" class="form-select">
+                                                <option value="" disabled selected>Selecione</option>
+                                                @foreach ($conselhos as $sigla => $codigo)
+                                                    <option value="{{ $codigo }}"
+                                                        {{ old('sigla_conselho1', $guiaSadt->sigla_conselho1) == $codigo ? 'selected' : '' }}>
+                                                        {{ $sigla }} <!-- Exibe a sigla -->
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
                                         <td><input class="form-control" name="numero_conselho_profissional1"
                                                 id="numero_conselho_profissional1" type="text" value="{{$guiaSadt->numero_conselho_profissional1}}"
-                                                readonly></< /td>
-                                        <td><input class="form-control" name="uf_profissional1"
-                                                id="uf_profissional1" type="text" value="{{$guiaSadt->uf_profissional1}}" readonly></<
-                                                /td>
+                                                readonly></td>
+                                        <td><select name="uf_profissional1" id="uf_profissional1" class="form-select">
+                                            <option selected disabled>Selecione</option>
+                                            @foreach ($ufs as $uf => $codigo)
+                                                <option value="{{ $codigo }}"
+                                                    {{ old('uf_profissional1', $guiaSadt->uf_profissional1) == $codigo ? 'selected' : '' }}>
+                                                    {{ $uf }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        </td>
                                         <td><input class="form-control" name="codigo_cbo_profissional1"
                                                 id="codigo_cbo_profissional1" type="text" value="{{$guiaSadt->codigo_cbo_profissional1}}"
                                                 readonly></< /td>
@@ -543,16 +605,31 @@
                                                 id="codigo_operadora_profissional2" type="text" value="{{$guiaSadt->codigo_operadora_profissional2}}"
                                                 readonly></< /td>
                                         <td><input class="form-control" id="nome_profissional2"
-                                                name="nome_profissional2" type="text" value="{{$guiaSadt->nome_profissional2}}" readonly>
-                                            </< /td>
-                                        <td><input class="form-control" name="sigla_conselho2" id="sigla_conselho2"
-                                                type="text" value="{{$guiaSadt->sigla_conselho2}}" readonly></< /td>
+                                                name="nome_profissional2" type="text" value="{{$guiaSadt->nome_profissional2}}" readonly title="{{$guiaSadt->nome_profissional2}}">
+                                        </td>
+                                        <td>
+                                            <select name="sigla_conselho2" id="sigla_conselho2" class="form-select">
+                                                <option value="" disabled selected>Selecione</option>
+                                                @foreach ($conselhos as $sigla => $codigo)
+                                                    <option value="{{ $codigo }}"
+                                                        {{ old('sigla_conselho2', $guiaSadt->sigla_conselho2) == $codigo ? 'selected' : '' }}>
+                                                        {{ $sigla }} <!-- Exibe a sigla -->
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
                                         <td><input class="form-control" name="numero_conselho_profissional2"
                                                 id="numero_conselho_profissional2" type="text" value="{{$guiaSadt->numero_conselho_profissional2}}"
-                                                readonly></< /td>
-                                        <td><input class="form-control" name="uf_profissional2"
-                                                id="uf_profissional2" type="text" value="{{$guiaSadt->uf_profissional2}}" readonly></<
-                                                /td>
+                                                readonly></td>
+                                        <td><select name="uf_profissional2" id="uf_profissional2" class="form-select">
+                                            <option selected disabled>Selecione</option>
+                                            @foreach ($ufs as $uf => $codigo)
+                                                <option value="{{ $codigo }}"
+                                                    {{ old('uf_profissional2', $guiaSadt->uf_profissional2) == $codigo ? 'selected' : '' }}>
+                                                    {{ $uf }}
+                                                </option>
+                                            @endforeach
+                                        </select></td>
                                         <td><input class="form-control" name="codigo_cbo_profissional2"
                                                 id="codigo_cbo_profissional2" type="text" value="{{$guiaSadt->codigo_cbo_profissional2}}"
                                                 readonly></< /td>
@@ -612,6 +689,36 @@
         </div>
     </div>
 </main>
+
+<div class="modal fade" id="modalProcedimento1" tabindex="-1" aria-labelledby="modalProcedimentoLabel1" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="max-width: 50%; margin: 1.75rem auto;">
+        <div class="modal-content" style="max-height: calc(100vh - 3.5rem); overflow-y: auto; overflow-x: hidden;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalProcedimentoLabel1">Selecione o Procedimento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="overflow-y: auto; max-height: 70vh;">
+                <div class="mb-3">
+                    <input class="form-control" id="procSearch" type="text" placeholder="Pesquisar por Código ou Procedimento...">
+                </div>
+                <input type="hidden" id="hiddenAgendaId" name="agendaId">
+                <table class="table table-hover" id="procTable">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Procedimento</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="procTableBody">
+                        <!-- Procedimentos serão carregados aqui -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="modalProfissional1" tabindex="-1" aria-labelledby="modalProfissionalLabel1"
             aria-hidden="true">
@@ -731,6 +838,8 @@
         </div>
 
         <script>
+        let activeRow = null;
+
             $('[id^=profSearch]').on('keyup', function() {
             var inputId = $(this).attr('id');
             var inputValue = $(this).val().toLowerCase();
@@ -749,18 +858,61 @@
         });
 
         function selectProfissional1(name, cbo, conselho_1, uf_conselho_1, cpf, conselho_profissional) {
-            // Preenche o campo com o nome selecionado
+            // Preenche os campos com os dados
             document.getElementById('nome_profissional').value = name;
             document.getElementById('sigla_conselho').value = conselho_profissional;
             document.getElementById('numero_conselho_profissional').value = conselho_1;
             document.getElementById('codigo_cbo_profissional').value = cbo;
-            document.getElementById('uf_profissional').value = uf_conselho_1;
             document.getElementById('codigo_operadora_profissional').value = cpf;
+
+        // Agora, lidamos com a atribuição do Conselho
+        const conselhos = {
+            'CRAS': '01',
+            'COREN': '02',
+            'CRF': '03',
+            'CRFA': '04',
+            'CREFITO': '05',
+            'CRM': '06',
+            'CRN': '07',
+            'CRO': '08',
+            'CRP': '09',
+            'OUTROS': '10'
+        };
+
+        // Se conselho_profissional for uma sigla (como "CRM"), procuramos o código
+        if (Object.keys(conselhos).includes(conselho_profissional)) {
+            document.getElementById('sigla_conselho').value = conselhos[conselho_profissional]; // Atribui o código correspondente
+        } else {
+            // Se for um código, apenas atribuimos diretamente
+            document.getElementById('sigla_conselho').value = conselho_profissional;
+        }
+        // Agora, lidamos com a atribuição da UF
+        const ufs = {
+            'AC': '12', 'AL': '27', 'AP': '16', 'AM': '13',
+            'BA': '29', 'CE': '23', 'DF': '53', 'ES': '32',
+            'GO': '52', 'MA': '21', 'MT': '51', 'MS': '50',
+            'MG': '31', 'PA': '15', 'PB': '25', 'PR': '41',
+            'PE': '26', 'PI': '22', 'RJ': '33', 'RN': '24',
+            'RS': '43', 'RO': '11', 'RR': '14', 'SC': '42',
+            'SP': '35', 'SE': '28', 'TO': '17'
+        };
+
+        // Se uf_conselho_1 for uma sigla (2 caracteres), usamos diretamente
+        if (uf_conselho_1.length == 2) {
+            document.getElementById('uf_profissional').value = ufs[uf_conselho_1] || ''; // Garante que se não encontrar o código, não atribui nada
+        } else {
+            // Se for um código numérico, mapeamos para a sigla correspondente
+            for (let uf in ufs) {
+                if (ufs[uf] == uf_conselho_1) {
+                    document.getElementById('uf_profissional').value = ufs[uf];
+                    break;
+                }
+            }
+        }
 
             // Fecha o modal de seleção de profissional
             const modalProfissional1 = bootstrap.Modal.getInstance(document.getElementById('modalProfissional1'));
             modalProfissional1.hide();
-
         }
 
         function selectProfissional2(name, cbo, conselho_1, uf_conselho_1, cpf, conselho_profissional) {
@@ -772,10 +924,54 @@
             document.getElementById('uf_profissional1').value = uf_conselho_1;
             document.getElementById('codigo_operadora_profissional1').value = cpf;
 
+            // Agora, lidamos com a atribuição do Conselho
+            const conselhos = {
+                'CRAS': '01',
+                'COREN': '02',
+                'CRF': '03',
+                'CRFA': '04',
+                'CREFITO': '05',
+                'CRM': '06',
+                'CRN': '07',
+                'CRO': '08',
+                'CRP': '09',
+                'OUTROS': '10'
+            };
+
+            // Se conselho_profissional for uma sigla (como "CRM"), procuramos o código
+            if (Object.keys(conselhos).includes(conselho_profissional)) {
+                document.getElementById('sigla_conselho1').value = conselhos[conselho_profissional]; // Atribui o código correspondente
+            } else {
+                // Se for um código, apenas atribuimos diretamente
+                document.getElementById('sigla_conselho1').value = conselho_profissional;
+            }
+            // Agora, lidamos com a atribuição da UF
+            const ufs = {
+                'AC': '12', 'AL': '27', 'AP': '16', 'AM': '13',
+                'BA': '29', 'CE': '23', 'DF': '53', 'ES': '32',
+                'GO': '52', 'MA': '21', 'MT': '51', 'MS': '50',
+                'MG': '31', 'PA': '15', 'PB': '25', 'PR': '41',
+                'PE': '26', 'PI': '22', 'RJ': '33', 'RN': '24',
+                'RS': '43', 'RO': '11', 'RR': '14', 'SC': '42',
+                'SP': '35', 'SE': '28', 'TO': '17'
+            };
+
+            // Se uf_conselho_1 for uma sigla (2 caracteres), usamos diretamente
+            if (uf_conselho_1.length == 2) {
+                document.getElementById('uf_profissional1').value = ufs[uf_conselho_1] || ''; // Garante que se não encontrar o código, não atribui nada
+            } else {
+                // Se for um código numérico, mapeamos para a sigla correspondente
+                for (let uf in ufs) {
+                    if (ufs[uf] == uf_conselho_1) {
+                        document.getElementById('uf_profissional1').value = ufs[uf];
+                        break;
+                    }
+                }
+            }
+
             // Fecha o modal de seleção de profissional
             const modalProfissional2 = bootstrap.Modal.getInstance(document.getElementById('modalProfissional2'));
             modalProfissional2.hide();
-
         }
 
         function selectProfissional3(name, cbo, conselho_1, uf_conselho_1, cpf, conselho_profissional) {
@@ -787,10 +983,201 @@
             document.getElementById('uf_profissional2').value = uf_conselho_1;
             document.getElementById('codigo_operadora_profissional2').value = cpf;
 
+            // Agora, lidamos com a atribuição do Conselho
+            const conselhos = {
+                'CRAS': '01',
+                'COREN': '02',
+                'CRF': '03',
+                'CRFA': '04',
+                'CREFITO': '05',
+                'CRM': '06',
+                'CRN': '07',
+                'CRO': '08',
+                'CRP': '09',
+                'OUTROS': '10'
+            };
+
+            // Se conselho_profissional for uma sigla (como "CRM"), procuramos o código
+            if (Object.keys(conselhos).includes(conselho_profissional)) {
+                document.getElementById('sigla_conselho2').value = conselhos[conselho_profissional]; // Atribui o código correspondente
+            } else {
+                // Se for um código, apenas atribuimos diretamente
+                document.getElementById('sigla_conselho2').value = conselho_profissional;
+            }
+             // Agora, lidamos com a atribuição da UF
+             const ufs = {
+                'AC': '12', 'AL': '27', 'AP': '16', 'AM': '13',
+                'BA': '29', 'CE': '23', 'DF': '53', 'ES': '32',
+                'GO': '52', 'MA': '21', 'MT': '51', 'MS': '50',
+                'MG': '31', 'PA': '15', 'PB': '25', 'PR': '41',
+                'PE': '26', 'PI': '22', 'RJ': '33', 'RN': '24',
+                'RS': '43', 'RO': '11', 'RR': '14', 'SC': '42',
+                'SP': '35', 'SE': '28', 'TO': '17'
+            };
+
+            // Se uf_conselho_1 for uma sigla (2 caracteres), usamos diretamente
+            if (uf_conselho_1.length == 2) {
+                document.getElementById('uf_profissional2').value = ufs[uf_conselho_1] || ''; // Garante que se não encontrar o código, não atribui nada
+            } else {
+                // Se for um código numérico, mapeamos para a sigla correspondente
+                for (let uf in ufs) {
+                    if (ufs[uf] == uf_conselho_1) {
+                        document.getElementById('uf_profissional2').value = ufs[uf];
+                        break;
+                    }
+                }
+            }
+
             // Fecha o modal de seleção de profissional
             const modalProfissional3 = bootstrap.Modal.getInstance(document.getElementById('modalProfissional3'));
             modalProfissional3.hide();
-
         }
+
+        function adicionarNovaLinha() {
+    let tabela = document.querySelector("table tbody");
+    let novaLinha = document.createElement("tr");
+    novaLinha.style.textAlign = "center";
+
+    novaLinha.innerHTML = `
+        <td>
+            <button type="button" class="btn btn-primary form-control"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalProcedimento1"
+                    onclick="setRowContext(this, '{{ $guiaSadt->paciente_id }}')">
+                <i class="bi bi-list"></i>
+            </button>
+        </td>
+        <td>
+            <input class="form-control" style="text-align: center;" name="agenda_id2[]" type="hidden" value="">
+            <input class="form-control" style="text-align: center;" name="tabela[]" type="text" value="22">
+        </td>
+        <td><input class="form-control" id="codigo_procedimento_solicitado" name="codigo_procedimento_solicitado[]" type="text" value=""></td>
+        <td><input class="form-control" id="descricao_procedimento" name="descricao_procedimento[]" type="text" value=""></td>
+        <td><input class="form-control" style="text-align: center;" name="qtd_sol[]" type="number" value=""></td>
+        <td><input class="form-control" style="text-align: center;" name="qtd_aut[]" type="number" value=""></td>
+        <td><button type="button" class="btn btn-danger btn-sm" onclick="excluirLinha(this)"><i class="icon bi bi-trash"></i></button></td>
+    `;
+
+    tabela.appendChild(novaLinha);
+}
+
+function excluirLinha(botao) {
+    let linha = botao.closest("tr");
+    linha.remove();
+}
+
+function setRowContext(button, pacienteId) {
+    // Identifica a linha correspondente ao botão clicado
+    activeRow = $(button).closest('tr');
+
+    // Definir o valor no modal, por exemplo, em um campo hidden ou exibindo na interface
+    $('#modalProcedimento1').find('#hiddenAgendaId').val(pacienteId); // Para campos hidden
+    $('#modalProcedimento1').find('.agenda-display').text(pacienteId);
+
+    if (!pacienteId) {
+        alert('Paciente ID não encontrado!');
+        return;
+    }
+
+    fetch(`/api/get-procedimentos/${pacienteId}`)
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('procTableBody');
+            tableBody.innerHTML = '';
+
+            if (data.length > 0) {
+                data.forEach(procedimento => {
+                    const row = `
+                        <tr>
+                            <td>${procedimento.codigo}</td>
+                            <td>${procedimento.procedimento}</td>
+                            <td>
+                                <button class="btn btn-primary" type="button"
+                                onclick="selectProcedimento1('${procedimento.id}', '${procedimento.codigo}', '${procedimento.procedimento}')">Selecionar</button>
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.insertAdjacentHTML('beforeend', row);
+                });
+            } else {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="3" class="text-center">Nenhum procedimento disponível.</td>
+                    </tr>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao buscar procedimentos:', error);
+            alert('Erro ao buscar procedimentos!');
+        });
+}
+
+function selectProcedimento1(id, codigo, procedimento) {
+    if (activeRow) {
+        // Preenche os campos da linha ativa pelos IDs
+        activeRow.find('#proce_id').val(id);
+        activeRow.find('#codigo_procedimento_solicitado').val(codigo);
+        activeRow.find('#descricao_procedimento').val(procedimento);
+
+        // Fecha o modal
+        const modalProcedimento1 = bootstrap.Modal.getInstance(document.getElementById('modalProcedimento1'));
+        modalProcedimento1.hide();
+
+        // Opcional: Reabre outro modal, se necessário
+        setTimeout(() => {
+            const modalSADT = new bootstrap.Modal(document.getElementById('modalSADT'));
+            modalSADT.show();
+        }, 500);
+    } else {
+        console.error('Nenhuma linha ativa encontrada para preencher os campos.');
+    }
+}
+
+// Envio do formulário Guia SADT via AJAX
+$('#guiaForm2').on('submit', function(event) {
+    event.preventDefault(); // Previne envio padrão
+
+    var formData = $(this).serialize(); // Serializa os dados do formulário
+    // Coleta os dados de #exame-table-body
+    var exameData = [];
+    $('#exame-table-body tr').each(function () {
+        var linha = {
+            tabela: $(this).find('input[name="tabela"]').val(),
+            codigo_procedimento_solicitado: $(this).find('input[name="codigo_procedimento_solicitado"]').val(),
+            descricao_procedimento: $(this).find('input[name="descricao_procedimento"]').val(),
+            qtd_sol: $(this).find('input[name="qtd_sol"]').val(),
+            qtd_aut: $(this).find('input[name="qtd_aut"]').val()
+        };
+        exameData.push(linha);
+    });
+
+    // Adiciona os dados coletados ao console para depuração
+    console.log('Dados enviados (form):', formData);
+    console.log('Dados enviados (exame-table-body):', exameData);
+
+    $.ajax({
+        url: '{{ route('guia.sadt.salvar') }}', // Rota para salvar guia SADT
+        type: 'POST',
+        data: formData,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+            if (response.success) {
+                alert(response.message); // Exibe mensagem de sucesso
+
+                // Exibir o botão de "Gerar Guia"
+                $('#gerarGuiaSADTButton').removeClass('d-none');
+            } else {
+                alert('Erro ao salvar a guia SADT: ' + response.message);
+            }
+        },
+        error: function(xhr) {
+            alert('Erro ao salvar a guia SADT.');
+            console.error('Erro:', xhr.responseText);
+        }
+    });
+});
         </script>
 @endsection

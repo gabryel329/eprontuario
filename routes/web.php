@@ -133,7 +133,7 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::post('/excluir-exame', [GuiaSpController::class, 'excluirExame'])->name('excluir.exame');
         Route::get('/visualizar-guia-sadt/{id}', [GuiaSpController::class, 'visualizarGuiaSadt'])->name('guia.sadt.visualizar');
         Route::get('guia-sp/{id}/editar', [GuiaSpController::class, 'editarGuia'])->name('guia-sp.editar');
-        Route::post('/guia-sp/{id}/atualizar', [GuiaSpController::class, 'atualizarGuia'])->name('guia.sp.atualizar');
+        Route::post('/guia-sp', [GuiaSpController::class, 'glosaSadt'])->name('guia.sp.atualizar');
 
         Route::get('/gerar-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarGuiaConsultaMODAL'])->name('gerar.guia.consulta');
         Route::post('/salvar-guia-consulta', [GuiaConsultaController::class, 'salvarGuiaConsulta'])->name('salvar.guiaConsulta');
