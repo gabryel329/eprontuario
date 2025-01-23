@@ -1131,6 +1131,8 @@
                                         </tbody>
                                         <tbody id="materiais-table-body">
                                         </tbody>
+                                        <tbody id="taxas-table-body">
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -1720,29 +1722,30 @@
                                     <td><input class="form-control" id="tabela" name="tabela[]" type="text" readonly value="22"></td>
                                     <td><input class="form-control" id="codigo_procedimento_realizado" name="codigo_procedimento_realizado[]" readonly type="text" value="${procedimento.codigo || ''}"></td>
                                     <td><input class="form-control" id="descricao_procedimento_realizado" name="descricao_procedimento_realizado[]" readonly type="text" value="${procedimento.procedimento_nome || ''}"></td>
-                                    <td><input class="form-control quantidade_autorizada" id="quantidade_autorizada" name="quantidade_autorizada[]" type="number" oninput="calcularValorTotal(this)" placeholder="Qtd"></td>
+                                    <td><input class="form-control quantidade_autorizada" id="quantidade_autorizada" name="quantidade_autorizada[]" type="number" value="${procedimento.quantidade_autorizada || ''}" oninput="calcularValorTotal(this)" placeholder="Qtd"></td>
                                     <td>
-                                        <select class="form-control" id="via" name="via[]">
-                                            <option value="">{{ old('via') ? 'selected' : 'Selecione' }}
-                                            <option value="1">Unidade</option>
-                                            <option value="2">Múltiplo</option>
+                                         <select class="form-control" id="via" name="via[]">
+                                            <option value="" ${procedimento.via == null ? 'selected' : ''}>Selecione</option>
+                                            <option value="1" ${procedimento.via == 1 ? 'selected' : ''}>Unidade</option>
+                                            <option value="2" ${procedimento.via == 2 ? 'selected' : ''}>Múltiplo</option>
                                         </select>
                                     </td>
 
                                     <td>
                                         <select class="form-control" id="tecnica" name="tecnica[]">
-                                            <option value="">{{ old('tecnica') ? 'selected' : 'Selecione' }}
-                                            <option value="U">Unilateral</option>
-                                            <option value="B">Bilateral</option>
-                                            <option value="M">Múltiplo</option>
-                                            <option value="S">Simples</option>
-                                            <option value="C">Complexo</option>
-                                            <option value="A">Avançado</option>
+                                            <option value="" ${procedimento.tecnica == null ? 'selected' : ''}>Selecione</option>
+                                            <option value="U" ${procedimento.tecnica == 'U' ? 'selected' : '' }>Unilateral</option>
+                                            <option value="B" ${procedimento.tecnica == 'B' ? 'selected' : '' }>Bilateral</option>
+                                            <option value="M" ${procedimento.tecnica == 'M' ? 'selected' : '' }>Múltiplo</option>
+                                            <option value="S" ${procedimento.tecnica == 'S' ? 'selected' : '' }>Simples</option>
+                                            <option value="C" ${procedimento.tecnica == 'C' ? 'selected' : '' }>Complexo</option>
+                                            <option value="A" ${procedimento.tecnica == 'A' ? 'selected' : '' }>Avançado</option>
                                         </select>
+
                                     </td>
-                                    <td><input class="form-control" name="fator_red_acres[]" id="fator_red_acres" type="text" oninput="calcularValorTotal(this)" placeholder="EX:1,00" value="${procedimento.tabela || ''}"></td>
+                                    <td><input class="form-control" name="fator_red_acres[]" id="fator_red_acres" type="text" oninput="calcularValorTotal(this)" placeholder="EX:1,00" value="${procedimento.fator_red_acres || ''}"></td>
                                     <td><input class="form-control valor_unitario" id="valor_unitario" oninput="calcularValorTotal(this)" name="valor_unitario[]" type="text" value="${procedimento.valor || ''}"></td>
-                                    <td><input class="form-control valor_total" id="valor_total" name="valor_total[]" type="text" readonly placeholder="Valor Total"></td>
+                                    <td><input class="form-control valor_total" id="valor_total" name="valor_total[]" type="text" readonly value="${procedimento.valor_total || ''}" placeholder="Valor Total"></td>
                                 </tr>
                             `;
                                 $('#procedimento-table-body').append(procedimentoRow);
@@ -1773,8 +1776,7 @@
 
                             // Iterar sobre cada exame e preencher a tabela
                             response.medicamentos.forEach(function(medicamento) {
-                                const unidadeMedidaNome = unidadeMedidaMap[medicamento
-                                    .unidade_medida] || "Desconhecido";
+                                const unidadeMedidaNome = unidadeMedidaMap[medicamento.unidade_medida] || "Desconhecido";
                                 const medicamentoRow = `
                                 <tr>
                                     <td><input style="width: 50px;" class="form-control" type="text" value="${medicamento.cd || ''}" readonly></td>
@@ -1825,6 +1827,37 @@
                                 </tr>
                             `;
                                 $('#materiais-table-body').append(materialRow);
+                            });
+
+                            if (!response || !response.taxas) {
+                                alert(
+                                    'Erro: Não foi possível carregar os dados ou nenhum medicamento foi encontrado.'
+                                );
+                                return;
+                            }
+
+                            // Limpar o corpo da tabela para evitar duplicação
+                            $('#taxas-table-body').empty();
+
+                            // Iterar sobre cada exame e preencher a tabela
+                            response.taxas.forEach(function(taxa) {
+                                const taxaRow = `
+                                <tr>
+                                    <td><input style="width: 50px;" class="form-control" type="text" value="" readonly></td>
+                                    <td><input style="width: 120px;" class="form-control" type="text" <input type="text" readonly value="${taxa.created_at ? taxa.created_at.substring(0, 10).split('-').reverse().join('/') : ''}"></td>
+                                    <td><input class="form-control" type="text" readonly value="${taxa.created_at ? taxa.created_at.substring(11, 16) : ''}"></td>
+                                    <td><input class="form-control" type="text" readonly value="${taxa.created_at ? taxa.created_at.substring(11, 16) : ''}"></td>
+                                    <td><input class="form-control" type="text" value="" readonly></td>
+                                    <td><input class="form-control" type="text" value="${taxa.nome_taxa || ''}" readonly></td>
+                                    <td><input class="form-control" type="text" value="" readonly></td>
+                                    <td><input class="form-control quantidade" type="text" value="" readonly></td>
+                                    <td><input class="form-control" type="text" value="" readonly></td>
+                                    <td><input class="form-control fator" type="text" value="" readonly></td>
+                                    <td><input class="form-control valor" type="text" value="${taxa.valor || ''}" readonly></td>
+                                    <td><input class="form-control valor_total" type="text" value="${taxa.valor || ''}" readonly></td>
+                                </tr>
+                            `;
+                                $('#taxas-table-body').append(taxaRow);
                             });
 
 
