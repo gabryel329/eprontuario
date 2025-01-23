@@ -167,7 +167,7 @@
                                         <td>{{ $p->nome_social }}</td>
                                         <td>
                                             <button class="btn btn-primary" type="button"
-                                                onclick="selectPaciente('{{ $p->id }}', '{{ $p->name }}', '{{ $p->celular }}')">
+                                                onclick="selectPaciente('{{ $p->id }}', '{{ $p->name }}', '{{ $p->celular }}', {{ $p->convenio_id }})">
                                                 Selecionar
                                             </button>
                                         </td>
@@ -197,13 +197,15 @@
             $('#pacienteModal').data('horario', horario).modal('show');
         }
 
-        function selectPaciente(id, name, celular) {
+        function selectPaciente(id, name, celular, convenio_id) {
             const horario = $('#pacienteModal').data('horario'); // Recupera o horário associado ao modal
 
             // Preenche o nome e o ID do paciente nos campos correspondentes
             document.getElementById(`paciente_nome${horario}`).value = name; // Nome do paciente
             document.getElementById(`paciente_id${horario}`).value = id; // ID do paciente
-            document.querySelector(`[name="celular[${horario}]"]`).value = celular; // Celular do paciente
+            document.querySelector(`[name="celular[${horario}]"]`).value = celular;
+            document.querySelector(`[name="convenio[${horario}]"]`).value = convenio_id; // Celular do paciente
+            document.querySelector(`[name="convenio2[${horario}]"]`).value = convenio_id;
             $('#pacienteModal').modal('hide'); // Fecha o modal
         }
 
@@ -390,7 +392,10 @@
                         <input type="hidden" id="paciente_id${horario.hora}" name="paciente_id[${horario.hora}]" value="${horario.paciente_id || ''}">
                     </td>
                     <td class="col-1"><input type="text" name="celular[${horario.hora}]" value="${horario.celular || ''}" class="form-control" ${isDisabled}></td>
-                    <td class="col-1">${renderConvenioSelect(horario, convenios, isDisabled)}</td>
+                    <td class="col-1">
+                        ${renderConvenioSelect(horario, convenios, isDisabled)}
+                        <input type="text" id="convenio2${horario.hora}" name="convenio2[${horario.hora}]" value="${horario.convenio_id || ''}">
+                    </td>
                     <td class="col-1">
                         <div class="d-flex align-items-center">
                             <input type="text" id="procedimento_nome${horario.hora}" title="${horario.procedimento_id || ''}" name="procedimento_nome[${horario.hora}]" value="${horario.procedimento_id || ''}" class="form-control me-2" ${isDisabled}>
@@ -443,7 +448,7 @@
                 </select>
             `;
         }
-
+        
         $(document).on('change', '#convenioProc', function() {
             const convenioId = $(this).val(); // Pega o ID do convênio selecionado
 

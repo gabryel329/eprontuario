@@ -129,13 +129,13 @@ class AgendaController extends Controller
                 $agendas->medicamentos = $query->get();
             } else {
                 $agendas->medicamentos = DB::table('medicamentos')
-                ->select('id', 'nome as medicamento', DB::raw('NULL as codigo'), DB::raw('NULL as unid'), DB::raw('NULL as preco')) // Define codigo como NULL
+                ->select('id', 'nome as medicamento', 'tipo as codigo', 'padrao as unid', 'preco_venda as preco') // Define codigo como NULL
                 ->orderBy('id')
                 ->get();
             }
         } else {
             $agendas->medicamentos = DB::table('medicamentos')
-                ->select('id', 'nome as medicamento')
+                ->select('id', 'nome as medicamento', 'tipo as codigo', 'padrao as unid', 'preco_venda as preco') // Define codigo como NULL
                 ->orderBy('id')
                 ->get();
 
@@ -168,14 +168,14 @@ class AgendaController extends Controller
             } else {
                 // Caso a tabela não exista
                 $agendas->materias = DB::table('medicamentos')
-                ->select('id', 'nome as medicamento', DB::raw('NULL as codigo'), DB::raw('NULL as unid'), DB::raw('NULL as preco')) // Define codigo como NULL
+                ->select('id', 'nome as medicamento', 'tipo as codigo', 'padrao as unid', 'preco_venda as preco') // Define codigo como NULL
                 ->orderBy('id')
                 ->get();
             }
         } else {
             // Caso não exista um convenio
             $agendas->materias = DB::table('medicamentos')
-                ->select('id', 'nome as medicamento', DB::raw('NULL as codigo')) // Define codigo como NULL
+                ->select('id', 'nome as medicamento', 'tipo as codigo', 'padrao as unid', 'preco_venda as preco') // Define codigo como NULL
                 ->orderBy('id')
                 ->get();
         }
