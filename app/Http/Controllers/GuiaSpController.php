@@ -16,7 +16,9 @@ use App\Models\MedAgenda;
 use App\Models\Pacientes;
 use App\Models\ProcAgenda;
 use App\Models\Profissional;
+use App\Models\TaxaAgenda;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -566,27 +568,94 @@ public function gerarZipGuiaSp($id)
             // Buscar paciente pelo ID associado à agenda
         $paciente = Pacientes::find($agenda->paciente_id);
 
-        $tabelaMed = $agenda->convenio->tab_med_id; // Nome da tabela de medicamentos do convênio
+        // $tabelaMed = $agenda->convenio->tab_med_id; // Nome da tabela de medicamentos do convênio
 
-        if (Schema::hasTable($tabelaMed)) { // Verifica se a tabela existe no banco
-            $medicamentos = MedAgenda::where('agenda_id', $agenda->id)
-                ->join($tabelaMed, "$tabelaMed.id", '=', 'med_agendas.medicamento_id') // Realiza o INNER JOIN
-                ->select('med_agendas.*', "$tabelaMed.medicamento as nome_medicamento") // Seleciona as colunas desejadas
-                ->get();
+        // if (Schema::hasTable($tabelaMed)) { // Verifica se a tabela existe no banco
+        //     $medicamentos = MedAgenda::where('agenda_id', $agenda->id)
+        //         ->join($tabelaMed, "$tabelaMed.id", '=', 'med_agendas.medicamento_id') // Realiza o INNER JOIN
+        //         ->select('med_agendas.*', "$tabelaMed.medicamento as nome_medicamento") // Seleciona as colunas desejadas
+        //         ->get();
+        // } else {
+        //     $medicamentos = collect(); // Retorna uma coleção vazia se a tabela não existir
+        // }
+
+
+
+        if ($agenda && $agenda->paciente && $agenda->paciente->convenio) {
+            $tabelaMedicamentos = $agenda->paciente->convenio->tab_med_id;
+    
+            if ($tabelaMedicamentos === null) {
+                $medicamentos = DB::table('med_agendas')
+                    ->join('medicamentos', 'med_agendas.medicamento_id', '=', 'medicamentos.id')
+                    ->where('med_agendas.agenda_id', $agenda->id)
+                    ->select('med_agendas.*', 'medicamentos.nome as nome_medicamento', 'medicamentos.tipo as codigo')
+                    ->orderBy('med_agendas.id', 'asc')
+                    ->get();
+            } elseif (Schema::hasTable($tabelaMedicamentos)) {
+                if (str_starts_with($tabelaMedicamentos, 'tab_brasindice')) {
+                    $medicamentos = DB::table('med_agendas')
+                        ->join($tabelaMedicamentos, 'med_agendas.medicamento_id', '=', "$tabelaMedicamentos.id")
+                        ->where('med_agendas.agenda_id', $agenda->id)
+                        ->select('med_agendas.*', "$tabelaMedicamentos.medicamento as nome_medicamento")
+                        ->orderBy('exames.id', 'asc')
+                        ->get();
+                } elseif (str_starts_with($tabelaMedicamentos, 'tab_simpro')) {
+                    $medicamentos = DB::table('med_agendas')
+                        ->join($tabelaMedicamentos, 'med_agendas.medicamento_id', '=', "$tabelaMedicamentos.id")
+                        ->where('med_agendas.agenda_id', $agenda->id)
+                        ->select('med_agendas.*', "$tabelaMedicamentos.medicamento as nome_medicamento")
+                        ->orderBy('exames.id', 'asc')
+                        ->get();
+                } else {
+                    $medicamentos = collect();
+                }
+            } else {
+                $medicamentos = collect();
+            }
         } else {
-            $medicamentos = collect(); // Retorna uma coleção vazia se a tabela não existir
+            $medicamentos = collect();
         }
 
-        $tabelaMat = $agenda->convenio->tab_mat_id; // Nome da tabela de medicamentos do convênio
 
-        if (Schema::hasTable($tabelaMat)) { // Verifica se a tabela existe no banco
-            $materiais = MatAgenda::where('agenda_id', $agenda->id)
-                ->join($tabelaMat, "$tabelaMat.id", '=', 'mat_agendas.material_id') // Realiza o INNER JOIN
-                ->select('mat_agendas.*', "$tabelaMat.medicamento as nome_material") // Seleciona as colunas desejadas
-                ->get();
+        if ($agenda && $agenda->paciente && $agenda->paciente->convenio) {
+            $tabelaMaterias = $agenda->paciente->convenio->tab_mat_id;
+    
+            if ($tabelaMaterias === null) {
+                $materiais = DB::table('mat_agendas')
+                    ->join('medicamentos', 'mat_agendas.material_id', '=', 'medicamentos.id')
+                    ->where('mat_agendas.agenda_id', $agenda->id)
+                    ->select('mat_agendas.*', 'medicamentos.nome as nome_material')
+                    ->orderBy('mat_agendas.id', 'asc')
+                    ->get();
+            } elseif (Schema::hasTable($tabelaMaterias)) {
+                if (str_starts_with($tabelaMaterias, 'tab_brasindice')) {
+                    $materiais = DB::table('mat_agendas')
+                        ->join($tabelaMaterias, 'mat_agendas.material_id', '=', "$tabelaMaterias.id")
+                        ->where('mat_agendas.agenda_id', $agenda->id)
+                        ->select('mat_agendas.*', "$tabelaMaterias.medicamento as nome_material")
+                        ->orderBy('mat_agendas.id', 'asc')
+                        ->get();
+                } elseif (str_starts_with($tabelaMaterias, 'tab_simpro')) {
+                    $materiais = DB::table('mat_agendas')
+                        ->join($tabelaMaterias, 'mat_agendas.material_id', '=', "$tabelaMaterias.id")
+                        ->where('mat_agendas.agenda_id', $agenda->id)
+                        ->select('mat_agendas.*', "$tabelaMaterias.medicamento as nome_material")
+                        ->orderBy('mat_agendas.id', 'asc')
+                        ->get();
+                } else {
+                    $materiais = collect();
+                }
+            } else {
+                $materiais = collect();
+            }
         } else {
-            $materiais = collect(); // Retorna uma coleção vazia se a tabela não existir
+            $materiais = collect();
         }
+
+        $taxas = TaxaAgenda::where('agenda_id', $agenda->id)
+            ->join('taxas', 'taxas.id', '=', 'taxa_agendas.id') // Realiza o INNER JOIN
+            ->select('taxa_agendas.*','taxas.descricao as nome_taxa') // Seleciona as colunas desejadas
+            ->get();
 
         // Buscar profissional com sua especialidade
         $profissional = Profissional::join('especialidade_profissional', 'profissionals.id', '=', 'especialidade_profissional.profissional_id')
@@ -612,6 +681,7 @@ public function gerarZipGuiaSp($id)
             'convenio' => $convenio,
             'empresa' => $empresa,
             'guia' => $guia,
+            'taxas' => $taxas,
             'exames' => $exames,
             'procedimentos' => $procedimentos,
             'ExameSolis' => $ExameSolis,
@@ -1928,6 +1998,22 @@ public function gerarZipGuiasadt($id, Request $request)
                 'numero_conselho_profissional' => $request->input('numero_conselho_profissional'),
                 'uf_profissional' => $request->input('uf_profissional'),
                 'codigo_cbo_profissional' => $request->input('codigo_cbo_profissional'),
+                'sequencia1' => $request->input('sequencia1'),
+                'grau1' => $request->input('grau1'),
+                'codigo_operadora_profissional1' => $request->input('codigo_operadora_profissional1'),
+                'nome_profissional1' => $request->input('nome_profissional1'),
+                'sigla_conselho1' => $request->input('sigla_conselho1'),
+                'numero_conselho_profissional1' => $request->input('numero_conselho_profissional1'),
+                'uf_profissional1' => $request->input('uf_profissional1'),
+                'codigo_cbo_profissional1' => $request->input('codigo_cbo_profissional1'),
+                'sequencia2' => $request->input('sequencia2'),
+                'grau2' => $request->input('grau2'),
+                'codigo_operadora_profissional2' => $request->input('codigo_operadora_profissional2'),
+                'nome_profissional2' => $request->input('nome_profissional2'),
+                'sigla_conselho2' => $request->input('sigla_conselho2'),
+                'numero_conselho_profissional2' => $request->input('numero_conselho_profissional2'),
+                'uf_profissional2' => $request->input('uf_profissional2'),
+                'codigo_cbo_profissional2' => $request->input('codigo_cbo_profissional2'),
                 'observacao' => $request->input('observacao') ?? 'N/A',
                 'identificador' => 'PENDENTE'
             ]);
@@ -2187,7 +2273,14 @@ public function gerarZipGuiasadt($id, Request $request)
      */
     public function edit(Guiasp $guiaSadt)
     {
-        $profissionals = Profissional::all();
+        $profissionals = Profissional::join('especialidade_profissional', 'profissionals.id', '=', 'especialidade_profissional.profissional_id')
+            ->leftJoin('especialidades', 'especialidade_profissional.especialidade_id', '=', 'especialidades.id')
+            ->select(
+                'profissionals.*',
+                'especialidades.conselho as conselho_profissional'
+            )
+            ->distinct('profissionals.id') // Retorna registros únicos por profissional
+            ->get();
         
         // Obtém um único registro usando first()
         $guia = GuiaSp::where('id', $guiaSadt->id)->first();
@@ -2315,209 +2408,161 @@ public function gerarZipGuiasadt($id, Request $request)
     /**
      * Update the specified resource in storage.
      */
-    public function atualizarGuia(Request $request, $id)
-{
-    try {
-        DB::beginTransaction();
-
-        // Busca a guia pelo ID
-        $guia = GuiaSp::findOrFail($id);
-
-        // Arrays de referência
-        $conselhos = [
-            'CRAS' => '01',
-            'COREN' => '02',
-            'CRF' => '03',
-            'CRFA' => '04',
-            'CREFITO' => '05',
-            'CRM' => '06',
-            'CRN' => '07',
-            'CRO' => '08',
-            'CRP' => '09',
-            'OUTROS' => '10'
-        ];
-
-        $ufs = [
-            'AC' => '12',
-            'AL' => '27',
-            'AP' => '16',
-            'AM' => '13',
-            'BA' => '29',
-            'CE' => '23',
-            'DF' => '53',
-            'ES' => '32',
-            'GO' => '52',
-            'MA' => '21',
-            'MT' => '51',
-            'MS' => '50',
-            'MG' => '31',
-            'PA' => '15',
-            'PB' => '25',
-            'PR' => '41',
-            'PE' => '26',
-            'PI' => '22',
-            'RJ' => '33',
-            'RN' => '24',
-            'RS' => '43',
-            'RO' => '11',
-            'RR' => '14',
-            'SC' => '42',
-            'SP' => '35',
-            'SE' => '28',
-            'TO' => '17'
-        ];
-
-        $horaInicioAtendimento = $request->input('hora_inicio_atendimento');
-        $horaFimAtendimento = $request->input('hora_fim_atendimento');
-
-        if (is_array($horaInicioAtendimento)) {
-            $horaInicioAtendimento = reset($horaInicioAtendimento);
-        }
-
-        if (is_array($horaFimAtendimento)) {
-            $horaFimAtendimento = reset($horaFimAtendimento);
-        }
-
-        // Atualizar os dados gerais da guia
-        $guia->update([
-            'agenda_id' => $request->input('agenda_id'),
-            'profissional_id' => $request->input('profissional_id'),
-            'paciente_id' => $request->input('paciente_id'),
-            'cns' => $request->input('cns'),
-            'atendimento_rn' => $request->input('atendimento_rn'),
-            'user_id' => $request->input('user_id'),
-            'nome_profissional_solicitante' => $request->input('nome_profissional_solicitante'),
-            'conselho_profissional' => $request->input('conselho_profissional'),
-            'codigo_cbo' => $request->input('codigo_cbo'),
-            'nome_contratado' => $request->input('nome_contratado'),
-            'codigo_cnes' => $request->input('codigo_cnes'),
-            'data_atendimento' => $request->input('data_solicitacao'),
-            'codigo_procedimento' => $request->input('codigo_procedimento'),
-            'validade_carteira' => $request->input('validade_carteira'),
-            'codigo_operadora' => $request->input('codigo_operadora'),
-            'codigo_operadora_executante' => $request->input('codigo_operadora_executante'),
-            'nome_social' => $request->input('nome_social'),
-            'uf_conselho' => $request->input('uf_conselho'),
-            'numero_conselho' => $request->input('numero_conselho'),
-            'registro_ans' => $request->input('registro_ans'),
-            'numero_carteira' => $request->input('numero_carteira'),
-            'nome_beneficiario' => $request->input('nome_beneficiario'),
-            'numero_guia_prestador' => $request->input('numero_guia_prestador'),
-            'hora_inicio_atendimento' => $horaInicioAtendimento,
-            'hora_fim_atendimento' => $horaFimAtendimento,
-            'data_autorizacao' => $request->input('data_solicitacao'),
-            'senha' => $request->input('senha'),
-            'validade_senha' => $request->input('validade_senha'),
-            'numero_guia_op' => $request->input('numero_guia_op'),
-            'carater_atendimento' => $request->input('carater_atendimento'),
-            'data_solicitacao' => $request->input('data_solicitacao'),
-            'indicacao_clinica' => $request->input('indicacao_clinica'),
-            'indicacao_cob_especial' => $request->input('indicacao_cob_especial'),
-            'nome_contratado_executante' => $request->input('nome_contratado_executante'),
-            'tipo_atendimento' => $request->input('tipo_atendimento'),
-            'indicacao_acidente' => $request->input('indicacao_acidente'),
-            'tipo_consulta' => $request->input('tipo_consulta'),
-            'motivo_encerramento' => $request->input('motivo_encerramento'),
-            'regime_atendimento' => $request->input('regime_atendimento'),
-            'saude_ocupacional' => $request->input('saude_ocupacional'),
-            'sequencia' => $request->input('sequencia'),
-            'grua' => $request->input('grau'),
-            'codigo_operadora_profissional' => $request->input('codigo_operadora_profissional'),
-            'nome_profissional' => $request->input('nome_profissional'),
-            'sigla_conselho' => $request->input('sigla_conselho'),
-            'numero_conselho_profissional' => $request->input('numero_conselho_profissional'),
-            'uf_profissional' => $request->input('uf_profissional'),
-            'codigo_cbo_profissional' => $request->input('codigo_cbo_profissional'),
-            'observacao' => $request->input('observacao') ?? 'N/A',
-            'identificador' => 'GERADO'
-        ]);
-
-        // Substituir valores de conselhos e UF por códigos
-        $conselhoProfissional = $request->input('sigla_conselho');
-        if (array_key_exists($conselhoProfissional, $conselhos)) {
-            $guia->sigla_conselho = $conselhos[$conselhoProfissional];
-        }
-
-        $ufConselho = $request->input('uf_profissional');
-        if (array_key_exists($ufConselho, $ufs)) {
-            $guia->uf_profissional = $ufs[$ufConselho];
-        }
-
-        $conselho_profissional = $request->input('conselho_profissional');
-        if (array_key_exists($conselho_profissional, $conselhos)) {
-            $guia->conselho_profissional = $conselhos[$conselho_profissional];
-        }
-
-        $uf_conselho = $request->input('uf_conselho');
-        if (array_key_exists($uf_conselho, $ufs)) {
-            $guia->uf_conselho = $ufs[$uf_conselho];
-        }
-
-        $guia->save();
-
-        // Atualizar exames na tabela `exames_sadt`
-        if ($request->has('descricao_procedimento')) {
-            ExamesSadt::where('guia_sps_id', $guia->id)->delete(); // Remove os exames antigos
-
-            foreach ($request->input('tabela') as $index => $tabela) {
-                ExamesSadt::create([
-                    'guia_sps_id' => $guia->id,
-                    'tabela' => $tabela,
-                    'codigo_procedimento_solicitado' => $request->input("codigo_procedimento_solicitado.$index"),
-                    'descricao_procedimento' => $request->input("descricao_procedimento.$index"),
-                    'qtd_sol' => $request->input("qtd_sol.$index"),
-                    'qtd_aut' => $request->input("qtd_aut.$index"),
-                ]);
-            }
-        }
-
-        // Atualizar procedimentos na tabela `exames_aut_sadt`
-        if ($request->has('descricao_procedimento_realizado')) {
-            ExamesAutSadt::where('guia_sps_id', $guia->id)->delete(); // Remove os procedimentos antigos
-
-            foreach ($request->input('data_real') as $index => $dataReal) {
-                ExamesAutSadt::create([
-                    'guia_sps_id' => $guia->id,
-                    'data_real' => $dataReal,
-                    'hora_inicio_atendimento' => $request->input("hora_inicio_atendimento.$index"),
-                    'hora_fim_atendimento' => $request->input("hora_fim_atendimento.$index"),
-                    'tabela' => $request->input("tabela.$index"),
-                    'codigo_procedimento_realizado' => $request->input("codigo_procedimento_realizado.$index"),
-                    'descricao_procedimento_realizado' => $request->input("descricao_procedimento_realizado.$index"),
-                    'quantidade_autorizada' => $request->input("quantidade_autorizada.$index"),
-                    'via' => $request->input("via.$index"),
-                    'tecnica' => $request->input("tecnica.$index"),
-                    'fator_red_acres' => $request->input("fator_red_acres.$index"),
-                    'valor_unitario' => $request->input("valor_unitario.$index"),
-                    'valor_total' => $request->input("valor_total.$index"),
-                ]);
-            }
-        }
-
-        DB::commit();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Guia SADT atualizada com sucesso!'
-        ]);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json([
-            'success' => false,
-            'message' => 'Erro ao atualizar a Guia SADT.',
-            'error' => $e->getMessage()
-        ], 500);
-    }
-}
 
 
-
-
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
+    
+     public function glosaSadt(Request $request)
+     {
+         try {
+             DB::beginTransaction();
+     
+             // Arrays de referência
+             $conselhos = [
+                 'CRAS' => '01', 'COREN' => '02', 'CRF' => '03', 'CRFA' => '04',
+                 'CREFITO' => '05', 'CRM' => '06', 'CRN' => '07', 'CRO' => '08',
+                 'CRP' => '09', 'OUTROS' => '10'
+             ];
+     
+             $ufs = [
+                 'AC' => '12', 'AL' => '27', 'AP' => '16', 'AM' => '13', 'BA' => '29',
+                 'CE' => '23', 'DF' => '53', 'ES' => '32', 'GO' => '52', 'MA' => '21',
+                 'MT' => '51', 'MS' => '50', 'MG' => '31', 'PA' => '15', 'PB' => '25',
+                 'PR' => '41', 'PE' => '26', 'PI' => '22', 'RJ' => '33', 'RN' => '24',
+                 'RS' => '43', 'RO' => '11', 'RR' => '14', 'SC' => '42', 'SP' => '35',
+                 'SE' => '28', 'TO' => '17'
+             ];
+     
+             $horaInicioAtendimento = is_array($request->input('hora_inicio_atendimento'))
+                 ? reset($request->input('hora_inicio_atendimento'))
+                 : $request->input('hora_inicio_atendimento');
+     
+             $horaFimAtendimento = is_array($request->input('hora_fim_atendimento'))
+                 ? reset($request->input('hora_fim_atendimento'))
+                 : $request->input('hora_fim_atendimento');
+     
+             // Criar a guia
+             $guia = GuiaSp::create([
+                 'user_id' => auth()->id(),
+                 'agenda_id' => $request->input('agenda_id'),
+                 'profissional_id' => $request->input('profissional_id'),
+                 'paciente_id' => $request->input('paciente_id'),
+                 'cns' => $request->input('cns'),
+                 'atendimento_rn' => $request->input('atendimento_rn'),
+                 'nome_profissional_solicitante' => $request->input('nome_profissional_solicitante'),
+                 'conselho_profissional' => $request->input('conselho_profissional'),
+                 'codigo_cbo' => $request->input('codigo_cbo'),
+                 'nome_contratado' => $request->input('nome_contratado'),
+                 'codigo_cnes' => $request->input('codigo_cnes'),
+                 'data_atendimento' => $request->input('data_solicitacao'),
+                 'codigo_procedimento' => $request->input('codigo_procedimento'),
+                 'validade_carteira' => $request->input('validade_carteira'),
+                 'codigo_operadora' => $request->input('codigo_operadora'),
+                 'codigo_operadora_executante' => $request->input('codigo_operadora_executante'),
+                 'nome_social' => $request->input('nome_social'),
+                 'uf_conselho' => $request->input('uf_conselho'),
+                 'numero_conselho' => $request->input('numero_conselho'),
+                 'registro_ans' => $request->input('registro_ans'),
+                 'numero_carteira' => $request->input('numero_carteira'),
+                 'nome_beneficiario' => $request->input('nome_beneficiario'),
+                 'numero_guia_prestador' => $request->input('numero_guia_prestador'),
+                 'hora_inicio_atendimento' => $horaInicioAtendimento,
+                 'hora_fim_atendimento' => $horaFimAtendimento,
+                 'data_autorizacao' => $request->input('data_solicitacao'),
+                 'senha' => $request->input('senha'),
+                 'validade_senha' => $request->input('validade_senha'),
+                 'numero_guia_op' => $request->input('numero_guia_op'),
+                 'carater_atendimento' => $request->input('carater_atendimento'),
+                 'data_solicitacao' => $request->input('data_solicitacao'),
+                 'indicacao_clinica' => $request->input('indicacao_clinica'),
+                 'indicacao_cob_especial' => $request->input('indicacao_cob_especial'),
+                 'nome_contratado_executante' => $request->input('nome_contratado_executante'),
+                 'tipo_atendimento' => $request->input('tipo_atendimento'),
+                 'indicacao_acidente' => $request->input('indicacao_acidente'),
+                 'tipo_consulta' => $request->input('tipo_consulta'),
+                 'motivo_encerramento' => $request->input('motivo_encerramento'),
+                 'regime_atendimento' => $request->input('regime_atendimento'),
+                 'saude_ocupacional' => $request->input('saude_ocupacional'),
+                 'sequencia' => $request->input('sequencia'),
+                 'grua' => $request->input('grau'),
+                 'codigo_operadora_profissional' => $request->input('codigo_operadora_profissional'),
+                 'nome_profissional' => $request->input('nome_profissional'),
+                 'sigla_conselho' => $request->input('sigla_conselho'),
+                 'numero_conselho_profissional' => $request->input('numero_conselho_profissional'),
+                 'uf_profissional' => $request->input('uf_profissional'),
+                 'codigo_cbo_profissional' => $request->input('codigo_cbo_profissional'),
+                 'sequencia1' => $request->input('sequencia1'),
+                 'grau1' => $request->input('grau1'),
+                 'codigo_operadora_profissional1' => $request->input('codigo_operadora_profissional1'),
+                 'nome_profissional1' => $request->input('nome_profissional1'),
+                 'sigla_conselho1' => $request->input('sigla_conselho1'),
+                 'numero_conselho_profissional1' => $request->input('numero_conselho_profissional1'),
+                 'uf_profissional1' => $request->input('uf_profissional1'),
+                 'codigo_cbo_profissional1' => $request->input('codigo_cbo_profissional1'),
+                 'sequencia2' => $request->input('sequencia2'),
+                 'grua2' => $request->input('grau2'),
+                 'codigo_operadora_profissional2' => $request->input('codigo_operadora_profissional2'),
+                 'nome_profissional2' => $request->input('nome_profissional2'),
+                 'sigla_conselho2' => $request->input('sigla_conselho2'),
+                 'numero_conselho_profissional2' => $request->input('numero_conselho_profissional2'),
+                 'uf_profissional2' => $request->input('uf_profissional2'),
+                 'codigo_cbo_profissional2' => $request->input('codigo_cbo_profissional2'),
+                 'observacao' => $request->input('observacao') ?? 'N/A',
+                 'identificador' => 'GERADO'
+             ]);
+     
+             // Substituir valores de conselhos e UF por códigos
+             if (array_key_exists($request->input('sigla_conselho'), $conselhos)) {
+                 $guia->update(['sigla_conselho' => $conselhos[$request->input('sigla_conselho')]]);
+             }
+     
+             if (array_key_exists($request->input('uf_profissional'), $ufs)) {
+                 $guia->update(['uf_profissional' => $ufs[$request->input('uf_profissional')]]);
+             }
+     
+             // Atualizar exames na tabela exames_sadt
+             if ($request->has('descricao_procedimento')) {
+                 foreach ($request->input('tabela') as $index => $tabela) {
+                     ExamesSadt::create([
+                         'guia_sps_id' => $guia->id,
+                         'tabela' => $tabela,
+                         'codigo_procedimento_solicitado' => $request->input("codigo_procedimento_solicitado.$index"),
+                         'descricao_procedimento' => $request->input("descricao_procedimento.$index"),
+                         'qtd_sol' => $request->input("qtd_sol.$index"),
+                         'qtd_aut' => $request->input("qtd_aut.$index"),
+                     ]);
+                 }
+             }
+     
+             // Atualizar procedimentos na tabela exames_aut_sadt
+             if ($request->has('descricao_procedimento_realizado')) {
+                 foreach ($request->input('data_real') as $index => $dataReal) {
+                     ExamesAutSadt::create([
+                         'guia_sps_id' => $guia->id,
+                         'data_real' => $dataReal,
+                         'hora_inicio_atendimento' => $request->input("hora_inicio_atendimento.$index"),
+                         'hora_fim_atendimento' => $request->input("hora_fim_atendimento.$index"),
+                         'tabela' => $request->input("tabela.$index"),
+                         'codigo_procedimento_realizado' => $request->input("codigo_procedimento_realizado.$index"),
+                         'descricao_procedimento_realizado' => $request->input("descricao_procedimento_realizado.$index"),
+                         'quantidade_autorizada' => $request->input("quantidade_autorizada.$index"),
+                         'via' => $request->input("via.$index"),
+                         'tecnica' => $request->input("tecnica.$index"),
+                         'fator_red_acres' => $request->input("fator_red_acres.$index"),
+                         'valor_unitario' => $request->input("valor_unitario.$index"),
+                         'valor_total' => $request->input("valor_total.$index"),
+                     ]);
+                 }
+             }
+     
+             DB::commit();
+     
+             return redirect()->back()->with('success', 'Guia criada com sucesso!');
+         } catch (Exception $e) {
+             DB::rollBack();
+             return redirect()->back()->with('error', 'Erro ao criar guia: ' . $e->getMessage());
+         }
+     }
+     
     public function destroy(GuiaSp $guiasp)
     {
         //
