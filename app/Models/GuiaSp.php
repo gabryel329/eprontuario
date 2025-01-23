@@ -74,6 +74,22 @@ class GuiaSp extends Model
         'sequencia',
         'grua',
         'identificador',
+        'sequencia1',
+        'grau1',
+        'codigo_operadora_profissional1',
+        'nome_profissional1',
+        'sigla_conselho1',
+        'numero_conselho_profissional1',
+        'uf_profissional1',
+        'codigo_cbo_profissional1',
+        'sequencia2',
+        'grau2',
+        'codigo_operadora_profissional2',
+        'nome_profissional2',
+        'sigla_conselho2',
+        'numero_conselho_profissional2',
+        'uf_profissional2',
+        'codigo_cbo_profissional2',
     ];
 
 
