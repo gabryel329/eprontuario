@@ -121,7 +121,7 @@ class AgendaController extends Controller
                 $query = DB::table($tabelaMedicamentos);
 
                 if (str_starts_with($tabelaMedicamentos, 'tab_brasindice')) {
-                    $query->select('id', 'medicamento', 'preco', 'GENERICO as codigo', 'APRESENTACAO as unid');
+                    $query->select('id', 'medicamento', 'preco', 'TUSS as codigo', 'APRESENTACAO as unid');
                 } elseif (str_starts_with($tabelaMedicamentos, 'tab_simpro')) {
                     $query->select('id', 'DESCRICAO as medicamento');
                 }
@@ -153,15 +153,10 @@ class AgendaController extends Controller
             if ($tabelaMaterias && Schema::hasTable($tabelaMaterias)) {
                 $query = DB::table($tabelaMaterias);
 
-                if (str_starts_with($tabelaMaterias, 'tab_brasindice')) {
-                    // Seleciona COD_ITEM como codigo
-                    $query->select('id', 'medicamento', 'preco', 'EAN as codigo', 'APRESENTACAO as unid');
-                } elseif (str_starts_with($tabelaMaterias, 'tab_simpro')) {
-                    // Adiciona codigo como NULL para tabelas sem essa coluna
-                    $query->select('id', 'DESCRICAO as medicamento', DB::raw('NULL as codigo'));
-                } else {
-                    // Adiciona codigo como NULL para tabelas genéricas
-                    $query->select('id', 'medicamento', 'preco', DB::raw('NULL as codigo'));
+                if (str_starts_with($tabelaMedicamentos, 'tab_brasindice')) {
+                    $query->select('id', 'medicamento', 'preco', 'TUSS as codigo', 'APRESENTACAO as unid');
+                } elseif (str_starts_with($tabelaMedicamentos, 'tab_simpro')) {
+                    $query->select('id', 'DESCRICAO as medicamento');
                 }
 
                 $agendas->materias = $query->get();

@@ -13,6 +13,7 @@ use App\Models\ExamesSadt;
 use App\Models\GuiaSp;
 use App\Models\MatAgenda;
 use App\Models\MedAgenda;
+use App\Models\Medicamento;
 use App\Models\Pacientes;
 use App\Models\ProcAgenda;
 use App\Models\Profissional;
@@ -192,240 +193,240 @@ class GuiaSpController extends Controller
     }
 
     public function gerarXmlGuiaSp($id)
-{
-    // Buscar a guia pelo ID
-    $guia = GuiaSp::findOrFail($id);
+    {
+        // Buscar a guia pelo ID
+        $guia = GuiaSp::findOrFail($id);
 
-    // Criar o XML utilizando SimpleXMLElement com a estrutura fornecida
-    $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas http://www.ans.gov.br/padroes/tiss/schemas/tissV4_01_00.xsd"></ans:mensagemTISS>');
+        // Criar o XML utilizando SimpleXMLElement com a estrutura fornecida
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas http://www.ans.gov.br/padroes/tiss/schemas/tissV4_01_00.xsd"></ans:mensagemTISS>');
 
-    // Cabeçalho
-    $cabecalho = $xml->addChild('ans:cabecalho');
-    $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
-    $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
-    $identificacaoTransacao->addChild('ans:sequencialTransacao', '0000000001');
-    $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
-    $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
+        // Cabeçalho
+        $cabecalho = $xml->addChild('ans:cabecalho');
+        $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
+        $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
+        $identificacaoTransacao->addChild('ans:sequencialTransacao', '0000000001');
+        $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
+        $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
 
-    $origem = $cabecalho->addChild('ans:origem');
-    $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
-    $identificacaoPrestador->addChild('ans:CPF', $guia->cpfContratado);  // Atualize conforme necessário
+        $origem = $cabecalho->addChild('ans:origem');
+        $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
+        $identificacaoPrestador->addChild('ans:CPF', $guia->cpfContratado);  // Atualize conforme necessário
 
-    $destino = $cabecalho->addChild('ans:destino');
-    $destino->addChild('ans:registroANS', $guia->registro_ans);
+        $destino = $cabecalho->addChild('ans:destino');
+        $destino->addChild('ans:registroANS', $guia->registro_ans);
 
-    $cabecalho->addChild('ans:Padrao', '4.01.00');
+        $cabecalho->addChild('ans:Padrao', '4.01.00');
 
-    // Lote de Guias
-    $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
-    $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
-    $loteGuias->addChild('ans:numeroLote', '0001');
-    $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
+        // Lote de Guias
+        $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
+        $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
+        $loteGuias->addChild('ans:numeroLote', '0001');
+        $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
 
-    // Guia SP/SADT
-    $guiaSP = $guiasTISS->addChild('ans:guiaSP-SADT');
-    $cabecalhoGuia = $guiaSP->addChild('ans:cabecalhoGuia');
-    $cabecalhoGuia->addChild('ans:registroANS', $guia->registro_ans);
-    $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_op);
+        // Guia SP/SADT
+        $guiaSP = $guiasTISS->addChild('ans:guiaSP-SADT');
+        $cabecalhoGuia = $guiaSP->addChild('ans:cabecalhoGuia');
+        $cabecalhoGuia->addChild('ans:registroANS', $guia->registro_ans);
+        $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_op);
 
-    // Dados de Autorização
-    $dadosAutorizacao = $guiaSP->addChild('ans:dadosAutorizacao');
-    $dadosAutorizacao->addChild('ans:numeroGuiaOperadora', $guia->numero_guia_op);
-    $dadosAutorizacao->addChild('ans:dataAutorizacao', $guia->data_autorizacao);
-    $dadosAutorizacao->addChild('ans:senha', $guia->senha);
-    $dadosAutorizacao->addChild('ans:dataValidadeSenha', $guia->validade_senha);
+        // Dados de Autorização
+        $dadosAutorizacao = $guiaSP->addChild('ans:dadosAutorizacao');
+        $dadosAutorizacao->addChild('ans:numeroGuiaOperadora', $guia->numero_guia_op);
+        $dadosAutorizacao->addChild('ans:dataAutorizacao', $guia->data_autorizacao);
+        $dadosAutorizacao->addChild('ans:senha', $guia->senha);
+        $dadosAutorizacao->addChild('ans:dataValidadeSenha', $guia->validade_senha);
 
-    // Dados do Beneficiário
-    $dadosBeneficiario = $guiaSP->addChild('ans:dadosBeneficiario');
-    $dadosBeneficiario->addChild('ans:numeroCarteira', $guia->numero_carteira);
-    $dadosBeneficiario->addChild('ans:atendimentoRN', $guia->atendimento_rn);
+        // Dados do Beneficiário
+        $dadosBeneficiario = $guiaSP->addChild('ans:dadosBeneficiario');
+        $dadosBeneficiario->addChild('ans:numeroCarteira', $guia->numero_carteira);
+        $dadosBeneficiario->addChild('ans:atendimentoRN', $guia->atendimento_rn);
 
-    // Dados do Solicitante
-    $dadosSolicitante = $guiaSP->addChild('ans:dadosSolicitante');
-    $contratadoSolicitante = $dadosSolicitante->addChild('ans:contratadoSolicitante');
-    $contratadoSolicitante->addChild('ans:cpfContratado', $guia->cpfContratado);
-    $dadosSolicitante->addChild('ans:nomeContratadoSolicitante', $guia->nome_contratado);
-    $profissionalSolicitante = $dadosSolicitante->addChild('ans:profissionalSolicitante');
-    $profissionalSolicitante->addChild('ans:nomeProfissional', $guia->nome_profissional_solicitante);
-    $profissionalSolicitante->addChild('ans:conselhoProfissional', $guia->conselho_profissional);
-    $profissionalSolicitante->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho);
-    $profissionalSolicitante->addChild('ans:UF', $guia->uf_conselho);
-    $profissionalSolicitante->addChild('ans:CBOS', $guia->codigo_cbo);
+        // Dados do Solicitante
+        $dadosSolicitante = $guiaSP->addChild('ans:dadosSolicitante');
+        $contratadoSolicitante = $dadosSolicitante->addChild('ans:contratadoSolicitante');
+        $contratadoSolicitante->addChild('ans:cpfContratado', $guia->cpfContratado);
+        $dadosSolicitante->addChild('ans:nomeContratadoSolicitante', $guia->nome_contratado);
+        $profissionalSolicitante = $dadosSolicitante->addChild('ans:profissionalSolicitante');
+        $profissionalSolicitante->addChild('ans:nomeProfissional', $guia->nome_profissional_solicitante);
+        $profissionalSolicitante->addChild('ans:conselhoProfissional', $guia->conselho_profissional);
+        $profissionalSolicitante->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho);
+        $profissionalSolicitante->addChild('ans:UF', $guia->uf_conselho);
+        $profissionalSolicitante->addChild('ans:CBOS', $guia->codigo_cbo);
 
-    // Dados de Solicitação
-    $dadosSolicitacao = $guiaSP->addChild('ans:dadosSolicitacao');
-    $dadosSolicitacao->addChild('ans:dataSolicitacao', $guia->data_solicitacao);
-    $dadosSolicitacao->addChild('ans:caraterAtendimento', $guia->carater_atendimento);
-    $dadosSolicitacao->addChild('ans:indicacaoClinica', $guia->indicacao_clinica);
+        // Dados de Solicitação
+        $dadosSolicitacao = $guiaSP->addChild('ans:dadosSolicitacao');
+        $dadosSolicitacao->addChild('ans:dataSolicitacao', $guia->data_solicitacao);
+        $dadosSolicitacao->addChild('ans:caraterAtendimento', $guia->carater_atendimento);
+        $dadosSolicitacao->addChild('ans:indicacaoClinica', $guia->indicacao_clinica);
 
-    // Dados do Atendimento
-    $dadosAtendimento = $guiaSP->addChild('ans:dadosAtendimento');
-    $dadosAtendimento->addChild('ans:tipoAtendimento', $guia->tipo_atendimento);
-    $dadosAtendimento->addChild('ans:indicacaoAcidente', $guia->indicacao_acidente);
-    $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta);
-    $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento ?? '01');
+        // Dados do Atendimento
+        $dadosAtendimento = $guiaSP->addChild('ans:dadosAtendimento');
+        $dadosAtendimento->addChild('ans:tipoAtendimento', $guia->tipo_atendimento);
+        $dadosAtendimento->addChild('ans:indicacaoAcidente', $guia->indicacao_acidente);
+        $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta);
+        $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento ?? '01');
 
-    // Procedimentos Executados
-    $procedimentosExecutados = $guiaSP->addChild('ans:procedimentosExecutados');
-    $procedimentoExecutado = $procedimentosExecutados->addChild('ans:procedimentoExecutado');
-    $procedimentoExecutado->addChild('ans:sequencialItem', '1');
-    $procedimentoExecutado->addChild('ans:dataExecucao', $guia->data_realizacao);
-    $procedimentoExecutado->addChild('ans:horaInicial', $guia->hora_inicio_atendimento);
-    $procedimentoExecutado->addChild('ans:horaFinal', $guia->hora_fim_atendimento);
-    $procedimento = $procedimentoExecutado->addChild('ans:procedimento');
-    $procedimento->addChild('ans:codigoTabela', $guia->codigo_tabela);
-    $procedimento->addChild('ans:codigoProcedimento', $guia->codigo_procedimento_realizado);
-    $procedimento->addChild('ans:descricaoProcedimento', $guia->descricao_procedimento_realizado);
+        // Procedimentos Executados
+        $procedimentosExecutados = $guiaSP->addChild('ans:procedimentosExecutados');
+        $procedimentoExecutado = $procedimentosExecutados->addChild('ans:procedimentoExecutado');
+        $procedimentoExecutado->addChild('ans:sequencialItem', '1');
+        $procedimentoExecutado->addChild('ans:dataExecucao', $guia->data_realizacao);
+        $procedimentoExecutado->addChild('ans:horaInicial', $guia->hora_inicio_atendimento);
+        $procedimentoExecutado->addChild('ans:horaFinal', $guia->hora_fim_atendimento);
+        $procedimento = $procedimentoExecutado->addChild('ans:procedimento');
+        $procedimento->addChild('ans:codigoTabela', $guia->codigo_tabela);
+        $procedimento->addChild('ans:codigoProcedimento', $guia->codigo_procedimento_realizado);
+        $procedimento->addChild('ans:descricaoProcedimento', $guia->descricao_procedimento_realizado);
 
-    // Epílogo
-    $epilogo = $xml->addChild('ans:epilogo');
-    $epilogo->addChild('ans:hash', $guia->hash);
+        // Epílogo
+        $epilogo = $xml->addChild('ans:epilogo');
+        $epilogo->addChild('ans:hash', $guia->hash);
 
-    // Criar nova conta financeira
-    $conta = ContasFinanceiras::create([
-        'user_id' => auth()->id(),
-        'status' => 'Aberto',
-        'tipo_conta' => 'Receber',
-        'convenio_id' => $guia->convenio_id,
-        'tipo_guia' => 'SADT', // Altere conforme necessário
-        'parcelas' => '1/1',
-        'data_emissao' => Carbon::parse($guia->data_atendimento)->format('Y-m-d'),
-        'competencia' => Carbon::parse($guia->data_atendimento)->format('Y-m-d'),
-        'data_vencimento' => now()->addDays(30)->format('Y-m-d'),
-        'referencia' => $guia->numeracao,
-        'tipo_doc' => 'XML',
-        'centro_custos' => $guia->nome_contratado_executante ?? 'Desconhecido',
-        'documento' => 'lote_guias_SADT_' . $guia->numeracao . '.xml',
-        'valor' => $guia->valor_procedimento ?? 0,
-        'historico' => 'Guia de SADT - ' . $guia->data_atendimento,
-    ]);
+        // Criar nova conta financeira
+        $conta = ContasFinanceiras::create([
+            'user_id' => auth()->id(),
+            'status' => 'Aberto',
+            'tipo_conta' => 'Receber',
+            'convenio_id' => $guia->convenio_id,
+            'tipo_guia' => 'SADT', // Altere conforme necessário
+            'parcelas' => '1/1',
+            'data_emissao' => Carbon::parse($guia->data_atendimento)->format('Y-m-d'),
+            'competencia' => Carbon::parse($guia->data_atendimento)->format('Y-m-d'),
+            'data_vencimento' => now()->addDays(30)->format('Y-m-d'),
+            'referencia' => $guia->numeracao,
+            'tipo_doc' => 'XML',
+            'centro_custos' => $guia->nome_contratado_executante ?? 'Desconhecido',
+            'documento' => 'lote_guias_SADT_' . $guia->numeracao . '.xml',
+            'valor' => $guia->valor_procedimento ?? 0,
+            'historico' => 'Guia de SADT - ' . $guia->data_atendimento,
+        ]);
 
-    // Criar relacionamento em `conta_guias`
-    ContaGuia::create([
-        'conta_financeira_id' => $conta->id,
-        'guia_id' => $guia->id,
-        'tipo_guia' => 'SADT', // Altere conforme necessário
-        'lote' => $guia->numeracao,
-    ]);
+        // Criar relacionamento em `conta_guias`
+        ContaGuia::create([
+            'conta_financeira_id' => $conta->id,
+            'guia_id' => $guia->id,
+            'tipo_guia' => 'SADT', // Altere conforme necessário
+            'lote' => $guia->numeracao,
+        ]);
 
-    // Retornar o XML como resposta para download
-    return response($xml->asXML(), 200)
-        ->header('Content-Type', 'application/xml')
-        ->header('Content-Disposition', 'attachment; filename="guia_sp_' . $guia->id . '.xml"');
-}
-
-
-public function gerarZipGuiaSp($id)
-{
-    // Buscar a guia pelo ID
-    $guia = GuiaSp::findOrFail($id);
-
-    // Criar o XML utilizando SimpleXMLElement com a estrutura fornecida
-    $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas http://www.ans.gov.br/padroes/tiss/schemas/tissV4_01_00.xsd"></ans:mensagemTISS>');
-
-    // Cabeçalho
-    $cabecalho = $xml->addChild('ans:cabecalho');
-    $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
-    $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
-    $identificacaoTransacao->addChild('ans:sequencialTransacao', '0000000001');
-    $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
-    $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
-
-    $origem = $cabecalho->addChild('ans:origem');
-    $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
-    $identificacaoPrestador->addChild('ans:CPF', $guia->cpfContratado);
-
-    $destino = $cabecalho->addChild('ans:destino');
-    $destino->addChild('ans:registroANS', $guia->registro_ans);
-
-    $cabecalho->addChild('ans:Padrao', '4.01.00');
-
-    // Lote de Guias
-    $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
-    $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
-    $loteGuias->addChild('ans:numeroLote', '0001');
-    $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
-
-    // Guia SP/SADT
-    $guiaSP = $guiasTISS->addChild('ans:guiaSP-SADT');
-    $cabecalhoGuia = $guiaSP->addChild('ans:cabecalhoGuia');
-    $cabecalhoGuia->addChild('ans:registroANS', $guia->registro_ans);
-    $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_op);
-
-    // Dados de Autorização
-    $dadosAutorizacao = $guiaSP->addChild('ans:dadosAutorizacao');
-    $dadosAutorizacao->addChild('ans:numeroGuiaOperadora', $guia->numero_guia_op);
-    $dadosAutorizacao->addChild('ans:dataAutorizacao', $guia->data_autorizacao);
-    $dadosAutorizacao->addChild('ans:senha', $guia->senha);
-    $dadosAutorizacao->addChild('ans:dataValidadeSenha', $guia->validade_senha);
-
-    // Dados do Beneficiário
-    $dadosBeneficiario = $guiaSP->addChild('ans:dadosBeneficiario');
-    $dadosBeneficiario->addChild('ans:numeroCarteira', $guia->numero_carteira);
-    $dadosBeneficiario->addChild('ans:atendimentoRN', $guia->atendimento_rn);
-
-    // Dados do Solicitante
-    $dadosSolicitante = $guiaSP->addChild('ans:dadosSolicitante');
-    $contratadoSolicitante = $dadosSolicitante->addChild('ans:contratadoSolicitante');
-    $contratadoSolicitante->addChild('ans:cpfContratado', $guia->cpfContratado);
-    $dadosSolicitante->addChild('ans:nomeContratadoSolicitante', $guia->nome_contratado);
-    $profissionalSolicitante = $dadosSolicitante->addChild('ans:profissionalSolicitante');
-    $profissionalSolicitante->addChild('ans:nomeProfissional', $guia->nome_profissional_solicitante);
-    $profissionalSolicitante->addChild('ans:conselhoProfissional', $guia->conselho_profissional);
-    $profissionalSolicitante->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho);
-    $profissionalSolicitante->addChild('ans:UF', $guia->uf_conselho);
-    $profissionalSolicitante->addChild('ans:CBOS', $guia->codigo_cbo);
-
-    // Dados de Solicitação
-    $dadosSolicitacao = $guiaSP->addChild('ans:dadosSolicitacao');
-    $dadosSolicitacao->addChild('ans:dataSolicitacao', $guia->data_solicitacao);
-    $dadosSolicitacao->addChild('ans:caraterAtendimento', $guia->carater_atendimento);
-    $dadosSolicitacao->addChild('ans:indicacaoClinica', $guia->indicacao_clinica);
-
-    // Dados do Atendimento
-    $dadosAtendimento = $guiaSP->addChild('ans:dadosAtendimento');
-    $dadosAtendimento->addChild('ans:tipoAtendimento', $guia->tipo_atendimento);
-    $dadosAtendimento->addChild('ans:indicacaoAcidente', $guia->indicacao_acidente);
-    $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta);
-    $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento ?? '01');
-
-    // Procedimentos Executados
-    $procedimentosExecutados = $guiaSP->addChild('ans:procedimentosExecutados');
-    $procedimentoExecutado = $procedimentosExecutados->addChild('ans:procedimentoExecutado');
-    $procedimentoExecutado->addChild('ans:sequencialItem', '1');
-    $procedimentoExecutado->addChild('ans:dataExecucao', $guia->data_realizacao);
-    $procedimentoExecutado->addChild('ans:horaInicial', $guia->hora_inicio_atendimento);
-    $procedimentoExecutado->addChild('ans:horaFinal', $guia->hora_fim_atendimento);
-    $procedimento = $procedimentoExecutado->addChild('ans:procedimento');
-    $procedimento->addChild('ans:codigoTabela', $guia->codigo_tabela);
-    $procedimento->addChild('ans:codigoProcedimento', $guia->codigo_procedimento_realizado);
-    $procedimento->addChild('ans:descricaoProcedimento', $guia->descricao_procedimento_realizado);
-
-    // Epílogo
-    $epilogo = $xml->addChild('ans:epilogo');
-    $epilogo->addChild('ans:hash', $guia->hash);
-
-    // Salvar o XML temporariamente no servidor
-    $fileName = 'guia_sp_' . $guia->id . '.xml';
-    $filePath = storage_path('app/public/' . $fileName);
-    $xml->asXML($filePath);
-
-    // Criar um arquivo ZIP contendo o XML
-    $zipFileName = 'guia_sp_' . $guia->id . '.zip';
-    $zipFilePath = storage_path('app/public/' . $zipFileName);
-
-    $zip = new \ZipArchive;
-    if ($zip->open($zipFilePath, \ZipArchive::CREATE) === TRUE) {
-        $zip->addFile($filePath, $fileName);  // Adiciona o XML ao ZIP
-        $zip->close();
+        // Retornar o XML como resposta para download
+        return response($xml->asXML(), 200)
+            ->header('Content-Type', 'application/xml')
+            ->header('Content-Disposition', 'attachment; filename="guia_sp_' . $guia->id . '.xml"');
     }
 
-    // Excluir o XML temporário após adicionar ao ZIP
-    unlink($filePath);
 
-    // Retornar o arquivo ZIP como download e excluir após o envio
-    return response()->download($zipFilePath)->deleteFileAfterSend(true);
-}
+    public function gerarZipGuiaSp($id)
+    {
+        // Buscar a guia pelo ID
+        $guia = GuiaSp::findOrFail($id);
+
+        // Criar o XML utilizando SimpleXMLElement com a estrutura fornecida
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas http://www.ans.gov.br/padroes/tiss/schemas/tissV4_01_00.xsd"></ans:mensagemTISS>');
+
+        // Cabeçalho
+        $cabecalho = $xml->addChild('ans:cabecalho');
+        $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
+        $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
+        $identificacaoTransacao->addChild('ans:sequencialTransacao', '0000000001');
+        $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
+        $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
+
+        $origem = $cabecalho->addChild('ans:origem');
+        $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
+        $identificacaoPrestador->addChild('ans:CPF', $guia->cpfContratado);
+
+        $destino = $cabecalho->addChild('ans:destino');
+        $destino->addChild('ans:registroANS', $guia->registro_ans);
+
+        $cabecalho->addChild('ans:Padrao', '4.01.00');
+
+        // Lote de Guias
+        $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
+        $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
+        $loteGuias->addChild('ans:numeroLote', '0001');
+        $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
+
+        // Guia SP/SADT
+        $guiaSP = $guiasTISS->addChild('ans:guiaSP-SADT');
+        $cabecalhoGuia = $guiaSP->addChild('ans:cabecalhoGuia');
+        $cabecalhoGuia->addChild('ans:registroANS', $guia->registro_ans);
+        $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_op);
+
+        // Dados de Autorização
+        $dadosAutorizacao = $guiaSP->addChild('ans:dadosAutorizacao');
+        $dadosAutorizacao->addChild('ans:numeroGuiaOperadora', $guia->numero_guia_op);
+        $dadosAutorizacao->addChild('ans:dataAutorizacao', $guia->data_autorizacao);
+        $dadosAutorizacao->addChild('ans:senha', $guia->senha);
+        $dadosAutorizacao->addChild('ans:dataValidadeSenha', $guia->validade_senha);
+
+        // Dados do Beneficiário
+        $dadosBeneficiario = $guiaSP->addChild('ans:dadosBeneficiario');
+        $dadosBeneficiario->addChild('ans:numeroCarteira', $guia->numero_carteira);
+        $dadosBeneficiario->addChild('ans:atendimentoRN', $guia->atendimento_rn);
+
+        // Dados do Solicitante
+        $dadosSolicitante = $guiaSP->addChild('ans:dadosSolicitante');
+        $contratadoSolicitante = $dadosSolicitante->addChild('ans:contratadoSolicitante');
+        $contratadoSolicitante->addChild('ans:cpfContratado', $guia->cpfContratado);
+        $dadosSolicitante->addChild('ans:nomeContratadoSolicitante', $guia->nome_contratado);
+        $profissionalSolicitante = $dadosSolicitante->addChild('ans:profissionalSolicitante');
+        $profissionalSolicitante->addChild('ans:nomeProfissional', $guia->nome_profissional_solicitante);
+        $profissionalSolicitante->addChild('ans:conselhoProfissional', $guia->conselho_profissional);
+        $profissionalSolicitante->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho);
+        $profissionalSolicitante->addChild('ans:UF', $guia->uf_conselho);
+        $profissionalSolicitante->addChild('ans:CBOS', $guia->codigo_cbo);
+
+        // Dados de Solicitação
+        $dadosSolicitacao = $guiaSP->addChild('ans:dadosSolicitacao');
+        $dadosSolicitacao->addChild('ans:dataSolicitacao', $guia->data_solicitacao);
+        $dadosSolicitacao->addChild('ans:caraterAtendimento', $guia->carater_atendimento);
+        $dadosSolicitacao->addChild('ans:indicacaoClinica', $guia->indicacao_clinica);
+
+        // Dados do Atendimento
+        $dadosAtendimento = $guiaSP->addChild('ans:dadosAtendimento');
+        $dadosAtendimento->addChild('ans:tipoAtendimento', $guia->tipo_atendimento);
+        $dadosAtendimento->addChild('ans:indicacaoAcidente', $guia->indicacao_acidente);
+        $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta);
+        $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento ?? '01');
+
+        // Procedimentos Executados
+        $procedimentosExecutados = $guiaSP->addChild('ans:procedimentosExecutados');
+        $procedimentoExecutado = $procedimentosExecutados->addChild('ans:procedimentoExecutado');
+        $procedimentoExecutado->addChild('ans:sequencialItem', '1');
+        $procedimentoExecutado->addChild('ans:dataExecucao', $guia->data_realizacao);
+        $procedimentoExecutado->addChild('ans:horaInicial', $guia->hora_inicio_atendimento);
+        $procedimentoExecutado->addChild('ans:horaFinal', $guia->hora_fim_atendimento);
+        $procedimento = $procedimentoExecutado->addChild('ans:procedimento');
+        $procedimento->addChild('ans:codigoTabela', $guia->codigo_tabela);
+        $procedimento->addChild('ans:codigoProcedimento', $guia->codigo_procedimento_realizado);
+        $procedimento->addChild('ans:descricaoProcedimento', $guia->descricao_procedimento_realizado);
+
+        // Epílogo
+        $epilogo = $xml->addChild('ans:epilogo');
+        $epilogo->addChild('ans:hash', $guia->hash);
+
+        // Salvar o XML temporariamente no servidor
+        $fileName = 'guia_sp_' . $guia->id . '.xml';
+        $filePath = storage_path('app/public/' . $fileName);
+        $xml->asXML($filePath);
+
+        // Criar um arquivo ZIP contendo o XML
+        $zipFileName = 'guia_sp_' . $guia->id . '.zip';
+        $zipFilePath = storage_path('app/public/' . $zipFileName);
+
+        $zip = new \ZipArchive;
+        if ($zip->open($zipFilePath, \ZipArchive::CREATE) === TRUE) {
+            $zip->addFile($filePath, $fileName);  // Adiciona o XML ao ZIP
+            $zip->close();
+        }
+
+        // Excluir o XML temporário após adicionar ao ZIP
+        unlink($filePath);
+
+        // Retornar o arquivo ZIP como download e excluir após o envio
+        return response()->download($zipFilePath)->deleteFileAfterSend(true);
+    }
 
 
 
@@ -433,12 +434,12 @@ public function gerarZipGuiaSp($id)
     public function impressaoGuia($id)
     {
         $guia = GuiaSp::find($id);
-        $agenda = Agenda::where('id',$guia->agenda_id)->first();
+        $agenda = Agenda::where('id', $guia->agenda_id)->first();
 
         // $user = User::where('id', $guia->user_id)->get();
         $ExameSolis = ExamesSadt::where('guia_sps_id', $guia->id)
-        ->whereNotNull('codigo_procedimento_solicitado')
-        ->get();
+            ->whereNotNull('codigo_procedimento_solicitado')
+            ->get();
 
         $ExameAuts = ExamesAutSadt::where('guia_sps_id', $guia->id)->get();
 
@@ -450,9 +451,12 @@ public function gerarZipGuiaSp($id)
                 ->select('med_agendas.*', "$tabelaMed.medicamento as nome_medicamento") // Seleciona as colunas desejadas
                 ->get();
         } else {
-            $medicamentos = collect(); // Retorna uma coleção vazia se a tabela não existir
+            $medicamentos = MedAgenda::where('agenda_id', $agenda->id)
+                ->join('medicamentos', 'medicamentos.id', '=', 'med_agendas.medicamento_id')
+                ->select('med_agendas.*', 'medicamentos.nome as nome_medicamento') // Seleciona as colunas desejadas
+                ->get();// Retorna uma coleção vazia se a tabela não existir
         }
-
+        
         $tabelaMat = $agenda->convenio->tab_mat_id; // Nome da tabela de medicamentos do convênio
 
         if (Schema::hasTable($tabelaMat)) { // Verifica se a tabela existe no banco
@@ -461,7 +465,10 @@ public function gerarZipGuiaSp($id)
                 ->select('mat_agendas.*', "$tabelaMat.medicamento as nome_material") // Seleciona as colunas desejadas
                 ->get();
         } else {
-            $materiais = collect(); // Retorna uma coleção vazia se a tabela não existir
+            $materiais = MatAgenda::where('agenda_id', $agenda->id) 
+            ->join('produtos', 'produtos.id', '=', 'mat_agendas.material_id') // Realiza o INNER JOIN
+            ->select('mat_agendas.*', 'produtos.nome as nome_material') // Seleciona as colunas desejadas
+            ->get();
         }
         // Buscar a empresa associada
         $empresa = Empresas::first();
@@ -525,8 +532,8 @@ public function gerarZipGuiaSp($id)
         $guia = GuiaSp::where('agenda_id', $agenda->id)->first();
 
         $ExameSolis = ExamesSadt::where('guia_sps_id', $agenda->id)
-        ->whereNotNull('codigo_procedimento_solicitado')
-        ->get();
+            ->whereNotNull('codigo_procedimento_solicitado')
+            ->get();
 
         $ExameAuts = ExamesAutSadt::where('guia_sps_id', $agenda->id)->get();
 
@@ -538,7 +545,7 @@ public function gerarZipGuiaSp($id)
                     ->join('procedimentos', 'exames.procedimento_id', '=', 'procedimentos.id')
                     ->where('exames.agenda_id', $agenda->id)
                     ->select('exames.*', 'procedimentos.procedimento as procedimento', 'procedimentos.codigo as codigo')
-                    ->orderBy('exames.id', 'asc')
+                    ->orderBy('med_agendas.id', 'asc')
                     ->get();
             } elseif (Schema::hasTable($tabelaProcedimentos)) {
                 if (str_starts_with($tabelaProcedimentos, 'tab_amb92') || str_starts_with($tabelaProcedimentos, 'tab_amb96')) {
@@ -565,7 +572,7 @@ public function gerarZipGuiaSp($id)
             $exames = collect();
         }
 
-            // Buscar paciente pelo ID associado à agenda
+        // Buscar paciente pelo ID associado à agenda
         $paciente = Pacientes::find($agenda->paciente_id);
 
         // $tabelaMed = $agenda->convenio->tab_med_id; // Nome da tabela de medicamentos do convênio
@@ -597,14 +604,14 @@ public function gerarZipGuiaSp($id)
                         ->join($tabelaMedicamentos, 'med_agendas.medicamento_id', '=', "$tabelaMedicamentos.id")
                         ->where('med_agendas.agenda_id', $agenda->id)
                         ->select('med_agendas.*', "$tabelaMedicamentos.medicamento as nome_medicamento")
-                        ->orderBy('exames.id', 'asc')
+                        ->orderBy('med_agendas.id', 'asc')
                         ->get();
                 } elseif (str_starts_with($tabelaMedicamentos, 'tab_simpro')) {
                     $medicamentos = DB::table('med_agendas')
                         ->join($tabelaMedicamentos, 'med_agendas.medicamento_id', '=', "$tabelaMedicamentos.id")
                         ->where('med_agendas.agenda_id', $agenda->id)
                         ->select('med_agendas.*', "$tabelaMedicamentos.medicamento as nome_medicamento")
-                        ->orderBy('exames.id', 'asc')
+                        ->orderBy('med_agendas.id', 'asc')
                         ->get();
                 } else {
                     $medicamentos = collect();
@@ -654,7 +661,7 @@ public function gerarZipGuiaSp($id)
 
         $taxas = TaxaAgenda::where('agenda_id', $agenda->id)
             ->join('taxas', 'taxas.id', '=', 'taxa_agendas.id') // Realiza o INNER JOIN
-            ->select('taxa_agendas.*','taxas.descricao as nome_taxa') // Seleciona as colunas desejadas
+            ->select('taxa_agendas.*', 'taxas.descricao as nome_taxa') // Seleciona as colunas desejadas
             ->get();
 
         // Buscar profissional com sua especialidade
@@ -729,64 +736,651 @@ public function gerarZipGuiaSp($id)
 
 
     public function gerarXmlGuiasadtEmLote(Request $request)
-{
-    $guiaIds = $request->input('guia_ids');
-    $numeracao = $request->input('numeracao'); // Recebe a numeração do frontend, se fornecida
+    {
+        $guiaIds = $request->input('guia_ids');
+        $numeracao = $request->input('numeracao'); // Recebe a numeração do frontend, se fornecida
 
-    $guias = GuiaSp::with('profissional', 'paciente.convenio')->whereIn('id', $guiaIds)->get();
+        $guias = GuiaSp::with('profissional', 'paciente.convenio')->whereIn('id', $guiaIds)->get();
 
-    $exameSadtAut = ExamesAutSadt::whereIn('guia_sps_id', $guiaIds)->get();
-    // Verificar a presença de `numeracao`
-    $sequencialTransacao = $numeracao ?? $guias->firstWhere('numeracao', '!=', null)->numeracao;
+        $exameSadtAut = ExamesAutSadt::whereIn('guia_sps_id', $guiaIds)->get();
+        // Verificar a presença de `numeracao`
+        $sequencialTransacao = $numeracao ?? $guias->firstWhere('numeracao', '!=', null)->numeracao;
 
-    // Se nenhuma `numeracao` estiver disponível, retorne um erro
-    if (is_null($sequencialTransacao)) {
-        return response()->json([
-            'error' => 'Numeração não encontrada para o lote. Por favor, insira a numeração para o lote.'
-        ], 422);
-    }
-
-    // Atualiza ou define a numeração para todas as guias
-    foreach ($guias as $guia) {
-        if (is_null($guia->numeracao)) {
-            $guia->numeracao = $sequencialTransacao;
-            $guia->save();
+        // Se nenhuma `numeracao` estiver disponível, retorne um erro
+        if (is_null($sequencialTransacao)) {
+            return response()->json([
+                'error' => 'Numeração não encontrada para o lote. Por favor, insira a numeração para o lote.'
+            ], 422);
         }
+
+        // Atualiza ou define a numeração para todas as guias
+        foreach ($guias as $guia) {
+            if (is_null($guia->numeracao)) {
+                $guia->numeracao = $sequencialTransacao;
+                $guia->save();
+            }
+        }
+
+        // Criar o XML utilizando SimpleXMLElement
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas http://www.ans.gov.br/padroes/tiss/schemas/tissV4_01_00.xsd"></ans:mensagemTISS>');
+
+        // Cabeçalho
+        $cabecalho = $xml->addChild('ans:cabecalho');
+        $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
+        $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
+        $identificacaoTransacao->addChild('ans:sequencialTransacao', $sequencialTransacao);
+        $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
+        $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
+
+        $origem = $cabecalho->addChild('ans:origem');
+        $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
+        $identificacaoPrestador->addChild('ans:CNPJ', $guia->codigo_operadora); // CPF do profissional da primeira guia
+
+        $destino = $cabecalho->addChild('ans:destino');
+        $destino->addChild('ans:registroANS', $guias->first()->registro_ans);
+
+        $cabecalho->addChild('ans:Padrao', '4.01.00');
+
+        // Lote de Guias
+        $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
+        $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
+        $loteGuias->addChild('ans:numeroLote', $sequencialTransacao);
+        $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
+
+        // Iterar sobre cada guia
+        foreach ($guias as $guia) {
+            // Puxar os procedimentos e materiais relacionados à guia
+            $procedimentos = DB::table('exames_aut_sadt')
+                ->where('guia_sps_id', $guia->id)
+                ->get();
+
+            $materiais = collect();
+            if ($guia->paciente->convenio) {
+                $tabelaMateriais = $guia->paciente->convenio->tab_mat_id;
+
+                if ($tabelaMateriais && Schema::hasTable($tabelaMateriais)) {
+                    $materiais = DB::table('mat_agendas')
+                        ->join($tabelaMateriais, 'mat_agendas.material_id', '=', "{$tabelaMateriais}.id")
+                        ->where('mat_agendas.agenda_id', $guia->agenda_id)
+                        ->select(
+                            'mat_agendas.id as id',
+                            'mat_agendas.quantidade as quantidade',
+                            'mat_agendas.unidade_medida',
+                            "{$tabelaMateriais}.medicamento as nome_produto",
+                            "{$tabelaMateriais}.medicamento as descricao_produto",
+                            DB::raw("'MEDICAMENTO' as tipo_produto"),
+                            "{$tabelaMateriais}.preco as valor_unitario_produto",
+                            "{$tabelaMateriais}.id as material_id"
+                        )
+                        ->get();
+                }
+            }
+
+            $medicamentos = collect();
+            if ($guia->paciente->convenio) {
+                $tabelaMedicamentos = $guia->paciente->convenio->tab_med_id;
+
+                if ($tabelaMedicamentos && Schema::hasTable($tabelaMedicamentos)) {
+                    $medicamentos = DB::table('med_agendas')
+                        ->join($tabelaMedicamentos, 'med_agendas.medicamento_id', '=', "{$tabelaMedicamentos}.id")
+                        ->where('med_agendas.agenda_id', $guia->agenda_id)
+                        ->select(
+                            'med_agendas.id as id',
+                            'med_agendas.quantidade as quantidade',
+                            'med_agendas.unidade_medida',
+                            "{$tabelaMedicamentos}.medicamento as nome_produto",
+                            "{$tabelaMedicamentos}.medicamento as descricao_produto",
+                            DB::raw("'MEDICAMENTO' as tipo_produto"),
+                            "{$tabelaMedicamentos}.preco as valor_unitario_produto",
+                            "{$tabelaMedicamentos}.id as material_id"
+                        )
+                        ->get();
+                }
+            }
+
+            $outrasDespesasItems = $materiais->concat($medicamentos);
+
+            // Calcular valores totais
+            $valorProcedimentos = $procedimentos->sum('valor_total');
+            $valorMateriais = $materiais->sum(fn($item) => $item->quantidade * $item->valor_unitario_produto);
+            $valorMedicamentos = $medicamentos->sum(fn($item) => $item->quantidade * $item->valor_unitario_produto);
+            $valorOPME = 0.00; // Adicionar lógica para OPME se necessário
+            $valorTotalGeral = $valorProcedimentos + $valorMateriais + $valorMedicamentos + $valorOPME;
+
+
+            // Adicionar cada guia ao XML
+            $guiaSadt = $guiasTISS->addChild('ans:guiaSP-SADT');
+
+            // Cabeçalho da Guia
+            $cabecalhoGuia = $guiaSadt->addChild('ans:cabecalhoGuia');
+            $cabecalhoGuia->addChild('ans:registroANS', $guia->registro_ans);
+            $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_op);
+
+            // Dados de Autorização
+            $dadosAutorizacao = $guiaSadt->addChild('ans:dadosAutorizacao');
+            $dadosAutorizacao->addChild('ans:numeroGuiaOperadora', $guia->numero_guia_op);
+            $dadosAutorizacao->addChild('ans:dataAutorizacao', $guia->data_autorizacao);
+            $dadosAutorizacao->addChild('ans:senha', $guia->senha);
+            $dadosAutorizacao->addChild('ans:dataValidadeSenha', $guia->validade_senha);
+
+            // Dados do Beneficiário
+            $dadosBeneficiario = $guiaSadt->addChild('ans:dadosBeneficiario');
+            $dadosBeneficiario->addChild('ans:numeroCarteira', $guia->numero_carteira);
+            $dadosBeneficiario->addChild('ans:atendimentoRN', $guia->atendimento_rn);
+
+            // Dados do Solicitante
+            $dadosSolicitante = $guiaSadt->addChild('ans:dadosSolicitante');
+            $contratadoSolicitante = $dadosSolicitante->addChild('ans:contratadoSolicitante');
+            $contratadoSolicitante->addChild('ans:cnpjContratado', $guia->codigo_operadora ?? '');
+            $dadosSolicitante->addChild('ans:nomeContratadoSolicitante', $guia->nome_contratado_executante);
+            $profissionalSolicitante = $dadosSolicitante->addChild('ans:profissionalSolicitante');
+            $profissionalSolicitante->addChild('ans:nomeProfissional', $guia->nome_profissional_solicitante);
+            $profissionalSolicitante->addChild('ans:conselhoProfissional', $guia->conselho_profissional);
+            $profissionalSolicitante->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho);
+            $profissionalSolicitante->addChild('ans:UF', $guia->uf_conselho);
+            $profissionalSolicitante->addChild('ans:CBOS', $guia->codigo_cbo);
+
+            // Dados Solicitação
+            $dadosSolicitacao = $guiaSadt->addChild('ans:dadosSolicitacao');
+            $dadosSolicitacao->addChild('ans:dataSolicitacao', $guia->data_autorizacao);
+            $dadosSolicitacao->addChild('ans:caraterAtendimento', $guia->carater_atendimento);
+            $dadosSolicitacao->addChild('ans:indicacaoClinica', $guia->indicacao_clinica);
+
+            // Dados do Executante
+            $dadosExecutante = $guiaSadt->addChild('ans:dadosExecutante');
+            $contratadoExecutante = $dadosExecutante->addChild('ans:contratadoExecutante');
+            $contratadoExecutante->addChild('ans:cpfContratado', $guia->profissional->cpf ?? '');
+            $dadosExecutante->addChild('ans:CNES', $guia->codigo_cnes);
+
+            // Dados do Atendimento
+            $dadosAtendimento = $guiaSadt->addChild('ans:dadosAtendimento');
+            $dadosAtendimento->addChild('ans:tipoAtendimento', $guia->tipo_atendimento);
+            $dadosAtendimento->addChild('ans:indicacaoAcidente', $guia->indicacao_acidente);
+            $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta);
+            $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento ?? '01');
+
+            // Procedimentos Executados
+            $procedimentosExecutados = $guiaSadt->addChild('ans:procedimentosExecutados');
+            foreach ($procedimentos as $index => $procedimento) {
+                $procedimentoExecutado = $procedimentosExecutados->addChild('ans:procedimentoExecutado');
+                $procedimentoExecutado->addChild('ans:sequencialItem', $index + 1);
+                $procedimentoExecutado->addChild('ans:dataExecucao', $procedimento->data_real ?? $guia->data_autorizacao);
+                $procedimentoExecutado->addChild('ans:horaInicial', $procedimento->hora_inicio_atendimento ?? $guia->hora_inicio_atendimento);
+                $procedimentoExecutado->addChild('ans:horaFinal', $procedimento->hora_fim_atendimento ?? $guia->hora_fim_atendimento);
+
+                $dadosProcedimento = $procedimentoExecutado->addChild('ans:procedimento');
+                $dadosProcedimento->addChild('ans:codigoTabela', $procedimento->tabela);
+                $dadosProcedimento->addChild('ans:codigoProcedimento', $procedimento->codigo_procedimento_realizado);
+                $dadosProcedimento->addChild('ans:descricaoProcedimento', $procedimento->descricao_procedimento_realizado);
+                $procedimentoExecutado->addChild('ans:quantidadeExecutada', $procedimento->quantidade_autorizada);
+                if (!empty($procedimento->via)) {
+                    $procedimentoExecutado->addChild('ans:viaAcesso', $procedimento->via);
+                }
+                $procedimentoExecutado->addChild('ans:reducaoAcrescimo', $procedimento->fator_red_acres);
+                $procedimentoExecutado->addChild('ans:valorUnitario', $procedimento->valor_unitario);
+                $procedimentoExecutado->addChild('ans:valorTotal', $procedimento->valor_total);
+
+                // Adicionando a equipe da guia diretamente da $guia
+                $equipeSadt = $procedimentoExecutado->addChild('ans:equipeSadt');
+                // Profissional 1 (sempre presente)
+                if (!empty($guia->grua) && !empty($guia->codigo_operadora_profissional)) {
+                    $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua);
+                    $codProfissional = $equipeSadt->addChild('ans:codProfissional');
+                    $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional);
+
+                    $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional);
+                    $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho);
+                    $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional);
+                    $equipeSadt->addChild('ans:UF', $guia->uf_profissional);
+                    $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional);
+                }
+
+                // Profissional 2 (só adiciona se houver dados)
+                if (!empty($guia->grau1) && !empty($guia->codigo_operadora_profissional1)) {
+                    $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grau1);
+                    $codProfissional = $equipeSadt->addChild('ans:codProfissional');
+                    $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional1);
+
+                    $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional1);
+                    $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho1);
+                    $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional1);
+                    $equipeSadt->addChild('ans:UF', $guia->uf_profissional1);
+                    $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional1);
+                }
+
+                // Profissional 3 (só adiciona se houver dados)
+                if (!empty($guia->grau2) && !empty($guia->codigo_operadora_profissional2)) {
+                    $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grau2);
+                    $codProfissional = $equipeSadt->addChild('ans:codProfissional');
+                    $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional2);
+
+                    $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional2);
+                    $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho2);
+                    $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional2);
+                    $equipeSadt->addChild('ans:UF', $guia->uf_profissional2);
+                    $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional2);
+                }
+            }
+            if (is_array($outrasDespesasItems) && count($outrasDespesasItems) > 0) {
+                $outrasDespesas = $guiaSadt->addChild('ans:outrasDespesas');
+                foreach ($outrasDespesasItems as $index => $item) {
+                    $despesa = $outrasDespesas->addChild('ans:despesa');
+                    $despesa->addChild('ans:sequencialItem', $index + 1);
+                    $despesa->addChild('ans:codigoDespesa');
+
+                    $servicosExecutados = $despesa->addChild('ans:servicosExecutados');
+                    $servicosExecutados->addChild('ans:dataExecucao', $guia->data_autorizacao);
+                    $servicosExecutados->addChild('ans:horaInicial', $guia->hora_inicio_atendimento);
+                    $servicosExecutados->addChild('ans:horaFinal', $guia->hora_fim_atendimento);
+
+                    $codigoTabela = strtoupper(trim($item->tipo_produto)) === 'MEDICAMENTO' ? '20' : '19';
+                    $servicosExecutados->addChild('ans:codigoTabela', $codigoTabela);
+
+                    $servicosExecutados->addChild('ans:codigoProcedimento', $item->material_id);
+                    $servicosExecutados->addChild('ans:quantidadeExecutada', $item->quantidade);
+                    $servicosExecutados->addChild('ans:unidadeMedida', $item->unidade_medida);
+                    $servicosExecutados->addChild('ans:reducaoAcrescimo', '1.00');
+                    $servicosExecutados->addChild('ans:valorUnitario', $item->valor_unitario_produto);
+                    $servicosExecutados->addChild('ans:valorTotal', $item->quantidade * $item->valor_unitario_produto);
+                    $servicosExecutados->addChild('ans:descricaoProcedimento', $item->nome_produto);
+                }
+            }
+        }
+
+        $valorTotal = $guiaSadt->addChild('ans:valorTotal');
+        $valorTotal->addChild('ans:valorProcedimentos', number_format($valorProcedimentos, 2, '.', ''));
+        $valorTotal->addChild('ans:valorMateriais', number_format($valorMateriais, 2, '.', ''));
+        $valorTotal->addChild('ans:valorMedicamentos', number_format($valorMedicamentos, 2, '.', ''));
+        $valorTotal->addChild('ans:valorOPME', number_format($valorOPME, 2, '.', ''));
+        $valorTotal->addChild('ans:valorTotalGeral', number_format($valorTotalGeral, 2, '.', ''));
+
+        // Epílogo
+        $epilogo = $xml->addChild('ans:epilogo');
+        $epilogo->addChild('ans:hash', md5($xml->asXML()));
+
+        // Verifica se já existe uma conta financeira para esse lote
+        $contaExistente = ContaGuia::where('lote', $sequencialTransacao)->first();
+
+        if (!$contaExistente) {
+            // Atualiza as guias com a numeração correta
+            foreach ($guias as $guia) {
+                $guia->identificador = 'GERADO';
+                $guia->save();
+            }
+
+            // Calcula o valor total do lote
+            $valorTotal = $exameSadtAut->sum('valor_total');
+
+            $referencia = $sequencialTransacao;
+
+            // Cria a conta financeira
+            $conta = ContasFinanceiras::create([
+                'user_id' => auth()->id(),
+                'status' => 'Aberto',
+                'tipo_conta' => 'Receber',
+                'convenio_id' => $guias->first()->convenio_id,
+                'tipo_guia' => 'SADT',
+                'parcelas' => '1/1',
+                'data_emissao' => Carbon::parse($guia->data_realizacao)->format('Y-m-d'),
+                'competencia' => Carbon::parse($guia->data_realizacao)->format('Y-m-d'),
+                'data_vencimento' => now()->addDays(30)->format('Y-m-d'),
+                'referencia' => $referencia,
+                'tipo_doc' => 'XML',
+                'centro_custos' => $guias->first()->nome_contratado ?? 'Desconhecido',
+                'documento' => 'lote_guias_sadt_' . $sequencialTransacao . '.xml',
+                'valor' => $valorTotal,
+                'historico' => 'Guia SADT - ' . $guia->data_realizacao,
+            ]);
+
+            // Salva o relacionamento na tabela `conta_guias`
+            foreach ($guias as $guia) {
+                ContaGuia::create([
+                    'conta_financeira_id' => $conta->id,
+                    'guia_id' => $guia->id,
+                    'tipo_guia' => 'SADT',
+                    'lote' => $sequencialTransacao,
+                ]);
+            }
+        } else {
+            // Apenas atualiza as guias e registra o relacionamento se não existirem
+            foreach ($guias as $guia) {
+                $existeRelacionamento = ContaGuia::where('guia_id', $guia->id)
+                    ->where('tipo_guia', 'SADT')
+                    ->exists();
+
+                if (!$existeRelacionamento) {
+                    $guia->numeracao = $sequencialTransacao;
+                    $guia->identificador = 'GERADO';
+                    $guia->save();
+
+                    ContaGuia::create([
+                        'conta_financeira_id' => $contaExistente->conta_financeira_id,
+                        'guia_id' => $guia->id,
+                        'tipo_guia' => 'SADT',
+                        'lote' => $sequencialTransacao,
+                    ]);
+                }
+            }
+        }
+
+        // Retorna o XML como download
+        $fileName = 'lote_guias_sadt.xml';
+        return response($xml->asXML(), 200)
+            ->header('Content-Type', 'application/xml')
+            ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"');
     }
 
-    // Criar o XML utilizando SimpleXMLElement
-    $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas http://www.ans.gov.br/padroes/tiss/schemas/tissV4_01_00.xsd"></ans:mensagemTISS>');
+    public function gerarZipGuiasadtEmLote(Request $request)
+    {
+        $guiaIds = $request->input('guia_ids');
+        $numeracao = $request->input('numeracao');
 
-    // Cabeçalho
-    $cabecalho = $xml->addChild('ans:cabecalho');
-    $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
-    $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
-    $identificacaoTransacao->addChild('ans:sequencialTransacao', $sequencialTransacao);
-    $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
-    $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
+        $guias = GuiaSp::with('profissional', 'paciente.convenio')->whereIn('id', $guiaIds)->get();
 
-    $origem = $cabecalho->addChild('ans:origem');
-    $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
-    $identificacaoPrestador->addChild('ans:CNPJ', $guia->codigo_operadora); // CPF do profissional da primeira guia
+        $sequencialTransacao = $numeracao ?? $guias->firstWhere('numeracao', '!=', null)->numeracao;
 
-    $destino = $cabecalho->addChild('ans:destino');
-    $destino->addChild('ans:registroANS', $guias->first()->registro_ans);
+        // Atualiza ou define a numeração para todas as guias
+        foreach ($guias as $guia) {
+            if (is_null($guia->numeracao)) {
+                $guia->numeracao = $sequencialTransacao;
+                $guia->save();
+            }
+        }
 
-    $cabecalho->addChild('ans:Padrao', '4.01.00');
+        // Criar o XML utilizando SimpleXMLElement
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas http://www.ans.gov.br/padroes/tiss/schemas/tissV4_01_00.xsd"></ans:mensagemTISS>');
 
-    // Lote de Guias
-    $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
-    $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
-    $loteGuias->addChild('ans:numeroLote', $sequencialTransacao);
-    $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
+        // Cabeçalho
+        $cabecalho = $xml->addChild('ans:cabecalho');
+        $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
+        $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
+        $identificacaoTransacao->addChild('ans:sequencialTransacao', $sequencialTransacao);
+        $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
+        $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
 
-    // Iterar sobre cada guia
-    foreach ($guias as $guia) {
-        // Puxar os procedimentos e materiais relacionados à guia
+        $origem = $cabecalho->addChild('ans:origem');
+        $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
+        $identificacaoPrestador->addChild('ans:CNPJ', $guia->codigo_operadora); // CPF do profissional da primeira guia
+
+        $destino = $cabecalho->addChild('ans:destino');
+        $destino->addChild('ans:registroANS', $guias->first()->registro_ans);
+
+        $cabecalho->addChild('ans:Padrao', '4.01.00');
+
+        // Lote de Guias
+        $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
+        $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
+        $loteGuias->addChild('ans:numeroLote', $sequencialTransacao);
+        $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
+
+        // Iterar sobre cada guia
+        foreach ($guias as $guia) {
+            // Puxar os procedimentos e materiais relacionados à guia
+            $procedimentos = DB::table('exames_aut_sadt')
+                ->where('guia_sps_id', $guia->id)
+                ->get();
+
+            $materiais = collect();
+            if ($guia->paciente->convenio) {
+                $tabelaMateriais = $guia->paciente->convenio->tab_mat_id;
+
+                if ($tabelaMateriais && Schema::hasTable($tabelaMateriais)) {
+                    $materiais = DB::table('mat_agendas')
+                        ->join($tabelaMateriais, 'mat_agendas.material_id', '=', "{$tabelaMateriais}.id")
+                        ->where('mat_agendas.agenda_id', $guia->agenda_id)
+                        ->select(
+                            'mat_agendas.id as id',
+                            'mat_agendas.quantidade as quantidade',
+                            'mat_agendas.unidade_medida',
+                            "{$tabelaMateriais}.medicamento as nome_produto",
+                            "{$tabelaMateriais}.medicamento as descricao_produto",
+                            DB::raw("'MEDICAMENTO' as tipo_produto"),
+                            "{$tabelaMateriais}.preco as valor_unitario_produto",
+                            "{$tabelaMateriais}.id as material_id"
+                        )
+                        ->get();
+                }
+            }
+
+            $medicamentos = collect();
+            if ($guia->paciente->convenio) {
+                $tabelaMedicamentos = $guia->paciente->convenio->tab_med_id;
+
+                if ($tabelaMedicamentos && Schema::hasTable($tabelaMedicamentos)) {
+                    $medicamentos = DB::table('med_agendas')
+                        ->join($tabelaMedicamentos, 'med_agendas.medicamento_id', '=', "{$tabelaMedicamentos}.id")
+                        ->where('med_agendas.agenda_id', $guia->agenda_id)
+                        ->select(
+                            'med_agendas.id as id',
+                            'med_agendas.quantidade as quantidade',
+                            'med_agendas.unidade_medida',
+                            "{$tabelaMedicamentos}.medicamento as nome_produto",
+                            "{$tabelaMedicamentos}.medicamento as descricao_produto",
+                            DB::raw("'MEDICAMENTO' as tipo_produto"),
+                            "{$tabelaMedicamentos}.preco as valor_unitario_produto",
+                            "{$tabelaMedicamentos}.id as material_id"
+                        )
+                        ->get();
+                }
+            }
+
+            $outrasDespesasItems = $materiais->concat($medicamentos);
+
+            // Calcular valores totais
+            $valorProcedimentos = $procedimentos->sum('valor_total');
+            $valorMateriais = $materiais->sum(fn($item) => $item->quantidade * $item->valor_unitario_produto);
+            $valorMedicamentos = $medicamentos->sum(fn($item) => $item->quantidade * $item->valor_unitario_produto);
+            $valorOPME = 0.00; // Adicionar lógica para OPME se necessário
+            $valorTotalGeral = $valorProcedimentos + $valorMateriais + $valorMedicamentos + $valorOPME;
+
+
+            // Adicionar cada guia ao XML
+            $guiaSadt = $guiasTISS->addChild('ans:guiaSP-SADT');
+
+            // Cabeçalho da Guia
+            $cabecalhoGuia = $guiaSadt->addChild('ans:cabecalhoGuia');
+            $cabecalhoGuia->addChild('ans:registroANS', $guia->registro_ans);
+            $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_op);
+
+            // Dados de Autorização
+            $dadosAutorizacao = $guiaSadt->addChild('ans:dadosAutorizacao');
+            $dadosAutorizacao->addChild('ans:numeroGuiaOperadora', $guia->numero_guia_op);
+            $dadosAutorizacao->addChild('ans:dataAutorizacao', $guia->data_autorizacao);
+            $dadosAutorizacao->addChild('ans:senha', $guia->senha);
+            $dadosAutorizacao->addChild('ans:dataValidadeSenha', $guia->validade_senha);
+
+            // Dados do Beneficiário
+            $dadosBeneficiario = $guiaSadt->addChild('ans:dadosBeneficiario');
+            $dadosBeneficiario->addChild('ans:numeroCarteira', $guia->numero_carteira);
+            $dadosBeneficiario->addChild('ans:atendimentoRN', $guia->atendimento_rn);
+
+            // Dados do Solicitante
+            $dadosSolicitante = $guiaSadt->addChild('ans:dadosSolicitante');
+            $contratadoSolicitante = $dadosSolicitante->addChild('ans:contratadoSolicitante');
+            $contratadoSolicitante->addChild('ans:cnpjContratado', $guia->codigo_operadora ?? '');
+            $dadosSolicitante->addChild('ans:nomeContratadoSolicitante', $guia->nome_contratado_executante);
+            $profissionalSolicitante = $dadosSolicitante->addChild('ans:profissionalSolicitante');
+            $profissionalSolicitante->addChild('ans:nomeProfissional', $guia->nome_profissional_solicitante);
+            $profissionalSolicitante->addChild('ans:conselhoProfissional', $guia->conselho_profissional);
+            $profissionalSolicitante->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho);
+            $profissionalSolicitante->addChild('ans:UF', $guia->uf_conselho);
+            $profissionalSolicitante->addChild('ans:CBOS', $guia->codigo_cbo);
+
+            // Dados Solicitação
+            $dadosSolicitacao = $guiaSadt->addChild('ans:dadosSolicitacao');
+            $dadosSolicitacao->addChild('ans:dataSolicitacao', $guia->data_autorizacao);
+            $dadosSolicitacao->addChild('ans:caraterAtendimento', $guia->carater_atendimento);
+            $dadosSolicitacao->addChild('ans:indicacaoClinica', $guia->indicacao_clinica);
+
+            // Dados do Executante
+            $dadosExecutante = $guiaSadt->addChild('ans:dadosExecutante');
+            $contratadoExecutante = $dadosExecutante->addChild('ans:contratadoExecutante');
+            $contratadoExecutante->addChild('ans:cpfContratado', $guia->profissional->cpf ?? '');
+            $dadosExecutante->addChild('ans:CNES', $guia->codigo_cnes);
+
+            // Dados do Atendimento
+            $dadosAtendimento = $guiaSadt->addChild('ans:dadosAtendimento');
+            $dadosAtendimento->addChild('ans:tipoAtendimento', $guia->tipo_atendimento);
+            $dadosAtendimento->addChild('ans:indicacaoAcidente', $guia->indicacao_acidente);
+            $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta);
+            $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento ?? '01');
+
+            // Procedimentos Executados
+            $procedimentosExecutados = $guiaSadt->addChild('ans:procedimentosExecutados');
+            foreach ($procedimentos as $index => $procedimento) {
+                $procedimentoExecutado = $procedimentosExecutados->addChild('ans:procedimentoExecutado');
+                $procedimentoExecutado->addChild('ans:sequencialItem', $index + 1);
+                $procedimentoExecutado->addChild('ans:dataExecucao', $procedimento->data_real ?? $guia->data_autorizacao);
+                $procedimentoExecutado->addChild('ans:horaInicial', $procedimento->hora_inicio_atendimento ?? $guia->hora_inicio_atendimento);
+                $procedimentoExecutado->addChild('ans:horaFinal', $procedimento->hora_fim_atendimento ?? $guia->hora_fim_atendimento);
+
+                $dadosProcedimento = $procedimentoExecutado->addChild('ans:procedimento');
+                $dadosProcedimento->addChild('ans:codigoTabela', $procedimento->tabela);
+                $dadosProcedimento->addChild('ans:codigoProcedimento', $procedimento->codigo_procedimento_realizado);
+                $dadosProcedimento->addChild('ans:descricaoProcedimento', $procedimento->descricao_procedimento_realizado);
+                $procedimentoExecutado->addChild('ans:quantidadeExecutada', $procedimento->quantidade_autorizada);
+                if (!empty($procedimento->via)) {
+                    $procedimentoExecutado->addChild('ans:viaAcesso', $procedimento->via);
+                }
+                $procedimentoExecutado->addChild('ans:reducaoAcrescimo', '1.00');
+                $procedimentoExecutado->addChild('ans:valorUnitario', $procedimento->valor_unitario);
+                $procedimentoExecutado->addChild('ans:valorTotal', $procedimento->valor_total);
+
+                // Adicionando a equipe da guia diretamente da $guia
+                $equipeSadt = $procedimentoExecutado->addChild('ans:equipeSadt');
+                // Profissional 1 (sempre presente)
+                if (!empty($guia->grua) && !empty($guia->codigo_operadora_profissional)) {
+                    $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua);
+                    $codProfissional = $equipeSadt->addChild('ans:codProfissional');
+                    $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional);
+
+                    $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional);
+                    $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho);
+                    $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional);
+                    $equipeSadt->addChild('ans:UF', $guia->uf_profissional);
+                    $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional);
+                }
+
+                // Profissional 2 (só adiciona se houver dados)
+                if (!empty($guia->grau1) && !empty($guia->codigo_operadora_profissional1)) {
+                    $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grau1);
+                    $codProfissional = $equipeSadt->addChild('ans:codProfissional');
+                    $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional1);
+
+                    $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional1);
+                    $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho1);
+                    $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional1);
+                    $equipeSadt->addChild('ans:UF', $guia->uf_profissional1);
+                    $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional1);
+                }
+
+                // Profissional 3 (só adiciona se houver dados)
+                if (!empty($guia->grau2) && !empty($guia->codigo_operadora_profissional2)) {
+                    $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grau2);
+                    $codProfissional = $equipeSadt->addChild('ans:codProfissional');
+                    $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional2);
+
+                    $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional2);
+                    $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho2);
+                    $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional2);
+                    $equipeSadt->addChild('ans:UF', $guia->uf_profissional2);
+                    $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional2);
+                }
+            }
+            if (is_array($outrasDespesasItems) && count($outrasDespesasItems) > 0) {
+                $outrasDespesas = $guiaSadt->addChild('ans:outrasDespesas');
+                foreach ($outrasDespesasItems as $index => $item) {
+                    $despesa = $outrasDespesas->addChild('ans:despesa');
+                    $despesa->addChild('ans:sequencialItem', $index + 1);
+                    $despesa->addChild('ans:codigoDespesa');
+
+                    $servicosExecutados = $despesa->addChild('ans:servicosExecutados');
+                    $servicosExecutados->addChild('ans:dataExecucao', $guia->data_autorizacao);
+                    $servicosExecutados->addChild('ans:horaInicial', $guia->hora_inicio_atendimento);
+                    $servicosExecutados->addChild('ans:horaFinal', $guia->hora_fim_atendimento);
+
+                    $codigoTabela = strtoupper(trim($item->tipo_produto)) === 'MEDICAMENTO' ? '20' : '19';
+                    $servicosExecutados->addChild('ans:codigoTabela', $codigoTabela);
+
+                    $servicosExecutados->addChild('ans:codigoProcedimento', $item->material_id);
+                    $servicosExecutados->addChild('ans:quantidadeExecutada', $item->quantidade);
+                    $servicosExecutados->addChild('ans:unidadeMedida', $item->unidade_medida);
+                    $servicosExecutados->addChild('ans:reducaoAcrescimo', '1.00');
+                    $servicosExecutados->addChild('ans:valorUnitario', $item->valor_unitario_produto);
+                    $servicosExecutados->addChild('ans:valorTotal', $item->quantidade * $item->valor_unitario_produto);
+                    $servicosExecutados->addChild('ans:descricaoProcedimento', $item->nome_produto);
+                }
+            }
+        }
+        // Adicionar valores totais conforme o padrão TISS
+        $valorTotal = $guiaSadt->addChild('ans:valorTotal');
+        $valorTotal->addChild('ans:valorProcedimentos', number_format($valorProcedimentos, 2, '.', ''));
+        $valorTotal->addChild('ans:valorMateriais', number_format($valorMateriais, 2, '.', ''));
+        $valorTotal->addChild('ans:valorMedicamentos', number_format($valorMedicamentos, 2, '.', ''));
+        $valorTotal->addChild('ans:valorOPME', number_format($valorOPME, 2, '.', ''));
+        $valorTotal->addChild('ans:valorTotalGeral', number_format($valorTotalGeral, 2, '.', ''));
+
+        $epilogo = $xml->addChild('ans:epilogo');
+        $hash = md5($xml->asXML());
+        $epilogo->addChild('ans:hash', $hash);
+
+        $guia->identificador = 'GERADO';
+        $guia->save();
+
+        $fileName = 'lote_guias_sadt.xml';
+        $filePath = storage_path('app/public/' . $fileName);
+
+        if (!$xml->asXML($filePath)) {
+            return response()->json(['error' => 'Erro ao salvar o arquivo XML.'], 500);
+        }
+
+        $zipFileName = 'lote_guias_sadt.zip';
+        $zipFilePath = storage_path('app/public/' . $zipFileName);
+
+        $zip = new \ZipArchive;
+        if ($zip->open($zipFilePath, \ZipArchive::CREATE) === TRUE) {
+            $zip->addFile($filePath, $fileName);
+            $zip->close();
+        } else {
+            return response()->json(['error' => 'Erro ao criar o arquivo ZIP.'], 500);
+        }
+
+        return response()->download($zipFilePath)->deleteFileAfterSend(true);
+    }
+
+    public function gerarXmlGuiasadt($id, Request $request)
+    {
+        // Verificar se a guia existe
+        $guia = GuiaSp::with('profissional')->findOrFail($id);
+
+        $exameSadtAut = ExamesAutSadt::whereIn('guia_sps_id', $id)->get();
+        // Verificar se a numeração é fornecida na requisição ou já existe na guia
+        if ($request->has('numeracao')) {
+            $guia->numeracao = $request->input('numeracao');
+        } elseif (is_null($guia->numeracao)) {
+            // Verificar se existe alguma numeração em outra guia
+            $ultimaNumeracao = GuiaSp::whereNotNull('numeracao')->max('numeracao');
+
+            if ($ultimaNumeracao) {
+                // Incrementa a numeração automaticamente se existe uma anterior
+                $guia->numeracao = $ultimaNumeracao + 1;
+            } else {
+                // Retorna erro se não há nenhuma numeração existente
+                return response()->json([
+                    'error' => 'Numeração não encontrada. Por favor, insira a numeração para esta guia.'
+                ], 422);
+            }
+        }
+
+        // Salvar a numeração na guia
+        $guia->save();
+
+        // Puxar os procedimentos das tabelas relacionadas
         $procedimentos = DB::table('exames_aut_sadt')
-            ->where('guia_sps_id', $guia->id)
+            ->where('guia_sps_id', $id)
             ->get();
 
+        // Recuperar materiais relacionados à agenda_id da guia
         $materiais = collect();
         if ($guia->paciente->convenio) {
             $tabelaMateriais = $guia->paciente->convenio->tab_mat_id;
@@ -809,7 +1403,9 @@ public function gerarZipGuiaSp($id)
             }
         }
 
-        $medicamentos = collect();
+
+        // Verificar se o convênio tem uma tabela de medicamentos dinâmica
+        $medicamentos = collect(); // Inicializando como vazio caso não seja encontrado
         if ($guia->paciente->convenio) {
             $tabelaMedicamentos = $guia->paciente->convenio->tab_med_id;
 
@@ -831,7 +1427,8 @@ public function gerarZipGuiaSp($id)
             }
         }
 
-        $outrasDespesasItems = $materiais->concat($medicamentos);
+        // Combinar os resultados de materiais e medicamentos
+        $outrasDespesasItems = $materiais->concat($medicamentos); // Usando concat para mesclar coleções
 
         // Calcular valores totais
         $valorProcedimentos = $procedimentos->sum('valor_total');
@@ -840,8 +1437,33 @@ public function gerarZipGuiaSp($id)
         $valorOPME = 0.00; // Adicionar lógica para OPME se necessário
         $valorTotalGeral = $valorProcedimentos + $valorMateriais + $valorMedicamentos + $valorOPME;
 
+        // Criar o XML utilizando SimpleXMLElement
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas http://www.ans.gov.br/padroes/tiss/schemas/tissV4_01_00.xsd"></ans:mensagemTISS>');
 
-        // Adicionar cada guia ao XML
+        // Cabeçalho
+        $cabecalho = $xml->addChild('ans:cabecalho');
+        $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
+        $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
+        $identificacaoTransacao->addChild('ans:sequencialTransacao', $guia->numeracao);
+        $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
+        $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
+
+        $origem = $cabecalho->addChild('ans:origem');
+        $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
+        $identificacaoPrestador->addChild('ans:CNPJ', $guia->codigo_operadora ?? '');
+
+        $destino = $cabecalho->addChild('ans:destino');
+        $destino->addChild('ans:registroANS', $guia->registro_ans);
+
+        $cabecalho->addChild('ans:Padrao', '4.01.00');
+
+        // Lote de Guias
+        $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
+        $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
+        $loteGuias->addChild('ans:numeroLote', $guia->numeracao);
+        $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
+
+        // Guia SP-SADT
         $guiaSadt = $guiasTISS->addChild('ans:guiaSP-SADT');
 
         // Cabeçalho da Guia
@@ -909,11 +1531,11 @@ public function gerarZipGuiaSp($id)
             if (!empty($procedimento->via)) {
                 $procedimentoExecutado->addChild('ans:viaAcesso', $procedimento->via);
             }
-            $procedimentoExecutado->addChild('ans:reducaoAcrescimo', $procedimento->fator_red_acres);
+            $procedimentoExecutado->addChild('ans:reducaoAcrescimo', '1.00');
             $procedimentoExecutado->addChild('ans:valorUnitario', $procedimento->valor_unitario);
             $procedimentoExecutado->addChild('ans:valorTotal', $procedimento->valor_total);
 
-             // Adicionando a equipe da guia diretamente da $guia
+            // Adicionando a equipe da guia diretamente da $guia
             $equipeSadt = $procedimentoExecutado->addChild('ans:equipeSadt');
             // Profissional 1 (sempre presente)
             if (!empty($guia->grua) && !empty($guia->codigo_operadora_profissional)) {
@@ -978,140 +1600,111 @@ public function gerarZipGuiaSp($id)
                 $servicosExecutados->addChild('ans:descricaoProcedimento', $item->nome_produto);
             }
         }
-    }
 
-    $valorTotal = $guiaSadt->addChild('ans:valorTotal');
-    $valorTotal->addChild('ans:valorProcedimentos', number_format($valorProcedimentos, 2, '.', ''));
-    $valorTotal->addChild('ans:valorMateriais', number_format($valorMateriais, 2, '.', ''));
-    $valorTotal->addChild('ans:valorMedicamentos', number_format($valorMedicamentos, 2, '.', ''));
-    $valorTotal->addChild('ans:valorOPME', number_format($valorOPME, 2, '.', ''));
-    $valorTotal->addChild('ans:valorTotalGeral', number_format($valorTotalGeral, 2, '.', ''));
+        // Adicionar valores totais conforme o padrão TISS
+        $valorTotal = $guiaSadt->addChild('ans:valorTotal');
+        $valorTotal->addChild('ans:valorProcedimentos', number_format($valorProcedimentos, 2, '.', ''));
+        $valorTotal->addChild('ans:valorMateriais', number_format($valorMateriais, 2, '.', ''));
+        $valorTotal->addChild('ans:valorMedicamentos', number_format($valorMedicamentos, 2, '.', ''));
+        $valorTotal->addChild('ans:valorOPME', number_format($valorOPME, 2, '.', ''));
+        $valorTotal->addChild('ans:valorTotalGeral', number_format($valorTotalGeral, 2, '.', ''));
 
-    // Epílogo
-    $epilogo = $xml->addChild('ans:epilogo');
-    $epilogo->addChild('ans:hash', md5($xml->asXML()));
+        // Epílogo
+        $epilogo = $xml->addChild('ans:epilogo');
+        $epilogo->addChild('ans:hash', md5($xml->asXML()));
 
-    // Verifica se já existe uma conta financeira para esse lote
-    $contaExistente = ContaGuia::where('lote', $sequencialTransacao)->first();
+        $guia->identificador = 'GERADO';
+        $guia->save();
 
-    if (!$contaExistente) {
-        // Atualiza as guias com a numeração correta
-        foreach ($guias as $guia) {
-            $guia->identificador = 'GERADO';
-            $guia->save();
-        }
+        // Verifica se já existe uma conta financeira para esse lote
+        $contaExistente = ContaGuia::where('lote', $guia->numeracao)->first();
 
-        // Calcula o valor total do lote
-        $valorTotal = $exameSadtAut->sum('valor_total');
+        if (!$contaExistente) {
+            // Atualiza as guias com a numeração correta
+            foreach ($guia as $g) {
+                $g->identificador = 'GERADO';
+                $g->save();
+            }
 
-        $referencia = $sequencialTransacao;
+            // Calcula o valor total do lote
+            $valorTotal = $exameSadtAut->sum('valor_total');
 
-        // Cria a conta financeira
-        $conta = ContasFinanceiras::create([
-            'user_id' => auth()->id(),
-            'status' => 'Aberto',
-            'tipo_conta' => 'Receber',
-            'convenio_id' => $guias->first()->convenio_id,
-            'tipo_guia' => 'SADT',
-            'parcelas' => '1/1',
-            'data_emissao' => Carbon::parse($guia->data_realizacao)->format('Y-m-d'),
-            'competencia' => Carbon::parse($guia->data_realizacao)->format('Y-m-d'),
-            'data_vencimento' => now()->addDays(30)->format('Y-m-d'),
-            'referencia' => $referencia,
-            'tipo_doc' => 'XML',
-            'centro_custos' => $guias->first()->nome_contratado ?? 'Desconhecido',
-            'documento' => 'lote_guias_sadt_' . $sequencialTransacao . '.xml',
-            'valor' => $valorTotal,
-            'historico' => 'Guia SADT - ' . $guia->data_realizacao,
-        ]);
+            $referencia = $guia->numeracao;
 
-        // Salva o relacionamento na tabela `conta_guias`
-        foreach ($guias as $guia) {
-            ContaGuia::create([
-                'conta_financeira_id' => $conta->id,
-                'guia_id' => $guia->id,
+            // Cria a conta financeira
+            $conta = ContasFinanceiras::create([
+                'user_id' => auth()->id(),
+                'status' => 'Aberto',
+                'tipo_conta' => 'Receber',
+                'convenio_id' => $guia->first()->convenio_id,
                 'tipo_guia' => 'SADT',
-                'lote' => $sequencialTransacao,
+                'parcelas' => '1/1',
+                'data_emissao' => Carbon::parse($guia->data_autorizacao)->format('Y-m-d'),
+                'competencia' => Carbon::parse($guia->data_autorizacao)->format('Y-m-d'),
+                'data_vencimento' => now()->addDays(30)->format('Y-m-d'),
+                'referencia' => $referencia,
+                'tipo_doc' => 'XML',
+                'centro_custos' => $guia->first()->nome_contratado ?? 'Desconhecido',
+                'documento' => 'lote_guias_sadt_' . $guia->numeracao . '.xml',
+                'valor' => $valorTotal,
+                'historico' => 'Guia SADT - ' . $guia->data_autorizacao,
             ]);
-        }
-    } else {
-        // Apenas atualiza as guias e registra o relacionamento se não existirem
-        foreach ($guias as $guia) {
-            $existeRelacionamento = ContaGuia::where('guia_id', $guia->id)
-                ->where('tipo_guia', 'SADT')
-                ->exists();
-
-            if (!$existeRelacionamento) {
-                $guia->numeracao = $sequencialTransacao;
-                $guia->identificador = 'GERADO';
-                $guia->save();
-
+            Log::info("message");
+            // Salva o relacionamento na tabela `conta_guias`
+            foreach ($guia as $g) {
                 ContaGuia::create([
-                    'conta_financeira_id' => $contaExistente->conta_financeira_id,
-                    'guia_id' => $guia->id,
+                    'conta_financeira_id' => $conta->id,
+                    'guia_id' => $g->id,
                     'tipo_guia' => 'SADT',
-                    'lote' => $sequencialTransacao,
+                    'lote' => $guia->numeracao,
                 ]);
             }
+        } else {
+            // Apenas atualiza as guias e registra o relacionamento se não existirem
+            foreach ($guia as $g) {
+                $existeRelacionamento = ContaGuia::where('guia_id', $g->id)
+                    ->where('tipo_guia', 'SADT')
+                    ->exists();
+
+                if (!$existeRelacionamento) {
+                    $g->numeracao = $guia->numeracao;
+                    $g->identificador = 'GERADO';
+                    $g->save();
+
+                    ContaGuia::create([
+                        'conta_financeira_id' => $contaExistente->conta_financeira_id,
+                        'guia_id' => $g->id,
+                        'tipo_guia' => 'SADT',
+                        'lote' => $g->numeracao,
+                    ]);
+                }
+            }
         }
+
+
+        // Retornar o XML como download
+        return response($xml->asXML(), 200)
+            ->header('Content-Type', 'application/xml')
+            ->header('Content-Disposition', 'attachment; filename="guia_sp_sadt_' . $guia->id . '.xml"');
     }
 
-    // Retorna o XML como download
-    $fileName = 'lote_guias_sadt.xml';
-    return response($xml->asXML(), 200)
-        ->header('Content-Type', 'application/xml')
-        ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"');
-}
+    public function gerarZipGuiasadt($id, Request $request)
+    {
 
-public function gerarZipGuiasadtEmLote(Request $request)
-{
-    $guiaIds = $request->input('guia_ids');
-    $numeracao = $request->input('numeracao');
+        // Buscar a guia com todos os relacionamentos necessários
+        $guia = GuiaSp::with('profissional')->findOrFail($id);
 
-    $guias = GuiaSp::with('profissional', 'paciente.convenio')->whereIn('id', $guiaIds)->get();
-
-    $sequencialTransacao = $numeracao ?? $guias->firstWhere('numeracao', '!=', null)->numeracao;
-
-    // Atualiza ou define a numeração para todas as guias
-    foreach ($guias as $guia) {
-        if (is_null($guia->numeracao)) {
-            $guia->numeracao = $sequencialTransacao;
+        // Verificar ou gerar a numeração da guia
+        if (!$guia->numeracao) {
+            $ultimaNumeracao = GuiaSp::whereNotNull('numeracao')->max('numeracao') ?? 0;
+            $guia->numeracao = $ultimaNumeracao + 1;
             $guia->save();
         }
-    }
 
-    // Criar o XML utilizando SimpleXMLElement
-    $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas http://www.ans.gov.br/padroes/tiss/schemas/tissV4_01_00.xsd"></ans:mensagemTISS>');
-
-    // Cabeçalho
-    $cabecalho = $xml->addChild('ans:cabecalho');
-    $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
-    $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
-    $identificacaoTransacao->addChild('ans:sequencialTransacao', $sequencialTransacao);
-    $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
-    $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
-
-    $origem = $cabecalho->addChild('ans:origem');
-    $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
-    $identificacaoPrestador->addChild('ans:CNPJ', $guia->codigo_operadora); // CPF do profissional da primeira guia
-
-    $destino = $cabecalho->addChild('ans:destino');
-    $destino->addChild('ans:registroANS', $guias->first()->registro_ans);
-
-    $cabecalho->addChild('ans:Padrao', '4.01.00');
-
-    // Lote de Guias
-    $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
-    $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
-    $loteGuias->addChild('ans:numeroLote', $sequencialTransacao);
-    $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
-
-   // Iterar sobre cada guia
-   foreach ($guias as $guia) {
-       // Puxar os procedimentos e materiais relacionados à guia
-       $procedimentos = DB::table('exames_aut_sadt')
-           ->where('guia_sps_id', $guia->id)
-           ->get();
+        // Puxar os procedimentos das tabelas relacionadas
+        $procedimentos = DB::table('exames_aut_sadt')
+            ->where('guia_sps_id', $id)
+            ->get();
 
         $materiais = collect();
         if ($guia->paciente->convenio) {
@@ -1135,29 +1728,31 @@ public function gerarZipGuiasadtEmLote(Request $request)
             }
         }
 
-       $medicamentos = collect();
-       if ($guia->paciente->convenio) {
-           $tabelaMedicamentos = $guia->paciente->convenio->tab_med_id;
+        // Verificar se o convênio tem medicamentos dinâmicos
+        $medicamentos = collect();
+        if ($guia->paciente->convenio) {
+            $tabelaMedicamentos = $guia->paciente->convenio->tab_med_id;
 
-           if ($tabelaMedicamentos && Schema::hasTable($tabelaMedicamentos)) {
-               $medicamentos = DB::table('med_agendas')
-                   ->join($tabelaMedicamentos, 'med_agendas.medicamento_id', '=', "{$tabelaMedicamentos}.id")
-                   ->where('med_agendas.agenda_id', $guia->agenda_id)
-                   ->select(
-                       'med_agendas.id as id',
-                       'med_agendas.quantidade as quantidade',
-                       'med_agendas.unidade_medida',
-                       "{$tabelaMedicamentos}.medicamento as nome_produto",
-                       "{$tabelaMedicamentos}.medicamento as descricao_produto",
-                       DB::raw("'MEDICAMENTO' as tipo_produto"),
-                       "{$tabelaMedicamentos}.preco as valor_unitario_produto",
-                       "{$tabelaMedicamentos}.id as material_id"
-                   )
-                   ->get();
-           }
-       }
+            if ($tabelaMedicamentos && Schema::hasTable($tabelaMedicamentos)) {
+                $medicamentos = DB::table('med_agendas')
+                    ->join($tabelaMedicamentos, 'med_agendas.medicamento_id', '=', "{$tabelaMedicamentos}.id")
+                    ->where('med_agendas.agenda_id', $guia->agenda_id)
+                    ->select(
+                        'med_agendas.id as id',
+                        'med_agendas.quantidade as quantidade',
+                        'med_agendas.unidade_medida',
+                        "{$tabelaMedicamentos}.medicamento as nome_produto",
+                        "{$tabelaMedicamentos}.medicamento as descricao_produto",
+                        DB::raw("'MEDICAMENTO' as tipo_produto"),
+                        "{$tabelaMedicamentos}.preco as valor_unitario_produto",
+                        "{$tabelaMedicamentos}.id as material_id"
+                    )
+                    ->get();
+            }
+        }
 
-       $outrasDespesasItems = $materiais->concat($medicamentos);
+        // Combinar materiais e medicamentos
+        $outrasDespesasItems = $materiais->concat($medicamentos);
 
         // Calcular valores totais
         $valorProcedimentos = $procedimentos->sum('valor_total');
@@ -1167,25 +1762,51 @@ public function gerarZipGuiasadtEmLote(Request $request)
         $valorTotalGeral = $valorProcedimentos + $valorMateriais + $valorMedicamentos + $valorOPME;
 
 
-       // Adicionar cada guia ao XML
-       $guiaSadt = $guiasTISS->addChild('ans:guiaSP-SADT');
+        // Criar o XML utilizando SimpleXMLElement
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas http://www.ans.gov.br/padroes/tiss/schemas/tissV4_01_00.xsd"></ans:mensagemTISS>');
 
-       // Cabeçalho da Guia
-       $cabecalhoGuia = $guiaSadt->addChild('ans:cabecalhoGuia');
-       $cabecalhoGuia->addChild('ans:registroANS', $guia->registro_ans);
-       $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_op);
+        // Cabeçalho
+        $cabecalho = $xml->addChild('ans:cabecalho');
+        $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
+        $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
+        $identificacaoTransacao->addChild('ans:sequencialTransacao', $guia->numeracao);
+        $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
+        $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
 
-       // Dados de Autorização
-       $dadosAutorizacao = $guiaSadt->addChild('ans:dadosAutorizacao');
-       $dadosAutorizacao->addChild('ans:numeroGuiaOperadora', $guia->numero_guia_op);
-       $dadosAutorizacao->addChild('ans:dataAutorizacao', $guia->data_autorizacao);
-       $dadosAutorizacao->addChild('ans:senha', $guia->senha);
-       $dadosAutorizacao->addChild('ans:dataValidadeSenha', $guia->validade_senha);
+        $origem = $cabecalho->addChild('ans:origem');
+        $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
+        $identificacaoPrestador->addChild('ans:CNPJ', $guia->codigo_operadora ?? '');
 
-       // Dados do Beneficiário
-       $dadosBeneficiario = $guiaSadt->addChild('ans:dadosBeneficiario');
-       $dadosBeneficiario->addChild('ans:numeroCarteira', $guia->numero_carteira);
-       $dadosBeneficiario->addChild('ans:atendimentoRN', $guia->atendimento_rn);
+        $destino = $cabecalho->addChild('ans:destino');
+        $destino->addChild('ans:registroANS', $guia->registro_ans);
+
+        $cabecalho->addChild('ans:Padrao', '4.01.00');
+
+        // Lote de Guias
+        $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
+        $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
+        $loteGuias->addChild('ans:numeroLote', $guia->numeracao);
+        $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
+
+        // Guia SP-SADT
+        $guiaSadt = $guiasTISS->addChild('ans:guiaSP-SADT');
+
+        // Cabeçalho da Guia
+        $cabecalhoGuia = $guiaSadt->addChild('ans:cabecalhoGuia');
+        $cabecalhoGuia->addChild('ans:registroANS', $guia->registro_ans);
+        $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_op);
+
+        // Dados de Autorização
+        $dadosAutorizacao = $guiaSadt->addChild('ans:dadosAutorizacao');
+        $dadosAutorizacao->addChild('ans:numeroGuiaOperadora', $guia->numero_guia_op);
+        $dadosAutorizacao->addChild('ans:dataAutorizacao', $guia->data_autorizacao);
+        $dadosAutorizacao->addChild('ans:senha', $guia->senha);
+        $dadosAutorizacao->addChild('ans:dataValidadeSenha', $guia->validade_senha);
+
+        // Dados do Beneficiário
+        $dadosBeneficiario = $guiaSadt->addChild('ans:dadosBeneficiario');
+        $dadosBeneficiario->addChild('ans:numeroCarteira', $guia->numero_carteira);
+        $dadosBeneficiario->addChild('ans:atendimentoRN', $guia->atendimento_rn);
 
         // Dados do Solicitante
         $dadosSolicitante = $guiaSadt->addChild('ans:dadosSolicitante');
@@ -1199,26 +1820,26 @@ public function gerarZipGuiasadtEmLote(Request $request)
         $profissionalSolicitante->addChild('ans:UF', $guia->uf_conselho);
         $profissionalSolicitante->addChild('ans:CBOS', $guia->codigo_cbo);
 
-       // Dados Solicitação
-       $dadosSolicitacao = $guiaSadt->addChild('ans:dadosSolicitacao');
-       $dadosSolicitacao->addChild('ans:dataSolicitacao', $guia->data_autorizacao);
-       $dadosSolicitacao->addChild('ans:caraterAtendimento', $guia->carater_atendimento);
-       $dadosSolicitacao->addChild('ans:indicacaoClinica', $guia->indicacao_clinica);
+        // Dados Solicitação
+        $dadosSolicitacao = $guiaSadt->addChild('ans:dadosSolicitacao');
+        $dadosSolicitacao->addChild('ans:dataSolicitacao', $guia->data_autorizacao);
+        $dadosSolicitacao->addChild('ans:caraterAtendimento', $guia->carater_atendimento);
+        $dadosSolicitacao->addChild('ans:indicacaoClinica', $guia->indicacao_clinica);
 
-       // Dados do Executante
-       $dadosExecutante = $guiaSadt->addChild('ans:dadosExecutante');
-       $contratadoExecutante = $dadosExecutante->addChild('ans:contratadoExecutante');
-       $contratadoExecutante->addChild('ans:cpfContratado', $guia->profissional->cpf ?? '');
-       $dadosExecutante->addChild('ans:CNES', $guia->codigo_cnes);
+        // Dados do Executante
+        $dadosExecutante = $guiaSadt->addChild('ans:dadosExecutante');
+        $contratadoExecutante = $dadosExecutante->addChild('ans:contratadoExecutante');
+        $contratadoExecutante->addChild('ans:cpfContratado', $guia->profissional->cpf ?? '');
+        $dadosExecutante->addChild('ans:CNES', $guia->codigo_cnes);
 
-       // Dados do Atendimento
-       $dadosAtendimento = $guiaSadt->addChild('ans:dadosAtendimento');
-       $dadosAtendimento->addChild('ans:tipoAtendimento', $guia->tipo_atendimento);
-       $dadosAtendimento->addChild('ans:indicacaoAcidente', $guia->indicacao_acidente);
-       $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta);
-       $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento ?? '01');
+        // Dados do Atendimento
+        $dadosAtendimento = $guiaSadt->addChild('ans:dadosAtendimento');
+        $dadosAtendimento->addChild('ans:tipoAtendimento', $guia->tipo_atendimento);
+        $dadosAtendimento->addChild('ans:indicacaoAcidente', $guia->indicacao_acidente);
+        $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta);
+        $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento ?? '01');
 
-       // Procedimentos Executados
+        // Procedimentos Executados
         $procedimentosExecutados = $guiaSadt->addChild('ans:procedimentosExecutados');
         foreach ($procedimentos as $index => $procedimento) {
             $procedimentoExecutado = $procedimentosExecutados->addChild('ans:procedimentoExecutado');
@@ -1234,11 +1855,12 @@ public function gerarZipGuiasadtEmLote(Request $request)
             $procedimentoExecutado->addChild('ans:quantidadeExecutada', $procedimento->quantidade_autorizada);
             if (!empty($procedimento->via)) {
                 $procedimentoExecutado->addChild('ans:viaAcesso', $procedimento->via);
-            }            $procedimentoExecutado->addChild('ans:reducaoAcrescimo', '1.00');
+            }
+            $procedimentoExecutado->addChild('ans:reducaoAcrescimo', '1.00');
             $procedimentoExecutado->addChild('ans:valorUnitario', $procedimento->valor_unitario);
             $procedimentoExecutado->addChild('ans:valorTotal', $procedimento->valor_total);
 
-             // Adicionando a equipe da guia diretamente da $guia
+            // Adicionando a equipe da guia diretamente da $guia
             $equipeSadt = $procedimentoExecutado->addChild('ans:equipeSadt');
             // Profissional 1 (sempre presente)
             if (!empty($guia->grua) && !empty($guia->codigo_operadora_profissional)) {
@@ -1279,6 +1901,7 @@ public function gerarZipGuiasadtEmLote(Request $request)
                 $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional2);
             }
         }
+        // Outras Despesas
         if (is_array($outrasDespesasItems) && count($outrasDespesasItems) > 0) {
             $outrasDespesas = $guiaSadt->addChild('ans:outrasDespesas');
             foreach ($outrasDespesasItems as $index => $item) {
@@ -1303,656 +1926,41 @@ public function gerarZipGuiasadtEmLote(Request $request)
                 $servicosExecutados->addChild('ans:descricaoProcedimento', $item->nome_produto);
             }
         }
-   }
-    // Adicionar valores totais conforme o padrão TISS
-    $valorTotal = $guiaSadt->addChild('ans:valorTotal');
-    $valorTotal->addChild('ans:valorProcedimentos', number_format($valorProcedimentos, 2, '.', ''));
-    $valorTotal->addChild('ans:valorMateriais', number_format($valorMateriais, 2, '.', ''));
-    $valorTotal->addChild('ans:valorMedicamentos', number_format($valorMedicamentos, 2, '.', ''));
-    $valorTotal->addChild('ans:valorOPME', number_format($valorOPME, 2, '.', ''));
-    $valorTotal->addChild('ans:valorTotalGeral', number_format($valorTotalGeral, 2, '.', ''));
 
-    $epilogo = $xml->addChild('ans:epilogo');
-    $hash = md5($xml->asXML());
-    $epilogo->addChild('ans:hash', $hash);
-
-    $guia->identificador = 'GERADO';
-    $guia->save();
-
-    $fileName = 'lote_guias_sadt.xml';
-    $filePath = storage_path('app/public/' . $fileName);
-
-    if (!$xml->asXML($filePath)) {
-        return response()->json(['error' => 'Erro ao salvar o arquivo XML.'], 500);
-    }
-
-    $zipFileName = 'lote_guias_sadt.zip';
-    $zipFilePath = storage_path('app/public/' . $zipFileName);
-
-    $zip = new \ZipArchive;
-    if ($zip->open($zipFilePath, \ZipArchive::CREATE) === TRUE) {
-        $zip->addFile($filePath, $fileName);
-        $zip->close();
-    } else {
-        return response()->json(['error' => 'Erro ao criar o arquivo ZIP.'], 500);
-    }
-
-    return response()->download($zipFilePath)->deleteFileAfterSend(true);
-}
-
-    public function gerarXmlGuiasadt($id, Request $request)
-{
-    // Verificar se a guia existe
-    $guia = GuiaSp::with('profissional')->findOrFail($id);
-
-    $exameSadtAut = ExamesAutSadt::whereIn('guia_sps_id', $id)->get();
-    // Verificar se a numeração é fornecida na requisição ou já existe na guia
-    if ($request->has('numeracao')) {
-        $guia->numeracao = $request->input('numeracao');
-    } elseif (is_null($guia->numeracao)) {
-        // Verificar se existe alguma numeração em outra guia
-        $ultimaNumeracao = GuiaSp::whereNotNull('numeracao')->max('numeracao');
-
-        if ($ultimaNumeracao) {
-            // Incrementa a numeração automaticamente se existe uma anterior
-            $guia->numeracao = $ultimaNumeracao + 1;
-        } else {
-            // Retorna erro se não há nenhuma numeração existente
-            return response()->json([
-                'error' => 'Numeração não encontrada. Por favor, insira a numeração para esta guia.'
-            ], 422);
-        }
-    }
-
-    // Salvar a numeração na guia
-    $guia->save();
-
-    // Puxar os procedimentos das tabelas relacionadas
-    $procedimentos = DB::table('exames_aut_sadt')
-        ->where('guia_sps_id', $id)
-        ->get();
-
-    // Recuperar materiais relacionados à agenda_id da guia
-    $materiais = collect();
-        if ($guia->paciente->convenio) {
-            $tabelaMateriais = $guia->paciente->convenio->tab_mat_id;
-
-            if ($tabelaMateriais && Schema::hasTable($tabelaMateriais)) {
-                $materiais = DB::table('mat_agendas')
-                    ->join($tabelaMateriais, 'mat_agendas.material_id', '=', "{$tabelaMateriais}.id")
-                    ->where('mat_agendas.agenda_id', $guia->agenda_id)
-                    ->select(
-                        'mat_agendas.id as id',
-                        'mat_agendas.quantidade as quantidade',
-                        'mat_agendas.unidade_medida',
-                        "{$tabelaMateriais}.medicamento as nome_produto",
-                        "{$tabelaMateriais}.medicamento as descricao_produto",
-                        DB::raw("'MEDICAMENTO' as tipo_produto"),
-                        "{$tabelaMateriais}.preco as valor_unitario_produto",
-                        "{$tabelaMateriais}.id as material_id"
-                    )
-                    ->get();
-            }
-        }
+        // Adicionar valores totais conforme o padrão TISS
+        $valorTotal = $guiaSadt->addChild('ans:valorTotal');
+        $valorTotal->addChild('ans:valorProcedimentos', number_format($valorProcedimentos, 2, '.', ''));
+        $valorTotal->addChild('ans:valorMateriais', number_format($valorMateriais, 2, '.', ''));
+        $valorTotal->addChild('ans:valorMedicamentos', number_format($valorMedicamentos, 2, '.', ''));
+        $valorTotal->addChild('ans:valorOPME', number_format($valorOPME, 2, '.', ''));
+        $valorTotal->addChild('ans:valorTotalGeral', number_format($valorTotalGeral, 2, '.', ''));
 
 
-    // Verificar se o convênio tem uma tabela de medicamentos dinâmica
-    $medicamentos = collect(); // Inicializando como vazio caso não seja encontrado
-    if ($guia->paciente->convenio) {
-    $tabelaMedicamentos = $guia->paciente->convenio->tab_med_id;
+        // Epílogo
+        $epilogo = $xml->addChild('ans:epilogo');
+        $epilogo->addChild('ans:hash', md5($xml->asXML()));
 
-    if ($tabelaMedicamentos && Schema::hasTable($tabelaMedicamentos)) {
-    $medicamentos = DB::table('med_agendas')
-        ->join($tabelaMedicamentos, 'med_agendas.medicamento_id', '=', "{$tabelaMedicamentos}.id")
-        ->where('med_agendas.agenda_id', $guia->agenda_id)
-        ->select(
-            'med_agendas.id as id',
-            'med_agendas.quantidade as quantidade',
-            'med_agendas.unidade_medida',
-            "{$tabelaMedicamentos}.medicamento as nome_produto",
-            "{$tabelaMedicamentos}.medicamento as descricao_produto",
-            DB::raw("'MEDICAMENTO' as tipo_produto"),
-            "{$tabelaMedicamentos}.preco as valor_unitario_produto",
-            "{$tabelaMedicamentos}.id as material_id"
-        )
-        ->get();
-    }
-    }
-
-    // Combinar os resultados de materiais e medicamentos
-    $outrasDespesasItems = $materiais->concat($medicamentos); // Usando concat para mesclar coleções
-
-    // Calcular valores totais
-    $valorProcedimentos = $procedimentos->sum('valor_total');
-    $valorMateriais = $materiais->sum(fn($item) => $item->quantidade * $item->valor_unitario_produto);
-    $valorMedicamentos = $medicamentos->sum(fn($item) => $item->quantidade * $item->valor_unitario_produto);
-    $valorOPME = 0.00; // Adicionar lógica para OPME se necessário
-    $valorTotalGeral = $valorProcedimentos + $valorMateriais + $valorMedicamentos + $valorOPME;
-
-    // Criar o XML utilizando SimpleXMLElement
-    $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas http://www.ans.gov.br/padroes/tiss/schemas/tissV4_01_00.xsd"></ans:mensagemTISS>');
-
-    // Cabeçalho
-    $cabecalho = $xml->addChild('ans:cabecalho');
-    $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
-    $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
-    $identificacaoTransacao->addChild('ans:sequencialTransacao', $guia->numeracao);
-    $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
-    $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
-
-    $origem = $cabecalho->addChild('ans:origem');
-    $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
-    $identificacaoPrestador->addChild('ans:CNPJ', $guia->codigo_operadora ?? '');
-
-    $destino = $cabecalho->addChild('ans:destino');
-    $destino->addChild('ans:registroANS', $guia->registro_ans);
-
-    $cabecalho->addChild('ans:Padrao', '4.01.00');
-
-    // Lote de Guias
-    $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
-    $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
-    $loteGuias->addChild('ans:numeroLote', $guia->numeracao);
-    $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
-
-    // Guia SP-SADT
-    $guiaSadt = $guiasTISS->addChild('ans:guiaSP-SADT');
-
-    // Cabeçalho da Guia
-    $cabecalhoGuia = $guiaSadt->addChild('ans:cabecalhoGuia');
-    $cabecalhoGuia->addChild('ans:registroANS', $guia->registro_ans);
-    $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_op);
-
-    // Dados de Autorização
-    $dadosAutorizacao = $guiaSadt->addChild('ans:dadosAutorizacao');
-    $dadosAutorizacao->addChild('ans:numeroGuiaOperadora', $guia->numero_guia_op);
-    $dadosAutorizacao->addChild('ans:dataAutorizacao', $guia->data_autorizacao);
-    $dadosAutorizacao->addChild('ans:senha', $guia->senha);
-    $dadosAutorizacao->addChild('ans:dataValidadeSenha', $guia->validade_senha);
-
-    // Dados do Beneficiário
-    $dadosBeneficiario = $guiaSadt->addChild('ans:dadosBeneficiario');
-    $dadosBeneficiario->addChild('ans:numeroCarteira', $guia->numero_carteira);
-    $dadosBeneficiario->addChild('ans:atendimentoRN', $guia->atendimento_rn);
-
-    // Dados do Solicitante
-    $dadosSolicitante = $guiaSadt->addChild('ans:dadosSolicitante');
-    $contratadoSolicitante = $dadosSolicitante->addChild('ans:contratadoSolicitante');
-    $contratadoSolicitante->addChild('ans:cnpjContratado', $guia->codigo_operadora ?? '');
-    $dadosSolicitante->addChild('ans:nomeContratadoSolicitante', $guia->nome_contratado_executante);
-    $profissionalSolicitante = $dadosSolicitante->addChild('ans:profissionalSolicitante');
-    $profissionalSolicitante->addChild('ans:nomeProfissional', $guia->nome_profissional_solicitante);
-    $profissionalSolicitante->addChild('ans:conselhoProfissional', $guia->conselho_profissional);
-    $profissionalSolicitante->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho);
-    $profissionalSolicitante->addChild('ans:UF', $guia->uf_conselho);
-    $profissionalSolicitante->addChild('ans:CBOS', $guia->codigo_cbo);
-
-    // Dados Solicitação
-    $dadosSolicitacao = $guiaSadt->addChild('ans:dadosSolicitacao');
-    $dadosSolicitacao->addChild('ans:dataSolicitacao', $guia->data_autorizacao);
-    $dadosSolicitacao->addChild('ans:caraterAtendimento', $guia->carater_atendimento);
-    $dadosSolicitacao->addChild('ans:indicacaoClinica', $guia->indicacao_clinica);
-
-    // Dados do Executante
-    $dadosExecutante = $guiaSadt->addChild('ans:dadosExecutante');
-    $contratadoExecutante = $dadosExecutante->addChild('ans:contratadoExecutante');
-    $contratadoExecutante->addChild('ans:cpfContratado', $guia->profissional->cpf ?? '');
-    $dadosExecutante->addChild('ans:CNES', $guia->codigo_cnes);
-
-    // Dados do Atendimento
-    $dadosAtendimento = $guiaSadt->addChild('ans:dadosAtendimento');
-    $dadosAtendimento->addChild('ans:tipoAtendimento', $guia->tipo_atendimento);
-    $dadosAtendimento->addChild('ans:indicacaoAcidente', $guia->indicacao_acidente);
-    $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta);
-    $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento ?? '01');
-
-    // Procedimentos Executados
-    $procedimentosExecutados = $guiaSadt->addChild('ans:procedimentosExecutados');
-    foreach ($procedimentos as $index => $procedimento) {
-        $procedimentoExecutado = $procedimentosExecutados->addChild('ans:procedimentoExecutado');
-        $procedimentoExecutado->addChild('ans:sequencialItem', $index + 1);
-        $procedimentoExecutado->addChild('ans:dataExecucao', $procedimento->data_real ?? $guia->data_autorizacao);
-        $procedimentoExecutado->addChild('ans:horaInicial', $procedimento->hora_inicio_atendimento ?? $guia->hora_inicio_atendimento);
-        $procedimentoExecutado->addChild('ans:horaFinal', $procedimento->hora_fim_atendimento ?? $guia->hora_fim_atendimento);
-
-        $dadosProcedimento = $procedimentoExecutado->addChild('ans:procedimento');
-        $dadosProcedimento->addChild('ans:codigoTabela', $procedimento->tabela);
-        $dadosProcedimento->addChild('ans:codigoProcedimento', $procedimento->codigo_procedimento_realizado);
-        $dadosProcedimento->addChild('ans:descricaoProcedimento', $procedimento->descricao_procedimento_realizado);
-        $procedimentoExecutado->addChild('ans:quantidadeExecutada', $procedimento->quantidade_autorizada);
-        if (!empty($procedimento->via)) {
-            $procedimentoExecutado->addChild('ans:viaAcesso', $procedimento->via);
-        }
-        $procedimentoExecutado->addChild('ans:reducaoAcrescimo', '1.00');
-        $procedimentoExecutado->addChild('ans:valorUnitario', $procedimento->valor_unitario);
-        $procedimentoExecutado->addChild('ans:valorTotal', $procedimento->valor_total);
-
-        // Adicionando a equipe da guia diretamente da $guia
-        $equipeSadt = $procedimentoExecutado->addChild('ans:equipeSadt');
-        // Profissional 1 (sempre presente)
-        if (!empty($guia->grua) && !empty($guia->codigo_operadora_profissional)) {
-            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua);
-            $codProfissional = $equipeSadt->addChild('ans:codProfissional');
-            $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional);
-
-            $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional);
-            $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho);
-            $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional);
-            $equipeSadt->addChild('ans:UF', $guia->uf_profissional);
-            $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional);
-        }
-
-        // Profissional 2 (só adiciona se houver dados)
-        if (!empty($guia->grau1) && !empty($guia->codigo_operadora_profissional1)) {
-            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grau1);
-            $codProfissional = $equipeSadt->addChild('ans:codProfissional');
-            $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional1);
-
-            $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional1);
-            $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho1);
-            $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional1);
-            $equipeSadt->addChild('ans:UF', $guia->uf_profissional1);
-            $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional1);
-        }
-
-        // Profissional 3 (só adiciona se houver dados)
-        if (!empty($guia->grau2) && !empty($guia->codigo_operadora_profissional2)) {
-            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grau2);
-            $codProfissional = $equipeSadt->addChild('ans:codProfissional');
-            $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional2);
-
-            $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional2);
-            $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho2);
-            $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional2);
-            $equipeSadt->addChild('ans:UF', $guia->uf_profissional2);
-            $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional2);
-        }
-    }
-    if (is_array($outrasDespesasItems) && count($outrasDespesasItems) > 0) {
-        $outrasDespesas = $guiaSadt->addChild('ans:outrasDespesas');
-        foreach ($outrasDespesasItems as $index => $item) {
-            $despesa = $outrasDespesas->addChild('ans:despesa');
-            $despesa->addChild('ans:sequencialItem', $index + 1);
-            $despesa->addChild('ans:codigoDespesa');
-
-            $servicosExecutados = $despesa->addChild('ans:servicosExecutados');
-            $servicosExecutados->addChild('ans:dataExecucao', $guia->data_autorizacao);
-            $servicosExecutados->addChild('ans:horaInicial', $guia->hora_inicio_atendimento);
-            $servicosExecutados->addChild('ans:horaFinal', $guia->hora_fim_atendimento);
-
-            $codigoTabela = strtoupper(trim($item->tipo_produto)) === 'MEDICAMENTO' ? '20' : '19';
-            $servicosExecutados->addChild('ans:codigoTabela', $codigoTabela);
-
-            $servicosExecutados->addChild('ans:codigoProcedimento', $item->material_id);
-            $servicosExecutados->addChild('ans:quantidadeExecutada', $item->quantidade);
-            $servicosExecutados->addChild('ans:unidadeMedida', $item->unidade_medida);
-            $servicosExecutados->addChild('ans:reducaoAcrescimo', '1.00');
-            $servicosExecutados->addChild('ans:valorUnitario', $item->valor_unitario_produto);
-            $servicosExecutados->addChild('ans:valorTotal', $item->quantidade * $item->valor_unitario_produto);
-            $servicosExecutados->addChild('ans:descricaoProcedimento', $item->nome_produto);
-        }
-    }
-
-    // Adicionar valores totais conforme o padrão TISS
-    $valorTotal = $guiaSadt->addChild('ans:valorTotal');
-    $valorTotal->addChild('ans:valorProcedimentos', number_format($valorProcedimentos, 2, '.', ''));
-    $valorTotal->addChild('ans:valorMateriais', number_format($valorMateriais, 2, '.', ''));
-    $valorTotal->addChild('ans:valorMedicamentos', number_format($valorMedicamentos, 2, '.', ''));
-    $valorTotal->addChild('ans:valorOPME', number_format($valorOPME, 2, '.', ''));
-    $valorTotal->addChild('ans:valorTotalGeral', number_format($valorTotalGeral, 2, '.', ''));
-
-    // Epílogo
-    $epilogo = $xml->addChild('ans:epilogo');
-    $epilogo->addChild('ans:hash', md5($xml->asXML()));
-
-    $guia->identificador = 'GERADO';
-    $guia->save();
-
-    // Verifica se já existe uma conta financeira para esse lote
-    $contaExistente = ContaGuia::where('lote', $guia->numeracao)->first();
-
-    if (!$contaExistente) {
-        // Atualiza as guias com a numeração correta
-        foreach ($guia as $g) {
-            $g->identificador = 'GERADO';
-            $g->save();
-        }
-
-        // Calcula o valor total do lote
-        $valorTotal = $exameSadtAut->sum('valor_total');
-
-        $referencia = $guia->numeracao;
-
-        // Cria a conta financeira
-        $conta = ContasFinanceiras::create([
-            'user_id' => auth()->id(),
-            'status' => 'Aberto',
-            'tipo_conta' => 'Receber',
-            'convenio_id' => $guia->first()->convenio_id,
-            'tipo_guia' => 'SADT',
-            'parcelas' => '1/1',
-            'data_emissao' => Carbon::parse($guia->data_autorizacao)->format('Y-m-d'),
-            'competencia' => Carbon::parse($guia->data_autorizacao)->format('Y-m-d'),
-            'data_vencimento' => now()->addDays(30)->format('Y-m-d'),
-            'referencia' => $referencia,
-            'tipo_doc' => 'XML',
-            'centro_custos' => $guia->first()->nome_contratado ?? 'Desconhecido',
-            'documento' => 'lote_guias_sadt_' . $guia->numeracao . '.xml',
-            'valor' => $valorTotal,
-            'historico' => 'Guia SADT - ' . $guia->data_autorizacao,
-        ]);
-        Log::info("message");
-        // Salva o relacionamento na tabela `conta_guias`
-        foreach ($guia as $g) {
-            ContaGuia::create([
-                'conta_financeira_id' => $conta->id,
-                'guia_id' => $g->id,
-                'tipo_guia' => 'SADT',
-                'lote' => $guia->numeracao,
-            ]);
-        }
-    } else {
-        // Apenas atualiza as guias e registra o relacionamento se não existirem
-        foreach ($guia as $g) {
-            $existeRelacionamento = ContaGuia::where('guia_id', $g->id)
-                ->where('tipo_guia', 'SADT')
-                ->exists();
-
-            if (!$existeRelacionamento) {
-                $g->numeracao = $guia->numeracao;
-                $g->identificador = 'GERADO';
-                $g->save();
-
-                ContaGuia::create([
-                    'conta_financeira_id' => $contaExistente->conta_financeira_id,
-                    'guia_id' => $g->id,
-                    'tipo_guia' => 'SADT',
-                    'lote' => $g->numeracao,
-                ]);
-            }
-        }
-    }
-
-
-    // Retornar o XML como download
-    return response($xml->asXML(), 200)
-        ->header('Content-Type', 'application/xml')
-        ->header('Content-Disposition', 'attachment; filename="guia_sp_sadt_' . $guia->id . '.xml"');
-}
-
-public function gerarZipGuiasadt($id, Request $request)
-{
-
-    // Buscar a guia com todos os relacionamentos necessários
-    $guia = GuiaSp::with('profissional')->findOrFail($id);
-
-    // Verificar ou gerar a numeração da guia
-    if (!$guia->numeracao) {
-        $ultimaNumeracao = GuiaSp::whereNotNull('numeracao')->max('numeracao') ?? 0;
-        $guia->numeracao = $ultimaNumeracao + 1;
+        $guia->identificador = 'GERADO';
         $guia->save();
+
+        // Salvar o XML em um arquivo
+        $fileName = 'guia_sadt_' . $guia->id . '.xml';
+        $filePath = storage_path('app/public/' . $fileName);
+        $xml->asXML($filePath);
+
+        // Criar o arquivo ZIP
+        $zipFileName = 'guia_sadt_' . $guia->id . '.zip';
+        $zipFilePath = storage_path('app/public/' . $zipFileName);
+
+        $zip = new \ZipArchive;
+        if ($zip->open($zipFilePath, \ZipArchive::CREATE) === TRUE) {
+            $zip->addFile($filePath, $fileName);
+            $zip->close();
+        }
+
+        // Retornar o arquivo ZIP como download
+        return response()->download($zipFilePath)->deleteFileAfterSend(true);
     }
-
-    // Puxar os procedimentos das tabelas relacionadas
-    $procedimentos = DB::table('exames_aut_sadt')
-        ->where('guia_sps_id', $id)
-        ->get();
-
-        $materiais = collect();
-        if ($guia->paciente->convenio) {
-            $tabelaMateriais = $guia->paciente->convenio->tab_mat_id;
-
-            if ($tabelaMateriais && Schema::hasTable($tabelaMateriais)) {
-                $materiais = DB::table('mat_agendas')
-                    ->join($tabelaMateriais, 'mat_agendas.material_id', '=', "{$tabelaMateriais}.id")
-                    ->where('mat_agendas.agenda_id', $guia->agenda_id)
-                    ->select(
-                        'mat_agendas.id as id',
-                        'mat_agendas.quantidade as quantidade',
-                        'mat_agendas.unidade_medida',
-                        "{$tabelaMateriais}.medicamento as nome_produto",
-                        "{$tabelaMateriais}.medicamento as descricao_produto",
-                        DB::raw("'MEDICAMENTO' as tipo_produto"),
-                        "{$tabelaMateriais}.preco as valor_unitario_produto",
-                        "{$tabelaMateriais}.id as material_id"
-                    )
-                    ->get();
-            }
-        }
-
-    // Verificar se o convênio tem medicamentos dinâmicos
-    $medicamentos = collect();
-    if ($guia->paciente->convenio) {
-        $tabelaMedicamentos = $guia->paciente->convenio->tab_med_id;
-
-        if ($tabelaMedicamentos && Schema::hasTable($tabelaMedicamentos)) {
-            $medicamentos = DB::table('med_agendas')
-                ->join($tabelaMedicamentos, 'med_agendas.medicamento_id', '=', "{$tabelaMedicamentos}.id")
-                ->where('med_agendas.agenda_id', $guia->agenda_id)
-                ->select(
-                    'med_agendas.id as id',
-                    'med_agendas.quantidade as quantidade',
-                    'med_agendas.unidade_medida',
-                    "{$tabelaMedicamentos}.medicamento as nome_produto",
-                    "{$tabelaMedicamentos}.medicamento as descricao_produto",
-                    DB::raw("'MEDICAMENTO' as tipo_produto"),
-                    "{$tabelaMedicamentos}.preco as valor_unitario_produto",
-                    "{$tabelaMedicamentos}.id as material_id"
-                )
-                ->get();
-        }
-    }
-
-    // Combinar materiais e medicamentos
-    $outrasDespesasItems = $materiais->concat($medicamentos);
-
-    // Calcular valores totais
-    $valorProcedimentos = $procedimentos->sum('valor_total');
-    $valorMateriais = $materiais->sum(fn($item) => $item->quantidade * $item->valor_unitario_produto);
-    $valorMedicamentos = $medicamentos->sum(fn($item) => $item->quantidade * $item->valor_unitario_produto);
-    $valorOPME = 0.00; // Adicionar lógica para OPME se necessário
-    $valorTotalGeral = $valorProcedimentos + $valorMateriais + $valorMedicamentos + $valorOPME;
-
-
-    // Criar o XML utilizando SimpleXMLElement
-    $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="ISO-8859-1"?><ans:mensagemTISS xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas http://www.ans.gov.br/padroes/tiss/schemas/tissV4_01_00.xsd"></ans:mensagemTISS>');
-
-    // Cabeçalho
-    $cabecalho = $xml->addChild('ans:cabecalho');
-    $identificacaoTransacao = $cabecalho->addChild('ans:identificacaoTransacao');
-    $identificacaoTransacao->addChild('ans:tipoTransacao', 'ENVIO_LOTE_GUIAS');
-    $identificacaoTransacao->addChild('ans:sequencialTransacao', $guia->numeracao);
-    $identificacaoTransacao->addChild('ans:dataRegistroTransacao', date('Y-m-d'));
-    $identificacaoTransacao->addChild('ans:horaRegistroTransacao', date('H:i:s'));
-
-    $origem = $cabecalho->addChild('ans:origem');
-    $identificacaoPrestador = $origem->addChild('ans:identificacaoPrestador');
-    $identificacaoPrestador->addChild('ans:CNPJ', $guia->codigo_operadora ?? '');
-
-    $destino = $cabecalho->addChild('ans:destino');
-    $destino->addChild('ans:registroANS', $guia->registro_ans);
-
-    $cabecalho->addChild('ans:Padrao', '4.01.00');
-
-    // Lote de Guias
-    $prestadorParaOperadora = $xml->addChild('ans:prestadorParaOperadora');
-    $loteGuias = $prestadorParaOperadora->addChild('ans:loteGuias');
-    $loteGuias->addChild('ans:numeroLote', $guia->numeracao);
-    $guiasTISS = $loteGuias->addChild('ans:guiasTISS');
-
-    // Guia SP-SADT
-    $guiaSadt = $guiasTISS->addChild('ans:guiaSP-SADT');
-
-    // Cabeçalho da Guia
-    $cabecalhoGuia = $guiaSadt->addChild('ans:cabecalhoGuia');
-    $cabecalhoGuia->addChild('ans:registroANS', $guia->registro_ans);
-    $cabecalhoGuia->addChild('ans:numeroGuiaPrestador', $guia->numero_guia_op);
-
-    // Dados de Autorização
-    $dadosAutorizacao = $guiaSadt->addChild('ans:dadosAutorizacao');
-    $dadosAutorizacao->addChild('ans:numeroGuiaOperadora', $guia->numero_guia_op);
-    $dadosAutorizacao->addChild('ans:dataAutorizacao', $guia->data_autorizacao);
-    $dadosAutorizacao->addChild('ans:senha', $guia->senha);
-    $dadosAutorizacao->addChild('ans:dataValidadeSenha', $guia->validade_senha);
-
-    // Dados do Beneficiário
-    $dadosBeneficiario = $guiaSadt->addChild('ans:dadosBeneficiario');
-    $dadosBeneficiario->addChild('ans:numeroCarteira', $guia->numero_carteira);
-    $dadosBeneficiario->addChild('ans:atendimentoRN', $guia->atendimento_rn);
-
-    // Dados do Solicitante
-    $dadosSolicitante = $guiaSadt->addChild('ans:dadosSolicitante');
-    $contratadoSolicitante = $dadosSolicitante->addChild('ans:contratadoSolicitante');
-    $contratadoSolicitante->addChild('ans:cnpjContratado', $guia->codigo_operadora ?? '');
-    $dadosSolicitante->addChild('ans:nomeContratadoSolicitante', $guia->nome_contratado_executante);
-    $profissionalSolicitante = $dadosSolicitante->addChild('ans:profissionalSolicitante');
-    $profissionalSolicitante->addChild('ans:nomeProfissional', $guia->nome_profissional_solicitante);
-    $profissionalSolicitante->addChild('ans:conselhoProfissional', $guia->conselho_profissional);
-    $profissionalSolicitante->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho);
-    $profissionalSolicitante->addChild('ans:UF', $guia->uf_conselho);
-    $profissionalSolicitante->addChild('ans:CBOS', $guia->codigo_cbo);
-
-    // Dados Solicitação
-    $dadosSolicitacao = $guiaSadt->addChild('ans:dadosSolicitacao');
-    $dadosSolicitacao->addChild('ans:dataSolicitacao', $guia->data_autorizacao);
-    $dadosSolicitacao->addChild('ans:caraterAtendimento', $guia->carater_atendimento);
-    $dadosSolicitacao->addChild('ans:indicacaoClinica', $guia->indicacao_clinica);
-
-    // Dados do Executante
-    $dadosExecutante = $guiaSadt->addChild('ans:dadosExecutante');
-    $contratadoExecutante = $dadosExecutante->addChild('ans:contratadoExecutante');
-    $contratadoExecutante->addChild('ans:cpfContratado', $guia->profissional->cpf ?? '');
-    $dadosExecutante->addChild('ans:CNES', $guia->codigo_cnes);
-
-    // Dados do Atendimento
-    $dadosAtendimento = $guiaSadt->addChild('ans:dadosAtendimento');
-    $dadosAtendimento->addChild('ans:tipoAtendimento', $guia->tipo_atendimento);
-    $dadosAtendimento->addChild('ans:indicacaoAcidente', $guia->indicacao_acidente);
-    $dadosAtendimento->addChild('ans:tipoConsulta', $guia->tipo_consulta);
-    $dadosAtendimento->addChild('ans:regimeAtendimento', $guia->regime_atendimento ?? '01');
-
-    // Procedimentos Executados
-    $procedimentosExecutados = $guiaSadt->addChild('ans:procedimentosExecutados');
-    foreach ($procedimentos as $index => $procedimento) {
-        $procedimentoExecutado = $procedimentosExecutados->addChild('ans:procedimentoExecutado');
-        $procedimentoExecutado->addChild('ans:sequencialItem', $index + 1);
-        $procedimentoExecutado->addChild('ans:dataExecucao', $procedimento->data_real ?? $guia->data_autorizacao);
-        $procedimentoExecutado->addChild('ans:horaInicial', $procedimento->hora_inicio_atendimento ?? $guia->hora_inicio_atendimento);
-        $procedimentoExecutado->addChild('ans:horaFinal', $procedimento->hora_fim_atendimento ?? $guia->hora_fim_atendimento);
-
-        $dadosProcedimento = $procedimentoExecutado->addChild('ans:procedimento');
-        $dadosProcedimento->addChild('ans:codigoTabela', $procedimento->tabela);
-        $dadosProcedimento->addChild('ans:codigoProcedimento', $procedimento->codigo_procedimento_realizado);
-        $dadosProcedimento->addChild('ans:descricaoProcedimento', $procedimento->descricao_procedimento_realizado);
-        $procedimentoExecutado->addChild('ans:quantidadeExecutada', $procedimento->quantidade_autorizada);
-        if (!empty($procedimento->via)) {
-            $procedimentoExecutado->addChild('ans:viaAcesso', $procedimento->via);
-        }
-        $procedimentoExecutado->addChild('ans:reducaoAcrescimo', '1.00');
-        $procedimentoExecutado->addChild('ans:valorUnitario', $procedimento->valor_unitario);
-        $procedimentoExecutado->addChild('ans:valorTotal', $procedimento->valor_total);
-
-        // Adicionando a equipe da guia diretamente da $guia
-        $equipeSadt = $procedimentoExecutado->addChild('ans:equipeSadt');
-        // Profissional 1 (sempre presente)
-        if (!empty($guia->grua) && !empty($guia->codigo_operadora_profissional)) {
-            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua);
-            $codProfissional = $equipeSadt->addChild('ans:codProfissional');
-            $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional);
-
-            $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional);
-            $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho);
-            $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional);
-            $equipeSadt->addChild('ans:UF', $guia->uf_profissional);
-            $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional);
-        }
-
-        // Profissional 2 (só adiciona se houver dados)
-        if (!empty($guia->grau1) && !empty($guia->codigo_operadora_profissional1)) {
-            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grau1);
-            $codProfissional = $equipeSadt->addChild('ans:codProfissional');
-            $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional1);
-
-            $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional1);
-            $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho1);
-            $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional1);
-            $equipeSadt->addChild('ans:UF', $guia->uf_profissional1);
-            $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional1);
-        }
-
-        // Profissional 3 (só adiciona se houver dados)
-        if (!empty($guia->grau2) && !empty($guia->codigo_operadora_profissional2)) {
-            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grau2);
-            $codProfissional = $equipeSadt->addChild('ans:codProfissional');
-            $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional2);
-
-            $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional2);
-            $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho2);
-            $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional2);
-            $equipeSadt->addChild('ans:UF', $guia->uf_profissional2);
-            $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional2);
-        }
-    }
-    // Outras Despesas
-    if (is_array($outrasDespesasItems) && count($outrasDespesasItems) > 0) {
-        $outrasDespesas = $guiaSadt->addChild('ans:outrasDespesas');
-        foreach ($outrasDespesasItems as $index => $item) {
-            $despesa = $outrasDespesas->addChild('ans:despesa');
-            $despesa->addChild('ans:sequencialItem', $index + 1);
-            $despesa->addChild('ans:codigoDespesa');
-
-            $servicosExecutados = $despesa->addChild('ans:servicosExecutados');
-            $servicosExecutados->addChild('ans:dataExecucao', $guia->data_autorizacao);
-            $servicosExecutados->addChild('ans:horaInicial', $guia->hora_inicio_atendimento);
-            $servicosExecutados->addChild('ans:horaFinal', $guia->hora_fim_atendimento);
-
-            $codigoTabela = strtoupper(trim($item->tipo_produto)) === 'MEDICAMENTO' ? '20' : '19';
-            $servicosExecutados->addChild('ans:codigoTabela', $codigoTabela);
-
-            $servicosExecutados->addChild('ans:codigoProcedimento', $item->material_id);
-            $servicosExecutados->addChild('ans:quantidadeExecutada', $item->quantidade);
-            $servicosExecutados->addChild('ans:unidadeMedida', $item->unidade_medida);
-            $servicosExecutados->addChild('ans:reducaoAcrescimo', '1.00');
-            $servicosExecutados->addChild('ans:valorUnitario', $item->valor_unitario_produto);
-            $servicosExecutados->addChild('ans:valorTotal', $item->quantidade * $item->valor_unitario_produto);
-            $servicosExecutados->addChild('ans:descricaoProcedimento', $item->nome_produto);
-        }
-    }
-
-    // Adicionar valores totais conforme o padrão TISS
-    $valorTotal = $guiaSadt->addChild('ans:valorTotal');
-    $valorTotal->addChild('ans:valorProcedimentos', number_format($valorProcedimentos, 2, '.', ''));
-    $valorTotal->addChild('ans:valorMateriais', number_format($valorMateriais, 2, '.', ''));
-    $valorTotal->addChild('ans:valorMedicamentos', number_format($valorMedicamentos, 2, '.', ''));
-    $valorTotal->addChild('ans:valorOPME', number_format($valorOPME, 2, '.', ''));
-    $valorTotal->addChild('ans:valorTotalGeral', number_format($valorTotalGeral, 2, '.', ''));
-
-
-    // Epílogo
-    $epilogo = $xml->addChild('ans:epilogo');
-    $epilogo->addChild('ans:hash', md5($xml->asXML()));
-
-    $guia->identificador = 'GERADO';
-    $guia->save();
-
-    // Salvar o XML em um arquivo
-    $fileName = 'guia_sadt_' . $guia->id . '.xml';
-    $filePath = storage_path('app/public/' . $fileName);
-    $xml->asXML($filePath);
-
-    // Criar o arquivo ZIP
-    $zipFileName = 'guia_sadt_' . $guia->id . '.zip';
-    $zipFilePath = storage_path('app/public/' . $zipFileName);
-
-    $zip = new \ZipArchive;
-    if ($zip->open($zipFilePath, \ZipArchive::CREATE) === TRUE) {
-        $zip->addFile($filePath, $fileName);
-        $zip->close();
-    }
-
-    // Retornar o arquivo ZIP como download
-    return response()->download($zipFilePath)->deleteFileAfterSend(true);
-}
 
 
     public function verificarNumeracao(Request $request)
@@ -1983,8 +1991,8 @@ public function gerarZipGuiasadt($id, Request $request)
         $guia = GuiaSp::where('agenda_id', $agenda->id)->first();
         // $user = User::where('id', $guia->user_id)->get();
         $ExameSolis = ExamesSadt::where('guia_sps_id', $guia->id)
-        ->whereNotNull('codigo_procedimento_solicitado')
-        ->get();
+            ->whereNotNull('codigo_procedimento_solicitado')
+            ->get();
 
         $ExameAuts = ExamesAutSadt::where('guia_sps_id', $guia->id)->get();
 
@@ -1996,7 +2004,10 @@ public function gerarZipGuiasadt($id, Request $request)
                 ->select('med_agendas.*', "$tabelaMed.medicamento as nome_medicamento") // Seleciona as colunas desejadas
                 ->get();
         } else {
-            $medicamentos = collect(); // Retorna uma coleção vazia se a tabela não existir
+            $medicamentos = MedAgenda::where('agenda_id', $agenda->id)
+                ->join('medicamentos', 'medicamentos.id', '=', 'med_agendas.medicamento_id')
+                ->select('med_agendas.*', 'medicamentos.nome as nome_medicamento') // Seleciona as colunas desejadas
+                ->get();// Retorna uma coleção vazia se a tabela não existir
         }
 
         $tabelaMat = $agenda->convenio->tab_mat_id; // Nome da tabela de medicamentos do convênio
@@ -2007,7 +2018,10 @@ public function gerarZipGuiasadt($id, Request $request)
                 ->select('mat_agendas.*', "$tabelaMat.medicamento as nome_material") // Seleciona as colunas desejadas
                 ->get();
         } else {
-            $materiais = collect(); // Retorna uma coleção vazia se a tabela não existir
+            $materiais = MatAgenda::where('agenda_id', $agenda->id) 
+            ->join('produtos', 'produtos.id', '=', 'mat_agendas.material_id') // Realiza o INNER JOIN
+            ->select('mat_agendas.*', 'produtos.nome as nome_material') // Seleciona as colunas desejadas
+            ->get();
         }
         // Buscar a empresa associada
         $empresa = Empresas::first();
@@ -2433,19 +2447,46 @@ public function gerarZipGuiasadt($id, Request $request)
         $exameAut = ExamesAutSadt::where('guia_sps_id', $guia->id)->get();
 
         $conselhos = [
-            'CRAS' => '01', 'COREN' => '02', 'CRF' => '03', 'CRFA' => '04',
-            'CREFITO' => '05', 'CRM' => '06', 'CRN' => '07', 'CRO' => '08',
-            'CRP' => '09', 'OUTROS' => '10'
+            'CRAS' => '01',
+            'COREN' => '02',
+            'CRF' => '03',
+            'CRFA' => '04',
+            'CREFITO' => '05',
+            'CRM' => '06',
+            'CRN' => '07',
+            'CRO' => '08',
+            'CRP' => '09',
+            'OUTROS' => '10'
         ];
 
         $ufs = [
-            'AC' => '12', 'AL' => '27', 'AP' => '16', 'AM' => '13',
-            'BA' => '29', 'CE' => '23', 'DF' => '53', 'ES' => '32',
-            'GO' => '52', 'MA' => '21', 'MT' => '51', 'MS' => '50',
-            'MG' => '31', 'PA' => '15', 'PB' => '25', 'PR' => '41',
-            'PE' => '26', 'PI' => '22', 'RJ' => '33', 'RN' => '24',
-            'RS' => '43', 'RO' => '11', 'RR' => '14', 'SC' => '42',
-            'SP' => '35', 'SE' => '28', 'TO' => '17'
+            'AC' => '12',
+            'AL' => '27',
+            'AP' => '16',
+            'AM' => '13',
+            'BA' => '29',
+            'CE' => '23',
+            'DF' => '53',
+            'ES' => '32',
+            'GO' => '52',
+            'MA' => '21',
+            'MT' => '51',
+            'MS' => '50',
+            'MG' => '31',
+            'PA' => '15',
+            'PB' => '25',
+            'PR' => '41',
+            'PE' => '26',
+            'PI' => '22',
+            'RJ' => '33',
+            'RN' => '24',
+            'RS' => '43',
+            'RO' => '11',
+            'RR' => '14',
+            'SC' => '42',
+            'SP' => '35',
+            'SE' => '28',
+            'TO' => '17'
         ];
 
         return view('guias.sadtEditar', compact('guiaSadt', 'conselhos', 'ufs', 'exameSoli', 'exameAut', 'profissionals'));
@@ -2455,19 +2496,46 @@ public function gerarZipGuiasadt($id, Request $request)
     {
         // Dados de apoio
         $conselhos = [
-            'CRAS' => '01', 'COREN' => '02', 'CRF' => '03', 'CRFA' => '04',
-            'CREFITO' => '05', 'CRM' => '06', 'CRN' => '07', 'CRO' => '08',
-            'CRP' => '09', 'OUTROS' => '10'
+            'CRAS' => '01',
+            'COREN' => '02',
+            'CRF' => '03',
+            'CRFA' => '04',
+            'CREFITO' => '05',
+            'CRM' => '06',
+            'CRN' => '07',
+            'CRO' => '08',
+            'CRP' => '09',
+            'OUTROS' => '10'
         ];
 
         $ufs = [
-            'AC' => '12', 'AL' => '27', 'AP' => '16', 'AM' => '13',
-            'BA' => '29', 'CE' => '23', 'DF' => '53', 'ES' => '32',
-            'GO' => '52', 'MA' => '21', 'MT' => '51', 'MS' => '50',
-            'MG' => '31', 'PA' => '15', 'PB' => '25', 'PR' => '41',
-            'PE' => '26', 'PI' => '22', 'RJ' => '33', 'RN' => '24',
-            'RS' => '43', 'RO' => '11', 'RR' => '14', 'SC' => '42',
-            'SP' => '35', 'SE' => '28', 'TO' => '17'
+            'AC' => '12',
+            'AL' => '27',
+            'AP' => '16',
+            'AM' => '13',
+            'BA' => '29',
+            'CE' => '23',
+            'DF' => '53',
+            'ES' => '32',
+            'GO' => '52',
+            'MA' => '21',
+            'MT' => '51',
+            'MS' => '50',
+            'MG' => '31',
+            'PA' => '15',
+            'PB' => '25',
+            'PR' => '41',
+            'PE' => '26',
+            'PI' => '22',
+            'RJ' => '33',
+            'RN' => '24',
+            'RS' => '43',
+            'RO' => '11',
+            'RR' => '14',
+            'SC' => '42',
+            'SP' => '35',
+            'SE' => '28',
+            'TO' => '17'
         ];
 
         // Atualizar a guia existente
@@ -2550,158 +2618,186 @@ public function gerarZipGuiasadt($id, Request $request)
 
 
 
-     public function glosaSadt(Request $request)
-     {
-         try {
-             DB::beginTransaction();
+    public function glosaSadt(Request $request)
+    {
+        try {
+            DB::beginTransaction();
 
-             // Arrays de referência
-             $conselhos = [
-                 'CRAS' => '01', 'COREN' => '02', 'CRF' => '03', 'CRFA' => '04',
-                 'CREFITO' => '05', 'CRM' => '06', 'CRN' => '07', 'CRO' => '08',
-                 'CRP' => '09', 'OUTROS' => '10'
-             ];
+            // Arrays de referência
+            $conselhos = [
+                'CRAS' => '01',
+                'COREN' => '02',
+                'CRF' => '03',
+                'CRFA' => '04',
+                'CREFITO' => '05',
+                'CRM' => '06',
+                'CRN' => '07',
+                'CRO' => '08',
+                'CRP' => '09',
+                'OUTROS' => '10'
+            ];
 
-             $ufs = [
-                 'AC' => '12', 'AL' => '27', 'AP' => '16', 'AM' => '13', 'BA' => '29',
-                 'CE' => '23', 'DF' => '53', 'ES' => '32', 'GO' => '52', 'MA' => '21',
-                 'MT' => '51', 'MS' => '50', 'MG' => '31', 'PA' => '15', 'PB' => '25',
-                 'PR' => '41', 'PE' => '26', 'PI' => '22', 'RJ' => '33', 'RN' => '24',
-                 'RS' => '43', 'RO' => '11', 'RR' => '14', 'SC' => '42', 'SP' => '35',
-                 'SE' => '28', 'TO' => '17'
-             ];
+            $ufs = [
+                'AC' => '12',
+                'AL' => '27',
+                'AP' => '16',
+                'AM' => '13',
+                'BA' => '29',
+                'CE' => '23',
+                'DF' => '53',
+                'ES' => '32',
+                'GO' => '52',
+                'MA' => '21',
+                'MT' => '51',
+                'MS' => '50',
+                'MG' => '31',
+                'PA' => '15',
+                'PB' => '25',
+                'PR' => '41',
+                'PE' => '26',
+                'PI' => '22',
+                'RJ' => '33',
+                'RN' => '24',
+                'RS' => '43',
+                'RO' => '11',
+                'RR' => '14',
+                'SC' => '42',
+                'SP' => '35',
+                'SE' => '28',
+                'TO' => '17'
+            ];
 
-             $horaInicioAtendimento = is_array($request->input('hora_inicio_atendimento'))
-                 ? reset($request->input('hora_inicio_atendimento'))
-                 : $request->input('hora_inicio_atendimento');
+            $horaInicioAtendimento = is_array($request->input('hora_inicio_atendimento'))
+                ? reset($request->input('hora_inicio_atendimento'))
+                : $request->input('hora_inicio_atendimento');
 
-             $horaFimAtendimento = is_array($request->input('hora_fim_atendimento'))
-                 ? reset($request->input('hora_fim_atendimento'))
-                 : $request->input('hora_fim_atendimento');
+            $horaFimAtendimento = is_array($request->input('hora_fim_atendimento'))
+                ? reset($request->input('hora_fim_atendimento'))
+                : $request->input('hora_fim_atendimento');
 
-             // Criar a guia
-             $guia = GuiaSp::create([
-                 'user_id' => auth()->id(),
-                 'agenda_id' => $request->input('agenda_id'),
-                 'convenio_id' => $request->input('convenio_id'),
-                 'profissional_id' => $request->input('profissional_id'),
-                 'paciente_id' => $request->input('paciente_id'),
-                 'cns' => $request->input('cns'),
-                 'atendimento_rn' => $request->input('atendimento_rn'),
-                 'nome_profissional_solicitante' => $request->input('nome_profissional_solicitante'),
-                 'conselho_profissional' => $request->input('conselho_profissional'),
-                 'codigo_cbo' => $request->input('codigo_cbo'),
-                 'nome_contratado' => $request->input('nome_contratado'),
-                 'codigo_cnes' => $request->input('codigo_cnes'),
-                 'data_atendimento' => $request->input('data_solicitacao'),
-                 'codigo_procedimento' => $request->input('codigo_procedimento'),
-                 'validade_carteira' => $request->input('validade_carteira'),
-                 'codigo_operadora' => $request->input('codigo_operadora'),
-                 'codigo_operadora_executante' => $request->input('codigo_operadora_executante'),
-                 'nome_social' => $request->input('nome_social'),
-                 'uf_conselho' => $request->input('uf_conselho'),
-                 'numero_conselho' => $request->input('numero_conselho'),
-                 'registro_ans' => $request->input('registro_ans'),
-                 'numero_carteira' => $request->input('numero_carteira'),
-                 'nome_beneficiario' => $request->input('nome_beneficiario'),
-                 'numero_guia_prestador' => $request->input('numero_guia_prestador'),
-                 'hora_inicio_atendimento' => $horaInicioAtendimento,
-                 'hora_fim_atendimento' => $horaFimAtendimento,
-                 'data_autorizacao' => $request->input('data_solicitacao'),
-                 'senha' => $request->input('senha'),
-                 'validade_senha' => $request->input('validade_senha'),
-                 'numero_guia_op' => $request->input('numero_guia_op'),
-                 'carater_atendimento' => $request->input('carater_atendimento'),
-                 'data_solicitacao' => $request->input('data_solicitacao'),
-                 'indicacao_clinica' => $request->input('indicacao_clinica'),
-                 'indicacao_cob_especial' => $request->input('indicacao_cob_especial'),
-                 'nome_contratado_executante' => $request->input('nome_contratado_executante'),
-                 'tipo_atendimento' => $request->input('tipo_atendimento'),
-                 'indicacao_acidente' => $request->input('indicacao_acidente'),
-                 'tipo_consulta' => $request->input('tipo_consulta'),
-                 'motivo_encerramento' => $request->input('motivo_encerramento'),
-                 'regime_atendimento' => $request->input('regime_atendimento'),
-                 'saude_ocupacional' => $request->input('saude_ocupacional'),
-                 'sequencia' => $request->input('sequencia'),
-                 'grua' => $request->input('grau'),
-                 'codigo_operadora_profissional' => $request->input('codigo_operadora_profissional'),
-                 'nome_profissional' => $request->input('nome_profissional'),
-                 'sigla_conselho' => $request->input('sigla_conselho'),
-                 'numero_conselho_profissional' => $request->input('numero_conselho_profissional'),
-                 'uf_profissional' => $request->input('uf_profissional'),
-                 'codigo_cbo_profissional' => $request->input('codigo_cbo_profissional'),
-                 'sequencia1' => $request->input('sequencia1'),
-                 'grau1' => $request->input('grau1'),
-                 'codigo_operadora_profissional1' => $request->input('codigo_operadora_profissional1'),
-                 'nome_profissional1' => $request->input('nome_profissional1'),
-                 'sigla_conselho1' => $request->input('sigla_conselho1'),
-                 'numero_conselho_profissional1' => $request->input('numero_conselho_profissional1'),
-                 'uf_profissional1' => $request->input('uf_profissional1'),
-                 'codigo_cbo_profissional1' => $request->input('codigo_cbo_profissional1'),
-                 'sequencia2' => $request->input('sequencia2'),
-                 'grau2' => $request->input('grau2'),
-                 'codigo_operadora_profissional2' => $request->input('codigo_operadora_profissional2'),
-                 'nome_profissional2' => $request->input('nome_profissional2'),
-                 'sigla_conselho2' => $request->input('sigla_conselho2'),
-                 'numero_conselho_profissional2' => $request->input('numero_conselho_profissional2'),
-                 'uf_profissional2' => $request->input('uf_profissional2'),
-                 'codigo_cbo_profissional2' => $request->input('codigo_cbo_profissional2'),
-                 'observacao' => $request->input('observacao') ?? 'N/A',
-                 'identificador' => 'GERADO'
-             ]);
+            // Criar a guia
+            $guia = GuiaSp::create([
+                'user_id' => auth()->id(),
+                'agenda_id' => $request->input('agenda_id'),
+                'convenio_id' => $request->input('convenio_id'),
+                'profissional_id' => $request->input('profissional_id'),
+                'paciente_id' => $request->input('paciente_id'),
+                'cns' => $request->input('cns'),
+                'atendimento_rn' => $request->input('atendimento_rn'),
+                'nome_profissional_solicitante' => $request->input('nome_profissional_solicitante'),
+                'conselho_profissional' => $request->input('conselho_profissional'),
+                'codigo_cbo' => $request->input('codigo_cbo'),
+                'nome_contratado' => $request->input('nome_contratado'),
+                'codigo_cnes' => $request->input('codigo_cnes'),
+                'data_atendimento' => $request->input('data_solicitacao'),
+                'codigo_procedimento' => $request->input('codigo_procedimento'),
+                'validade_carteira' => $request->input('validade_carteira'),
+                'codigo_operadora' => $request->input('codigo_operadora'),
+                'codigo_operadora_executante' => $request->input('codigo_operadora_executante'),
+                'nome_social' => $request->input('nome_social'),
+                'uf_conselho' => $request->input('uf_conselho'),
+                'numero_conselho' => $request->input('numero_conselho'),
+                'registro_ans' => $request->input('registro_ans'),
+                'numero_carteira' => $request->input('numero_carteira'),
+                'nome_beneficiario' => $request->input('nome_beneficiario'),
+                'numero_guia_prestador' => $request->input('numero_guia_prestador'),
+                'hora_inicio_atendimento' => $horaInicioAtendimento,
+                'hora_fim_atendimento' => $horaFimAtendimento,
+                'data_autorizacao' => $request->input('data_solicitacao'),
+                'senha' => $request->input('senha'),
+                'validade_senha' => $request->input('validade_senha'),
+                'numero_guia_op' => $request->input('numero_guia_op'),
+                'carater_atendimento' => $request->input('carater_atendimento'),
+                'data_solicitacao' => $request->input('data_solicitacao'),
+                'indicacao_clinica' => $request->input('indicacao_clinica'),
+                'indicacao_cob_especial' => $request->input('indicacao_cob_especial'),
+                'nome_contratado_executante' => $request->input('nome_contratado_executante'),
+                'tipo_atendimento' => $request->input('tipo_atendimento'),
+                'indicacao_acidente' => $request->input('indicacao_acidente'),
+                'tipo_consulta' => $request->input('tipo_consulta'),
+                'motivo_encerramento' => $request->input('motivo_encerramento'),
+                'regime_atendimento' => $request->input('regime_atendimento'),
+                'saude_ocupacional' => $request->input('saude_ocupacional'),
+                'sequencia' => $request->input('sequencia'),
+                'grua' => $request->input('grau'),
+                'codigo_operadora_profissional' => $request->input('codigo_operadora_profissional'),
+                'nome_profissional' => $request->input('nome_profissional'),
+                'sigla_conselho' => $request->input('sigla_conselho'),
+                'numero_conselho_profissional' => $request->input('numero_conselho_profissional'),
+                'uf_profissional' => $request->input('uf_profissional'),
+                'codigo_cbo_profissional' => $request->input('codigo_cbo_profissional'),
+                'sequencia1' => $request->input('sequencia1'),
+                'grau1' => $request->input('grau1'),
+                'codigo_operadora_profissional1' => $request->input('codigo_operadora_profissional1'),
+                'nome_profissional1' => $request->input('nome_profissional1'),
+                'sigla_conselho1' => $request->input('sigla_conselho1'),
+                'numero_conselho_profissional1' => $request->input('numero_conselho_profissional1'),
+                'uf_profissional1' => $request->input('uf_profissional1'),
+                'codigo_cbo_profissional1' => $request->input('codigo_cbo_profissional1'),
+                'sequencia2' => $request->input('sequencia2'),
+                'grau2' => $request->input('grau2'),
+                'codigo_operadora_profissional2' => $request->input('codigo_operadora_profissional2'),
+                'nome_profissional2' => $request->input('nome_profissional2'),
+                'sigla_conselho2' => $request->input('sigla_conselho2'),
+                'numero_conselho_profissional2' => $request->input('numero_conselho_profissional2'),
+                'uf_profissional2' => $request->input('uf_profissional2'),
+                'codigo_cbo_profissional2' => $request->input('codigo_cbo_profissional2'),
+                'observacao' => $request->input('observacao') ?? 'N/A',
+                'identificador' => 'GERADO'
+            ]);
 
-             // Substituir valores de conselhos e UF por códigos
-             if (array_key_exists($request->input('sigla_conselho'), $conselhos)) {
-                 $guia->update(['sigla_conselho' => $conselhos[$request->input('sigla_conselho')]]);
-             }
+            // Substituir valores de conselhos e UF por códigos
+            if (array_key_exists($request->input('sigla_conselho'), $conselhos)) {
+                $guia->update(['sigla_conselho' => $conselhos[$request->input('sigla_conselho')]]);
+            }
 
-             if (array_key_exists($request->input('uf_profissional'), $ufs)) {
-                 $guia->update(['uf_profissional' => $ufs[$request->input('uf_profissional')]]);
-             }
+            if (array_key_exists($request->input('uf_profissional'), $ufs)) {
+                $guia->update(['uf_profissional' => $ufs[$request->input('uf_profissional')]]);
+            }
 
-             // Atualizar exames na tabela exames_sadt
-             if ($request->has('descricao_procedimento')) {
-                 foreach ($request->input('tabela') as $index => $tabela) {
-                     ExamesSadt::create([
-                         'guia_sps_id' => $guia->id,
-                         'tabela' => $tabela,
-                         'codigo_procedimento_solicitado' => $request->input("codigo_procedimento_solicitado.$index"),
-                         'descricao_procedimento' => $request->input("descricao_procedimento.$index"),
-                         'qtd_sol' => $request->input("qtd_sol.$index"),
-                         'qtd_aut' => $request->input("qtd_aut.$index"),
-                     ]);
-                 }
-             }
+            // Atualizar exames na tabela exames_sadt
+            if ($request->has('descricao_procedimento')) {
+                foreach ($request->input('tabela') as $index => $tabela) {
+                    ExamesSadt::create([
+                        'guia_sps_id' => $guia->id,
+                        'tabela' => $tabela,
+                        'codigo_procedimento_solicitado' => $request->input("codigo_procedimento_solicitado.$index"),
+                        'descricao_procedimento' => $request->input("descricao_procedimento.$index"),
+                        'qtd_sol' => $request->input("qtd_sol.$index"),
+                        'qtd_aut' => $request->input("qtd_aut.$index"),
+                    ]);
+                }
+            }
 
-             // Atualizar procedimentos na tabela exames_aut_sadt
-             if ($request->has('descricao_procedimento_realizado')) {
-                 foreach ($request->input('data_real') as $index => $dataReal) {
-                     ExamesAutSadt::create([
-                         'guia_sps_id' => $guia->id,
-                         'data_real' => $dataReal,
-                         'hora_inicio_atendimento' => $request->input("hora_inicio_atendimento.$index"),
-                         'hora_fim_atendimento' => $request->input("hora_fim_atendimento.$index"),
-                         'tabela' => $request->input("tabela.$index"),
-                         'codigo_procedimento_realizado' => $request->input("codigo_procedimento_realizado.$index"),
-                         'descricao_procedimento_realizado' => $request->input("descricao_procedimento_realizado.$index"),
-                         'quantidade_autorizada' => $request->input("quantidade_autorizada.$index"),
-                         'via' => $request->input("via.$index"),
-                         'tecnica' => $request->input("tecnica.$index"),
-                         'fator_red_acres' => $request->input("fator_red_acres.$index"),
-                         'valor_unitario' => $request->input("valor_unitario.$index"),
-                         'valor_total' => $request->input("valor_total.$index"),
-                     ]);
-                 }
-             }
+            // Atualizar procedimentos na tabela exames_aut_sadt
+            if ($request->has('descricao_procedimento_realizado')) {
+                foreach ($request->input('data_real') as $index => $dataReal) {
+                    ExamesAutSadt::create([
+                        'guia_sps_id' => $guia->id,
+                        'data_real' => $dataReal,
+                        'hora_inicio_atendimento' => $request->input("hora_inicio_atendimento.$index"),
+                        'hora_fim_atendimento' => $request->input("hora_fim_atendimento.$index"),
+                        'tabela' => $request->input("tabela.$index"),
+                        'codigo_procedimento_realizado' => $request->input("codigo_procedimento_realizado.$index"),
+                        'descricao_procedimento_realizado' => $request->input("descricao_procedimento_realizado.$index"),
+                        'quantidade_autorizada' => $request->input("quantidade_autorizada.$index"),
+                        'via' => $request->input("via.$index"),
+                        'tecnica' => $request->input("tecnica.$index"),
+                        'fator_red_acres' => $request->input("fator_red_acres.$index"),
+                        'valor_unitario' => $request->input("valor_unitario.$index"),
+                        'valor_total' => $request->input("valor_total.$index"),
+                    ]);
+                }
+            }
 
-             DB::commit();
+            DB::commit();
 
-             return redirect()->back()->with('success', 'Guia criada com sucesso!');
-         } catch (Exception $e) {
-             DB::rollBack();
-             return redirect()->back()->with('error', 'Erro ao criar guia: ' . $e->getMessage());
-         }
-     }
+            return redirect()->back()->with('success', 'Guia criada com sucesso!');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Erro ao criar guia: ' . $e->getMessage());
+        }
+    }
 
     public function destroy(GuiaSp $guiasp)
     {

@@ -394,7 +394,7 @@
                     <td class="col-1"><input type="text" name="celular[${horario.hora}]" value="${horario.celular || ''}" class="form-control" ${isDisabled}></td>
                     <td class="col-1">
                         ${renderConvenioSelect(horario, convenios, isDisabled)}
-                        <input type="text" id="convenio2${horario.hora}" name="convenio2[${horario.hora}]" value="${horario.convenio_id || ''}">
+                        <input type="hidden" id="convenio2${horario.hora}" name="convenio2[${horario.hora}]" value="${horario.convenio_id || ''}">
                     </td>
                     <td class="col-1">
                         <div class="d-flex align-items-center">

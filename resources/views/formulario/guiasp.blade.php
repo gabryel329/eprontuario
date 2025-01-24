@@ -332,16 +332,53 @@
         </div>
 
         <div class="section-title">Identificação do(s) Profissional(is) Executante(s)</div>
-        <div class="block center">
-            <div>48- Seq.Ref: <br> <strong>{{ $guia->sequencia ?? '  ' }}</strong></div>
-            <div>49- Grau Part: <br> <strong>{{ $guia->grua ?? '  ' }}</strong></div>
-            <div>50- Códigoo na Operadora/CPF: <br> <strong>{{ $guia->codigo_operadora_profissional ?? '  ' }}</strong>
-            </div>
-            <div>51- Nome do Profissional: <br> <strong>{{ $guia->nome_profissional ?? '  ' }}</strong></div>
-            <div>52- Conselho: <br> <strong>{{ $guia->sigla_conselho ?? '  ' }}</strong></div>
-            <div>53- Nº do Conselho: <br> <strong>{{ $guia->numero_conselho_profissional ?? '  ' }}</strong></div>
-            <div>54- UF: <br> <strong>{{ $guia->uf_profissional ?? '  ' }}</strong></div>
-            <div>55- CBO: <br> <strong>{{ $guia->codigo_cbo_profissional ?? '  ' }}</strong></div>
+        <div class="container">
+            <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th>48- Seq.Ref</th>
+                        <th>49- Grau Part</th>
+                        <th>50- Códigoo na Operadora/CPF</th>
+                        <th>51- Nome do Profissional</th>
+                        <th>52- Conselho</th>
+                        <th>53- Nº do Conselho</th>
+                        <th>54- UF</th>
+                        <th>55- CBO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>{{ $guia->sequencia ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->grua ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->codigo_operadora_profissional ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->nome_profissional ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->sigla_conselho ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->numero_conselho_profissional ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->uf_profissional ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->codigo_cbo_profissional ?? '  ' }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>{{ $guia->sequencia1 ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->grau1 ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->codigo_operadora_profissional1 ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->nome_profissional1 ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->sigla_conselho1 ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->numero_conselho_profissional1 ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->uf_profissional1 ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->codigo_cbo_profissional1 ?? '  ' }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>{{ $guia->sequencia2 ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->grua2 ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->codigo_operadora_profissional2 ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->nome_profissional2 ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->sigla_conselho2 ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->numero_conselho_profissional2 ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->uf_profissional2 ?? '  ' }}</strong></td>
+                        <td><strong>{{ $guia->codigo_cbo_profissional2 ?? '  ' }}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <!-- Assinaturas-->

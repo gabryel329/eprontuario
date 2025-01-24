@@ -982,7 +982,7 @@
                                                 <td>
                                                     <select id="grau" name="grau" class="form-control">
                                                         <option value="">
-                                                            {{ old('grau') ? 'selected' : 'Selecione' }}
+                                                            {{ old('grua') ? 'selected' : 'Selecione' }}
                                                         <option value="12">Médico principal ou responsável pelo
                                                             procedimento</option>
                                                         <option value="13">Assistente</option>
@@ -1942,7 +1942,7 @@
                                 '');
                             $('#modalSADT #sequencia').val(response.guia?.sequencia ||
                                 '');
-                            $('#modalSADT #grau').val(response.guia?.grau ||
+                            $('#modalSADT #grau').val(response.guia?.grua ||
                                 '');
                             $('#modalSADT #codigo_operadora_profissional').val(response.guia
                                 ?.codigo_operadora_profissional ||
