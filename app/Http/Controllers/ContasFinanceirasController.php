@@ -11,6 +11,7 @@ use App\Models\MotivosGlosa;
 use App\Models\NaturezaOperacao;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ContasFinanceirasController extends Controller
 {
@@ -223,6 +224,10 @@ class ContasFinanceirasController extends Controller
 
         if ($conta->tipo_conta === ucfirst($tipo)) {
             $conta->delete();
+
+            // Exclui também de conta_guias
+            DB::table('conta_guias')->where('conta_financeira_id', $id)->delete();
+
             return redirect()->route('contas' . ucfirst($tipo) . '.index')
                 ->with('success', 'Conta excluída com sucesso!');
         }

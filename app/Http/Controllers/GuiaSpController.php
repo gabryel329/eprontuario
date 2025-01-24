@@ -456,7 +456,7 @@ class GuiaSpController extends Controller
                 ->select('med_agendas.*', 'medicamentos.nome as nome_medicamento') // Seleciona as colunas desejadas
                 ->get();// Retorna uma coleção vazia se a tabela não existir
         }
-        
+
         $tabelaMat = $agenda->convenio->tab_mat_id; // Nome da tabela de medicamentos do convênio
 
         if (Schema::hasTable($tabelaMat)) { // Verifica se a tabela existe no banco
@@ -465,7 +465,7 @@ class GuiaSpController extends Controller
                 ->select('mat_agendas.*', "$tabelaMat.medicamento as nome_material") // Seleciona as colunas desejadas
                 ->get();
         } else {
-            $materiais = MatAgenda::where('agenda_id', $agenda->id) 
+            $materiais = MatAgenda::where('agenda_id', $agenda->id)
             ->join('produtos', 'produtos.id', '=', 'mat_agendas.material_id') // Realiza o INNER JOIN
             ->select('mat_agendas.*', 'produtos.nome as nome_material') // Seleciona as colunas desejadas
             ->get();
@@ -739,10 +739,11 @@ class GuiaSpController extends Controller
     {
         $guiaIds = $request->input('guia_ids');
         $numeracao = $request->input('numeracao'); // Recebe a numeração do frontend, se fornecida
-
         $guias = GuiaSp::with('profissional', 'paciente.convenio')->whereIn('id', $guiaIds)->get();
 
         $exameSadtAut = ExamesAutSadt::whereIn('guia_sps_id', $guiaIds)->get();
+        $mat_agendas = MatAgenda::whereIn('agenda_id', $guias->pluck('agenda_id'))->get();
+        $med_agendas = MedAgenda::whereIn('agenda_id', $guias->pluck('agenda_id'))->get();
         // Verificar a presença de `numeracao`
         $sequencialTransacao = $numeracao ?? $guias->firstWhere('numeracao', '!=', null)->numeracao;
 
@@ -839,7 +840,8 @@ class GuiaSpController extends Controller
             }
 
             $outrasDespesasItems = $materiais->concat($medicamentos);
-
+            LOG::info($outrasDespesasItems);
+            // LOG::info($medicamentos);
             // Calcular valores totais
             $valorProcedimentos = $procedimentos->sum('valor_total');
             $valorMateriais = $materiais->sum(fn($item) => $item->quantidade * $item->valor_unitario_produto);
@@ -961,7 +963,11 @@ class GuiaSpController extends Controller
                     $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional2);
                 }
             }
-            if (is_array($outrasDespesasItems) && count($outrasDespesasItems) > 0) {
+            LOG::info('FORA', ['outrasDespesasItems' => $outrasDespesasItems]);
+            if ($outrasDespesasItems instanceof \Illuminate\Support\Collection && $outrasDespesasItems->isNotEmpty()) {
+
+                LOG::info('DENTRO', ['outrasDespesasItems' => $outrasDespesasItems]);
+
                 $outrasDespesas = $guiaSadt->addChild('ans:outrasDespesas');
                 foreach ($outrasDespesasItems as $index => $item) {
                     $despesa = $outrasDespesas->addChild('ans:despesa');
@@ -1009,8 +1015,12 @@ class GuiaSpController extends Controller
             }
 
             // Calcula o valor total do lote
-            $valorTotal = $exameSadtAut->sum('valor_total');
 
+            $valorExame = $exameSadtAut->sum('valor_total');
+            $valorMaterial = $mat_agendas->sum('valor_total');
+            $valorMedicamento = $med_agendas->sum('valor_total');
+
+            $valorTotal = $valorExame + $valorMaterial + $valorMedicamento;
             $referencia = $sequencialTransacao;
 
             // Cria a conta financeira
@@ -2018,7 +2028,7 @@ class GuiaSpController extends Controller
                 ->select('mat_agendas.*', "$tabelaMat.medicamento as nome_material") // Seleciona as colunas desejadas
                 ->get();
         } else {
-            $materiais = MatAgenda::where('agenda_id', $agenda->id) 
+            $materiais = MatAgenda::where('agenda_id', $agenda->id)
             ->join('produtos', 'produtos.id', '=', 'mat_agendas.material_id') // Realiza o INNER JOIN
             ->select('mat_agendas.*', 'produtos.nome as nome_material') // Seleciona as colunas desejadas
             ->get();

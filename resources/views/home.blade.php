@@ -94,6 +94,45 @@
                             </div>
                         </a>
                     </div>
+                    <!-- Card 5 -->
+                    <div class="col-md-6 col-lg-3">
+                        <a class="card hover-card text-center shadow-sm h-100 text-decoration-none"
+                            href="{{ route('paciente.index') }}">
+                            <div class="card-body">
+                                <i class="icon bi bi-person-add fs-1 text-primary"></i>
+                                <p class="card-text mt-3 text-dark">Cadastrar Pacientes</p>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- Card 6 -->
+                    <div class="col-md-6 col-lg-3">
+                        <a class="card hover-card text-center shadow-sm h-100 text-decoration-none"
+                            href="{{ route('contasPagar.index') }}">
+                            <div class="card-body">
+                                <i class="bi bi-cash-coin fs-1 text-primary"></i>
+                                <p class="card-text mt-3 text-dark">Contas a Pagar</p>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- Card 7 -->
+                    <div class="col-md-6 col-lg-3">
+                        <a id="btn-relatorio-agenda" class="card hover-card text-center shadow-sm h-100 text-decoration-none" href="#">
+                            <div class="card-body">
+                                <i class="bi bi-calendar-week fs-1 text-primary"></i>
+                                <p class="card-text mt-3 text-dark">Relatório de Agendas</p>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- Card 8 -->
+                    <div class="col-md-6 col-lg-3">
+                        <a class="card hover-card text-center shadow-sm h-100 text-decoration-none"
+                            href="{{ route('faturamentoGlosa.index') }}">
+                            <div class="card-body">
+                                <i class="icon bi bi-piggy-bank-fill fs-1 text-primary"></i>
+                                <p class="card-text mt-3 text-dark">Glosa das Guias</p>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
