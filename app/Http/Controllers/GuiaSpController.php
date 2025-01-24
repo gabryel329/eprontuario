@@ -787,20 +787,27 @@ public function gerarZipGuiaSp($id)
             ->where('guia_sps_id', $guia->id)
             ->get();
 
-        $materiais = DB::table('mat_agendas')
-            ->join('produtos', 'mat_agendas.material_id', '=', 'produtos.id')
-            ->where('mat_agendas.agenda_id', $guia->agenda_id)
-            ->select(
-                'mat_agendas.id as id',
-                'mat_agendas.quantidade',
-                'mat_agendas.unidade_medida',
-                'produtos.nome as nome_produto',
-                'produtos.produto as descricao_produto',
-                'produtos.tipo as tipo_produto',
-                'produtos.preco_venda as valor_unitario_produto',
-                'produtos.id as material_id'
-            )
-            ->get();
+        $materiais = collect();
+        if ($guia->paciente->convenio) {
+            $tabelaMateriais = $guia->paciente->convenio->tab_mat_id;
+
+            if ($tabelaMateriais && Schema::hasTable($tabelaMateriais)) {
+                $materiais = DB::table('mat_agendas')
+                    ->join($tabelaMateriais, 'mat_agendas.material_id', '=', "{$tabelaMateriais}.id")
+                    ->where('mat_agendas.agenda_id', $guia->agenda_id)
+                    ->select(
+                        'mat_agendas.id as id',
+                        'mat_agendas.quantidade as quantidade',
+                        'mat_agendas.unidade_medida',
+                        "{$tabelaMateriais}.medicamento as nome_produto",
+                        "{$tabelaMateriais}.medicamento as descricao_produto",
+                        DB::raw("'MEDICAMENTO' as tipo_produto"),
+                        "{$tabelaMateriais}.preco as valor_unitario_produto",
+                        "{$tabelaMateriais}.id as material_id"
+                    )
+                    ->get();
+            }
+        }
 
         $medicamentos = collect();
         if ($guia->paciente->convenio) {
@@ -906,7 +913,7 @@ public function gerarZipGuiaSp($id)
             $procedimentoExecutado->addChild('ans:valorUnitario', $procedimento->valor_unitario);
             $procedimentoExecutado->addChild('ans:valorTotal', $procedimento->valor_total);
 
-            // Adicionando a equipe da guia diretamente da $guia
+             // Adicionando a equipe da guia diretamente da $guia
             $equipeSadt = $procedimentoExecutado->addChild('ans:equipeSadt');
             // Profissional 1 (sempre presente)
             if (!empty($guia->grua) && !empty($guia->codigo_operadora_profissional)) {
@@ -922,8 +929,8 @@ public function gerarZipGuiaSp($id)
             }
 
             // Profissional 2 (só adiciona se houver dados)
-            if (!empty($guia->grua1) && !empty($guia->codigo_operadora_profissional1)) {
-                $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua);
+            if (!empty($guia->grau1) && !empty($guia->codigo_operadora_profissional1)) {
+                $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grau1);
                 $codProfissional = $equipeSadt->addChild('ans:codProfissional');
                 $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional1);
 
@@ -935,8 +942,8 @@ public function gerarZipGuiaSp($id)
             }
 
             // Profissional 3 (só adiciona se houver dados)
-            if (!empty($guia->grua2) && !empty($guia->codigo_operadora_profissional2)) {
-                $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua2);
+            if (!empty($guia->grau2) && !empty($guia->codigo_operadora_profissional2)) {
+                $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grau2);
                 $codProfissional = $equipeSadt->addChild('ans:codProfissional');
                 $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional2);
 
@@ -1106,20 +1113,27 @@ public function gerarZipGuiasadtEmLote(Request $request)
            ->where('guia_sps_id', $guia->id)
            ->get();
 
-       $materiais = DB::table('mat_agendas')
-           ->join('produtos', 'mat_agendas.material_id', '=', 'produtos.id')
-           ->where('mat_agendas.agenda_id', $guia->agenda_id)
-           ->select(
-               'mat_agendas.id as id',
-               'mat_agendas.quantidade',
-               'mat_agendas.unidade_medida',
-               'produtos.nome as nome_produto',
-               'produtos.produto as descricao_produto',
-               'produtos.tipo as tipo_produto',
-               'produtos.preco_venda as valor_unitario_produto',
-               'produtos.id as material_id'
-           )
-           ->get();
+        $materiais = collect();
+        if ($guia->paciente->convenio) {
+            $tabelaMateriais = $guia->paciente->convenio->tab_mat_id;
+
+            if ($tabelaMateriais && Schema::hasTable($tabelaMateriais)) {
+                $materiais = DB::table('mat_agendas')
+                    ->join($tabelaMateriais, 'mat_agendas.material_id', '=', "{$tabelaMateriais}.id")
+                    ->where('mat_agendas.agenda_id', $guia->agenda_id)
+                    ->select(
+                        'mat_agendas.id as id',
+                        'mat_agendas.quantidade as quantidade',
+                        'mat_agendas.unidade_medida',
+                        "{$tabelaMateriais}.medicamento as nome_produto",
+                        "{$tabelaMateriais}.medicamento as descricao_produto",
+                        DB::raw("'MEDICAMENTO' as tipo_produto"),
+                        "{$tabelaMateriais}.preco as valor_unitario_produto",
+                        "{$tabelaMateriais}.id as material_id"
+                    )
+                    ->get();
+            }
+        }
 
        $medicamentos = collect();
        if ($guia->paciente->convenio) {
@@ -1224,7 +1238,7 @@ public function gerarZipGuiasadtEmLote(Request $request)
             $procedimentoExecutado->addChild('ans:valorUnitario', $procedimento->valor_unitario);
             $procedimentoExecutado->addChild('ans:valorTotal', $procedimento->valor_total);
 
-            // Adicionando a equipe da guia diretamente da $guia
+             // Adicionando a equipe da guia diretamente da $guia
             $equipeSadt = $procedimentoExecutado->addChild('ans:equipeSadt');
             // Profissional 1 (sempre presente)
             if (!empty($guia->grua) && !empty($guia->codigo_operadora_profissional)) {
@@ -1240,8 +1254,8 @@ public function gerarZipGuiasadtEmLote(Request $request)
             }
 
             // Profissional 2 (só adiciona se houver dados)
-            if (!empty($guia->grua1) && !empty($guia->codigo_operadora_profissional1)) {
-                $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua);
+            if (!empty($guia->grau1) && !empty($guia->codigo_operadora_profissional1)) {
+                $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grau1);
                 $codProfissional = $equipeSadt->addChild('ans:codProfissional');
                 $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional1);
 
@@ -1253,8 +1267,8 @@ public function gerarZipGuiasadtEmLote(Request $request)
             }
 
             // Profissional 3 (só adiciona se houver dados)
-            if (!empty($guia->grua2) && !empty($guia->codigo_operadora_profissional2)) {
-                $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua2);
+            if (!empty($guia->grau2) && !empty($guia->codigo_operadora_profissional2)) {
+                $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grau2);
                 $codProfissional = $equipeSadt->addChild('ans:codProfissional');
                 $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional2);
 
@@ -1359,20 +1373,27 @@ public function gerarZipGuiasadtEmLote(Request $request)
         ->get();
 
     // Recuperar materiais relacionados à agenda_id da guia
-    $materiais = DB::table('mat_agendas')
-    ->join('produtos', 'mat_agendas.material_id', '=', 'produtos.id')
-    ->where('mat_agendas.agenda_id', $guia->agenda_id)
-    ->select(
-        'mat_agendas.id as id',
-        'mat_agendas.quantidade',
-        'mat_agendas.unidade_medida', // Incluindo unidade de medida
-        'produtos.nome as nome_produto', // Nome do produto da tabela produtos
-        'produtos.produto as descricao_produto', // Produto ou descrição completa
-        'produtos.tipo as tipo_produto', // Tipo de produto
-        'produtos.preco_venda as valor_unitario_produto', // Preço unitário do produto
-        'produtos.id as material_id' // ID do material na tabela produtos
-    )
-    ->get(); // Buscando os dados para transformá-los em uma coleção
+    $materiais = collect();
+        if ($guia->paciente->convenio) {
+            $tabelaMateriais = $guia->paciente->convenio->tab_mat_id;
+
+            if ($tabelaMateriais && Schema::hasTable($tabelaMateriais)) {
+                $materiais = DB::table('mat_agendas')
+                    ->join($tabelaMateriais, 'mat_agendas.material_id', '=', "{$tabelaMateriais}.id")
+                    ->where('mat_agendas.agenda_id', $guia->agenda_id)
+                    ->select(
+                        'mat_agendas.id as id',
+                        'mat_agendas.quantidade as quantidade',
+                        'mat_agendas.unidade_medida',
+                        "{$tabelaMateriais}.medicamento as nome_produto",
+                        "{$tabelaMateriais}.medicamento as descricao_produto",
+                        DB::raw("'MEDICAMENTO' as tipo_produto"),
+                        "{$tabelaMateriais}.preco as valor_unitario_produto",
+                        "{$tabelaMateriais}.id as material_id"
+                    )
+                    ->get();
+            }
+        }
 
 
     // Verificar se o convênio tem uma tabela de medicamentos dinâmica
@@ -1522,8 +1543,8 @@ public function gerarZipGuiasadtEmLote(Request $request)
         }
 
         // Profissional 2 (só adiciona se houver dados)
-        if (!empty($guia->grua1) && !empty($guia->codigo_operadora_profissional1)) {
-            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua);
+        if (!empty($guia->grau1) && !empty($guia->codigo_operadora_profissional1)) {
+            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grau1);
             $codProfissional = $equipeSadt->addChild('ans:codProfissional');
             $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional1);
 
@@ -1535,8 +1556,8 @@ public function gerarZipGuiasadtEmLote(Request $request)
         }
 
         // Profissional 3 (só adiciona se houver dados)
-        if (!empty($guia->grua2) && !empty($guia->codigo_operadora_profissional2)) {
-            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua2);
+        if (!empty($guia->grau2) && !empty($guia->codigo_operadora_profissional2)) {
+            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grau2);
             $codProfissional = $equipeSadt->addChild('ans:codProfissional');
             $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional2);
 
@@ -1677,21 +1698,27 @@ public function gerarZipGuiasadt($id, Request $request)
         ->where('guia_sps_id', $id)
         ->get();
 
-    // Recuperar materiais relacionados à agenda_id da guia
-    $materiais = DB::table('mat_agendas')
-        ->join('produtos', 'mat_agendas.material_id', '=', 'produtos.id')
-        ->where('mat_agendas.agenda_id', $guia->agenda_id)
-        ->select(
-            'mat_agendas.id as id',
-            'mat_agendas.quantidade',
-            'mat_agendas.unidade_medida',
-            'produtos.nome as nome_produto',
-            'produtos.produto as descricao_produto',
-            'produtos.tipo as tipo_produto',
-            'produtos.preco_venda as valor_unitario_produto',
-            'produtos.id as material_id'
-        )
-        ->get();
+        $materiais = collect();
+        if ($guia->paciente->convenio) {
+            $tabelaMateriais = $guia->paciente->convenio->tab_mat_id;
+
+            if ($tabelaMateriais && Schema::hasTable($tabelaMateriais)) {
+                $materiais = DB::table('mat_agendas')
+                    ->join($tabelaMateriais, 'mat_agendas.material_id', '=', "{$tabelaMateriais}.id")
+                    ->where('mat_agendas.agenda_id', $guia->agenda_id)
+                    ->select(
+                        'mat_agendas.id as id',
+                        'mat_agendas.quantidade as quantidade',
+                        'mat_agendas.unidade_medida',
+                        "{$tabelaMateriais}.medicamento as nome_produto",
+                        "{$tabelaMateriais}.medicamento as descricao_produto",
+                        DB::raw("'MEDICAMENTO' as tipo_produto"),
+                        "{$tabelaMateriais}.preco as valor_unitario_produto",
+                        "{$tabelaMateriais}.id as material_id"
+                    )
+                    ->get();
+            }
+        }
 
     // Verificar se o convênio tem medicamentos dinâmicos
     $medicamentos = collect();
@@ -1841,8 +1868,8 @@ public function gerarZipGuiasadt($id, Request $request)
         }
 
         // Profissional 2 (só adiciona se houver dados)
-        if (!empty($guia->grua1) && !empty($guia->codigo_operadora_profissional1)) {
-            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua);
+        if (!empty($guia->grau1) && !empty($guia->codigo_operadora_profissional1)) {
+            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grau1);
             $codProfissional = $equipeSadt->addChild('ans:codProfissional');
             $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional1);
 
@@ -1854,8 +1881,8 @@ public function gerarZipGuiasadt($id, Request $request)
         }
 
         // Profissional 3 (só adiciona se houver dados)
-        if (!empty($guia->grua2) && !empty($guia->codigo_operadora_profissional2)) {
-            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua2);
+        if (!empty($guia->grau2) && !empty($guia->codigo_operadora_profissional2)) {
+            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grau2);
             $codProfissional = $equipeSadt->addChild('ans:codProfissional');
             $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional2);
 
@@ -2612,7 +2639,7 @@ public function gerarZipGuiasadt($id, Request $request)
                  'uf_profissional1' => $request->input('uf_profissional1'),
                  'codigo_cbo_profissional1' => $request->input('codigo_cbo_profissional1'),
                  'sequencia2' => $request->input('sequencia2'),
-                 'grua2' => $request->input('grau2'),
+                 'grau2' => $request->input('grau2'),
                  'codigo_operadora_profissional2' => $request->input('codigo_operadora_profissional2'),
                  'nome_profissional2' => $request->input('nome_profissional2'),
                  'sigla_conselho2' => $request->input('sigla_conselho2'),

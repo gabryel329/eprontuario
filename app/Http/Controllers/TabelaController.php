@@ -17,30 +17,30 @@ class TabelaController extends Controller
     {
         // Consultar todas as tabelas que começam com "tab_"
         $tabelas = DB::select("
-            SELECT table_name 
-            FROM information_schema.tables 
-            WHERE table_schema = 'public' 
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
             AND (
-                table_name LIKE 'tab_amb%' OR 
-                table_name LIKE 'tab_brasindice%' OR 
+                table_name LIKE 'tab_amb%' OR
+                table_name LIKE 'tab_brasindice%' OR
                 table_name LIKE 'tab_cbhpm%' OR
                 table_name LIKE 'tab_simpro%'
             );
         ");
 
         $portes = DB::select("
-            SELECT table_name 
-            FROM information_schema.tables 
-            WHERE table_schema = 'public' 
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
             AND (
                 table_name LIKE 'porte_%'
             );
         ");
 
         $ch = DB::select("
-            SELECT table_name 
-            FROM information_schema.tables 
-            WHERE table_schema = 'public' 
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
             AND (
                 table_name LIKE 'ch_%'
             );
@@ -229,7 +229,7 @@ class TabelaController extends Controller
                     $table->string('TP_FRACAO', 500)->nullable();
                     $table->string('CD_MERCACAO', 500)->nullable();
                     $table->string('FABRICA', 500)->nullable();
-                    $table->string('PC_FR_VEND', 500)->nullable();
+                    $table->string('preco', 500)->nullable();
                     $table->string('PAGINA', 500)->nullable();
                     $table->string('DATA2', 500)->nullable();
                     $table->string('DATASINC', 500)->nullable();
@@ -401,7 +401,7 @@ class TabelaController extends Controller
                 $line = mb_convert_encoding($line, 'UTF-8', 'auto');
                 $row = str_getcsv($line, ',', '"');
                 $dataBatch[] = $this->formatarDados($prefixoTabela, $row);
-            
+
                 if (count($dataBatch) === $batchSize || $index === array_key_last($fileContent)) {
                     DB::table($tableName)->insert($dataBatch);
                     $dataBatch = []; // Limpa o lote

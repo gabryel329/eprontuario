@@ -667,6 +667,8 @@
                                 </tbody>
                                 <tbody id="materiais-table-body">
                                 </tbody>
+                                <tbody id="taxas-table-body">
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -1182,5 +1184,161 @@ $('#guiaForm2').on('submit', function(event) {
         }
     });
 });
-        </script>
+
+if (!response || !response.procedimentos) {
+    alert('Erro: Não foi possível carregar os dados ou nenhum exame foi encontrado.');
+    return;
+}
+
+// Limpar o corpo da tabela para evitar duplicação
+$('#procedimento-table-body').empty();
+
+// Iterar sobre cada exame e preencher a tabela
+response.procedimentos.forEach(function(procedimento) {
+    const procedimentoRow = `
+    <tr>
+        <td><input class="form-control" id="data_real" name="data_real[]" type="date" readonly value="${procedimento.dataproc}"></td>
+        <td><input class="form-control" id="hora_inicio_atendimento" name="hora_inicio_atendimento[]" type="text" readonly value="${procedimento.created_at ? procedimento.created_at.substring(11, 19) : ''}"></td>
+        <td><input class="form-control" id="hora_fim_atendimento" name="hora_fim_atendimento[]" type="text" readonly value="${procedimento.created_at ? procedimento.created_at.substring(11, 19) : ''}"></td>
+        <td><input class="form-control" id="tabela" name="tabela[]" type="text" readonly value="22"></td>
+        <td><input class="form-control" id="codigo_procedimento_realizado" name="codigo_procedimento_realizado[]" readonly type="text" value="${procedimento.codigo || ''}"></td>
+        <td><input class="form-control" id="descricao_procedimento_realizado" name="descricao_procedimento_realizado[]" readonly type="text" value="${procedimento.procedimento_nome || ''}"></td>
+        <td><input class="form-control quantidade_autorizada" id="quantidade_autorizada" name="quantidade_autorizada[]" type="number" value="${procedimento.quantidade_autorizada || ''}" oninput="calcularValorTotal(this)" placeholder="Qtd"></td>
+        <td>
+             <select class="form-control" id="via" name="via[]">
+                <option value="" ${procedimento.via == null ? 'selected' : ''}>Selecione</option>
+                <option value="1" ${procedimento.via == 1 ? 'selected' : ''}>Unidade</option>
+                <option value="2" ${procedimento.via == 2 ? 'selected' : ''}>Múltiplo</option>
+            </select>
+        </td>
+
+        <td>
+            <select class="form-control" id="tecnica" name="tecnica[]">
+                <option value="" ${procedimento.tecnica == null ? 'selected' : ''}>Selecione</option>
+                <option value="U" ${procedimento.tecnica == 'U' ? 'selected' : '' }>Unilateral</option>
+                <option value="B" ${procedimento.tecnica == 'B' ? 'selected' : '' }>Bilateral</option>
+                <option value="M" ${procedimento.tecnica == 'M' ? 'selected' : '' }>Múltiplo</option>
+                <option value="S" ${procedimento.tecnica == 'S' ? 'selected' : '' }>Simples</option>
+                <option value="C" ${procedimento.tecnica == 'C' ? 'selected' : '' }>Complexo</option>
+                <option value="A" ${procedimento.tecnica == 'A' ? 'selected' : '' }>Avançado</option>
+            </select>
+
+        </td>
+        <td><input class="form-control" name="fator_red_acres[]" id="fator_red_acres" type="text" oninput="calcularValorTotal(this)" placeholder="EX:1,00" value="${procedimento.fator_red_acres || ''}"></td>
+        <td><input class="form-control valor_unitario" id="valor_unitario" oninput="calcularValorTotal(this)" name="valor_unitario[]" type="text" value="${procedimento.valor || ''}"></td>
+        <td><input class="form-control valor_total" id="valor_total" name="valor_total[]" type="text" readonly value="${procedimento.valor_total || ''}" placeholder="Valor Total"></td>
+    </tr>
+`;
+    $('#procedimento-table-body').append(procedimentoRow);
+});
+
+if (!response || !response.medicamentos) {
+    alert(
+        'Erro: Não foi possível carregar os dados ou nenhum medicamento foi encontrado.'
+    );
+    return;
+}
+
+const unidadeMedidaMap = {
+    "001": "Unidade",
+    "002": "Caixa",
+    "003": "Frasco",
+    "004": "Ampola",
+    "005": "Comprimido",
+    "006": "Gotas",
+    "007": "Mililitro (ml)",
+    "008": "Grama (g)",
+    "036": "Outros"
+};
+
+
+// Limpar o corpo da tabela para evitar duplicação
+$('#medicamentos-table-body').empty();
+
+// Iterar sobre cada exame e preencher a tabela
+response.medicamentos.forEach(function(medicamento) {
+    const unidadeMedidaNome = unidadeMedidaMap[medicamento.unidade_medida] || "Desconhecido";
+    const medicamentoRow = `
+    <tr>
+        <td><input style="width: 50px;" class="form-control" type="text" value="${medicamento.cd || ''}" readonly></td>
+        <td><input style="width: 119px;" class="form-control" type="text" <input type="text" readonly value="${medicamento.created_at ? medicamento.created_at.substring(0, 10).split('-').reverse().join('/') : ''}"></td>
+        <td><input class="form-control" type="text" readonly value="${medicamento.created_at ? medicamento.created_at.substring(11, 19) : ''}"></td>
+        <td><input class="form-control" type="text" readonly value="${medicamento.created_at ? medicamento.created_at.substring(11, 19) : ''}"></td>
+        <td><input class="form-control" type="text" value="${medicamento.tabela || ''}" readonly></td>
+        <td><input class="form-control" type="text" value="${medicamento.nome_medicamento || ''}" readonly></td>
+        <td><input class="form-control" type="text" value="${medicamento.codigo || ''}" readonly></td>
+        <td><input class="form-control quantidade" type="text" value="${medicamento.quantidade  || ''}" readonly></td>
+        <td><input class="form-control" type="text" value="${unidadeMedidaNome}" readonly></td>
+        <td><input class="form-control fator" type="text" value="${medicamento.fator || ''}" readonly></td>
+        <td><input class="form-control valor" type="text" value="${medicamento.valor || ''}" readonly></td>
+        <td><input class="form-control valor_total" type="text" value="${medicamento.valor_total || ''}" readonly></td>
+    </tr>
+`;
+    $('#medicamentos-table-body').append(medicamentoRow);
+});
+
+if (!response || !response.materiais) {
+    alert(
+        'Erro: Não foi possível carregar os dados ou nenhum medicamento foi encontrado.'
+    );
+    return;
+}
+
+// Limpar o corpo da tabela para evitar duplicação
+$('#materiais-table-body').empty();
+
+// Iterar sobre cada exame e preencher a tabela
+response.materiais.forEach(function(material) {
+    const unidadeMedidaNome = unidadeMedidaMap[material
+        .unidade_medida] || "Desconhecido";
+    const materialRow = `
+    <tr>
+        <td><input style="width: 50px;" class="form-control" type="text" value="${material.cd || ''}" readonly></td>
+        <td><input style="width: 120px;" class="form-control" type="text" <input type="text" readonly value="${material.created_at ? material.created_at.substring(0, 10).split('-').reverse().join('/') : ''}"></td>
+        <td><input class="form-control" type="text" readonly value="${material.created_at ? material.created_at.substring(11, 16) : ''}"></td>
+        <td><input class="form-control" type="text" readonly value="${material.created_at ? material.created_at.substring(11, 16) : ''}"></td>
+        <td><input class="form-control" type="text" value="${material.tabela || ''}" readonly></td>
+        <td><input class="form-control" type="text" value="${material.nome_material || ''}" readonly></td>
+        <td><input class="form-control" type="text" value="${material.codigo || ''}" readonly></td>
+        <td><input class="form-control quantidade" type="text" value="${material.quantidade  || ''}" readonly></td>
+        <td><input class="form-control" type="text" value="${unidadeMedidaNome}" readonly></td>
+        <td><input class="form-control fator" type="text" value="${material.fator || ''}" readonly></td>
+        <td><input class="form-control valor" type="text" value="${material.valor || ''}" readonly></td>
+        <td><input class="form-control valor_total" type="text" value="${material.valor_total || ''}" readonly></td>
+    </tr>
+`;
+    $('#materiais-table-body').append(materialRow);
+});
+
+if (!response || !response.taxas) {
+    alert(
+        'Erro: Não foi possível carregar os dados ou nenhum medicamento foi encontrado.'
+    );
+    return;
+}
+
+// Limpar o corpo da tabela para evitar duplicação
+$('#taxas-table-body').empty();
+
+// Iterar sobre cada exame e preencher a tabela
+response.taxas.forEach(function(taxa) {
+    const taxaRow = `
+    <tr>
+        <td><input style="width: 50px;" class="form-control" type="text" value="" readonly></td>
+        <td><input style="width: 120px;" class="form-control" type="text" <input type="text" readonly value="${taxa.created_at ? taxa.created_at.substring(0, 10).split('-').reverse().join('/') : ''}"></td>
+        <td><input class="form-control" type="text" readonly value="${taxa.created_at ? taxa.created_at.substring(11, 16) : ''}"></td>
+        <td><input class="form-control" type="text" readonly value="${taxa.created_at ? taxa.created_at.substring(11, 16) : ''}"></td>
+        <td><input class="form-control" type="text" value="" readonly></td>
+        <td><input class="form-control" type="text" value="${taxa.nome_taxa || ''}" readonly></td>
+        <td><input class="form-control" type="text" value="" readonly></td>
+        <td><input class="form-control quantidade" type="text" value="" readonly></td>
+        <td><input class="form-control" type="text" value="" readonly></td>
+        <td><input class="form-control fator" type="text" value="" readonly></td>
+        <td><input class="form-control valor" type="text" value="${taxa.valor || ''}" readonly></td>
+        <td><input class="form-control valor_total" type="text" value="${taxa.valor || ''}" readonly></td>
+    </tr>
+`;
+    $('#taxas-table-body').append(taxaRow);
+});
+</script>
 @endsection

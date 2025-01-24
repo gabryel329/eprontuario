@@ -167,14 +167,14 @@ class AgendaController extends Controller
                 $agendas->materias = $query->get();
             } else {
                 // Caso a tabela não exista
-                $agendas->materias = DB::table('medicamentos')
+                $agendas->materias = DB::table('produtos')
                 ->select('id', 'nome as medicamento', 'tipo as codigo', 'padrao as unid', 'preco_venda as preco') // Define codigo como NULL
                 ->orderBy('id')
                 ->get();
             }
         } else {
             // Caso não exista um convenio
-            $agendas->materias = DB::table('medicamentos')
+            $agendas->materias = DB::table('produtos')
                 ->select('id', 'nome as medicamento', 'tipo as codigo', 'padrao as unid', 'preco_venda as preco') // Define codigo como NULL
                 ->orderBy('id')
                 ->get();
