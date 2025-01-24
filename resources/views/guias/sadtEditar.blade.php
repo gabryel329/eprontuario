@@ -15,6 +15,9 @@
                 {{-- SADT Form --}}
                 <div>
                     <input type="hidden" name="convenio_id" value="{{ $guiaSadt->convenio_id }}">
+                    <input type="hidden" name="agenda_id" value="{{ $guiaSadt->agenda_id }}">
+                    <input type="hidden" name="paciente_id" value="{{ $guiaSadt->paciente_id }}">
+                    <input type="hidden" name="profissional_id" value="{{ $guiaSadt->profissional_id }}">
                     <h5 class="modal-title">Guia SADT</h5>
                     @csrf
                     <div class="row">

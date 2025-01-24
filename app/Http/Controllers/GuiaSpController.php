@@ -532,7 +532,7 @@ public function gerarZipGuiaSp($id)
 
         if ($agenda && $agenda->paciente && $agenda->paciente->convenio) {
             $tabelaProcedimentos = $agenda->paciente->convenio->tab_proc_id;
-    
+
             if ($tabelaProcedimentos === null) {
                 $exames = DB::table('exames')
                     ->join('procedimentos', 'exames.procedimento_id', '=', 'procedimentos.id')
@@ -583,7 +583,7 @@ public function gerarZipGuiaSp($id)
 
         if ($agenda && $agenda->paciente && $agenda->paciente->convenio) {
             $tabelaMedicamentos = $agenda->paciente->convenio->tab_med_id;
-    
+
             if ($tabelaMedicamentos === null) {
                 $medicamentos = DB::table('med_agendas')
                     ->join('medicamentos', 'med_agendas.medicamento_id', '=', 'medicamentos.id')
@@ -619,7 +619,7 @@ public function gerarZipGuiaSp($id)
 
         if ($agenda && $agenda->paciente && $agenda->paciente->convenio) {
             $tabelaMaterias = $agenda->paciente->convenio->tab_mat_id;
-    
+
             if ($tabelaMaterias === null) {
                 $materiais = DB::table('mat_agendas')
                     ->join('medicamentos', 'mat_agendas.material_id', '=', 'medicamentos.id')
@@ -908,16 +908,44 @@ public function gerarZipGuiaSp($id)
 
             // Adicionando a equipe da guia diretamente da $guia
             $equipeSadt = $procedimentoExecutado->addChild('ans:equipeSadt');
-            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua); // Grau padrão se não fornecido
+            // Profissional 1 (sempre presente)
+            if (!empty($guia->grua) && !empty($guia->codigo_operadora_profissional)) {
+                $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua);
+                $codProfissional = $equipeSadt->addChild('ans:codProfissional');
+                $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional);
 
-            $codProfissional = $equipeSadt->addChild('ans:codProfissional');
-            $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional);
+                $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional);
+                $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho);
+                $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional);
+                $equipeSadt->addChild('ans:UF', $guia->uf_profissional);
+                $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional);
+            }
 
-            $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional);
-            $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho);
-            $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional);
-            $equipeSadt->addChild('ans:UF', $guia->uf_profissional);
-            $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional);
+            // Profissional 2 (só adiciona se houver dados)
+            if (!empty($guia->grua1) && !empty($guia->codigo_operadora_profissional1)) {
+                $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua);
+                $codProfissional = $equipeSadt->addChild('ans:codProfissional');
+                $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional1);
+
+                $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional1);
+                $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho1);
+                $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional1);
+                $equipeSadt->addChild('ans:UF', $guia->uf_profissional1);
+                $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional1);
+            }
+
+            // Profissional 3 (só adiciona se houver dados)
+            if (!empty($guia->grua2) && !empty($guia->codigo_operadora_profissional2)) {
+                $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua2);
+                $codProfissional = $equipeSadt->addChild('ans:codProfissional');
+                $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional2);
+
+                $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional2);
+                $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho2);
+                $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional2);
+                $equipeSadt->addChild('ans:UF', $guia->uf_profissional2);
+                $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional2);
+            }
         }
         if (is_array($outrasDespesasItems) && count($outrasDespesasItems) > 0) {
             $outrasDespesas = $guiaSadt->addChild('ans:outrasDespesas');
@@ -1198,16 +1226,44 @@ public function gerarZipGuiasadtEmLote(Request $request)
 
             // Adicionando a equipe da guia diretamente da $guia
             $equipeSadt = $procedimentoExecutado->addChild('ans:equipeSadt');
-            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua); // Grau padrão se não fornecido
+            // Profissional 1 (sempre presente)
+            if (!empty($guia->grua) && !empty($guia->codigo_operadora_profissional)) {
+                $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua);
+                $codProfissional = $equipeSadt->addChild('ans:codProfissional');
+                $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional);
 
-            $codProfissional = $equipeSadt->addChild('ans:codProfissional');
-            $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional);
+                $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional);
+                $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho);
+                $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional);
+                $equipeSadt->addChild('ans:UF', $guia->uf_profissional);
+                $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional);
+            }
 
-            $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional);
-            $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho);
-            $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional);
-            $equipeSadt->addChild('ans:UF', $guia->uf_profissional);
-            $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional);
+            // Profissional 2 (só adiciona se houver dados)
+            if (!empty($guia->grua1) && !empty($guia->codigo_operadora_profissional1)) {
+                $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua);
+                $codProfissional = $equipeSadt->addChild('ans:codProfissional');
+                $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional1);
+
+                $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional1);
+                $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho1);
+                $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional1);
+                $equipeSadt->addChild('ans:UF', $guia->uf_profissional1);
+                $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional1);
+            }
+
+            // Profissional 3 (só adiciona se houver dados)
+            if (!empty($guia->grua2) && !empty($guia->codigo_operadora_profissional2)) {
+                $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua2);
+                $codProfissional = $equipeSadt->addChild('ans:codProfissional');
+                $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional2);
+
+                $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional2);
+                $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho2);
+                $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional2);
+                $equipeSadt->addChild('ans:UF', $guia->uf_profissional2);
+                $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional2);
+            }
         }
         if (is_array($outrasDespesasItems) && count($outrasDespesasItems) > 0) {
             $outrasDespesas = $guiaSadt->addChild('ans:outrasDespesas');
@@ -1452,16 +1508,44 @@ public function gerarZipGuiasadtEmLote(Request $request)
 
         // Adicionando a equipe da guia diretamente da $guia
         $equipeSadt = $procedimentoExecutado->addChild('ans:equipeSadt');
-        $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua); // Grau padrão se não fornecido
+        // Profissional 1 (sempre presente)
+        if (!empty($guia->grua) && !empty($guia->codigo_operadora_profissional)) {
+            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua);
+            $codProfissional = $equipeSadt->addChild('ans:codProfissional');
+            $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional);
 
-        $codProfissional = $equipeSadt->addChild('ans:codProfissional');
-        $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional);
+            $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional);
+            $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho);
+            $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional);
+            $equipeSadt->addChild('ans:UF', $guia->uf_profissional);
+            $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional);
+        }
 
-        $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional);
-        $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho);
-        $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional);
-        $equipeSadt->addChild('ans:UF', $guia->uf_profissional);
-        $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional);
+        // Profissional 2 (só adiciona se houver dados)
+        if (!empty($guia->grua1) && !empty($guia->codigo_operadora_profissional1)) {
+            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua);
+            $codProfissional = $equipeSadt->addChild('ans:codProfissional');
+            $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional1);
+
+            $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional1);
+            $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho1);
+            $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional1);
+            $equipeSadt->addChild('ans:UF', $guia->uf_profissional1);
+            $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional1);
+        }
+
+        // Profissional 3 (só adiciona se houver dados)
+        if (!empty($guia->grua2) && !empty($guia->codigo_operadora_profissional2)) {
+            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua2);
+            $codProfissional = $equipeSadt->addChild('ans:codProfissional');
+            $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional2);
+
+            $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional2);
+            $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho2);
+            $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional2);
+            $equipeSadt->addChild('ans:UF', $guia->uf_profissional2);
+            $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional2);
+        }
     }
     if (is_array($outrasDespesasItems) && count($outrasDespesasItems) > 0) {
         $outrasDespesas = $guiaSadt->addChild('ans:outrasDespesas');
@@ -1505,7 +1589,7 @@ public function gerarZipGuiasadtEmLote(Request $request)
 
     // Verifica se já existe uma conta financeira para esse lote
     $contaExistente = ContaGuia::where('lote', $guia->numeracao)->first();
-    
+
     if (!$contaExistente) {
         // Atualiza as guias com a numeração correta
         foreach ($guia as $g) {
@@ -1743,16 +1827,44 @@ public function gerarZipGuiasadt($id, Request $request)
 
         // Adicionando a equipe da guia diretamente da $guia
         $equipeSadt = $procedimentoExecutado->addChild('ans:equipeSadt');
-        $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua); // Grau padrão se não fornecido
+        // Profissional 1 (sempre presente)
+        if (!empty($guia->grua) && !empty($guia->codigo_operadora_profissional)) {
+            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua);
+            $codProfissional = $equipeSadt->addChild('ans:codProfissional');
+            $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional);
 
-        $codProfissional = $equipeSadt->addChild('ans:codProfissional');
-        $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional);
+            $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional);
+            $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho);
+            $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional);
+            $equipeSadt->addChild('ans:UF', $guia->uf_profissional);
+            $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional);
+        }
 
-        $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional);
-        $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho);
-        $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional);
-        $equipeSadt->addChild('ans:UF', $guia->uf_profissional);
-        $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional);
+        // Profissional 2 (só adiciona se houver dados)
+        if (!empty($guia->grua1) && !empty($guia->codigo_operadora_profissional1)) {
+            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua);
+            $codProfissional = $equipeSadt->addChild('ans:codProfissional');
+            $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional1);
+
+            $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional1);
+            $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho1);
+            $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional1);
+            $equipeSadt->addChild('ans:UF', $guia->uf_profissional1);
+            $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional1);
+        }
+
+        // Profissional 3 (só adiciona se houver dados)
+        if (!empty($guia->grua2) && !empty($guia->codigo_operadora_profissional2)) {
+            $codProfissional = $equipeSadt->addChild('ans:grauPart', $guia->grua2);
+            $codProfissional = $equipeSadt->addChild('ans:codProfissional');
+            $codProfissional->addChild('ans:cpfContratado', $guia->codigo_operadora_profissional2);
+
+            $equipeSadt->addChild('ans:nomeProf', $guia->nome_profissional2);
+            $equipeSadt->addChild('ans:conselho', $guia->sigla_conselho2);
+            $equipeSadt->addChild('ans:numeroConselhoProfissional', $guia->numero_conselho_profissional2);
+            $equipeSadt->addChild('ans:UF', $guia->uf_profissional2);
+            $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional2);
+        }
     }
     // Outras Despesas
     if (is_array($outrasDespesasItems) && count($outrasDespesasItems) > 0) {
@@ -1887,11 +1999,11 @@ public function gerarZipGuiasadt($id, Request $request)
     }
 
     public function salvarGuiaSADT(Request $request)
-    {   
+    {
         Log::info('Dados recebidos no request:', $request->all());
         try {
             DB::beginTransaction();
-            
+
             $horaInicioAtendimento = $request->input('hora_inicio_atendimento');
             $horaFimAtendimento = $request->input('hora_fim_atendimento');
 
@@ -2051,7 +2163,7 @@ public function gerarZipGuiasadt($id, Request $request)
                     $descricaoProcedimento = $request->input("descricao_procedimento.$index");
                     $qtdSol = $request->input("qtd_sol.$index");
                     $qtdAut = $request->input("qtd_aut.$index");
-            
+
                     // Verifique se os valores existem antes de salvar
                     if ($tabela && $descricaoProcedimento && $qtdSol && $qtdAut) {
                         ExamesSadt::create([
@@ -2078,7 +2190,7 @@ public function gerarZipGuiasadt($id, Request $request)
             Log::info($request->input("codigo_procedimento_solicitado.$index"));
             // Salvar na tabela exames
             // Captura o valor do primeiro índice de agenda_id2
-            
+
             log::info($agendaId);
 
             // Itera sobre as tabelas e utiliza o mesmo agenda_id
@@ -2095,17 +2207,17 @@ public function gerarZipGuiasadt($id, Request $request)
                     ]);
                 }
             }
-            
+
 
 
             // Salvar os procedimentos na tabela exames_aut_sadt
             if ($request->has('descricao_procedimento_realizado')) {
                 $valorTotal = 0; // Inicializa a variável para soma
-            
+
                 foreach ($request->input('data_real') as $index => $dataReal) {
                     $valorTotalItem = $request->input("valor_total.$index");
                     $valorTotal += $valorTotalItem; // Acumula os valores
-            
+
                     ExamesAutSadt::create([
                         'guia_sps_id' => $guiaSps->id,
                         'data_real' => $dataReal,
@@ -2122,13 +2234,13 @@ public function gerarZipGuiasadt($id, Request $request)
                         'valor_total' => $valorTotalItem,
                     ]);
                 }
-            
+
                 // Atualiza a tabela guia_sps com a soma total dos valores
                 GuiaSp::where('id', $guiaSps->id)->update([
                     'valor_total' => $valorTotal
                 ]);
             }
-            
+
 
             Log::info($request->input("descricao_procedimento_realizado.$index"));
 
@@ -2281,7 +2393,7 @@ public function gerarZipGuiasadt($id, Request $request)
             )
             ->distinct('profissionals.id') // Retorna registros únicos por profissional
             ->get();
-        
+
         // Obtém um único registro usando first()
         $guia = GuiaSp::where('id', $guiaSadt->id)->first();
 
@@ -2410,19 +2522,19 @@ public function gerarZipGuiasadt($id, Request $request)
      */
 
 
-    
+
      public function glosaSadt(Request $request)
      {
          try {
              DB::beginTransaction();
-     
+
              // Arrays de referência
              $conselhos = [
                  'CRAS' => '01', 'COREN' => '02', 'CRF' => '03', 'CRFA' => '04',
                  'CREFITO' => '05', 'CRM' => '06', 'CRN' => '07', 'CRO' => '08',
                  'CRP' => '09', 'OUTROS' => '10'
              ];
-     
+
              $ufs = [
                  'AC' => '12', 'AL' => '27', 'AP' => '16', 'AM' => '13', 'BA' => '29',
                  'CE' => '23', 'DF' => '53', 'ES' => '32', 'GO' => '52', 'MA' => '21',
@@ -2431,19 +2543,20 @@ public function gerarZipGuiasadt($id, Request $request)
                  'RS' => '43', 'RO' => '11', 'RR' => '14', 'SC' => '42', 'SP' => '35',
                  'SE' => '28', 'TO' => '17'
              ];
-     
+
              $horaInicioAtendimento = is_array($request->input('hora_inicio_atendimento'))
                  ? reset($request->input('hora_inicio_atendimento'))
                  : $request->input('hora_inicio_atendimento');
-     
+
              $horaFimAtendimento = is_array($request->input('hora_fim_atendimento'))
                  ? reset($request->input('hora_fim_atendimento'))
                  : $request->input('hora_fim_atendimento');
-     
+
              // Criar a guia
              $guia = GuiaSp::create([
                  'user_id' => auth()->id(),
                  'agenda_id' => $request->input('agenda_id'),
+                 'convenio_id' => $request->input('convenio_id'),
                  'profissional_id' => $request->input('profissional_id'),
                  'paciente_id' => $request->input('paciente_id'),
                  'cns' => $request->input('cns'),
@@ -2509,16 +2622,16 @@ public function gerarZipGuiasadt($id, Request $request)
                  'observacao' => $request->input('observacao') ?? 'N/A',
                  'identificador' => 'GERADO'
              ]);
-     
+
              // Substituir valores de conselhos e UF por códigos
              if (array_key_exists($request->input('sigla_conselho'), $conselhos)) {
                  $guia->update(['sigla_conselho' => $conselhos[$request->input('sigla_conselho')]]);
              }
-     
+
              if (array_key_exists($request->input('uf_profissional'), $ufs)) {
                  $guia->update(['uf_profissional' => $ufs[$request->input('uf_profissional')]]);
              }
-     
+
              // Atualizar exames na tabela exames_sadt
              if ($request->has('descricao_procedimento')) {
                  foreach ($request->input('tabela') as $index => $tabela) {
@@ -2532,7 +2645,7 @@ public function gerarZipGuiasadt($id, Request $request)
                      ]);
                  }
              }
-     
+
              // Atualizar procedimentos na tabela exames_aut_sadt
              if ($request->has('descricao_procedimento_realizado')) {
                  foreach ($request->input('data_real') as $index => $dataReal) {
@@ -2553,16 +2666,16 @@ public function gerarZipGuiasadt($id, Request $request)
                      ]);
                  }
              }
-     
+
              DB::commit();
-     
+
              return redirect()->back()->with('success', 'Guia criada com sucesso!');
          } catch (Exception $e) {
              DB::rollBack();
              return redirect()->back()->with('error', 'Erro ao criar guia: ' . $e->getMessage());
          }
      }
-     
+
     public function destroy(GuiaSp $guiasp)
     {
         //

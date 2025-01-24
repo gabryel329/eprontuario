@@ -1248,7 +1248,6 @@ class AgendaController extends Controller
             'paciente_id' => 'required|integer',
             'convenio_id' => 'required|integer|exists:convenios,id',
             'name' => 'required|string|max:255',
-            'matricula' => 'required|string|max:255',
         ]);
 
         // Encontrar a agenda pelo ID
