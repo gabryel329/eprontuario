@@ -133,6 +133,16 @@
                             </div>
                         </a>
                     </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <a class="card hover-card text-center shadow-sm h-100 text-decoration-none"
+                            href="{{ route('atendimento.lista') }}">
+                            <div class="card-body">
+                                <i class="bi bi-pencil-square fs-1 text-primary"></i>
+                                <p class="card-text mt-3 text-dark">Consultar Prontuários</p>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

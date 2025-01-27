@@ -430,7 +430,7 @@
                                     <li class="nav-item"><a class="nav-link active" href="#prescricao-exame"
                                             data-bs-toggle="tab">Exame</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#prescricao-remedio"
-                                            data-bs-toggle="tab">Remedio</a></li>
+                                            data-bs-toggle="tab">Medicação</a></li>
                                 </ul>
                             </div>
                             <div class="col-md-12">

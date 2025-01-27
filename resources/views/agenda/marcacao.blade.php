@@ -167,7 +167,7 @@
                                         <td>{{ $p->nome_social }}</td>
                                         <td>
                                             <button class="btn btn-primary" type="button"
-                                                onclick="selectPaciente('{{ $p->id }}', '{{ $p->name }}', '{{ $p->celular }}', {{ $p->convenio_id }})">
+                                                onclick="selectPaciente('{{ $p->id }}', '{{ $p->name }}', '{{ $p->celular }}')">
                                                 Selecionar
                                             </button>
                                         </td>
@@ -197,15 +197,15 @@
             $('#pacienteModal').data('horario', horario).modal('show');
         }
 
-        function selectPaciente(id, name, celular, convenio_id) {
+        function selectPaciente(id, name, celular) {
             const horario = $('#pacienteModal').data('horario'); // Recupera o horário associado ao modal
 
             // Preenche o nome e o ID do paciente nos campos correspondentes
             document.getElementById(`paciente_nome${horario}`).value = name; // Nome do paciente
             document.getElementById(`paciente_id${horario}`).value = id; // ID do paciente
             document.querySelector(`[name="celular[${horario}]"]`).value = celular;
-            document.querySelector(`[name="convenio[${horario}]"]`).value = convenio_id; // Celular do paciente
-            document.querySelector(`[name="convenio2[${horario}]"]`).value = convenio_id;
+            // document.querySelector(`[name="convenio[${horario}]"]`).value = convenio_id; // Celular do paciente
+            // document.querySelector(`[name="convenio2[${horario}]"]`).value = convenio_id;
             $('#pacienteModal').modal('hide'); // Fecha o modal
         }
 
