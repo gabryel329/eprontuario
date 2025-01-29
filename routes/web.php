@@ -21,6 +21,7 @@ use App\Http\Controllers\PainelController;
 use App\Http\Controllers\PermisoesController;
 use App\Http\Controllers\ProdutosController;
 use App\Http\Controllers\ProfissionalController;
+use App\Http\Controllers\RelatoriosController;
 use App\Http\Controllers\TabConvenioController;
 use App\Http\Controllers\TabelaController;
 use App\Http\Controllers\TaxaController;
@@ -366,6 +367,9 @@ Route::middleware(['check.session.expired'])->group(function () {
     #Glosa/Baixa
     Route::get('/contas-guias/{contaId}', [BaixasController::class, 'buscarGuiasPorConta']);
     Route::get('/faturamentoGlosa', [BaixasController::class, 'indexGlosa'])->name('faturamentoGlosa.index');
+
+    #Relatorio BI
+    Route::get('/relatorio-bi', [RelatoriosController::class, 'index'])->name('relatorio.bi');
 
 
 
