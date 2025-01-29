@@ -215,7 +215,7 @@
                                         <th>26 - Descrição</th>
                                         <th>27 - Qtde Sol.</th>
                                         <th>28 - Qtde Aut.</th>
-                                        <th colspan="3" style="text-align: center;">Ação</th>
+                                        <th colspan="2" style="text-align: center;">Ação</th>
                                     </tr>
                                 </thead>
                                 <tbody id="exame-table-body">
@@ -225,20 +225,22 @@
                                         <button type="button" class="btn btn-primary form-control"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#modalProcedimento1"
-                                                onclick="setRowContext(this, '{{ $guiaSadt->paciente_id }}')">
+                                                data-agenda-id="{{ $guiaSadt->paciente_id }}"
+                                                onclick="setRow1(this, '{{ $guiaSadt->paciente_id }}')">
                                             <i class="bi bi-list"></i>
                                         </button>
                                     </td>
                                         <td>
-                                            <input class="form-control" style="text-align: center;" name="agenda_id2[]" type="hidden" value="{{$item->agenda_id}}" readonly>
+                                            <input class="form-control" style="text-align: center;" id="agenda_id2" name="agenda_id2[]" type="hidden" value="{{$item->agenda_id}}" readonly>
                                             <input class="form-control" style="text-align: center;" name="tabela[]" type="text" value="{{$item->tabela}}" readonly>
                                         </td>
                                         <td><input class="form-control" id="codigo_procedimento_solicitado" name="codigo_procedimento_solicitado[]" type="text" value="{{$item->codigo_procedimento_solicitado}}" readonly></td>
                                         <td><input class="form-control" id="descricao_procedimento" name="descricao_procedimento[]" type="text" value="{{$item->descricao_procedimento}}" readonly></td>
                                         <td><input class="form-control" style="text-align: center;" name="qtd_sol[]" type="number" value="{{$item->qtd_sol}}"></td>
                                         <td><input class="form-control" style="text-align: center;" name="qtd_aut[]" type="number" value="{{$item->qtd_aut}}"></td>
-                                        <td><button type="button" class="btn btn-danger btn-sm" onclick="excluirLinha(this)"><i class="icon bi bi-trash"></i></button></td>
-                                        <td><button type="button" class="btn btn-success" onclick="adicionarNovaLinha()">+</button> </td>
+                            
+                                        <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha()">+</button></td>
+                                        <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha(this)">-</button></td>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -396,6 +398,7 @@
                                 style="text-align: center; white-space: nowrap; font-size: 12px; min-width: 1800px; vertical-align: middle;">
                                 <thead>
                                     <tr>
+                                        <th>Adicionar</th>
                                         <th>36 - Data</th>
                                         <th>37 - Hora Inicial</th>
                                         <th>38 - Hora Final</th>
@@ -408,11 +411,21 @@
                                         <th>45 - Fator Red./ Acrés</th>
                                         <th>46 - Valor Unit.</th>
                                         <th>47 - Valor Total</th>
+                                        <th colspan="2" style="text-align: center;">Ação</th>
                                     </tr>
                                 </thead>
                                 <tbody id="procedimento-table-body">
                                     @foreach ($exameAut as $item)
                                         <tr>
+                                            <td>
+                                                <button type="button" class="btn btn-primary form-control"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalProcedimento2"
+                                                        data-agenda-id="{{ $guiaSadt->paciente_id }}"
+                                                        onclick="setRow2(this, '{{ $guiaSadt->paciente_id }}')">
+                                                    <i class="bi bi-list"></i>
+                                                </button>
+                                            </td>
                                             <td><input class="form-control" id="data_real" name="data_real[]" type="date"  value="{{$item->data_real}}"></td>
                                             <td><input class="form-control" id="hora_inicio_atendimento" name="hora_inicio_atendimento[]" type="text"  value="{{$item->hora_inicio_atendimento}}"></td>
                                             <td><input class="form-control" id="hora_fim_atendimento" name="hora_fim_atendimento[]" type="text"  value="{{$item->hora_fim_atendimento}}"></td>
@@ -422,25 +435,27 @@
                                             <td><input class="form-control quantidade_autorizada" id="quantidade_autorizada" name="quantidade_autorizada[]" value="{{$item->quantidade_autorizada}}" type="number" oninput="calcularValorTotal(this)" placeholder="Qtd"></td>
                                             <td>
                                                 <select class="form-control" id="via" name="via[]">
-                                                    <option value="">{{ old('via',$item->via) ? 'selected' : 'Selecione' }}
-                                                    <option value="1">Unidade</option>
-                                                    <option value="2">Múltiplo</option>
+                                                    <option value="">{{ old('via', $item->via) ? '' : 'Selecione' }}</option>
+                                                    <option value="1" {{ old('via', $item->via) == '1' ? 'selected' : '' }}>Unidade</option>
+                                                    <option value="2" {{ old('via', $item->via) == '2' ? 'selected' : '' }}>Múltiplo</option>
                                                 </select>
                                             </td>
                                             <td>
                                                 <select class="form-control" id="tecnica" name="tecnica[]">
-                                                    <option value="">{{ old('tecnica',$item->tecnica) ? 'selected' : 'Selecione' }}
-                                                    <option value="U">Unilateral</option>
-                                                    <option value="B">Bilateral</option>
-                                                    <option value="M">Múltiplo</option>
-                                                    <option value="S">Simples</option>
-                                                    <option value="C">Complexo</option>
-                                                    <option value="A">Avançado</option>
+                                                    <option value="">{{ old('tecnica', $item->tecnica) ? '' : 'Selecione' }}</option>
+                                                    <option value="U" {{ old('tecnica', $item->tecnica) == 'U' ? 'selected' : '' }}>Unilateral</option>
+                                                    <option value="B" {{ old('tecnica', $item->tecnica) == 'B' ? 'selected' : '' }}>Bilateral</option>
+                                                    <option value="M" {{ old('tecnica', $item->tecnica) == 'M' ? 'selected' : '' }}>Múltiplo</option>
+                                                    <option value="S" {{ old('tecnica', $item->tecnica) == 'S' ? 'selected' : '' }}>Simples</option>
+                                                    <option value="C" {{ old('tecnica', $item->tecnica) == 'C' ? 'selected' : '' }}>Complexo</option>
+                                                    <option value="A" {{ old('tecnica', $item->tecnica) == 'A' ? 'selected' : '' }}>Avançado</option>
                                                 </select>
                                             </td>
                                             <td><input class="form-control" name="fator_red_acres[]" id="fator_red_acres" type="text" oninput="calcularValorTotal(this)" placeholder="EX:1,00" value="{{$item->fator_red_acres}}"></td>
                                             <td><input class="form-control valor_unitario" id="valor_unitario" oninput="calcularValorTotal(this)" name="valor_unitario[]" type="text" value="{{$item->valor_unitario}}"></td>
                                             <td><input class="form-control valor_total" id="valor_total" name="valor_total[]" type="text" value="{{$item->valor_total}}" placeholder="Valor Total"></td>
+                                            <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha1()">+</button></td>
+                                            <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha1(this)">-</button></td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -472,15 +487,14 @@
                                                 value="1" readonly></td>
                                         <td>
                                             <select id="grau" name="grau" class="form-control">
-                                                    <option value="">{{ old('grau', $guiaSadt->grau) ? old('grau', $guiaSadt->grau) : 'Selecione' }}</option>
-                                                <option value="12">Médico principal ou responsável pelo
-                                                    procedimento</option>
-                                                <option value="13">Assistente</option>
-                                                <option value="14">Anestesista</option>
-                                                <option value="15">Cirurgião Auxiliar</option>
-                                                <option value="16">Técnico em Enfermagem</option>
-                                                <option value="17">Fisioterapeuta</option>
-                                                <option value="18">Outro Profissional</option>
+                                                <option value="">{{ old('grua', $guiaSadt->grua) ? old('grua', $guiaSadt->grua) : 'Selecione' }}</option>
+                                                <option value="12" {{ old('grua', $guiaSadt->grua) == '12' ? 'selected' : '' }}>Médico principal ou responsável pelo procedimento</option>
+                                                <option value="13" {{ old('grua', $guiaSadt->grua) == '13' ? 'selected' : '' }}>Assistente</option>
+                                                <option value="14" {{ old('grua', $guiaSadt->grua) == '14' ? 'selected' : '' }}>Anestesista</option>
+                                                <option value="15" {{ old('grua', $guiaSadt->grua) == '15' ? 'selected' : '' }}>Cirurgião Auxiliar</option>
+                                                <option value="16" {{ old('grua', $guiaSadt->grua) == '16' ? 'selected' : '' }}>Técnico em Enfermagem</option>
+                                                <option value="17" {{ old('grua', $guiaSadt->grua) == '17' ? 'selected' : '' }}>Fisioterapeuta</option>
+                                                <option value="18" {{ old('grua', $guiaSadt->grua) == '18' ? 'selected' : '' }}>Outro Profissional</option>
                                             </select>
                                         </td>
                                         <td>
@@ -530,15 +544,14 @@
                                                 value="2" readonly></td>
                                         <td>
                                             <select id="grau1" name="grau1" class="form-control">
-                                                    <option value="">{{ old('grau1', $guiaSadt->grau1) ? old('grau1', $guiaSadt->grau1) : 'Selecione' }}</option>
-                                                <option value="12">Médico principal ou responsável pelo
-                                                    procedimento</option>
-                                                <option value="13">Assistente</option>
-                                                <option value="14">Anestesista</option>
-                                                <option value="15">Cirurgião Auxiliar</option>
-                                                <option value="16">Técnico em Enfermagem</option>
-                                                <option value="17">Fisioterapeuta</option>
-                                                <option value="18">Outro Profissional</option>
+                                                <option value="">{{ old('grau1', $guiaSadt->grau1) ? old('grau1', $guiaSadt->grau1) : 'Selecione' }}</option>
+                                                <option value="12" {{ old('grau1', $guiaSadt->grau1) == '12' ? 'selected' : '' }}>Médico principal ou responsável pelo procedimento</option>
+                                                <option value="13" {{ old('grau1', $guiaSadt->grau1) == '13' ? 'selected' : '' }}>Assistente</option>
+                                                <option value="14" {{ old('grau1', $guiaSadt->grau1) == '14' ? 'selected' : '' }}>Anestesista</option>
+                                                <option value="15" {{ old('grau1', $guiaSadt->grau1) == '15' ? 'selected' : '' }}>Cirurgião Auxiliar</option>
+                                                <option value="16" {{ old('grau1', $guiaSadt->grau1) == '16' ? 'selected' : '' }}>Técnico em Enfermagem</option>
+                                                <option value="17" {{ old('grau1', $guiaSadt->grau1) == '17' ? 'selected' : '' }}>Fisioterapeuta</option>
+                                                <option value="18" {{ old('grau1', $guiaSadt->grau1) == '18' ? 'selected' : '' }}>Outro Profissional</option>
                                             </select>
                                         </td>
                                         <td>
@@ -589,13 +602,13 @@
                                         <td>
                                             <select id="grau2" name="grau2" class="form-control">
                                                 <option value="">{{ old('grau2', $guiaSadt->grau2) ? old('grau2', $guiaSadt->grau2) : 'Selecione' }}</option>
-                                                <option value="12">Médico principal ou responsável pelo procedimento</option>
-                                                <option value="13">Assistente</option>
-                                                <option value="14">Anestesista</option>
-                                                <option value="15">Cirurgião Auxiliar</option>
-                                                <option value="16">Técnico em Enfermagem</option>
-                                                <option value="17">Fisioterapeuta</option>
-                                                <option value="18">Outro Profissional</option>
+                                                <option value="12" {{ old('grau2', $guiaSadt->grau2) == '12' ? 'selected' : '' }}>Médico principal ou responsável pelo procedimento</option>
+                                                <option value="13" {{ old('grau2', $guiaSadt->grau2) == '13' ? 'selected' : '' }}>Assistente</option>
+                                                <option value="14" {{ old('grau2', $guiaSadt->grau2) == '14' ? 'selected' : '' }}>Anestesista</option>
+                                                <option value="15" {{ old('grau2', $guiaSadt->grau2) == '15' ? 'selected' : '' }}>Cirurgião Auxiliar</option>
+                                                <option value="16" {{ old('grau2', $guiaSadt->grau2) == '16' ? 'selected' : '' }}>Técnico em Enfermagem</option>
+                                                <option value="17" {{ old('grau2', $guiaSadt->grau2) == '17' ? 'selected' : '' }}>Fisioterapeuta</option>
+                                                <option value="18" {{ old('grau2', $guiaSadt->grau2) == '18' ? 'selected' : '' }}>Outro Profissional</option>
                                             </select>
                                         </td>
                                         <td>
@@ -645,10 +658,14 @@
                     <h5>Despesas Realizadas</h5>
                     <div class="row">
                         <div class="table-responsive" style="overflow-x: auto;">
-                            <table class="table table-striped"
-                                style="text-align: center; white-space: nowrap; font-size: 12px; min-width: 1800px; vertical-align: middle;">
-                                <thead>
+                            <table class="table table-striped" 
+                            style="text-align: center; white-space: nowrap; font-size: 12px; min-width: 1800px; vertical-align: middle;">
+                            <thead>
                                     <tr>
+                                        <th colspan="15" style="text-align: center; font-size: 16px; font-weight: bold;">Medicamentos</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Adicionar</th>
                                         <th>6 - CD</th>
                                         <th>7 - Data</th>
                                         <th>8 - Hora inicial</th>
@@ -661,11 +678,120 @@
                                         <th>14 - Fator Red./Acresc.</th>
                                         <th>15 - Valor Unitário</th>
                                         <th>16 - Valor Total</th>
+                                        <th colspan="2">Ação</th>
                                     </tr>
                                 </thead>
                                 <tbody id="medicamentos-table-body">
+                                    @foreach ($medicamentos as $medicamento)
+                                        <tr>
+                                            @if(is_object($medicamento))
+                                                <td>
+                                                    <button type="button" class="btn btn-primary form-control"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#modalProcedimento3"
+                                                            data-agenda-id="{{ $guiaSadt->paciente_id }}"
+                                                            onclick="setRow3(this, '{{ $guiaSadt->paciente_id }}')">
+                                                        <i class="bi bi-list"></i>
+                                                    </button>
+                                                </td>
+                                                <td><input style="width: 50px;" class="form-control" id="cd" name="cd" type="text" value="{{ $medicamento->cd ?? '' }}" readonly>
+                                                    <input style="width: 50px;" class="form-control" id="medicamento_id" name="medicamento_id" type="hidden" value="{{ $medicamento->medicamento_id ?? '' }}" readonly></td>
+                                                <td><input style="width: 119px;" class="form-control" type="text" readonly value="{{ $medicamento->created_at ? \Carbon\Carbon::parse($medicamento->created_at)->format('d/m/Y') : '' }}"></td>
+                                                <td><input class="form-control" type="text" readonly value="{{ $medicamento->created_at ? \Carbon\Carbon::parse($medicamento->created_at)->format('H:i:s') : '' }}"></td>
+                                                <td><input class="form-control" type="text" readonly value="{{ $medicamento->created_at ? \Carbon\Carbon::parse($medicamento->created_at)->format('H:i:s') : '' }}"></td>
+                                                <td><input class="form-control" type="text" id="tabela" name="tabela" value="{{ $medicamento->tabela ?? '' }}" readonly></td>
+                                                <td><input class="form-control" type="text" id="nome_medicamento" name="nome_medicamento" value="{{ $medicamento->nome_medicamento ?? '' }}" readonly></td>
+                                                <td><input class="form-control" type="text" id="codigo" name="codigo" value="{{ $medicamento->codigo ?? '' }}" readonly></td>
+                                                <td><input class="form-control quantidade" id="quantidade" name="quantidade" type="text" value="{{ $medicamento->quantidade ?? '' }}" readonly></td>
+                                                <td>
+                                                    <select id="unidade_medida" name="unidade_medida" class="form-control">
+                                                        <option value="">Selecione</option>
+                                                        <option value="001" {{ old('unidade_medida', $medicamento->unidade_medida ?? '') == '001' ? 'selected' : '' }}>Unidade</option>
+                                                        <option value="002" {{ old('unidade_medida', $medicamento->unidade_medida ?? '') == '002' ? 'selected' : '' }}>Caixa</option>
+                                                        <option value="003" {{ old('unidade_medida', $medicamento->unidade_medida ?? '') == '003' ? 'selected' : '' }}>Frasco</option>
+                                                        <option value="004" {{ old('unidade_medida', $medicamento->unidade_medida ?? '') == '004' ? 'selected' : '' }}>Ampola</option>
+                                                        <option value="005" {{ old('unidade_medida', $medicamento->unidade_medida ?? '') == '005' ? 'selected' : '' }}>Comprimido</option>
+                                                        <option value="006" {{ old('unidade_medida', $medicamento->unidade_medida ?? '') == '006' ? 'selected' : '' }}>Gotas</option>
+                                                        <option value="007" {{ old('unidade_medida', $medicamento->unidade_medida ?? '') == '007' ? 'selected' : '' }}>Mililitro (ml)</option>
+                                                        <option value="008" {{ old('unidade_medida', $medicamento->unidade_medida ?? '') == '008' ? 'selected' : '' }}>Grama (g)</option>
+                                                        <option value="036" {{ old('unidade_medida', $medicamento->unidade_medida ?? '') == '036' ? 'selected' : '' }}>Outros</option>
+                                                    </select>
+                                                </td>
+                                                <td><input class="form-control fator" id="fator" name="fator" type="text" value="{{ $medicamento->fator ?? '' }}" readonly></td>
+                                                <td><input class="form-control valor" id="valor" name="valor" type="text" value="{{ $medicamento->valor ?? '' }}" readonly></td>
+                                                <td><input class="form-control valor_total" id="valor_total" name="valor_total" type="text" value="{{ $medicamento->valor_total ?? '' }}" readonly></td>
+                                                <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha2()">+</button></td>
+                                                <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha2(this)">-</button></td>
+                                            @endif
+                                        </tr>
+                                    @endforeach
                                 </tbody>
+                            </table>
+                            <table class="table table-striped" 
+                                style="text-align: center; white-space: nowrap; font-size: 12px; min-width: 1800px; vertical-align: middle;">
+                                <thead>
+                                    <tr>
+                                        <th colspan="15" style="text-align: center; font-size: 16px; font-weight: bold;">Materias</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Adicionar</th>
+                                        <th>6 - CD</th>
+                                        <th>7 - Data</th>
+                                        <th>8 - Hora inicial</th>
+                                        <th>9 - Hora Final</th>
+                                        <th>10 - Tabela</th>
+                                        <th>17 - Descrição</th>
+                                        <th>11 - Código do Ítem</th>
+                                        <th>12 - Qtd</th>
+                                        <th>13 - Unid de Medida </th>
+                                        <th>14 - Fator Red./Acresc.</th>
+                                        <th>15 - Valor Unitário</th>
+                                        <th>16 - Valor Total</th>
+                                        <th colspan="2">Ação</th>
+                                    </tr>
+                                </thead>
                                 <tbody id="materiais-table-body">
+                                    @foreach ($materiais as $material)
+                                        <tr>
+                                            @if(is_object($material))
+                                                <td>
+                                                    <button type="button" class="btn btn-primary form-control"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#modalProcedimento1"
+                                                            onclick="setRowContext(this, '{{ $guiaSadt->paciente_id }}')">
+                                                        <i class="bi bi-list"></i>
+                                                    </button>
+                                                </td>
+                                                <td><input style="width: 50px;" class="form-control" type="text" value="{{ $material->cd ?? '' }}" readonly></td>
+                                                <td><input style="width: 120px;" class="form-control" type="text" value="{{ $material->created_at ? \Carbon\Carbon::parse($material->created_at)->format('d/m/Y') : '' }}" readonly></td>
+                                                <td><input class="form-control" type="text" value="{{ $material->created_at ? \Carbon\Carbon::parse($material->created_at)->format('H:i') : '' }}" readonly></td>
+                                                <td><input class="form-control" type="text" value="{{ $material->created_at ? \Carbon\Carbon::parse($material->created_at)->format('H:i') : '' }}" readonly></td>
+                                                <td><input class="form-control" type="text" value="{{ $material->tabela ?? '' }}" readonly></td>
+                                                <td><input class="form-control" type="text" value="{{ $material->nome_material ?? '' }}" readonly></td>
+                                                <td><input class="form-control" type="text" value="{{ $material->codigo ?? '' }}" readonly></td>
+                                                <td><input class="form-control quantidade" type="text" value="{{ $material->quantidade ?? '' }}" readonly></td>
+                                                <td>
+                                                    <select id="unidade_medida" name="unidade_medida" class="form-control">
+                                                        <option value="">Selecione</option>
+                                                        <option value="001" {{ old('unidade_medida', $material->unidade_medida ?? '') == '001' ? 'selected' : '' }}>Unidade</option>
+                                                        <option value="002" {{ old('unidade_medida', $material->unidade_medida ?? '') == '002' ? 'selected' : '' }}>Caixa</option>
+                                                        <option value="003" {{ old('unidade_medida', $material->unidade_medida ?? '') == '003' ? 'selected' : '' }}>Frasco</option>
+                                                        <option value="004" {{ old('unidade_medida', $material->unidade_medida ?? '') == '004' ? 'selected' : '' }}>Ampola</option>
+                                                        <option value="005" {{ old('unidade_medida', $material->unidade_medida ?? '') == '005' ? 'selected' : '' }}>Comprimido</option>
+                                                        <option value="006" {{ old('unidade_medida', $material->unidade_medida ?? '') == '006' ? 'selected' : '' }}>Gotas</option>
+                                                        <option value="007" {{ old('unidade_medida', $material->unidade_medida ?? '') == '007' ? 'selected' : '' }}>Mililitro (ml)</option>
+                                                        <option value="008" {{ old('unidade_medida', $material->unidade_medida ?? '') == '008' ? 'selected' : '' }}>Grama (g)</option>
+                                                        <option value="036" {{ old('unidade_medida', $material->unidade_medida ?? '') == '036' ? 'selected' : '' }}>Outros</option>
+                                                    </select>
+                                                </td>
+                                                <td><input class="form-control fator" type="text" value="{{ $material->fator ?? '' }}" readonly></td>
+                                                <td><input class="form-control valor" type="text" value="{{ $material->valor ?? '' }}" readonly></td>
+                                                <td><input class="form-control valor_total" type="text" value="{{ $material->valor_total ?? '' }}" readonly></td>
+                                                <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha3()">+</button></td>
+                                                <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha3(this)">-</button></td>
+                                            @endif
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                                 <tbody id="taxas-table-body">
                                 </tbody>
@@ -694,7 +820,6 @@
         </div>
     </div>
 </main>
-
 <div class="modal fade" id="modalProcedimento1" tabindex="-1" aria-labelledby="modalProcedimentoLabel1" aria-hidden="true">
     <div class="modal-dialog modal-lg" style="max-width: 50%; margin: 1.75rem auto;">
         <div class="modal-content" style="max-height: calc(100vh - 3.5rem); overflow-y: auto; overflow-x: hidden;">
@@ -724,621 +849,436 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="modalProfissional1" tabindex="-1" aria-labelledby="modalProfissionalLabel1"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalProfissionalLabel1">Selecione o Profissional</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <input class="form-control" id="profSearch" type="text"
-                                placeholder="Pesquisar por nome ou CPF...">
-                        </div>
-                        <table class="table table-hover" id="profTable">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>CPF</th>
-                                    <th>Ação</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($profissionals as $p)
-                                    <tr>
-                                        <td>{{ $p->name }}</td>
-                                        <td>{{ $p->cpf }}</td>
-                                        <td>
-                                            <button class="btn btn-primary" type="button"
-                                                onclick="selectProfissional1('{{ $p->name }}', '{{ $p->cbo }}', '{{ $p->conselho_1 }}', '{{ $p->uf_conselho_1 }}', '{{ $p->cpf }}', '{{ $p->conselho_profissional }}')">Selecionar</button>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+<div class="modal fade" id="modalProcedimento2" tabindex="-1" aria-labelledby="modalProcedimentoLabel2" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="max-width: 50%; margin: 1.75rem auto;">
+        <div class="modal-content" style="max-height: calc(100vh - 3.5rem); overflow-y: auto; overflow-x: hidden;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalProcedimentoLabel2">Selecione o Procedimento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-        </div>
-
-        <div class="modal fade" id="modalProfissional2" tabindex="-1" aria-labelledby="modalProfissionalLabel2"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalProfissionalLabel2">Selecione o Profissional</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <input class="form-control" id="profSearch" type="text"
-                                placeholder="Pesquisar por nome ou CPF...">
-                        </div>
-                        <table class="table table-hover" id="profTable">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>CPF</th>
-                                    <th>Ação</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($profissionals as $p)
-                                    <tr>
-                                        <td>{{ $p->name }}</td>
-                                        <td>{{ $p->cpf }}</td>
-                                        <td>
-                                            <button class="btn btn-primary" type="button"
-                                                onclick="selectProfissional2('{{ $p->name }}', '{{ $p->cbo }}', '{{ $p->conselho_1 }}', '{{ $p->uf_conselho_1 }}', '{{ $p->cpf }}', '{{ $p->conselho_profissional }}')">Selecionar</button>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="modal-body" style="overflow-y: auto; max-height: 70vh;">
+                <div class="mb-3">
+                    <input class="form-control" id="procSearch" type="text" placeholder="Pesquisar por Código ou Procedimento...">
                 </div>
+                <input type="hidden" id="hiddenAgendaId" name="agendaId">
+                <table class="table table-hover" id="procTable">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Procedimento</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="procTableBody1">
+                        <!-- Procedimentos serão carregados aqui -->
+                    </tbody>
+                </table>
             </div>
+            <div class="modal-footer"></div>
         </div>
-
-        <div class="modal fade" id="modalProfissional3" tabindex="-1" aria-labelledby="modalProfissionalLabel3"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalProfissionalLabel3">Selecione o Profissional</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <input class="form-control" id="profSearch" type="text"
-                                placeholder="Pesquisar por nome ou CPF...">
-                        </div>
-                        <table class="table table-hover" id="profTable">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>CPF</th>
-                                    <th>Ação</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($profissionals as $p)
-                                    <tr>
-                                        <td>{{ $p->name }}</td>
-                                        <td>{{ $p->cpf }}</td>
-                                        <td>
-                                            <button class="btn btn-primary" type="button"
-                                                onclick="selectProfissional3('{{ $p->name }}', '{{ $p->cbo }}', '{{ $p->conselho_1 }}', '{{ $p->uf_conselho_1 }}', '{{ $p->cpf }}', '{{ $p->conselho_profissional }}')">Selecionar</button>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+    </div>
+</div>
+<div class="modal fade" id="modalProcedimento3" tabindex="-1" aria-labelledby="modalProcedimentoLabel3" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="max-width: 50%; margin: 1.75rem auto;">
+        <div class="modal-content" style="max-height: calc(100vh - 3.5rem); overflow-y: auto; overflow-x: hidden;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalProcedimentoLabel3">Selecione o Procedimento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="overflow-y: auto; max-height: 70vh;">
+                <div class="mb-3">
+                    <input class="form-control" id="procSearch" type="text" placeholder="Pesquisar por Código ou Procedimento...">
                 </div>
+                <input type="hidden" id="hiddenAgendaId" name="agendaId">
+                <table class="table table-hover" id="procTable">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Medicamento</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="procTableBody3">
+                        <!-- Procedimentos serão carregados aqui -->
+                    </tbody>
+                </table>
             </div>
+            <div class="modal-footer"></div>
         </div>
+    </div>
+</div>
+<script>
+    // Função para adicionar uma nova linha
+    function adicionarLinha() {
+        var tableBody = document.getElementById('exame-table-body');
+        var newRow = tableBody.rows[0].cloneNode(true); // Clona a primeira linha
 
-        <script>
-        let activeRow = null;
-
-            $('[id^=profSearch]').on('keyup', function() {
-            var inputId = $(this).attr('id');
-            var inputValue = $(this).val().toLowerCase();
-            var tableId = inputId.replace('Search', 'Table');
-            var rows = $('#' + tableId + ' tbody tr');
-
-            rows.each(function() {
-                var name = $(this).find('td').eq(0).text().toLowerCase();
-                var cpf = $(this).find('td').eq(2).text().toLowerCase();
-                if (name.indexOf(inputValue) > -1 || cpf.indexOf(inputValue) > -1) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
+        // Limpar os valores de input da nova linha
+        var inputs = newRow.querySelectorAll('input');
+        inputs.forEach(function(input) {
+            input.value = ''; // Limpa o valor do input
         });
 
-        function selectProfissional1(name, cbo, conselho_1, uf_conselho_1, cpf, conselho_profissional) {
-            // Preenche os campos com os dados
-            document.getElementById('nome_profissional').value = name;
-            document.getElementById('sigla_conselho').value = conselho_profissional;
-            document.getElementById('numero_conselho_profissional').value = conselho_1;
-            document.getElementById('codigo_cbo_profissional').value = cbo;
-            document.getElementById('codigo_operadora_profissional').value = cpf;
-
-        // Agora, lidamos com a atribuição do Conselho
-        const conselhos = {
-            'CRAS': '01',
-            'COREN': '02',
-            'CRF': '03',
-            'CRFA': '04',
-            'CREFITO': '05',
-            'CRM': '06',
-            'CRN': '07',
-            'CRO': '08',
-            'CRP': '09',
-            'OUTROS': '10'
-        };
-
-        // Se conselho_profissional for uma sigla (como "CRM"), procuramos o código
-        if (Object.keys(conselhos).includes(conselho_profissional)) {
-            document.getElementById('sigla_conselho').value = conselhos[conselho_profissional]; // Atribui o código correspondente
-        } else {
-            // Se for um código, apenas atribuimos diretamente
-            document.getElementById('sigla_conselho').value = conselho_profissional;
-        }
-        // Agora, lidamos com a atribuição da UF
-        const ufs = {
-            'AC': '12', 'AL': '27', 'AP': '16', 'AM': '13',
-            'BA': '29', 'CE': '23', 'DF': '53', 'ES': '32',
-            'GO': '52', 'MA': '21', 'MT': '51', 'MS': '50',
-            'MG': '31', 'PA': '15', 'PB': '25', 'PR': '41',
-            'PE': '26', 'PI': '22', 'RJ': '33', 'RN': '24',
-            'RS': '43', 'RO': '11', 'RR': '14', 'SC': '42',
-            'SP': '35', 'SE': '28', 'TO': '17'
-        };
-
-        // Se uf_conselho_1 for uma sigla (2 caracteres), usamos diretamente
-        if (uf_conselho_1.length == 2) {
-            document.getElementById('uf_profissional').value = ufs[uf_conselho_1] || ''; // Garante que se não encontrar o código, não atribui nada
-        } else {
-            // Se for um código numérico, mapeamos para a sigla correspondente
-            for (let uf in ufs) {
-                if (ufs[uf] == uf_conselho_1) {
-                    document.getElementById('uf_profissional').value = ufs[uf];
-                    break;
-                }
-            }
+        // Preencher o campo de "tabela" com o valor 22
+        var tabelaInput = newRow.querySelector('input[name="tabela[]"]');
+        if (tabelaInput) {
+            tabelaInput.value = '22'; // Define o valor como 22
         }
 
-            // Fecha o modal de seleção de profissional
-            const modalProfissional1 = bootstrap.Modal.getInstance(document.getElementById('modalProfissional1'));
-            modalProfissional1.hide();
-        }
-
-        function selectProfissional2(name, cbo, conselho_1, uf_conselho_1, cpf, conselho_profissional) {
-            // Preenche o campo com o nome selecionado
-            document.getElementById('nome_profissional1').value = name;
-            document.getElementById('sigla_conselho1').value = conselho_profissional;
-            document.getElementById('numero_conselho_profissional1').value = conselho_1;
-            document.getElementById('codigo_cbo_profissional1').value = cbo;
-            document.getElementById('uf_profissional1').value = uf_conselho_1;
-            document.getElementById('codigo_operadora_profissional1').value = cpf;
-
-            // Agora, lidamos com a atribuição do Conselho
-            const conselhos = {
-                'CRAS': '01',
-                'COREN': '02',
-                'CRF': '03',
-                'CRFA': '04',
-                'CREFITO': '05',
-                'CRM': '06',
-                'CRN': '07',
-                'CRO': '08',
-                'CRP': '09',
-                'OUTROS': '10'
-            };
-
-            // Se conselho_profissional for uma sigla (como "CRM"), procuramos o código
-            if (Object.keys(conselhos).includes(conselho_profissional)) {
-                document.getElementById('sigla_conselho1').value = conselhos[conselho_profissional]; // Atribui o código correspondente
-            } else {
-                // Se for um código, apenas atribuimos diretamente
-                document.getElementById('sigla_conselho1').value = conselho_profissional;
-            }
-            // Agora, lidamos com a atribuição da UF
-            const ufs = {
-                'AC': '12', 'AL': '27', 'AP': '16', 'AM': '13',
-                'BA': '29', 'CE': '23', 'DF': '53', 'ES': '32',
-                'GO': '52', 'MA': '21', 'MT': '51', 'MS': '50',
-                'MG': '31', 'PA': '15', 'PB': '25', 'PR': '41',
-                'PE': '26', 'PI': '22', 'RJ': '33', 'RN': '24',
-                'RS': '43', 'RO': '11', 'RR': '14', 'SC': '42',
-                'SP': '35', 'SE': '28', 'TO': '17'
-            };
-
-            // Se uf_conselho_1 for uma sigla (2 caracteres), usamos diretamente
-            if (uf_conselho_1.length == 2) {
-                document.getElementById('uf_profissional1').value = ufs[uf_conselho_1] || ''; // Garante que se não encontrar o código, não atribui nada
-            } else {
-                // Se for um código numérico, mapeamos para a sigla correspondente
-                for (let uf in ufs) {
-                    if (ufs[uf] == uf_conselho_1) {
-                        document.getElementById('uf_profissional1').value = ufs[uf];
-                        break;
-                    }
-                }
-            }
-
-            // Fecha o modal de seleção de profissional
-            const modalProfissional2 = bootstrap.Modal.getInstance(document.getElementById('modalProfissional2'));
-            modalProfissional2.hide();
-        }
-
-        function selectProfissional3(name, cbo, conselho_1, uf_conselho_1, cpf, conselho_profissional) {
-            // Preenche o campo com o nome selecionado
-            document.getElementById('nome_profissional2').value = name;
-            document.getElementById('sigla_conselho2').value = conselho_profissional;
-            document.getElementById('numero_conselho_profissional2').value = conselho_1;
-            document.getElementById('codigo_cbo_profissional2').value = cbo;
-            document.getElementById('uf_profissional2').value = uf_conselho_1;
-            document.getElementById('codigo_operadora_profissional2').value = cpf;
-
-            // Agora, lidamos com a atribuição do Conselho
-            const conselhos = {
-                'CRAS': '01',
-                'COREN': '02',
-                'CRF': '03',
-                'CRFA': '04',
-                'CREFITO': '05',
-                'CRM': '06',
-                'CRN': '07',
-                'CRO': '08',
-                'CRP': '09',
-                'OUTROS': '10'
-            };
-
-            // Se conselho_profissional for uma sigla (como "CRM"), procuramos o código
-            if (Object.keys(conselhos).includes(conselho_profissional)) {
-                document.getElementById('sigla_conselho2').value = conselhos[conselho_profissional]; // Atribui o código correspondente
-            } else {
-                // Se for um código, apenas atribuimos diretamente
-                document.getElementById('sigla_conselho2').value = conselho_profissional;
-            }
-             // Agora, lidamos com a atribuição da UF
-             const ufs = {
-                'AC': '12', 'AL': '27', 'AP': '16', 'AM': '13',
-                'BA': '29', 'CE': '23', 'DF': '53', 'ES': '32',
-                'GO': '52', 'MA': '21', 'MT': '51', 'MS': '50',
-                'MG': '31', 'PA': '15', 'PB': '25', 'PR': '41',
-                'PE': '26', 'PI': '22', 'RJ': '33', 'RN': '24',
-                'RS': '43', 'RO': '11', 'RR': '14', 'SC': '42',
-                'SP': '35', 'SE': '28', 'TO': '17'
-            };
-
-            // Se uf_conselho_1 for uma sigla (2 caracteres), usamos diretamente
-            if (uf_conselho_1.length == 2) {
-                document.getElementById('uf_profissional2').value = ufs[uf_conselho_1] || ''; // Garante que se não encontrar o código, não atribui nada
-            } else {
-                // Se for um código numérico, mapeamos para a sigla correspondente
-                for (let uf in ufs) {
-                    if (ufs[uf] == uf_conselho_1) {
-                        document.getElementById('uf_profissional2').value = ufs[uf];
-                        break;
-                    }
-                }
-            }
-
-            // Fecha o modal de seleção de profissional
-            const modalProfissional3 = bootstrap.Modal.getInstance(document.getElementById('modalProfissional3'));
-            modalProfissional3.hide();
-        }
-
-        function adicionarNovaLinha() {
-    let tabela = document.querySelector("table tbody");
-    let novaLinha = document.createElement("tr");
-    novaLinha.style.textAlign = "center";
-
-    novaLinha.innerHTML = `
-        <td>
-            <button type="button" class="btn btn-primary form-control"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalProcedimento1"
-                    onclick="setRowContext(this, '{{ $guiaSadt->paciente_id }}')">
-                <i class="bi bi-list"></i>
-            </button>
-        </td>
-        <td>
-            <input class="form-control" style="text-align: center;" name="agenda_id2[]" type="hidden" value="">
-            <input class="form-control" style="text-align: center;" name="tabela[]" type="text" value="22">
-        </td>
-        <td><input class="form-control" id="codigo_procedimento_solicitado" name="codigo_procedimento_solicitado[]" type="text" value=""></td>
-        <td><input class="form-control" id="descricao_procedimento" name="descricao_procedimento[]" type="text" value=""></td>
-        <td><input class="form-control" style="text-align: center;" name="qtd_sol[]" type="number" value=""></td>
-        <td><input class="form-control" style="text-align: center;" name="qtd_aut[]" type="number" value=""></td>
-        <td><button type="button" class="btn btn-danger btn-sm" onclick="excluirLinha(this)"><i class="icon bi bi-trash"></i></button></td>
-    `;
-
-    tabela.appendChild(novaLinha);
-}
-
-function excluirLinha(botao) {
-    let linha = botao.closest("tr");
-    linha.remove();
-}
-
-function setRowContext(button, pacienteId) {
-    // Identifica a linha correspondente ao botão clicado
-    activeRow = $(button).closest('tr');
-
-    // Definir o valor no modal, por exemplo, em um campo hidden ou exibindo na interface
-    $('#modalProcedimento1').find('#hiddenAgendaId').val(pacienteId); // Para campos hidden
-    $('#modalProcedimento1').find('.agenda-display').text(pacienteId);
-
-    if (!pacienteId) {
-        alert('Paciente ID não encontrado!');
-        return;
+        // Adicionar a nova linha ao final da tabela
+        tableBody.appendChild(newRow);
     }
 
-    fetch(`/api/get-procedimentos/${pacienteId}`)
-        .then(response => response.json())
-        .then(data => {
-            const tableBody = document.getElementById('procTableBody');
-            tableBody.innerHTML = '';
 
-            if (data.length > 0) {
-                data.forEach(procedimento => {
-                    const row = `
+    // Função para remover a linha
+    window.removerLinha = function(button) {
+        const tabela = $(button).closest('table');
+        const totalLinhas = tabela.find('tbody tr').length;
+
+        if (totalLinhas > 1) {
+            $(button).closest('tr').remove();
+        } else {
+            alert('A tabela deve ter pelo menos uma linha.');
+        }
+    };
+
+    // Função para definir o contexto da linha (se necessário)
+    function setRowContext(button, pacienteId) {
+        // Aqui você pode adicionar o código para definir o contexto do paciente ou linha, se necessário
+        console.log('Definindo contexto para paciente ID: ' + pacienteId);
+    }
+
+
+    function adicionarLinha1() {
+        var tableBody = document.getElementById('procedimento-table-body');
+        var newRow = tableBody.rows[0].cloneNode(true); // Clona a primeira linha
+
+        // Limpar os valores de input da nova linha
+        // Limpar os valores de input da nova linha
+        var inputs = newRow.querySelectorAll('input');
+        inputs.forEach(function(input) {
+            input.value = ''; // Limpa o valor do input
+        });
+
+        // Preencher o campo de "tabela" com o valor 22
+        var tabelaInput = newRow.querySelector('input[name="tabela[]"]');
+        if (tabelaInput) {
+            tabelaInput.value = '22'; // Define o valor como 22
+        }
+
+        // Adicionar a nova linha ao final da tabela
+        tableBody.appendChild(newRow);
+    }
+
+    // Função para remover a linha
+    window.removerLinha1 = function(button) {
+        const tabela = $(button).closest('table');
+        const totalLinhas = tabela.find('tbody tr').length;
+
+        if (totalLinhas > 1) {
+            $(button).closest('tr').remove();
+        } else {
+            alert('A tabela deve ter pelo menos uma linha.');
+        }
+    };
+
+    // Função para calcular o valor total (exemplo)
+    function calcularValorTotal(input) {
+        var row = input.closest('tr'); // Encontra a linha onde o input está
+        var quantidade = row.querySelector('.quantidade_autorizada').value;
+        var valorUnitario = row.querySelector('.valor_unitario').value;
+        var fator = row.querySelector('#fator_red_acres').value;
+
+        // Calcular o valor total com base nas entradas
+        var valorTotal = quantidade * valorUnitario * (fator ? parseFloat(fator) : 1);
+
+        row.querySelector('.valor_total').value = valorTotal.toFixed(2); // Atualiza o valor total
+    }
+
+    function adicionarLinha2() {
+        var tableBody = document.getElementById('medicamentos-table-body');
+        var newRow = tableBody.rows[0].cloneNode(true); // Clona a primeira linha
+
+        // Limpar os valores de input da nova linha
+        var inputs = newRow.querySelectorAll('input, select');
+        inputs.forEach(function(input) {
+            input.value = ''; // Limpa o valor do input ou select
+        });
+
+        // Adicionar a nova linha ao final da tabela
+        tableBody.appendChild(newRow);
+    }
+
+    // Função para remover a linha
+    window.removerLinha2 = function(button) {
+        const tabela = $(button).closest('table');
+        const totalLinhas = tabela.find('tbody tr').length;
+
+        if (totalLinhas > 1) {
+            $(button).closest('tr').remove();
+        } else {
+            alert('A tabela deve ter pelo menos uma linha.');
+        }
+    };
+
+    function adicionarLinha3() {
+        var tableBody = document.getElementById('materiais-table-body');
+        var newRow = tableBody.rows[0].cloneNode(true); // Clona a primeira linha
+
+        // Limpar os valores de input da nova linha
+        var inputs = newRow.querySelectorAll('input, select');
+        inputs.forEach(function(input) {
+            input.value = ''; // Limpa o valor do input ou select
+        });
+
+        // Adicionar a nova linha ao final da tabela
+        tableBody.appendChild(newRow);
+    }
+
+    // Função para remover a linha
+    window.removerLinha3 = function(button) {
+        const tabela = $(button).closest('table');
+        const totalLinhas = tabela.find('tbody tr').length;
+
+        if (totalLinhas > 1) {
+            $(button).closest('tr').remove();
+        } else {
+            alert('A tabela deve ter pelo menos uma linha.');
+        }
+    };
+
+
+    function setRow1(button) {
+        // Identifica a linha correspondente ao botão clicado
+        activeRow = $(button).closest('tr');
+
+        var pacienteId = $(button).data('agenda-id');
+        
+        // Definir o valor no modal, por exemplo, em um campo hidden ou exibindo na interface
+        $('#modalProcedimento1').find('#hiddenAgendaId').val(pacienteId); // Para campos hidden
+        $('#modalProcedimento1').find('.agenda-display').text(pacienteId);
+
+        if (!pacienteId) {
+            alert('Paciente ID não encontrado!');
+            return;
+        }
+
+        fetch(`/api/get-procedimentos/${pacienteId}`)
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('procTableBody');
+                tableBody.innerHTML = '';
+
+                if (data.length > 0) {
+                    data.forEach(procedimento => {
+                        const row = `
+                            <tr>
+                                <td>${procedimento.codigo}</td>
+                                <td>${procedimento.procedimento}</td>
+                                <td>
+                                    <button class="btn btn-primary" type="button"
+                                    onclick="selectProcedimento1('${procedimento.id}', '${procedimento.codigo}', '${procedimento.procedimento}')">Selecionar</button>
+                                </td>
+                            </tr>
+                        `;
+                        tableBody.insertAdjacentHTML('beforeend', row);
+                    });
+                } else {
+                    tableBody.innerHTML = `
                         <tr>
-                            <td>${procedimento.codigo}</td>
-                            <td>${procedimento.procedimento}</td>
-                            <td>
-                                <button class="btn btn-primary" type="button"
-                                onclick="selectProcedimento1('${procedimento.id}', '${procedimento.codigo}', '${procedimento.procedimento}')">Selecionar</button>
-                            </td>
+                            <td colspan="3" class="text-center">Nenhum procedimento disponível.</td>
                         </tr>
                     `;
-                    tableBody.insertAdjacentHTML('beforeend', row);
-                });
-            } else {
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="3" class="text-center">Nenhum procedimento disponível.</td>
-                    </tr>
-                `;
-            }
-        })
-        .catch(error => {
-            console.error('Erro ao buscar procedimentos:', error);
-            alert('Erro ao buscar procedimentos!');
-        });
-}
-
-function selectProcedimento1(id, codigo, procedimento) {
-    if (activeRow) {
-        // Preenche os campos da linha ativa pelos IDs
-        activeRow.find('#proce_id').val(id);
-        activeRow.find('#codigo_procedimento_solicitado').val(codigo);
-        activeRow.find('#descricao_procedimento').val(procedimento);
-
-        // Fecha o modal
-        const modalProcedimento1 = bootstrap.Modal.getInstance(document.getElementById('modalProcedimento1'));
-        modalProcedimento1.hide();
-
-        // Opcional: Reabre outro modal, se necessário
-        setTimeout(() => {
-            const modalSADT = new bootstrap.Modal(document.getElementById('modalSADT'));
-            modalSADT.show();
-        }, 500);
-    } else {
-        console.error('Nenhuma linha ativa encontrada para preencher os campos.');
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao buscar procedimentos:', error);
+                alert('Erro ao buscar procedimentos!');
+            });
     }
-}
 
-// Envio do formulário Guia SADT via AJAX
-$('#guiaForm2').on('submit', function(event) {
-    event.preventDefault(); // Previne envio padrão
+    function selectProcedimento1(id, codigo, procedimento) {
+        if (activeRow) {
+            // Preenche os campos da linha ativa pelos IDs
+            activeRow.find('#proce_id').val(id);
+            activeRow.find('#codigo_procedimento_solicitado').val(codigo);
+            activeRow.find('#descricao_procedimento').val(procedimento);
 
-    var formData = $(this).serialize(); // Serializa os dados do formulário
-    // Coleta os dados de #exame-table-body
-    var exameData = [];
-    $('#exame-table-body tr').each(function () {
-        var linha = {
-            tabela: $(this).find('input[name="tabela"]').val(),
-            codigo_procedimento_solicitado: $(this).find('input[name="codigo_procedimento_solicitado"]').val(),
-            descricao_procedimento: $(this).find('input[name="descricao_procedimento"]').val(),
-            qtd_sol: $(this).find('input[name="qtd_sol"]').val(),
-            qtd_aut: $(this).find('input[name="qtd_aut"]').val()
-        };
-        exameData.push(linha);
-    });
+            // Fecha o modal
+            const modalProcedimento1 = bootstrap.Modal.getInstance(document.getElementById('modalProcedimento1'));
+            modalProcedimento1.hide();
 
-    // Adiciona os dados coletados ao console para depuração
-    console.log('Dados enviados (form):', formData);
-    console.log('Dados enviados (exame-table-body):', exameData);
-
-    $.ajax({
-        url: '{{ route('guia.sadt.salvar') }}', // Rota para salvar guia SADT
-        type: 'POST',
-        data: formData,
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function(response) {
-            if (response.success) {
-                alert(response.message); // Exibe mensagem de sucesso
-
-                // Exibir o botão de "Gerar Guia"
-                $('#gerarGuiaSADTButton').removeClass('d-none');
-            } else {
-                alert('Erro ao salvar a guia SADT: ' + response.message);
-            }
-        },
-        error: function(xhr) {
-            alert('Erro ao salvar a guia SADT.');
-            console.error('Erro:', xhr.responseText);
+            // Opcional: Reabre outro modal, se necessário
+            setTimeout(() => {
+                const modalSADT = new bootstrap.Modal(document.getElementById('modalSADT'));
+                modalSADT.show();
+            }, 500);
+        } else {
+            console.error('Nenhuma linha ativa encontrada para preencher os campos.');
         }
+    }
+
+    $('[id^=procSearch]').on('keyup', function() {
+        var inputId = $(this).attr('id'); // Obtém o ID do campo de busca
+        var inputValue = $(this).val().toLowerCase().trim(); // Valor da busca em minúsculas e sem espaços extras
+        var tableId = inputId.replace('Search', 'Table'); // Mapeia o ID da tabela correspondente
+        var rows = $('#' + tableId + ' tbody tr'); // Seleciona todas as linhas da tabela
+
+        rows.each(function() {
+            var codigo = $(this).find('td').eq(0).text().toLowerCase().trim(); // Código da linha
+            var procedimento = $(this).find('td').eq(1).text().toLowerCase().trim(); // Procedimento da linha
+
+            // Verifica se o código ou procedimento contém o valor digitado
+            if (codigo.includes(inputValue) || procedimento.includes(inputValue)) {
+                $(this).show(); // Exibe a linha
+            } else {
+                $(this).hide(); // Esconde a linha
+            }
+        });
     });
-});
 
-if (!response || !response.procedimentos) {
-    alert('Erro: Não foi possível carregar os dados ou nenhum exame foi encontrado.');
-    return;
-}
+    function setRow2(button) {
+        // Identifica a linha correspondente ao botão clicado
+        activeRow = $(button).closest('tr');
 
-// Limpar o corpo da tabela para evitar duplicação
-$('#procedimento-table-body').empty();
+        var pacienteId = $(button).data('agenda-id');
+        
+        // Definir o valor no modal, por exemplo, em um campo hidden ou exibindo na interface
+        $('#modalProcedimento1').find('#hiddenAgendaId').val(pacienteId); // Para campos hidden
+        $('#modalProcedimento1').find('.agenda-display').text(pacienteId);
 
-// Iterar sobre cada exame e preencher a tabela
-response.procedimentos.forEach(function(procedimento) {
-    const procedimentoRow = `
-    <tr>
-        <td><input class="form-control" id="data_real" name="data_real[]" type="date" readonly value="${procedimento.dataproc}"></td>
-        <td><input class="form-control" id="hora_inicio_atendimento" name="hora_inicio_atendimento[]" type="text" readonly value="${procedimento.created_at ? procedimento.created_at.substring(11, 19) : ''}"></td>
-        <td><input class="form-control" id="hora_fim_atendimento" name="hora_fim_atendimento[]" type="text" readonly value="${procedimento.created_at ? procedimento.created_at.substring(11, 19) : ''}"></td>
-        <td><input class="form-control" id="tabela" name="tabela[]" type="text" readonly value="22"></td>
-        <td><input class="form-control" id="codigo_procedimento_realizado" name="codigo_procedimento_realizado[]" readonly type="text" value="${procedimento.codigo || ''}"></td>
-        <td><input class="form-control" id="descricao_procedimento_realizado" name="descricao_procedimento_realizado[]" readonly type="text" value="${procedimento.procedimento_nome || ''}"></td>
-        <td><input class="form-control quantidade_autorizada" id="quantidade_autorizada" name="quantidade_autorizada[]" type="number" value="${procedimento.quantidade_autorizada || ''}" oninput="calcularValorTotal(this)" placeholder="Qtd"></td>
-        <td>
-             <select class="form-control" id="via" name="via[]">
-                <option value="" ${procedimento.via == null ? 'selected' : ''}>Selecione</option>
-                <option value="1" ${procedimento.via == 1 ? 'selected' : ''}>Unidade</option>
-                <option value="2" ${procedimento.via == 2 ? 'selected' : ''}>Múltiplo</option>
-            </select>
-        </td>
+        if (!pacienteId) {
+            alert('Paciente ID não encontrado!');
+            return;
+        }
 
-        <td>
-            <select class="form-control" id="tecnica" name="tecnica[]">
-                <option value="" ${procedimento.tecnica == null ? 'selected' : ''}>Selecione</option>
-                <option value="U" ${procedimento.tecnica == 'U' ? 'selected' : '' }>Unilateral</option>
-                <option value="B" ${procedimento.tecnica == 'B' ? 'selected' : '' }>Bilateral</option>
-                <option value="M" ${procedimento.tecnica == 'M' ? 'selected' : '' }>Múltiplo</option>
-                <option value="S" ${procedimento.tecnica == 'S' ? 'selected' : '' }>Simples</option>
-                <option value="C" ${procedimento.tecnica == 'C' ? 'selected' : '' }>Complexo</option>
-                <option value="A" ${procedimento.tecnica == 'A' ? 'selected' : '' }>Avançado</option>
-            </select>
+        fetch(`/api/get-procedimentos/${pacienteId}`)
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('procTableBody1');
+                tableBody.innerHTML = '';
 
-        </td>
-        <td><input class="form-control" name="fator_red_acres[]" id="fator_red_acres" type="text" oninput="calcularValorTotal(this)" placeholder="EX:1,00" value="${procedimento.fator_red_acres || ''}"></td>
-        <td><input class="form-control valor_unitario" id="valor_unitario" oninput="calcularValorTotal(this)" name="valor_unitario[]" type="text" value="${procedimento.valor || ''}"></td>
-        <td><input class="form-control valor_total" id="valor_total" name="valor_total[]" type="text" readonly value="${procedimento.valor_total || ''}" placeholder="Valor Total"></td>
-    </tr>
-`;
-    $('#procedimento-table-body').append(procedimentoRow);
-});
+                if (data.length > 0) {
+                    data.forEach(procedimento => {
+                        const row = `
+                            <tr>
+                                <td>${procedimento.codigo}</td>
+                                <td>${procedimento.procedimento}</td>
+                                <td>
+                                    <button class="btn btn-primary" type="button"
+                                    onclick="selectProcedimento2('${procedimento.id}', '${procedimento.codigo}', '${procedimento.procedimento}', '${procedimento.valor_proc}')">Selecionar</button>
+                                </td>
+                            </tr>
+                        `;
+                        tableBody.insertAdjacentHTML('beforeend', row);
+                    });
+                } else {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="3" class="text-center">Nenhum procedimento disponível.</td>
+                        </tr>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao buscar procedimentos:', error);
+                alert('Erro ao buscar procedimentos!');
+            });
+    }
 
-if (!response || !response.medicamentos) {
-    alert(
-        'Erro: Não foi possível carregar os dados ou nenhum medicamento foi encontrado.'
-    );
-    return;
-}
+    function selectProcedimento2(id, codigo, procedimento, valor_proc) {
+        if (activeRow) {
+            // Preenche os campos da linha ativa pelos IDs
+            activeRow.find('#proce_id2').val(id);
+            activeRow.find('#codigo_procedimento_realizado').val(codigo);
+            activeRow.find('#descricao_procedimento_realizado').val(procedimento);
+            activeRow.find('#valor_unitario').val(valor_proc);
 
-const unidadeMedidaMap = {
-    "001": "Unidade",
-    "002": "Caixa",
-    "003": "Frasco",
-    "004": "Ampola",
-    "005": "Comprimido",
-    "006": "Gotas",
-    "007": "Mililitro (ml)",
-    "008": "Grama (g)",
-    "036": "Outros"
-};
+            // Fecha o modal
+            const modalProcedimento2 = bootstrap.Modal.getInstance(document.getElementById('modalProcedimento2'));
+            modalProcedimento2.hide();
 
+            // Opcional: Reabre outro modal, se necessário
+            setTimeout(() => {
+                const modalSADT = new bootstrap.Modal(document.getElementById('modalSADT'));
+                modalSADT.show();
+            }, 500);
+        } else {
+            console.error('Nenhuma linha ativa encontrada para preencher os campos.');
+        }
+    }
 
-// Limpar o corpo da tabela para evitar duplicação
-$('#medicamentos-table-body').empty();
+    function setRow3(button) {
+        // Identifica a linha correspondente ao botão clicado
+        activeRow = $(button).closest('tr');
 
-// Iterar sobre cada exame e preencher a tabela
-response.medicamentos.forEach(function(medicamento) {
-    const unidadeMedidaNome = unidadeMedidaMap[medicamento.unidade_medida] || "Desconhecido";
-    const medicamentoRow = `
-    <tr>
-        <td><input style="width: 50px;" class="form-control" type="text" value="${medicamento.cd || ''}" readonly></td>
-        <td><input style="width: 119px;" class="form-control" type="text" <input type="text" readonly value="${medicamento.created_at ? medicamento.created_at.substring(0, 10).split('-').reverse().join('/') : ''}"></td>
-        <td><input class="form-control" type="text" readonly value="${medicamento.created_at ? medicamento.created_at.substring(11, 19) : ''}"></td>
-        <td><input class="form-control" type="text" readonly value="${medicamento.created_at ? medicamento.created_at.substring(11, 19) : ''}"></td>
-        <td><input class="form-control" type="text" value="${medicamento.tabela || ''}" readonly></td>
-        <td><input class="form-control" type="text" value="${medicamento.nome_medicamento || ''}" readonly></td>
-        <td><input class="form-control" type="text" value="${medicamento.codigo || ''}" readonly></td>
-        <td><input class="form-control quantidade" type="text" value="${medicamento.quantidade  || ''}" readonly></td>
-        <td><input class="form-control" type="text" value="${unidadeMedidaNome}" readonly></td>
-        <td><input class="form-control fator" type="text" value="${medicamento.fator || ''}" readonly></td>
-        <td><input class="form-control valor" type="text" value="${medicamento.valor || ''}" readonly></td>
-        <td><input class="form-control valor_total" type="text" value="${medicamento.valor_total || ''}" readonly></td>
-    </tr>
-`;
-    $('#medicamentos-table-body').append(medicamentoRow);
-});
+        var pacienteId = $(button).data('agenda-id');
+        
+        // Definir o valor no modal, por exemplo, em um campo hidden ou exibindo na interface
+        $('#modalProcedimento1').find('#hiddenAgendaId').val(pacienteId); // Para campos hidden
+        $('#modalProcedimento1').find('.agenda-display').text(pacienteId);
 
-if (!response || !response.materiais) {
-    alert(
-        'Erro: Não foi possível carregar os dados ou nenhum medicamento foi encontrado.'
-    );
-    return;
-}
+        if (!pacienteId) {
+            alert('Paciente ID não encontrado!');
+            return;
+        }
 
-// Limpar o corpo da tabela para evitar duplicação
-$('#materiais-table-body').empty();
+        fetch(`/api/get-medicamentos/${pacienteId}`)
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('procTableBody3');
+                tableBody.innerHTML = '';
 
-// Iterar sobre cada exame e preencher a tabela
-response.materiais.forEach(function(material) {
-    const unidadeMedidaNome = unidadeMedidaMap[material
-        .unidade_medida] || "Desconhecido";
-    const materialRow = `
-    <tr>
-        <td><input style="width: 50px;" class="form-control" type="text" value="${material.cd || ''}" readonly></td>
-        <td><input style="width: 120px;" class="form-control" type="text" <input type="text" readonly value="${material.created_at ? material.created_at.substring(0, 10).split('-').reverse().join('/') : ''}"></td>
-        <td><input class="form-control" type="text" readonly value="${material.created_at ? material.created_at.substring(11, 16) : ''}"></td>
-        <td><input class="form-control" type="text" readonly value="${material.created_at ? material.created_at.substring(11, 16) : ''}"></td>
-        <td><input class="form-control" type="text" value="${material.tabela || ''}" readonly></td>
-        <td><input class="form-control" type="text" value="${material.nome_material || ''}" readonly></td>
-        <td><input class="form-control" type="text" value="${material.codigo || ''}" readonly></td>
-        <td><input class="form-control quantidade" type="text" value="${material.quantidade  || ''}" readonly></td>
-        <td><input class="form-control" type="text" value="${unidadeMedidaNome}" readonly></td>
-        <td><input class="form-control fator" type="text" value="${material.fator || ''}" readonly></td>
-        <td><input class="form-control valor" type="text" value="${material.valor || ''}" readonly></td>
-        <td><input class="form-control valor_total" type="text" value="${material.valor_total || ''}" readonly></td>
-    </tr>
-`;
-    $('#materiais-table-body').append(materialRow);
-});
+                if (data.length > 0) {
+                    data.forEach(medicamento => {
+                        const row = `
+                            <tr>
+                                <td>${medicamento.codigo}</td>
+                                <td>${medicamento.medicamento}</td>
+                                <td>
+                                    <button class="btn btn-primary" type="button"
+                                    onclick="selectProcedimento3('${medicamento.id}', '${medicamento.codigo}', '${medicamento.medicamento}','${medicamento.preco}')">Selecionar</button>
+                                </td>
+                            </tr>
+                        `;
+                        tableBody.insertAdjacentHTML('beforeend', row);
+                    });
+                } else {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="3" class="text-center">Nenhum medicamento disponível.</td>
+                        </tr>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao buscar medicamento:', error);
+                alert('Erro ao buscar medicamento!');
+            });
+    }
 
-if (!response || !response.taxas) {
-    alert(
-        'Erro: Não foi possível carregar os dados ou nenhum medicamento foi encontrado.'
-    );
-    return;
-}
+    function selectProcedimento3(id, codigo, medicamento, preco) {
+        if (activeRow) {
+            // Preenche os campos da linha ativa pelos IDs
+            activeRow.find('#medicamento_id').val(id);
+            activeRow.find('#codigo').val(codigo);
+            activeRow.find('#nome_medicamento').val(medicamento);
+            activeRow.find('#valor').val(preco);
 
-// Limpar o corpo da tabela para evitar duplicação
-$('#taxas-table-body').empty();
+            // Fecha o modal
+            const modalProcedimento3 = bootstrap.Modal.getInstance(document.getElementById('modalProcedimento3'));
+            modalProcedimento3.hide();
 
-// Iterar sobre cada exame e preencher a tabela
-response.taxas.forEach(function(taxa) {
-    const taxaRow = `
-    <tr>
-        <td><input style="width: 50px;" class="form-control" type="text" value="" readonly></td>
-        <td><input style="width: 120px;" class="form-control" type="text" <input type="text" readonly value="${taxa.created_at ? taxa.created_at.substring(0, 10).split('-').reverse().join('/') : ''}"></td>
-        <td><input class="form-control" type="text" readonly value="${taxa.created_at ? taxa.created_at.substring(11, 16) : ''}"></td>
-        <td><input class="form-control" type="text" readonly value="${taxa.created_at ? taxa.created_at.substring(11, 16) : ''}"></td>
-        <td><input class="form-control" type="text" value="" readonly></td>
-        <td><input class="form-control" type="text" value="${taxa.nome_taxa || ''}" readonly></td>
-        <td><input class="form-control" type="text" value="" readonly></td>
-        <td><input class="form-control quantidade" type="text" value="" readonly></td>
-        <td><input class="form-control" type="text" value="" readonly></td>
-        <td><input class="form-control fator" type="text" value="" readonly></td>
-        <td><input class="form-control valor" type="text" value="${taxa.valor || ''}" readonly></td>
-        <td><input class="form-control valor_total" type="text" value="${taxa.valor || ''}" readonly></td>
-    </tr>
-`;
-    $('#taxas-table-body').append(taxaRow);
-});
+            // Opcional: Reabre outro modal, se necessário
+            setTimeout(() => {
+                const modalSADT = new bootstrap.Modal(document.getElementById('modalSADT'));
+                modalSADT.show();
+            }, 500);
+        } else {
+            console.error('Nenhuma linha ativa encontrada para preencher os campos.');
+        }
+    }
+
 </script>
+
 @endsection

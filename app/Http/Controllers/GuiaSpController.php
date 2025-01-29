@@ -734,6 +734,42 @@ class GuiaSpController extends Controller
         return response()->json($procedimentos);
     }
 
+    public function getMedicamentos($pacienteId)
+    {
+        $agendas = Agenda::where('id', $pacienteId)->first();
+
+        if ($agendas && $agendas->paciente && $agendas->paciente->convenio) {
+            $tabelaMedicamento = $agendas->paciente->convenio->tab_med_id;
+
+            if ($tabelaMedicamento === null) {
+                $medicamentos = DB::table('medicamentos')
+                    ->select('id', 'nome as medicamento', 'tipo as codigo', 'preco_venda as preco')
+                    ->orderBy('id', 'asc')
+                    ->get();
+            } elseif (Schema::hasTable($tabelaMedicamento)) {
+                if (str_starts_with($tabelaMedicamento, 'tab_brasindice')) {
+                    $medicamentos = DB::table($tabelaMedicamento)
+                        ->select('id', 'medicamento', 'preco', 'TUSS as codigo')
+                        ->orderBy('id', 'asc')
+                        ->get();
+                } elseif (str_starts_with($tabelaMedicamento, 'tab_simpro')) {
+                    $medicamentos = DB::table($tabelaMedicamento)
+                        ->select('id', 'DESCRICAO as medicamento')
+                        ->orderBy('id', 'asc')
+                        ->get();
+                } else {
+                    $medicamentos = [];
+                }
+            } else {
+                $medicamentos = [];
+            }
+        } else {
+            $medicamentos = [];
+        }
+
+        return response()->json($medicamentos);
+    }
+
 
     public function gerarXmlGuiasadtEmLote(Request $request)
     {
@@ -2456,6 +2492,36 @@ class GuiaSpController extends Controller
         $exameSoli = ExamesSadt::where('guia_sps_id', $guia->id)->get();
         $exameAut = ExamesAutSadt::where('guia_sps_id', $guia->id)->get();
 
+        $agenda = Agenda::where('id', $guia->agenda_id)->first();
+
+        $tabelaMed = $agenda->convenio->tab_med_id; // Nome da tabela de medicamentos do convênio
+
+        if (Schema::hasTable($tabelaMed)) { // Verifica se a tabela existe no banco
+            $medicamentos = MedAgenda::where('agenda_id', $agenda->id)
+                ->join($tabelaMed, "$tabelaMed.id", '=', 'med_agendas.medicamento_id') // Realiza o INNER JOIN
+                ->select('med_agendas.*', "$tabelaMed.medicamento as nome_medicamento") // Seleciona as colunas desejadas
+                ->get();
+        } else {
+            $medicamentos = MedAgenda::where('agenda_id', $agenda->id)
+                ->join('medicamentos', 'medicamentos.id', '=', 'med_agendas.medicamento_id')
+                ->select('med_agendas.*', 'medicamentos.nome as nome_medicamento') // Seleciona as colunas desejadas
+                ->get();// Retorna uma coleção vazia se a tabela não existir
+        }
+
+        $tabelaMat = $agenda->convenio->tab_mat_id; // Nome da tabela de medicamentos do convênio
+
+        if (Schema::hasTable($tabelaMat)) { // Verifica se a tabela existe no banco
+            $materiais = MatAgenda::where('agenda_id', $agenda->id)
+                ->join($tabelaMat, "$tabelaMat.id", '=', 'mat_agendas.material_id') // Realiza o INNER JOIN
+                ->select('mat_agendas.*', "$tabelaMat.medicamento as nome_material") // Seleciona as colunas desejadas
+                ->get();
+        } else {
+            $materiais = MatAgenda::where('agenda_id', $agenda->id)
+            ->join('produtos', 'produtos.id', '=', 'mat_agendas.material_id') // Realiza o INNER JOIN
+            ->select('mat_agendas.*', 'produtos.nome as nome_material') // Seleciona as colunas desejadas
+            ->get();
+        }
+
         $conselhos = [
             'CRAS' => '01',
             'COREN' => '02',
@@ -2499,7 +2565,7 @@ class GuiaSpController extends Controller
             'TO' => '17'
         ];
 
-        return view('guias.sadtEditar', compact('guiaSadt', 'conselhos', 'ufs', 'exameSoli', 'exameAut', 'profissionals'));
+        return view('guias.sadtEditar', compact('guiaSadt', 'materiais','medicamentos','conselhos', 'ufs', 'exameSoli', 'exameAut', 'profissionals'));
     }
 
     public function updateGuiaSadt(Request $request, GuiaSp $guiaSadt)
