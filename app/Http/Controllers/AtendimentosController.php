@@ -257,25 +257,68 @@ class AtendimentosController extends Controller
 
     public function storeRemedio(Request $request)
     {
+        Log::info('Iniciando storeRemedio', ['request' => $request->all()]);
+    
         $paciente_id = $request->input('paciente_id');
         $agenda_id = $request->input('agenda_id');
         $profissional_id = $request->input('profissional_id');
-
+    
+        Log::info('IDs recebidos', [
+            'paciente_id' => $paciente_id,
+            'agenda_id' => $agenda_id,
+            'profissional_id' => $profissional_id
+        ]);
+    
         // Processar os medicamentos
         $medicamento_ids = $request->input('medicamento_id', []);
         $doses = $request->input('dose', []);
-        $horas = $request->input('horas', []);
-
-        // Verificar se existem múltiplas linhas e processar cada uma
+        $horas = $request->input('hora', []); // Corrigido o nome do campo para corresponder ao input do formulário
+    
+        Log::info('Dados recebidos', [
+            'medicamento_ids' => $medicamento_ids,
+            'doses' => $doses,
+            'horas' => $horas
+        ]);
+    
+        // Verificar se os arrays possuem os mesmos tamanhos
+        if (count($medicamento_ids) !== count($doses) || count($medicamento_ids) !== count($horas)) {
+            Log::error('Os arrays de medicamentos, doses e horas possuem tamanhos diferentes!', [
+                'medicamento_ids' => count($medicamento_ids),
+                'doses' => count($doses),
+                'horas' => count($horas)
+            ]);
+            return response()->json(['error' => 'Dados inconsistentes'], 422);
+        }
+    
+        // Processar cada linha da prescrição
         foreach ($medicamento_ids as $index => $medicamento_id) {
             if (!empty($medicamento_id)) {
+                // Verifica se os índices existem antes de acessar
+                $dose = $doses[$index] ?? null;
+                $hora = $horas[$index] ?? null;
+    
+                Log::info("Processando medicamento $index", [
+                    'medicamento_id' => $medicamento_id,
+                    'dose' => $dose,
+                    'hora' => $hora
+                ]);
+    
+                if (is_null($dose) || is_null($hora)) {
+                    Log::warning("Dados ausentes para medicamento $index", [
+                        'medicamento_id' => $medicamento_id,
+                        'dose' => $dose,
+                        'hora' => $hora
+                    ]);
+                    continue;
+                }
+    
                 // Verificar se já existe uma prescrição com esses dados
                 $existingPrescricao = Remedio::where('agenda_id', $agenda_id)
                     ->where('profissional_id', $profissional_id)
                     ->where('paciente_id', $paciente_id)
                     ->where('medicamento_id', $medicamento_id)
                     ->first();
-
+    
                 if (!$existingPrescricao) {
                     // Criar uma nova prescrição se não existir
                     Remedio::create([
@@ -283,19 +326,22 @@ class AtendimentosController extends Controller
                         'profissional_id' => $profissional_id,
                         'paciente_id' => $paciente_id,
                         'medicamento_id' => $medicamento_id,
-                        'dose' => $doses[$index],
-                        'horas' => $horas[$index]
+                        'dose' => $dose,
+                        'horas' => $hora
                     ]);
+                    Log::info("Nova prescrição criada para medicamento $index");
                 } else {
                     // Atualizar a prescrição existente
                     $existingPrescricao->update([
-                        'dose' => $doses[$index],
-                        'horas' => $horas[$index]
+                        'dose' => $dose,
+                        'horas' => $hora
                     ]);
+                    Log::info("Prescrição atualizada para medicamento $index");
                 }
             }
         }
-
+    
+        Log::info('Finalizando storeRemedio com sucesso');
         return response()->noContent();
     }
 

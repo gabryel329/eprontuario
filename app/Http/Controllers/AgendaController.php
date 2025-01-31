@@ -1380,7 +1380,7 @@ class AgendaController extends Controller
 
         $agendasEvadio = Agenda::where('profissional_id', $profissionalId)
             ->where('data', $data)
-            ->where('status', 'EVADIO')
+            ->where('status', 'EVADIU')
             ->orderBy('hora', 'asc')
             ->get();
 

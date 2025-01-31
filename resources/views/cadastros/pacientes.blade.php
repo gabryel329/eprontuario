@@ -22,7 +22,8 @@
                                 <div class="mb-3 col-md-6">
                                     <label class="form-label">Nome Completo:</label>
                                     <input class="form-control" placeholder="*" id="name" name="name" type="text"
-                                        value="{{ old('name') }}">
+                                        value="{{ request('name', old('name')) }}">
+
                                 </div>
                                 <div class="mb-3 col-md-3">
                                     <label class="form-label">E-mail:</label>
@@ -263,6 +264,13 @@
                                     <label class="form-label">Complemento</label>
                                     <input class="form-control" name="complemento" type="text" id="complemento"
                                         size="40" value="{{ old('complemento') }}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col-md-12">
+                                    <label class="form-label">Observações</label>
+                                    <textarea class="form-control" name="obs" type="text" id="obs"
+                                        size="40" value="{{ old('obs') }}"></textarea>
                                 </div>
                             </div>
                             <div class="row">

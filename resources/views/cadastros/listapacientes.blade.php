@@ -369,6 +369,12 @@
                                                                         value="{{ old('uf', $item->uf) }}">
                                                                 </div>
                                                             </div>
+                                                            <div class="row">
+                                                                <div class="mb-3 col-md-12">
+                                                                    <label class="form-label">Observações</label>
+                                                                    <textarea class="form-control" name="obs" id="obs" size="40">{{ old('obs', $item->obs) }}</textarea>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary"

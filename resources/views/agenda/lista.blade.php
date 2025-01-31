@@ -194,8 +194,8 @@
                                                     <option value="CANCELADO"
                                                         {{ $item->status == 'CANCELADO' ? 'selected' : '' }}>CANCELADO
                                                     </option>
-                                                    <option value="EVADIO"
-                                                        {{ $item->status == 'EVADIO' ? 'selected' : '' }}>EVADIO</option>
+                                                    <option value="EVADIU"
+                                                        {{ $item->status == 'EVADIU' ? 'selected' : '' }}>EVADIU</option>
                                                     <option value="FINALIZADO"
                                                         {{ $item->status == 'FINALIZADO' ? 'selected' : '' }}>FINALIZADO
                                                     </option>
@@ -260,9 +260,12 @@
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label class="form-label">Novo Paciente</label>
-                                    <a href="{{ route('paciente.index') }}" class="btn btn-primary form-control"><i
-                                            class="bi bi-person-add"></i></a>
+                                    <a href="{{ route('paciente.index', ['name' => optional($item->paciente)->name ?? $item->name]) }}" 
+                                       class="btn btn-primary form-control">
+                                        <i class="bi bi-person-add"></i>
+                                    </a>
                                 </div>
+                                
                             </div>
 
                             <div class="row">

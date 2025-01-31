@@ -16,6 +16,7 @@ use App\Http\Controllers\GuiaHonorarioController;
 use App\Http\Controllers\GuiaSpController;
 use App\Http\Controllers\GuiaTissController;
 use App\Http\Controllers\HonorarioController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PacientesController;
 use App\Http\Controllers\PainelController;
 use App\Http\Controllers\PermisoesController;
@@ -269,7 +270,7 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::get('/atendimentos/{agenda_id}/{paciente_id}', [AtendimentosController::class, 'verificarAtendimento']);
     Route::post('/anamneses/store', [AtendimentosController::class, 'storeAnamnese']);
     Route::get('/anamneses/check/{paciente_id}', [AtendimentosController::class, 'verificarAnamnese']);
-    Route::post('/remedios/store', [AtendimentosController::class, 'storeRemedio']);
+    Route::post('/remedios/store', [AtendimentosController::class, 'storeRemedio'])->name('remedios.store');
     Route::get('/remedios/{agenda_id}/{paciente_id}', [AtendimentosController::class, 'verificarRemedio']);
     Route::post('/exames/store', [AtendimentosController::class, 'storeExame'])->name('exames.store');
 
@@ -371,6 +372,10 @@ Route::middleware(['check.session.expired'])->group(function () {
     #Relatorio BI
     Route::get('/relatorio-bi', [RelatoriosController::class, 'index'])->name('relatorio.bi');
 
+    #Chat
+    Route::get('/chat', [MessageController::class, 'index'])->name('chat.index');
+    Route::get('/chat/{id}', [MessageController::class, 'show'])->name('chat.show');
+    Route::post('/chat', [MessageController::class, 'store'])->name('chat.store');
 
 
     Route::middleware(['auth', 'check.question'])->group(function () {

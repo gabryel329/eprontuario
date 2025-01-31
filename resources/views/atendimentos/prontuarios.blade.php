@@ -384,11 +384,11 @@
                                                                         <div class="col-12 text-end">
                                                                             <button type="submit"
                                                                                 class="btn btn-primary">Imprimir</button>
-                                                                            <button type="button" id="responseIA"
+                                                                            {{-- <button type="button" id="responseIA"
                                                                                 title="Saiba a opinião da nossa IA."
                                                                                 class="btn btn-outline-danger"
                                                                                 onclick="handleResponseIA(event)">Doctor
-                                                                                IA</button>
+                                                                                IA</button> --}}
 
                                                                         </div>
                                                                     </div>

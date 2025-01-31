@@ -95,6 +95,7 @@ class PacientesController extends Controller
         $validade = $request->input('validade'); // Recebe o valor do input 'validade' (formato YYYY-MM)
         $produto = $request->input('produto');
         $cor = $request->input('cor');
+        $obs = $request->input('obs');
         $imagem = $request->file('imagem');
 
         $imagem_base64 = $request->input('imagem');
@@ -153,6 +154,7 @@ class PacientesController extends Controller
             'validade' => $validade,
             'produto' => $produto,
             'cor' => $cor,
+            'obs' => $obs,
             'imagem' => $imageName,
         ]);
 
@@ -208,6 +210,7 @@ class PacientesController extends Controller
         $validade = $request->input('validade');
         $produto = $request->input('produto');
         $cor = $request->input('cor');
+        $obs = $request->input('obs');
         $imagem = $request->file('imagem');
 
         if ($imagem && $imagem->isValid()) {
@@ -260,6 +263,7 @@ class PacientesController extends Controller
         $paciente->validade = $validade;
         $paciente->produto = $produto;
         $paciente->cor = $cor;
+        $paciente->obs = $obs;
 
         // Save the updated paciente data
         $paciente->save();

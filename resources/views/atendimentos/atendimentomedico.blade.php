@@ -499,7 +499,7 @@
                                         </form>
                                     </div>
                                     <div class="tab-pane fade" id="prescricao-remedio">
-                                        <form id="remedioForm" method="POST" action="#">
+                                        <form id="remedioForm" method="POST" action="{{ route('remedios.store') }}">
                                             @csrf
                                             <input class="form-control" id="paciente_id" name="paciente_id"
                                                 type="text" value="{{ $paciente->id }}" hidden>
@@ -1166,7 +1166,7 @@
             </select>
         </td>
         <td><input type="number" class="form-control dose" name="dose[]" placeholder="Dose" min="1" value="${medicamento.dose || ''}"></td>
-        <td><input type="number" class="form-control hora" name="hora[]" placeholder="Horas" min="1" value="${medicamento.hora || ''}"></td>
+        <td><input type="number" class="form-control hora" name="hora[]" placeholder="Horas" min="1" value="${medicamento.horas || ''}"></td>
         <td>
             <button type="button" class="btn btn-success add-row">+</button>
             <button type="button" class="btn btn-danger remove-row">-</button>
@@ -1180,7 +1180,7 @@
 
         // Carregar medicamentos via AJAX
         $.ajax({
-            url: `/medicamento/${agenda_id}/${paciente_id}`,
+            url: `/remedios/${agenda_id}/${paciente_id}`,
             type: 'GET',
             success: function(response) {
                 if (response.data && response.data.length > 0) {
@@ -1199,7 +1199,7 @@
             event.preventDefault();
 
             $.ajax({
-                url: '/medicamento/store',
+                url: '/remedios/store',
                 type: 'POST',
                 data: $('#remedioForm').serialize(),
                 headers: {
