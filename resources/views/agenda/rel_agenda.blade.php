@@ -73,6 +73,7 @@
                                 </div>
 
                                 <!-- Exibição dos Resultados da Agenda -->
+                                <button class="btn btn-primary mt-3" onclick="imprimirAgenda()">Imprimir Agenda</button>
                                 <div id="resultados-agenda">
                                     <!-- Resultados da Agenda vão aparecer aqui -->
                                 </div>
@@ -157,5 +158,17 @@
             });
         });
     });
+
+    function imprimirAgenda() {
+        var conteudo = document.getElementById('resultados-agenda').innerHTML;
+        var janelaImpressao = window.open('', '', 'width=800,height=600');
+        janelaImpressao.document.write('<html><head><title>Imprimir Agenda</title>');
+        janelaImpressao.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">');
+        janelaImpressao.document.write('</head><body>');
+        janelaImpressao.document.write(conteudo);
+        janelaImpressao.document.write('</body></html>');
+        janelaImpressao.document.close();
+        janelaImpressao.print();
+    }
 </script>
 @endsection
