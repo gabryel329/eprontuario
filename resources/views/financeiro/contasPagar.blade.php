@@ -58,7 +58,14 @@
                                 </div>
                                 <div class="mb-3 col-md-3">
                                     <label class="form-label">1º Vencimento:</label>
-                                    <input class="form-control" id="data_vencimento" name="data_vencimento" type="date" required>
+                                    <input
+                                        class="form-control"
+                                        id="data_vencimento"
+                                        name="data_vencimento"
+                                        type="date"
+                                        min="{{ date('Y-m-d') }}"
+                                        required
+                                    >
                                 </div>
                                 <div class="mb-3 col-md-3">
                                     <label class="form-label">Referência:</label>
@@ -116,7 +123,15 @@
                                 <!-- Valores -->
                                 <div class="mb-3 col-md-2">
                                     <label class="form-label">Valor:</label>
-                                    <input class="form-control" id="valor" name="valor" type="text">
+                                    <input
+                                        class="form-control"
+                                        id="valor"
+                                        name="valor"
+                                        type="number"
+                                        min="0.01"
+                                        step="0.01"
+                                        required
+                                    >
                                 </div>
                                 <div class="mb-3 col-md-2">
                                     <label class="form-label">Desconto:</label>
@@ -285,12 +300,29 @@
                                         <div class="modal-body">
                                             <div class="mb-3">
                                                 <label for="data_vencimento" class="form-label">Data de Vencimento</label>
-                                                <input type="date" class="form-control" id="data_vencimento" name="data_vencimento" value="{{ $conta->data_vencimento }}" required>
+                                                <input
+                                                    type="date"
+                                                    class="form-control"
+                                                    id="data_vencimento"
+                                                    name="data_vencimento"
+                                                    value="{{ $conta->data_vencimento }}"
+                                                    min="{{ date('Y-m-d') }}"
+                                                    required
+                                                >
                                             </div>
 
                                             <div class="mb-3">
                                                 <label for="valor" class="form-label">Valor</label>
-                                                <input type="text" class="form-control" id="valor" name="valor" value="{{ $conta->valor }}" required>
+                                                <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    id="valor"
+                                                    name="valor"
+                                                    value="{{ $conta->valor }}"
+                                                    min="0"
+                                                    step="0.01"
+                                                    required
+                                                >
                                             </div>
 
                                             <div class="mb-3">
@@ -318,6 +350,33 @@
     </main>
 
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('form'); // Alterar para o seletor do formulário correto
+    const dataVencimento = document.querySelector('input[name="data_vencimento"]');
+    const valor = document.querySelector('input[name="valor"]');
+
+    form.addEventListener('submit', function (e) {
+        const hoje = new Date();
+        const dataSelecionada = new Date(dataVencimento.value);
+
+        // Validação para data de vencimento
+        if (dataSelecionada < hoje) {
+            e.preventDefault();
+            alert('A data de vencimento não pode ser anterior à data atual.');
+            dataVencimento.focus();
+            return;
+        }
+
+        // Validação para valor
+        const valorInserido = parseFloat(valor.value);
+        if (isNaN(valorInserido) || valorInserido <= 0) {
+            e.preventDefault();
+            alert('O valor deve ser um número positivo.');
+            valor.focus();
+            return;
+        }
+    });
+});
 document.addEventListener('DOMContentLoaded', function() {
     $('#data').datepicker({
         format: "yyyy-mm",

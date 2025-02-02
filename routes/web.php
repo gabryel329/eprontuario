@@ -126,7 +126,9 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::get('/agenda/{id}/guia-sadt', [GuiaSpController::class, 'gerarGuiaSadt'])->name('guia.sadt');
 
         Route::post('/get-procedimentos', [AgendaController::class, 'getProcedimentos'])->name('get.procedimentos');
-
+        Route::get('/api/get-medicamentos/{guia_sps_id}', [GuiaSpController::class, 'getMedicamentos']);
+        Route::get('/api/get-materiais/{guia_sps_id}', [GuiaSpController::class, 'getMateriais']);
+        
         Route::get('/api/get-procedimentos/{pacienteId}', [GuiaSpController::class, 'getProcedimentos']);
 
         Route::get('/gerar-guia-sadt/{id}', [GuiaSpController::class, 'gerarGuiaSADTMODAL']);

@@ -18,7 +18,7 @@ class MessageController extends Controller
         return view('chat.index', compact('users'));
     }
 
-    public function show($id)
+public function show($id)
 {
     $messages = Message::where(function ($query) use ($id) {
             $query->where('remetente_id', auth()->id())->where('destinatario_id', $id);
@@ -26,31 +26,41 @@ class MessageController extends Controller
         ->orWhere(function ($query) use ($id) {
             $query->where('remetente_id', $id)->where('destinatario_id', auth()->id());
         })
-        ->orderBy('created_at', 'asc') // Para organizar as mensagens
+        ->orderBy('created_at', 'asc')
         ->get();
-    
+
     return view('chat.messages', compact('messages'));
 }
 
 
-
-
 public function store(Request $request)
 {
-    $request->validate([
-        'destinatario_id' => 'required|exists:users,id',
-        'messagem' => 'required|string'
-    ]);
+    try {
+        // Certifique-se de que o campo correto está sendo validado
+        $request->validate([
+            'destinatario_id' => 'required|exists:users,id',
+            'messagem' => 'required|string' // O nome correto é 'messagem'
+        ]);
 
-    // Cria a mensagem
-    $message = Message::create([
-        'remetente_id' => auth()->id(),
-        'destinatario_id' => $request->destinatario_id,
-        'messagem' => $request->messagem,
-    ]);
+        // Salvar a mensagem no banco de dados
+        $message = Message::create([
+            'remetente_id' => auth()->id(),
+            'destinatario_id' => $request->destinatario_id,
+            'messagem' => $request->messagem // O nome correto é 'messagem'
+        ]);
 
-    // Retorna a resposta em JSON para AJAX
-    return response()->json(['success' => true, 'message' => $message]);
+        return response()->json([
+            'success' => true,
+            'message' => $message
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage()
+        ], 500);
+    }
 }
+
 
 }

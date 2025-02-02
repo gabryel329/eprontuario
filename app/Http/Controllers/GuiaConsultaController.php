@@ -823,70 +823,68 @@ class GuiaConsultaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function updateGuiaConsulta(Request $request, GuiaConsulta $guiaConsulta)
-{
-    // Dados de apoio
-    $conselhos = [
-        'CRAS' => '01', 'COREN' => '02', 'CRF' => '03', 'CRFA' => '04',
-        'CREFITO' => '05', 'CRM' => '06', 'CRN' => '07', 'CRO' => '08',
-        'CRP' => '09', 'OUTROS' => '10'
-    ];
+    public function updateGuiaConsulta(Request $request)
+    {
+        // Dados de apoio
+        $conselhos = [
+            'CRAS' => '01', 'COREN' => '02', 'CRF' => '03', 'CRFA' => '04',
+            'CREFITO' => '05', 'CRM' => '06', 'CRN' => '07', 'CRO' => '08',
+            'CRP' => '09', 'OUTROS' => '10'
+        ];
 
-    $ufs = [
-        'AC' => '12', 'AL' => '27', 'AP' => '16', 'AM' => '13',
-        'BA' => '29', 'CE' => '23', 'DF' => '53', 'ES' => '32',
-        'GO' => '52', 'MA' => '21', 'MT' => '51', 'MS' => '50',
-        'MG' => '31', 'PA' => '15', 'PB' => '25', 'PR' => '41',
-        'PE' => '26', 'PI' => '22', 'RJ' => '33', 'RN' => '24',
-        'RS' => '43', 'RO' => '11', 'RR' => '14', 'SC' => '42',
-        'SP' => '35', 'SE' => '28', 'TO' => '17'
-    ];
+        $ufs = [
+            'AC' => '12', 'AL' => '27', 'AP' => '16', 'AM' => '13',
+            'BA' => '29', 'CE' => '23', 'DF' => '53', 'ES' => '32',
+            'GO' => '52', 'MA' => '21', 'MT' => '51', 'MS' => '50',
+            'MG' => '31', 'PA' => '15', 'PB' => '25', 'PR' => '41',
+            'PE' => '26', 'PI' => '22', 'RJ' => '33', 'RN' => '24',
+            'RS' => '43', 'RO' => '11', 'RR' => '14', 'SC' => '42',
+            'SP' => '35', 'SE' => '28', 'TO' => '17'
+        ];
 
-    // Atualizar a guia existente
-    $guiaConsulta->update($request->only([
-        'numero_guia_operadora',
-        'registro_ans',
-        'numero_carteira',
-        'validade_carteira',
-        'atendimento_rn',
-        'nome_social',
-        'nome_beneficiario',
-        'codigo_operadora',
-        'nome_contratado',
-        'codigo_cnes',
-        'nome_profissional_executante',
-        'numero_conselho',
-        'codigo_cbo',
-        'indicacao_acidente',
-        'indicacao_cobertura_especial',
-        'regime_atendimento',
-        'saude_ocupacional',
-        'data_atendimento',
-        'tipo_consulta',
-        'valor_procedimento',
-        'observacao',
-    ]) + [
-        'identificador' => 'GERADO',
-        'conselho_profissional' => array_key_exists($request->input('conselho_profissional'), $conselhos)
-            ? $conselhos[$request->input('conselho_profissional')]
-            : $request->input('conselho_profissional'),
-        'uf_conselho' => array_key_exists($request->input('uf_conselho'), $ufs)
-            ? $ufs[$request->input('uf_conselho')]
-            : $request->input('uf_conselho'),
-    ]);
+        // Criar uma nova guia de consulta
+        $novaGuia = new GuiaConsulta();
 
+        $novaGuia->fill($request->only([
+            'numero_guia_operadora',
+            'registro_ans',
+            'numero_carteira',
+            'validade_carteira',
+            'atendimento_rn',
+            'nome_social',
+            'nome_beneficiario',
+            'codigo_operadora',
+            'nome_contratado',
+            'codigo_cnes',
+            'nome_profissional_executante',
+            'numero_conselho',
+            'codigo_cbo',
+            'indicacao_acidente',
+            'indicacao_cobertura_especial',
+            'regime_atendimento',
+            'saude_ocupacional',
+            'data_atendimento',
+            'tipo_consulta',
+            'valor_procedimento',
+            'observacao',
+        ]) + [
+            'identificador' => 'GERADO',
+            'conselho_profissional' => array_key_exists($request->input('conselho_profissional'), $conselhos)
+                ? $conselhos[$request->input('conselho_profissional')]
+                : $request->input('conselho_profissional'),
+            'uf_conselho' => array_key_exists($request->input('uf_conselho'), $ufs)
+                ? $ufs[$request->input('uf_conselho')]
+                : $request->input('uf_conselho'),
+        ]);
 
-    // Obter o lote atual
-    $loteAtual = $guiaConsulta->numeracao;
+        // Determinar a numeração da guia
+        $novaGuia->numeracao = GuiaConsulta::max('numeracao') + 1;
 
-    // Criar uma nova guia com o lote incrementado
-    $novaGuia = $guiaConsulta->replicate();
-    $novaGuia->numeracao = $loteAtual + 1;
-    $novaGuia->identificador = 'GLOSADA';
-    $novaGuia->save();
+        // Salvar a nova guia
+        $novaGuia->save();
 
-    return redirect()->route('faturamentoGlosa.index')->with('success', 'Guia de Consulta atualizada e nova guia criada com sucesso!');
-}
+        return redirect()->route('faturamentoGlosa.index')->with('success', 'Nova Guia de Consulta criada com sucesso!');
+    }
 
     /**
      * Remove the specified resource from storage.

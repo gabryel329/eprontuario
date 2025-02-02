@@ -770,6 +770,41 @@ class GuiaSpController extends Controller
         return response()->json($medicamentos);
     }
 
+    public function getMateriais($pacienteId)
+{
+    $agendas = Agenda::where('id', $pacienteId)->first();
+
+    if ($agendas && $agendas->paciente && $agendas->paciente->convenio) {
+        $tabelaMaterial = $agendas->paciente->convenio->tab_mat_id;
+
+        if ($tabelaMaterial === null) {
+            $materiais = DB::table('produtos')
+                ->select('id', 'nome as material', 'codigo', 'preco_venda as preco')
+                ->orderBy('id', 'asc')
+                ->get();
+        } elseif (Schema::hasTable($tabelaMaterial)) {
+            if (str_starts_with($tabelaMaterial, 'tab_brasindice')) {
+                $materiais = DB::table($tabelaMaterial)
+                    ->select('id', 'medicamento as material', 'preco', 'TUSS as codigo', 'APRESENTACAO as unid')
+                    ->orderBy('id', 'asc')
+                    ->get();
+            } elseif (str_starts_with($tabelaMaterial, 'tab_simpro')) {
+                $materiais = DB::table($tabelaMaterial)
+                    ->select('id', 'DESCRICAO as material') // <-- Padroniza como 'material'
+                    ->orderBy('id', 'asc')
+                    ->get();
+            } else {
+                $materiais = [];
+            }
+        } else {
+            $materiais = [];
+        }
+    } else {
+        $materiais = [];
+    }
+
+    return response()->json($materiais);
+}
 
     public function gerarXmlGuiasadtEmLote(Request $request)
     {
@@ -838,7 +873,7 @@ class GuiaSpController extends Controller
                 if ($tabelaMateriais && Schema::hasTable($tabelaMateriais)) {
                     $materiais = DB::table('mat_agendas')
                         ->join($tabelaMateriais, 'mat_agendas.material_id', '=', "{$tabelaMateriais}.id")
-                        ->where('mat_agendas.agenda_id', $guia->agenda_id)
+                        ->where('mat_agendas.guia_sps_id', $guia->id)
                         ->select(
                             'mat_agendas.id as id',
                             'mat_agendas.quantidade as quantidade',
@@ -860,7 +895,7 @@ class GuiaSpController extends Controller
                 if ($tabelaMedicamentos && Schema::hasTable($tabelaMedicamentos)) {
                     $medicamentos = DB::table('med_agendas')
                         ->join($tabelaMedicamentos, 'med_agendas.medicamento_id', '=', "{$tabelaMedicamentos}.id")
-                        ->where('med_agendas.agenda_id', $guia->agenda_id)
+                        ->where('med_agendas.guia_sps_id', $guia->id)
                         ->select(
                             'med_agendas.id as id',
                             'med_agendas.quantidade as quantidade',
@@ -1047,6 +1082,7 @@ class GuiaSpController extends Controller
             // Atualiza as guias com a numeração correta
             foreach ($guias as $guia) {
                 $guia->identificador = 'GERADO';
+                $guia->valor_total = $valorTotalGeral;
                 $guia->save();
             }
 
@@ -1173,7 +1209,7 @@ class GuiaSpController extends Controller
                 if ($tabelaMateriais && Schema::hasTable($tabelaMateriais)) {
                     $materiais = DB::table('mat_agendas')
                         ->join($tabelaMateriais, 'mat_agendas.material_id', '=', "{$tabelaMateriais}.id")
-                        ->where('mat_agendas.agenda_id', $guia->agenda_id)
+                        ->where('mat_agendas.guia_sps_id', $guia->id)
                         ->select(
                             'mat_agendas.id as id',
                             'mat_agendas.quantidade as quantidade',
@@ -1195,7 +1231,7 @@ class GuiaSpController extends Controller
                 if ($tabelaMedicamentos && Schema::hasTable($tabelaMedicamentos)) {
                     $medicamentos = DB::table('med_agendas')
                         ->join($tabelaMedicamentos, 'med_agendas.medicamento_id', '=', "{$tabelaMedicamentos}.id")
-                        ->where('med_agendas.agenda_id', $guia->agenda_id)
+                        ->where('med_agendas.guia_sps_id', $guia->id)
                         ->select(
                             'med_agendas.id as id',
                             'med_agendas.quantidade as quantidade',
@@ -1333,7 +1369,7 @@ class GuiaSpController extends Controller
                     $equipeSadt->addChild('ans:CBOS', $guia->codigo_cbo_profissional2);
                 }
             }
-            if (is_array($outrasDespesasItems) && count($outrasDespesasItems) > 0) {
+            if ($outrasDespesasItems instanceof \Illuminate\Support\Collection && $outrasDespesasItems->isNotEmpty()) {
                 $outrasDespesas = $guiaSadt->addChild('ans:outrasDespesas');
                 foreach ($outrasDespesasItems as $index => $item) {
                     $despesa = $outrasDespesas->addChild('ans:despesa');
@@ -1434,7 +1470,7 @@ class GuiaSpController extends Controller
             if ($tabelaMateriais && Schema::hasTable($tabelaMateriais)) {
                 $materiais = DB::table('mat_agendas')
                     ->join($tabelaMateriais, 'mat_agendas.material_id', '=', "{$tabelaMateriais}.id")
-                    ->where('mat_agendas.agenda_id', $guia->agenda_id)
+                    ->where('mat_agendas.guia_sps_id', $guia->id)
                     ->select(
                         'mat_agendas.id as id',
                         'mat_agendas.quantidade as quantidade',
@@ -1458,7 +1494,7 @@ class GuiaSpController extends Controller
             if ($tabelaMedicamentos && Schema::hasTable($tabelaMedicamentos)) {
                 $medicamentos = DB::table('med_agendas')
                     ->join($tabelaMedicamentos, 'med_agendas.medicamento_id', '=', "{$tabelaMedicamentos}.id")
-                    ->where('med_agendas.agenda_id', $guia->agenda_id)
+                    ->where('med_agendas.guia_sps_id', $guia->id)
                     ->select(
                         'med_agendas.id as id',
                         'med_agendas.quantidade as quantidade',
@@ -1670,6 +1706,7 @@ class GuiaSpController extends Controller
             foreach ($guia as $g) {
                 $g->identificador = 'GERADO';
                 $g->save();
+                $g->save();
             }
 
             // Calcula o valor total do lote
@@ -1759,7 +1796,7 @@ class GuiaSpController extends Controller
             if ($tabelaMateriais && Schema::hasTable($tabelaMateriais)) {
                 $materiais = DB::table('mat_agendas')
                     ->join($tabelaMateriais, 'mat_agendas.material_id', '=', "{$tabelaMateriais}.id")
-                    ->where('mat_agendas.agenda_id', $guia->agenda_id)
+                    ->where('mat_agendas.guia_sps_id', $guia->id)
                     ->select(
                         'mat_agendas.id as id',
                         'mat_agendas.quantidade as quantidade',
@@ -1782,7 +1819,7 @@ class GuiaSpController extends Controller
             if ($tabelaMedicamentos && Schema::hasTable($tabelaMedicamentos)) {
                 $medicamentos = DB::table('med_agendas')
                     ->join($tabelaMedicamentos, 'med_agendas.medicamento_id', '=', "{$tabelaMedicamentos}.id")
-                    ->where('med_agendas.agenda_id', $guia->agenda_id)
+                    ->where('med_agendas.guia_sps_id', $guia->id)
                     ->select(
                         'med_agendas.id as id',
                         'med_agendas.quantidade as quantidade',
@@ -1948,7 +1985,7 @@ class GuiaSpController extends Controller
             }
         }
         // Outras Despesas
-        if (is_array($outrasDespesasItems) && count($outrasDespesasItems) > 0) {
+        if ($outrasDespesasItems instanceof \Illuminate\Support\Collection && $outrasDespesasItems->isNotEmpty()) {
             $outrasDespesas = $guiaSadt->addChild('ans:outrasDespesas');
             foreach ($outrasDespesasItems as $index => $item) {
                 $despesa = $outrasDespesas->addChild('ans:despesa');
@@ -2223,20 +2260,22 @@ class GuiaSpController extends Controller
                 $guiaSps->sigla_conselho = $conselhos[$conselhoProfissional];
             }
 
-            // Verifica se o uf_conselho está no mapeamento e substitui pelo código numérico
-            $ufConselho = $request->input('uf_profissional');
-            if (array_key_exists($ufConselho, $ufs)) {
-                $guiaSps->uf_profissional = $ufs[$ufConselho];
+            if (array_key_exists($request->input('sigla_conselho1'), $conselhos)) {
+                $guiaSps->update(['sigla_conselho1' => $conselhos[$request->input('sigla_conselho1')]]);
             }
 
-            $conselho_profissional = $request->input('conselho_profissional');
-            if (array_key_exists($conselho_profissional, $conselhos)) {
-                $guiaSps->conselho_profissional = $conselhos[$conselho_profissional];
+            if (array_key_exists($request->input('sigla_conselho2'), $conselhos)) {
+                $guiaSps->update(['sigla_conselho2' => $conselhos[$request->input('sigla_conselho2')]]);
             }
 
-            $uf_conselho = $request->input('uf_conselho');
-            if (array_key_exists($uf_conselho, $ufs)) {
-                $guiaSps->uf_conselho = $ufs[$uf_conselho];
+            if (array_key_exists($request->input('uf_profissional'), $ufs)) {
+                $guiaSps->update(['uf_profissional' => $ufs[$request->input('uf_profissional')]]);
+            }
+            if (array_key_exists($request->input('uf_profissional1'), $ufs)) {
+                $guiaSps->update(['uf_profissional1' => $ufs[$request->input('uf_profissional1')]]);
+            }
+            if (array_key_exists($request->input('uf_profissional2'), $ufs)) {
+                $guiaSps->update(['uf_profissional2' => $ufs[$request->input('uf_profissional2')]]);
             }
 
             // Salva as mudanças no banco de dados
@@ -2328,8 +2367,48 @@ class GuiaSpController extends Controller
                 ]);
             }
 
+            // Atualiza a tabela guia_sps com a soma total dos valores
+            MatAgenda::where('agenda_id', $guiaSps->agenda_id)->update([
+                'guia_sps_id' => $guiaSps->id
+            ]);
+
+            TaxaAgenda::where('agenda_id', $guiaSps->agenda_id)->update([
+                'guia_sps_id' => $guiaSps->id
+            ]);
+
+            MedAgenda::where('agenda_id', $guiaSps->agenda_id)->update([
+                'guia_sps_id' => $guiaSps->id
+            ]);
 
             Log::info($request->input("descricao_procedimento_realizado.$index"));
+
+            // Salvar Medicamentos
+            if (is_array($request->input('nome_medicamento'))) {
+                foreach ($request->input('nome_medicamento') as $index => $nomeMedicamento) {
+                    MedAgenda::create([
+                        'agenda_id' => $request->input('agenda_id'),
+                        'medicamento_id' => $request->input('medicamento_id')[$index],
+                        'quantidade' => $request->input('quantidade_medicamento')[$index],
+                        'valor_unitario' => $request->input('valor_unitario_medicamento')[$index],
+                        'valor_total' => $request->input('valor_total_medicamento')[$index],
+                        'guia_sps_id' => $guiaSps->id
+                    ]);
+                }
+            }
+
+            // Salvar Materiais
+            if (is_array($request->input('nome_material'))) {
+                foreach ($request->input('nome_material') as $index => $nomeMaterial) {
+                    MatAgenda::create([
+                        'agenda_id' => $request->input('agenda_id'),
+                        'material_id' => $request->input('material_id')[$index],
+                        'quantidade' => $request->input('quantidade_material')[$index],
+                        'valor_unitario' => $request->input('valor_unitario_material')[$index],
+                        'valor_total' => $request->input('valor_total_material')[$index],
+                        'guia_sps_id' => $guiaSps->id
+                    ]);
+                }
+            }
 
             DB::commit();
 
@@ -2497,26 +2576,26 @@ class GuiaSpController extends Controller
         $tabelaMed = $agenda->convenio->tab_med_id; // Nome da tabela de medicamentos do convênio
 
         if (Schema::hasTable($tabelaMed)) { // Verifica se a tabela existe no banco
-            $medicamentos = MedAgenda::where('agenda_id', $agenda->id)
-                ->join($tabelaMed, "$tabelaMed.id", '=', 'med_agendas.medicamento_id') // Realiza o INNER JOIN
-                ->select('med_agendas.*', "$tabelaMed.medicamento as nome_medicamento") // Seleciona as colunas desejadas
-                ->get();
+            $medicamentos = MedAgenda::where('guia_sps_id', $guia->id)
+            ->join($tabelaMed, "$tabelaMed.id", '=', 'med_agendas.medicamento_id') // Realiza o INNER JOIN
+            ->select('med_agendas.*', "$tabelaMed.medicamento as nome_medicamento") // Seleciona as colunas desejadas
+            ->get();
         } else {
-            $medicamentos = MedAgenda::where('agenda_id', $agenda->id)
-                ->join('medicamentos', 'medicamentos.id', '=', 'med_agendas.medicamento_id')
-                ->select('med_agendas.*', 'medicamentos.nome as nome_medicamento') // Seleciona as colunas desejadas
-                ->get();// Retorna uma coleção vazia se a tabela não existir
+            $medicamentos = MedAgenda::where('guia_sps_id', $guia->id)
+            ->join('medicamentos', 'medicamentos.id', '=', 'med_agendas.medicamento_id')
+            ->select('med_agendas.*', 'medicamentos.nome as nome_medicamento') // Seleciona as colunas desejadas
+            ->get();// Retorna uma coleção vazia se a tabela não existir
         }
 
         $tabelaMat = $agenda->convenio->tab_mat_id; // Nome da tabela de medicamentos do convênio
 
         if (Schema::hasTable($tabelaMat)) { // Verifica se a tabela existe no banco
-            $materiais = MatAgenda::where('agenda_id', $agenda->id)
-                ->join($tabelaMat, "$tabelaMat.id", '=', 'mat_agendas.material_id') // Realiza o INNER JOIN
-                ->select('mat_agendas.*', "$tabelaMat.medicamento as nome_material") // Seleciona as colunas desejadas
-                ->get();
+            $materiais = MatAgenda::where('guia_sps_id', $guia->id)
+            ->join($tabelaMat, "$tabelaMat.id", '=', 'mat_agendas.material_id') // Realiza o INNER JOIN
+            ->select('mat_agendas.*', "$tabelaMat.medicamento as nome_material") // Seleciona as colunas desejadas
+            ->get();
         } else {
-            $materiais = MatAgenda::where('agenda_id', $agenda->id)
+            $materiais = MatAgenda::where('guia_sps_id', $guia->id)
             ->join('produtos', 'produtos.id', '=', 'mat_agendas.material_id') // Realiza o INNER JOIN
             ->select('mat_agendas.*', 'produtos.nome as nome_material') // Seleciona as colunas desejadas
             ->get();
@@ -2743,13 +2822,15 @@ class GuiaSpController extends Controller
                 'TO' => '17'
             ];
 
-            $horaInicioAtendimento = is_array($request->input('hora_inicio_atendimento'))
-                ? reset($request->input('hora_inicio_atendimento'))
-                : $request->input('hora_inicio_atendimento');
+            $horaInicioAtendimentoInput = $request->input('hora_inicio_atendimento');
+            $horaInicioAtendimento = is_array($horaInicioAtendimentoInput)
+                ? reset($horaInicioAtendimentoInput)
+                : $horaInicioAtendimentoInput;
 
-            $horaFimAtendimento = is_array($request->input('hora_fim_atendimento'))
-                ? reset($request->input('hora_fim_atendimento'))
-                : $request->input('hora_fim_atendimento');
+            $horaFimAtendimentoInput = $request->input('hora_fim_atendimento');
+            $horaFimAtendimento = is_array($horaFimAtendimentoInput)
+                ? reset($horaFimAtendimentoInput)
+                : $horaFimAtendimentoInput;
 
             // Criar a guia
             $guia = GuiaSp::create([
@@ -2819,24 +2900,36 @@ class GuiaSpController extends Controller
                 'uf_profissional2' => $request->input('uf_profissional2'),
                 'codigo_cbo_profissional2' => $request->input('codigo_cbo_profissional2'),
                 'observacao' => $request->input('observacao') ?? 'N/A',
-                'identificador' => 'GERADO'
+                'identificador' => 'GLOSADA'
             ]);
 
             // Substituir valores de conselhos e UF por códigos
             if (array_key_exists($request->input('sigla_conselho'), $conselhos)) {
                 $guia->update(['sigla_conselho' => $conselhos[$request->input('sigla_conselho')]]);
             }
+            if (array_key_exists($request->input('sigla_conselho1'), $conselhos)) {
+                $guia->update(['sigla_conselho1' => $conselhos[$request->input('sigla_conselho1')]]);
+            }
+            if (array_key_exists($request->input('sigla_conselho2'), $conselhos)) {
+                $guia->update(['sigla_conselho2' => $conselhos[$request->input('sigla_conselho2')]]);
+            }
 
             if (array_key_exists($request->input('uf_profissional'), $ufs)) {
                 $guia->update(['uf_profissional' => $ufs[$request->input('uf_profissional')]]);
             }
+            if (array_key_exists($request->input('uf_profissional1'), $ufs)) {
+                $guia->update(['uf_profissional1' => $ufs[$request->input('uf_profissional1')]]);
+            }
+            if (array_key_exists($request->input('uf_profissional2'), $ufs)) {
+                $guia->update(['uf_profissional2' => $ufs[$request->input('uf_profissional2')]]);
+            }
 
             // Atualizar exames na tabela exames_sadt
-            if ($request->has('descricao_procedimento')) {
-                foreach ($request->input('tabela') as $index => $tabela) {
+            if (is_array($request->input('descricao_procedimento'))) {
+                foreach ($request->input('descricao_procedimento') as $index => $tabela) {
                     ExamesSadt::create([
                         'guia_sps_id' => $guia->id,
-                        'tabela' => $tabela,
+                        'tabela' => $request->input("tabela.$index"),
                         'codigo_procedimento_solicitado' => $request->input("codigo_procedimento_solicitado.$index"),
                         'descricao_procedimento' => $request->input("descricao_procedimento.$index"),
                         'qtd_sol' => $request->input("qtd_sol.$index"),
@@ -2845,8 +2938,7 @@ class GuiaSpController extends Controller
                 }
             }
 
-            // Atualizar procedimentos na tabela exames_aut_sadt
-            if ($request->has('descricao_procedimento_realizado')) {
+            if (is_array($request->input('descricao_procedimento_realizado'))) {
                 foreach ($request->input('data_real') as $index => $dataReal) {
                     ExamesAutSadt::create([
                         'guia_sps_id' => $guia->id,
@@ -2865,6 +2957,62 @@ class GuiaSpController extends Controller
                     ]);
                 }
             }
+
+            // Salvar Medicamentos
+            if ($request->has('nome_medicamento')) {
+                foreach ($request->input('nome_medicamento') as $index => $nomeMedicamento) {
+                    Log::info("Recebendo dados para índice {$index}", [
+                        'quantidade' => $request->input("quantidade.$index"), // Deve aparecer corretamente!
+                        'nome_medicamento' => $nomeMedicamento,
+                        'medicamento_id' => $request->input("medicamento_id.$index"),
+                        'valor' => $request->input("valor.$index"),
+                    ]);
+                    MedAgenda::create([
+                        'guia_sps_id' => $guia->id,
+                        'agenda_id' => $request->input('agenda_id'),
+                        'paciente_id' => $request->input('paciente_id'),
+                        'medicamento_id' => $request->input("medicamento_id.$index"),
+                        'cd' => $request->input("cd.$index"),
+                        'data' => $request->input("created_at.$index") ? \Carbon\Carbon::createFromFormat('d/m/Y', $request->input("created_at.$index"))->format('Y-m-d') : now()->format('Y-m-d'),
+                        'hora_inicial' => $request->input("hora_inicial.$index"),
+                        'hora_final' => $request->input("hora_final.$index"),
+                        'tabela' => $request->input("tabela.$index"),
+                        'codigo' => $request->input("codigo.$index"),
+                        'nome_medicamento' => $nomeMedicamento,
+                        'quantidade' => $request->input("quantidade.$index"),
+                        'unidade_medida' => $request->input("unidade_medida.$index"),
+                        'fator' => $request->input("fator.$index"),
+                        'valor' => $request->input("valor.$index"),
+                        'valor_total' => ($request->input("quantidade.$index") * $request->input("valor.$index")),
+                    ]);
+                }
+            }
+
+
+            // Salvar Materiais
+            if (is_array($request->input('nome_material'))) {
+                foreach ($request->input('nome_material') as $index => $nomeMaterial) {
+                    MatAgenda::create([
+                        'guia_sps_id' => $guia->id,
+                        'agenda_id' => $request->input('agenda_id'), // Ensure agenda_id is set
+                        'paciente_id' => $request->input('paciente_id'), // Ensure paciente_id is set
+                        'material_id' => $request->input("material_id.$index"), // Ensure material_id is set
+                        'cd' => $request->input("cd.$index"),
+                        'data' => $request->input("created_at.$index"),
+                        'hora_inicial' => $request->input("hora_inicial.$index"),
+                        'hora_final' => $request->input("hora_final.$index"),
+                        'tabela' => $request->input("tabela.$index"),
+                        'codigo' => $request->input("codigo.$index"),
+                        'nome_material' => $nomeMaterial,
+                        'quantidade' => $request->input("quantidade.$index"),
+                        'unidade_medida' => $request->input("unidade_medida.$index"),
+                        'fator' => $request->input("fator.$index"),
+                        'valor' => $request->input("valor.$index"),
+                        'valor_total' => $request->input("valor_total.$index"),
+                    ]);
+                }
+            }
+
 
             DB::commit();
 

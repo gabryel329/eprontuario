@@ -15,6 +15,7 @@ class MatAgenda extends Model
         'agenda_id',
         'paciente_id',
         'material_id',
+        'guia_sps_id',
         'valor',
         'unidade_medida',
         'quantidade',

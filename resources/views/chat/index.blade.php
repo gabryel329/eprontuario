@@ -46,7 +46,7 @@
             max-height: 50px; /* Ajuste a altura máxima da imagem para se adequar ao cabeçalho */
             max-width: 100%;  /* Garante que a imagem não ultrapasse a largura do cabeçalho */
         }
-        
+
         .app-content {
             min-height: calc(100vh - 60px); /* Ajusta a altura mínima do conteúdo principal */
             margin-top: 60px;              /* Adiciona margem superior para o cabeçalho fixo */
@@ -73,7 +73,7 @@
             </div>
         </a>
     </header>
-    
+
     <!-- Sidebar menu-->
     <aside class="app-sidebar" style="background-color: #1D695C">
         <div class="app-sidebar__user-name" style="text-align: center;">
@@ -94,7 +94,7 @@
         </ul>
     </aside>
     <main class="app-content d-flex justify-content-center align-items-center flex-column">
-        
+
     </main>
     <!-- Modal para abrir o chat com iframe -->
     <div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
@@ -119,9 +119,6 @@
             </div>
         </div>
     </div>
-    
-
-    
 </body>
 
 <script src="js/jquery-3.7.0.min.js"></script>

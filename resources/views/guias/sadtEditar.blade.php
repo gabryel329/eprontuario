@@ -6,6 +6,15 @@
         <h1><i class="bi bi-pencil"></i> Editar Guia de SADT</h1>
     </div>
 
+    <!-- Mensagens de Sucesso e Erro -->
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-warning">{{ session('error') }}</div>
+    @endif
+
     <div class="card">
         <div class="card-body">
             <form method="POST" action="{{ route('guia.sp.atualizar') }}">
@@ -215,7 +224,10 @@
                                         <th>26 - Descrição</th>
                                         <th>27 - Qtde Sol.</th>
                                         <th>28 - Qtde Aut.</th>
-                                        <th colspan="2" style="text-align: center;">Ação</th>
+                                        <th colspan="2" class="text-center">
+                                            Ação
+                                            <button type="button" class="btn btn-success btn-sm" onclick="adicionarLinha()">+</button>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody id="exame-table-body">
@@ -238,7 +250,7 @@
                                         <td><input class="form-control" id="descricao_procedimento" name="descricao_procedimento[]" type="text" value="{{$item->descricao_procedimento}}" readonly></td>
                                         <td><input class="form-control" style="text-align: center;" name="qtd_sol[]" type="number" value="{{$item->qtd_sol}}"></td>
                                         <td><input class="form-control" style="text-align: center;" name="qtd_aut[]" type="number" value="{{$item->qtd_aut}}"></td>
-                            
+
                                         <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha()">+</button></td>
                                         <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha(this)">-</button></td>
                                     @endforeach
@@ -411,7 +423,10 @@
                                         <th>45 - Fator Red./ Acrés</th>
                                         <th>46 - Valor Unit.</th>
                                         <th>47 - Valor Total</th>
-                                        <th colspan="2" style="text-align: center;">Ação</th>
+                                        <th colspan="2" class="text-center">
+                                            Ação
+                                            <button type="button" class="btn btn-success btn-sm" onclick="adicionarLinha1()">+</button>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody id="procedimento-table-body">
@@ -426,7 +441,7 @@
                                                     <i class="bi bi-list"></i>
                                                 </button>
                                             </td>
-                                            <td><input class="form-control" id="data_real" name="data_real[]" type="date"  value="{{$item->data_real}}"></td>
+                                            <td><input style="width: 119px;" class="form-control" name="data_real[]" type="text" value="{{ $item->data_real ? \Carbon\Carbon::parse($item->data_real)->format('d/m/Y') : '' }}"></td>
                                             <td><input class="form-control" id="hora_inicio_atendimento" name="hora_inicio_atendimento[]" type="text"  value="{{$item->hora_inicio_atendimento}}"></td>
                                             <td><input class="form-control" id="hora_fim_atendimento" name="hora_fim_atendimento[]" type="text"  value="{{$item->hora_fim_atendimento}}"></td>
                                             <td><input class="form-control" id="tabela" name="tabela[]" type="text"  value="22"></td>
@@ -435,20 +450,20 @@
                                             <td><input class="form-control quantidade_autorizada" id="quantidade_autorizada" name="quantidade_autorizada[]" value="{{$item->quantidade_autorizada}}" type="number" oninput="calcularValorTotal(this)" placeholder="Qtd"></td>
                                             <td>
                                                 <select class="form-control" id="via" name="via[]">
-                                                    <option value="">{{ old('via', $item->via) ? '' : 'Selecione' }}</option>
-                                                    <option value="1" {{ old('via', $item->via) == '1' ? 'selected' : '' }}>Unidade</option>
-                                                    <option value="2" {{ old('via', $item->via) == '2' ? 'selected' : '' }}>Múltiplo</option>
+                                                    <option value="" {{ old("via.$loop->index", $item->via) == '' ? 'selected' : '' }}>Selecione</option>
+                                                    <option value="1" {{ old("via.$loop->index", $item->via) == 1 ? 'selected' : '' }}>Unidade</option>
+                                                    <option value="2" {{ old("via.$loop->index", $item->via) == 2 ? 'selected' : '' }}>Múltiplo</option>
                                                 </select>
                                             </td>
                                             <td>
                                                 <select class="form-control" id="tecnica" name="tecnica[]">
-                                                    <option value="">{{ old('tecnica', $item->tecnica) ? '' : 'Selecione' }}</option>
-                                                    <option value="U" {{ old('tecnica', $item->tecnica) == 'U' ? 'selected' : '' }}>Unilateral</option>
-                                                    <option value="B" {{ old('tecnica', $item->tecnica) == 'B' ? 'selected' : '' }}>Bilateral</option>
-                                                    <option value="M" {{ old('tecnica', $item->tecnica) == 'M' ? 'selected' : '' }}>Múltiplo</option>
-                                                    <option value="S" {{ old('tecnica', $item->tecnica) == 'S' ? 'selected' : '' }}>Simples</option>
-                                                    <option value="C" {{ old('tecnica', $item->tecnica) == 'C' ? 'selected' : '' }}>Complexo</option>
-                                                    <option value="A" {{ old('tecnica', $item->tecnica) == 'A' ? 'selected' : '' }}>Avançado</option>
+                                                    <option value="" {{ old("tecnica.$loop->index", $item->tecnica) == '' ? 'selected' : '' }}>Selecione</option>
+                                                    <option value="U" {{ old("tecnica.$loop->index", $item->tecnica) == 'U' ? 'selected' : '' }}>Unilateral</option>
+                                                    <option value="B" {{ old("tecnica.$loop->index", $item->tecnica) == 'B' ? 'selected' : '' }}>Bilateral</option>
+                                                    <option value="M" {{ old("tecnica.$loop->index", $item->tecnica) == 'M' ? 'selected' : '' }}>Múltiplo</option>
+                                                    <option value="S" {{ old("tecnica.$loop->index", $item->tecnica) == 'S' ? 'selected' : '' }}>Simples</option>
+                                                    <option value="C" {{ old("tecnica.$loop->index", $item->tecnica) == 'C' ? 'selected' : '' }}>Complexo</option>
+                                                    <option value="A" {{ old("tecnica.$loop->index", $item->tecnica) == 'A' ? 'selected' : '' }}>Avançado</option>
                                                 </select>
                                             </td>
                                             <td><input class="form-control" name="fator_red_acres[]" id="fator_red_acres" type="text" oninput="calcularValorTotal(this)" placeholder="EX:1,00" value="{{$item->fator_red_acres}}"></td>
@@ -544,7 +559,7 @@
                                                 value="2" readonly></td>
                                         <td>
                                             <select id="grau1" name="grau1" class="form-control">
-                                                <option value="">{{ old('grau1', $guiaSadt->grau1) ? old('grau1', $guiaSadt->grau1) : 'Selecione' }}</option>
+                                                <option value="" {{ old('grau1', $guiaSadt->grau1) == '' ? 'selected' : '' }}>Selecione</option>
                                                 <option value="12" {{ old('grau1', $guiaSadt->grau1) == '12' ? 'selected' : '' }}>Médico principal ou responsável pelo procedimento</option>
                                                 <option value="13" {{ old('grau1', $guiaSadt->grau1) == '13' ? 'selected' : '' }}>Assistente</option>
                                                 <option value="14" {{ old('grau1', $guiaSadt->grau1) == '14' ? 'selected' : '' }}>Anestesista</option>
@@ -658,8 +673,7 @@
                     <h5>Despesas Realizadas</h5>
                     <div class="row">
                         <div class="table-responsive" style="overflow-x: auto;">
-                            <table class="table table-striped" 
-                            style="text-align: center; white-space: nowrap; font-size: 12px; min-width: 1800px; vertical-align: middle;">
+                            <table class="table table-striped">
                             <thead>
                                     <tr>
                                         <th colspan="15" style="text-align: center; font-size: 16px; font-weight: bold;">Medicamentos</th>
@@ -678,7 +692,10 @@
                                         <th>14 - Fator Red./Acresc.</th>
                                         <th>15 - Valor Unitário</th>
                                         <th>16 - Valor Total</th>
-                                        <th colspan="2">Ação</th>
+                                        <th colspan="2" class="text-center">
+                                            Ação
+                                            <button type="button" class="btn btn-success btn-sm" onclick="adicionarLinha2()">+</button>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody id="medicamentos-table-body">
@@ -694,17 +711,17 @@
                                                         <i class="bi bi-list"></i>
                                                     </button>
                                                 </td>
-                                                <td><input style="width: 50px;" class="form-control" id="cd" name="cd" type="text" value="{{ $medicamento->cd ?? '' }}" readonly>
-                                                    <input style="width: 50px;" class="form-control" id="medicamento_id" name="medicamento_id" type="hidden" value="{{ $medicamento->medicamento_id ?? '' }}" readonly></td>
-                                                <td><input style="width: 119px;" class="form-control" type="text" readonly value="{{ $medicamento->created_at ? \Carbon\Carbon::parse($medicamento->created_at)->format('d/m/Y') : '' }}"></td>
-                                                <td><input class="form-control" type="text" readonly value="{{ $medicamento->created_at ? \Carbon\Carbon::parse($medicamento->created_at)->format('H:i:s') : '' }}"></td>
-                                                <td><input class="form-control" type="text" readonly value="{{ $medicamento->created_at ? \Carbon\Carbon::parse($medicamento->created_at)->format('H:i:s') : '' }}"></td>
-                                                <td><input class="form-control" type="text" id="tabela" name="tabela" value="{{ $medicamento->tabela ?? '' }}" readonly></td>
-                                                <td><input class="form-control" type="text" id="nome_medicamento" name="nome_medicamento" value="{{ $medicamento->nome_medicamento ?? '' }}" readonly></td>
-                                                <td><input class="form-control" type="text" id="codigo" name="codigo" value="{{ $medicamento->codigo ?? '' }}" readonly></td>
-                                                <td><input class="form-control quantidade" id="quantidade" name="quantidade" type="text" value="{{ $medicamento->quantidade ?? '' }}" readonly></td>
+                                                <td><input style="width: 50px;" class="form-control" name="cd[]" type="text" value="{{ $medicamento->cd ?? '' }}">
+                                                    <input style="width: 50px;" class="form-control" name="medicamento_id[]" type="hidden" value="{{ $medicamento->medicamento_id ?? '' }}"></td>
+                                                <td><input style="width: 119px;" class="form-control" name="created_at[]" type="text" value="{{ $medicamento->created_at ? \Carbon\Carbon::parse($medicamento->created_at)->format('d/m/Y') : '' }}"></td>
+                                                <td><input class="form-control" type="text" name="hora_inicial[]" value="{{ $medicamento->created_at ? \Carbon\Carbon::parse($medicamento->created_at)->format('H:i:s') : '' }}"></td>
+                                                <td><input class="form-control" type="text" name="hora_final[]" value="{{ $medicamento->created_at ? \Carbon\Carbon::parse($medicamento->created_at)->format('H:i:s') : '' }}"></td>
+                                                <td><input class="form-control" type="text" name="tabela[]" value="{{ $medicamento->tabela ?? '' }}"></td>
+                                                <td><input class="form-control" name="nome_medicamento[]" type="text" value="{{ $medicamento->nome_medicamento ?? '' }}"></td>
+                                                <td><input class="form-control" name="codigo[]" id="codigo" type="text" value="{{ $medicamento->codigo ?? '' }}"></td>
+                                                <td><input class="form-control quantidade" name="quantidade[]" type="number" value="{{ $medicamento->quantidade ?? '' }}"></td>
                                                 <td>
-                                                    <select id="unidade_medida" name="unidade_medida" class="form-control">
+                                                    <select name="unidade_medida[]" class="form-control">
                                                         <option value="">Selecione</option>
                                                         <option value="001" {{ old('unidade_medida', $medicamento->unidade_medida ?? '') == '001' ? 'selected' : '' }}>Unidade</option>
                                                         <option value="002" {{ old('unidade_medida', $medicamento->unidade_medida ?? '') == '002' ? 'selected' : '' }}>Caixa</option>
@@ -717,9 +734,9 @@
                                                         <option value="036" {{ old('unidade_medida', $medicamento->unidade_medida ?? '') == '036' ? 'selected' : '' }}>Outros</option>
                                                     </select>
                                                 </td>
-                                                <td><input class="form-control fator" id="fator" name="fator" type="text" value="{{ $medicamento->fator ?? '' }}" readonly></td>
-                                                <td><input class="form-control valor" id="valor" name="valor" type="text" value="{{ $medicamento->valor ?? '' }}" readonly></td>
-                                                <td><input class="form-control valor_total" id="valor_total" name="valor_total" type="text" value="{{ $medicamento->valor_total ?? '' }}" readonly></td>
+                                                <td><input class="form-control fator" name="fator[]" type="text" value="{{ $medicamento->fator ?? '' }}"></td>
+                                                <td><input class="form-control valor" name="valor[]" type="text" value="{{ $medicamento->valor ?? '' }}"></td>
+                                                <td><input class="form-control valor_total" name="valor_total[]" type="text" value="{{ $medicamento->valor_total ?? '' }}"></td>
                                                 <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha2()">+</button></td>
                                                 <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha2(this)">-</button></td>
                                             @endif
@@ -727,8 +744,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            <table class="table table-striped" 
-                                style="text-align: center; white-space: nowrap; font-size: 12px; min-width: 1800px; vertical-align: middle;">
+                            <table class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th colspan="15" style="text-align: center; font-size: 16px; font-weight: bold;">Materias</th>
@@ -747,7 +763,10 @@
                                         <th>14 - Fator Red./Acresc.</th>
                                         <th>15 - Valor Unitário</th>
                                         <th>16 - Valor Total</th>
-                                        <th colspan="2">Ação</th>
+                                        <th colspan="2" class="text-center">
+                                            Ação
+                                            <button type="button" class="btn btn-success btn-sm" onclick="adicionarLinha3()">+</button>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody id="materiais-table-body">
@@ -756,22 +775,23 @@
                                             @if(is_object($material))
                                                 <td>
                                                     <button type="button" class="btn btn-primary form-control"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#modalProcedimento1"
-                                                            onclick="setRowContext(this, '{{ $guiaSadt->paciente_id }}')">
-                                                        <i class="bi bi-list"></i>
-                                                    </button>
-                                                </td>
-                                                <td><input style="width: 50px;" class="form-control" type="text" value="{{ $material->cd ?? '' }}" readonly></td>
-                                                <td><input style="width: 120px;" class="form-control" type="text" value="{{ $material->created_at ? \Carbon\Carbon::parse($material->created_at)->format('d/m/Y') : '' }}" readonly></td>
-                                                <td><input class="form-control" type="text" value="{{ $material->created_at ? \Carbon\Carbon::parse($material->created_at)->format('H:i') : '' }}" readonly></td>
-                                                <td><input class="form-control" type="text" value="{{ $material->created_at ? \Carbon\Carbon::parse($material->created_at)->format('H:i') : '' }}" readonly></td>
-                                                <td><input class="form-control" type="text" value="{{ $material->tabela ?? '' }}" readonly></td>
-                                                <td><input class="form-control" type="text" value="{{ $material->nome_material ?? '' }}" readonly></td>
-                                                <td><input class="form-control" type="text" value="{{ $material->codigo ?? '' }}" readonly></td>
-                                                <td><input class="form-control quantidade" type="text" value="{{ $material->quantidade ?? '' }}" readonly></td>
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalProcedimento4"
+                                                        data-agenda-id="{{ $guiaSadt->paciente_id }}"
+                                                        onclick="setRow4(this, '{{ $guiaSadt->paciente_id }}')">
+                                                    <i class="bi bi-list"></i>
+                                                </button>
+                                                <input type="hidden" name="material_id[]" value="{{ $material->id ?? '' }}">
+                                                <td><input style="width: 50px;" class="form-control" name="cd[]" type="text" value="{{ $material->cd ?? '' }}"></td>
+                                                <td><input style="width: 120px;" class="form-control" name="created_at[]" type="text" value="{{ $material->created_at ? \Carbon\Carbon::parse($material->created_at)->format('d/m/Y') : '' }}"></td>
+                                                <td><input class="form-control" name="hora_inicial[]" type="text" value="{{ $material->created_at ? \Carbon\Carbon::parse($material->created_at)->format('H:i') : '' }}"></td>
+                                                <td><input class="form-control" name="hora_final[]" type="text" value="{{ $material->created_at ? \Carbon\Carbon::parse($material->created_at)->format('H:i') : '' }}"></td>
+                                                <td><input class="form-control" name="tabela[]" type="text" value="{{ $material->tabela ?? '' }}"></td>
+                                                <td><input class="form-control" name="nome_material[]" type="text" value="{{ $material->nome_material ?? '' }}"></td>
+                                                <td><input class="form-control" name="codigo[]" type="text" value="{{ $material->codigo ?? '' }}"></td>
+                                                <td><input class="form-control quantidade" name="quantidade[]" type="number" value="{{ $material->quantidade ?? '' }}"></td>
                                                 <td>
-                                                    <select id="unidade_medida" name="unidade_medida" class="form-control">
+                                                    <select id="unidade_medida" name="unidade_medida[]" class="form-control">
                                                         <option value="">Selecione</option>
                                                         <option value="001" {{ old('unidade_medida', $material->unidade_medida ?? '') == '001' ? 'selected' : '' }}>Unidade</option>
                                                         <option value="002" {{ old('unidade_medida', $material->unidade_medida ?? '') == '002' ? 'selected' : '' }}>Caixa</option>
@@ -784,9 +804,9 @@
                                                         <option value="036" {{ old('unidade_medida', $material->unidade_medida ?? '') == '036' ? 'selected' : '' }}>Outros</option>
                                                     </select>
                                                 </td>
-                                                <td><input class="form-control fator" type="text" value="{{ $material->fator ?? '' }}" readonly></td>
-                                                <td><input class="form-control valor" type="text" value="{{ $material->valor ?? '' }}" readonly></td>
-                                                <td><input class="form-control valor_total" type="text" value="{{ $material->valor_total ?? '' }}" readonly></td>
+                                                <td><input class="form-control fator" name="fator[]" type="number" value="{{ $material->fator ?? '' }}"></td>
+                                                <td><input class="form-control valor" name="valor[]" type="text" value="{{ $material->valor ?? '' }}"></td>
+                                                <td><input class="form-control valor_total" name="valor_total[]" type="number" value="{{ $material->valor_total ?? '' }}"></td>
                                                 <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha3()">+</button></td>
                                                 <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha3(this)">-</button></td>
                                             @endif
@@ -907,27 +927,70 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="modalProcedimento4" tabindex="-1" aria-labelledby="modalProcedimentoLabel3" aria-hidden="true" data-data-atendimento="{{ $agenda->data_atendimento ?? '' }}"
+     data-hora-atendimento="{{ $agenda->hora_atendimento ?? '' }}">
+    <div class="modal-dialog modal-lg" style="max-width: 50%; margin: 1.75rem auto;">
+        <div class="modal-content" style="max-height: calc(100vh - 3.5rem); overflow-y: auto; overflow-x: hidden;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalProcedimentoLabel3">Selecione o Procedimento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="overflow-y: auto; max-height: 70vh;">
+                <div class="mb-3">
+                    <input class="form-control" id="procSearch" type="text" placeholder="Pesquisar por Código ou Procedimento...">
+                </div>
+                <input type="hidden" id="hiddenAgendaId" name="agendaId">
+                <table class="table table-hover" id="procTable">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Material</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="procTableBody4">
+                        <!-- Medicamentos serão carregados aqui -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+    </div>
+</div>
 <script>
-    // Função para adicionar uma nova linha
-    function adicionarLinha() {
-        var tableBody = document.getElementById('exame-table-body');
-        var newRow = tableBody.rows[0].cloneNode(true); // Clona a primeira linha
+function adicionarLinha() {
+    var tableBody = document.getElementById('exame-table-body');
 
-        // Limpar os valores de input da nova linha
-        var inputs = newRow.querySelectorAll('input');
-        inputs.forEach(function(input) {
-            input.value = ''; // Limpa o valor do input
-        });
+    // Criar uma nova linha do zero
+    var newRow = document.createElement('tr');
+    newRow.style.textAlign = "center";
 
-        // Preencher o campo de "tabela" com o valor 22
-        var tabelaInput = newRow.querySelector('input[name="tabela[]"]');
-        if (tabelaInput) {
-            tabelaInput.value = '22'; // Define o valor como 22
-        }
+    newRow.innerHTML = `
+        <td>
+            <button type="button" class="btn btn-primary form-control"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalProcedimento1"
+                    data-agenda-id="{{ $guiaSadt->paciente_id }}"
+                    onclick="setRow1(this, '{{ $guiaSadt->paciente_id }}')">
+                <i class="bi bi-list"></i>
+            </button>
+        </td>
+        <td>
+            <input class="form-control" name="agenda_id2[]" type="hidden" value="">
+            <input class="form-control" style="text-align: center;" name="tabela[]" type="text" value="22" readonly>
+        </td>
+        <td><input class="form-control" name="codigo_procedimento_solicitado[]" type="text" readonly></td>
+        <td><input class="form-control" name="descricao_procedimento[]" type="text" readonly></td>
+        <td><input class="form-control" style="text-align: center;" name="qtd_sol[]" type="number" value="1"></td>
+        <td><input class="form-control" style="text-align: center;" name="qtd_aut[]" type="number" ></td>
+        <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha()">+</button></td>
+        <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha(this)">-</button></td>
+    `;
 
-        // Adicionar a nova linha ao final da tabela
-        tableBody.appendChild(newRow);
-    }
+    // Adicionar a nova linha ao final da tabela
+    tableBody.appendChild(newRow);
+}
+
 
 
     // Função para remover a linha
@@ -935,11 +998,7 @@
         const tabela = $(button).closest('table');
         const totalLinhas = tabela.find('tbody tr').length;
 
-        if (totalLinhas > 1) {
-            $(button).closest('tr').remove();
-        } else {
-            alert('A tabela deve ter pelo menos uma linha.');
-        }
+        $(button).closest('tr').remove();
     };
 
     // Função para definir o contexto da linha (se necessário)
@@ -950,36 +1009,65 @@
 
 
     function adicionarLinha1() {
-        var tableBody = document.getElementById('procedimento-table-body');
-        var newRow = tableBody.rows[0].cloneNode(true); // Clona a primeira linha
+    var tableBody = document.getElementById('procedimento-table-body');
 
-        // Limpar os valores de input da nova linha
-        // Limpar os valores de input da nova linha
-        var inputs = newRow.querySelectorAll('input');
-        inputs.forEach(function(input) {
-            input.value = ''; // Limpa o valor do input
-        });
+    // Criar uma nova linha vazia
+    var newRow = document.createElement('tr');
 
-        // Preencher o campo de "tabela" com o valor 22
-        var tabelaInput = newRow.querySelector('input[name="tabela[]"]');
-        if (tabelaInput) {
-            tabelaInput.value = '22'; // Define o valor como 22
-        }
+    newRow.innerHTML = `
+        <td>
+            <button type="button" class="btn btn-primary form-control"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalProcedimento2"
+                    data-agenda-id="{{ $guiaSadt->paciente_id }}"
+                    onclick="setRow2(this, '{{ $guiaSadt->paciente_id }}')">
+                <i class="bi bi-list"></i>
+            </button>
+        </td>
+        <td><input style="width: 119px;" class="form-control" name="data_real[]" type="text" value="{{ \Carbon\Carbon::now()->format('d/m/Y') }}"></td>
+        <td><input class="form-control" name="hora_inicio_atendimento[]" type="text" value=""></td>
+        <td><input class="form-control" name="hora_fim_atendimento[]" type="text" value=""></td>
+        <td><input class="form-control" name="tabela[]" type="text" value="22" readonly></td>
+        <td><input class="form-control" name="codigo_procedimento_realizado[]" type="text"></td>
+        <td><input class="form-control" name="descricao_procedimento_realizado[]" type="text"></td>
+        <td><input class="form-control quantidade_autorizada" name="quantidade_autorizada[]" type="number" value="1" min="1" oninput="calcularValorTotal(this)"></td>
+        <td>
+            <select class="form-control" name="via[]">
+                <option value="">Selecione</option>
+                <option value="1">Unidade</option>
+                <option value="2">Múltiplo</option>
+            </select>
+        </td>
+        <td>
+            <select class="form-control" name="tecnica[]">
+                <option value="">Selecione</option>
+                <option value="U">Unilateral</option>
+                <option value="B">Bilateral</option>
+                <option value="M">Múltiplo</option>
+                <option value="S">Simples</option>
+                <option value="C">Complexo</option>
+                <option value="A">Avançado</option>
+            </select>
+        </td>
+        <td><input class="form-control" name="fator_red_acres[]" type="text" placeholder="EX:1,00" oninput="calcularValorTotal(this)"></td>
+        <td><input class="form-control valor_unitario" name="valor_unitario[]" type="text" value="" oninput="calcularValorTotal(this)"></td>
+        <td><input class="form-control valor_total" name="valor_total[]" type="text" value="" placeholder="Valor Total"></td>
+        <td><button type="button" class="btn btn-success" onclick="adicionarLinha1()">+</button></td>
+        <td><button type="button" class="btn btn-danger" onclick="removerLinha1(this)">-</button></td>
+    `;
 
-        // Adicionar a nova linha ao final da tabela
-        tableBody.appendChild(newRow);
-    }
+    // Adicionar a nova linha ao final da tabela
+    tableBody.appendChild(newRow);
+}
+
+
 
     // Função para remover a linha
     window.removerLinha1 = function(button) {
         const tabela = $(button).closest('table');
         const totalLinhas = tabela.find('tbody tr').length;
 
-        if (totalLinhas > 1) {
-            $(button).closest('tr').remove();
-        } else {
-            alert('A tabela deve ter pelo menos uma linha.');
-        }
+        $(button).closest('tr').remove();
     };
 
     // Função para calcular o valor total (exemplo)
@@ -997,13 +1085,51 @@
 
     function adicionarLinha2() {
         var tableBody = document.getElementById('medicamentos-table-body');
-        var newRow = tableBody.rows[0].cloneNode(true); // Clona a primeira linha
 
-        // Limpar os valores de input da nova linha
-        var inputs = newRow.querySelectorAll('input, select');
-        inputs.forEach(function(input) {
-            input.value = ''; // Limpa o valor do input ou select
-        });
+        // Criar uma nova linha vazia
+        var newRow = document.createElement('tr');
+
+        newRow.innerHTML = `
+            <td>
+                <button type="button" class="btn btn-primary form-control"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalProcedimento3"
+                        data-agenda-id="{{ $guiaSadt->paciente_id }}"
+                        onclick="setRow3(this, '{{ $guiaSadt->paciente_id }}')">
+                    <i class="bi bi-list"></i>
+                </button>
+            </td>
+            <td>
+                <input style="width: 50px;" class="form-control" name="cd[]" type="text" value="">
+                <input style="width: 50px;" class="form-control" name="medicamento_id[]" type="hidden" value="">
+            </td>
+            <td><input style="width: 119px;" class="form-control" name="created_at[]" type="text" value="{{ \Carbon\Carbon::now()->format('d/m/Y') }}"></td>
+            <td><input class="form-control" type="text" name="hora_inicial[]" value=""></td>
+            <td><input class="form-control" type="text" name="hora_final[]" value=""></td>
+            <td><input class="form-control" type="text" name="tabela[]" value=""></td>
+            <td><input class="form-control" name="nome_medicamento[]" type="text" value=""></td>
+            <td><input class="form-control" name="codigo[]" type="text" value=""></td>
+            <td><input class="form-control quantidade" name="quantidade[]" type="number" value="1" min="1"></td>
+            <td>
+                <select name="unidade_medida[]" class="form-control">
+                    <option value="">Selecione</option>
+                    <option value="001">Unidade</option>
+                    <option value="002">Caixa</option>
+                    <option value="003">Frasco</option>
+                    <option value="004">Ampola</option>
+                    <option value="005">Comprimido</option>
+                    <option value="006">Gotas</option>
+                    <option value="007">Mililitro (ml)</option>
+                    <option value="008">Grama (g)</option>
+                    <option value="036">Outros</option>
+                </select>
+            </td>
+            <td><input class="form-control fator" name="fator[]" type="text" value=""></td>
+            <td><input class="form-control valor" name="valor[]" type="text" value=""></td>
+            <td><input class="form-control valor_total" name="valor_total[]" type="text" value=""></td>
+            <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha2()">+</button></td>
+            <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha2(this)">-</button></td>
+        `;
 
         // Adicionar a nova linha ao final da tabela
         tableBody.appendChild(newRow);
@@ -1014,37 +1140,66 @@
         const tabela = $(button).closest('table');
         const totalLinhas = tabela.find('tbody tr').length;
 
-        if (totalLinhas > 1) {
-            $(button).closest('tr').remove();
-        } else {
-            alert('A tabela deve ter pelo menos uma linha.');
-        }
+        $(button).closest('tr').remove();
     };
 
     function adicionarLinha3() {
         var tableBody = document.getElementById('materiais-table-body');
-        var newRow = tableBody.rows[0].cloneNode(true); // Clona a primeira linha
 
-        // Limpar os valores de input da nova linha
-        var inputs = newRow.querySelectorAll('input, select');
-        inputs.forEach(function(input) {
-            input.value = ''; // Limpa o valor do input ou select
-        });
+        // Criar uma nova linha do zero
+        var newRow = document.createElement('tr');
+
+        newRow.innerHTML = `
+            <td>
+                <button type="button" class="btn btn-primary form-control"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalProcedimento4"
+                        data-agenda-id="{{ $guiaSadt->paciente_id }}"
+                        onclick="setRow4(this, '{{ $guiaSadt->paciente_id }}')">
+                    <i class="bi bi-list"></i>
+                </button>
+                <input type="hidden" name="material_id[]" value="">
+            </td>
+            <td><input style="width: 50px;" class="form-control" name="cd[]" type="text" value=""></td>
+            <td><input style="width: 120px;" class="form-control" name="created_at[]" type="text" value="{{ \Carbon\Carbon::now()->format('d/m/Y') }}"></td>
+            <td><input class="form-control" name="hora_inicial[]" type="text" value=""></td>
+            <td><input class="form-control" name="hora_final[]" type="text" value=""></td>
+            <td><input class="form-control" name="tabela[]" type="text" value=""></td>
+            <td><input class="form-control" name="nome_material[]" type="text" value=""></td>
+            <td><input class="form-control" name="codigo[]" type="text" value=""></td>
+            <td><input class="form-control quantidade" name="quantidade[]" type="number" value="1" min="1"></td>
+            <td>
+                <select name="unidade_medida[]" class="form-control">
+                    <option value="">Selecione</option>
+                    <option value="001">Unidade</option>
+                    <option value="002">Caixa</option>
+                    <option value="003">Frasco</option>
+                    <option value="004">Ampola</option>
+                    <option value="005">Comprimido</option>
+                    <option value="006">Gotas</option>
+                    <option value="007">Mililitro (ml)</option>
+                    <option value="008">Grama (g)</option>
+                    <option value="036">Outros</option>
+                </select>
+            </td>
+            <td><input class="form-control fator" name="fator[]" type="number" value=""></td>
+            <td><input class="form-control valor" name="valor[]" type="text" value=""></td>
+            <td><input class="form-control valor_total" name="valor_total[]" type="number" value=""></td>
+            <td><button type="button" class="form-control btn btn-success" onclick="adicionarLinha3()">+</button></td>
+            <td><button type="button" class="form-control btn btn-danger" onclick="removerLinha3(this)">-</button></td>
+        `;
 
         // Adicionar a nova linha ao final da tabela
         tableBody.appendChild(newRow);
     }
+
 
     // Função para remover a linha
     window.removerLinha3 = function(button) {
         const tabela = $(button).closest('table');
         const totalLinhas = tabela.find('tbody tr').length;
 
-        if (totalLinhas > 1) {
-            $(button).closest('tr').remove();
-        } else {
-            alert('A tabela deve ter pelo menos uma linha.');
-        }
+        $(button).closest('tr').remove();
     };
 
 
@@ -1053,7 +1208,7 @@
         activeRow = $(button).closest('tr');
 
         var pacienteId = $(button).data('agenda-id');
-        
+
         // Definir o valor no modal, por exemplo, em um campo hidden ou exibindo na interface
         $('#modalProcedimento1').find('#hiddenAgendaId').val(pacienteId); // Para campos hidden
         $('#modalProcedimento1').find('.agenda-display').text(pacienteId);
@@ -1099,10 +1254,15 @@
 
     function selectProcedimento1(id, codigo, procedimento) {
         if (activeRow) {
-            // Preenche os campos da linha ativa pelos IDs
-            activeRow.find('#proce_id').val(id);
-            activeRow.find('#codigo_procedimento_solicitado').val(codigo);
-            activeRow.find('#descricao_procedimento').val(procedimento);
+            console.log("Preenchendo os campos da linha ativa...");
+
+            // Preenchendo os campos corretamente usando os seletores de name[]
+            activeRow.find('input[name="codigo_procedimento_solicitado[]"]').val(codigo);
+            activeRow.find('input[name="descricao_procedimento[]"]').val(procedimento);
+
+            // Debug para verificar se os dados foram preenchidos corretamente
+            console.log("Código:", activeRow.find('input[name="codigo_procedimento_solicitado[]"]').val());
+            console.log("Descrição:", activeRow.find('input[name="descricao_procedimento[]"]').val());
 
             // Fecha o modal
             const modalProcedimento1 = bootstrap.Modal.getInstance(document.getElementById('modalProcedimento1'));
@@ -1115,8 +1275,10 @@
             }, 500);
         } else {
             console.error('Nenhuma linha ativa encontrada para preencher os campos.');
+            alert('Nenhuma linha ativa foi selecionada para preenchimento!');
         }
     }
+
 
     $('[id^=procSearch]').on('keyup', function() {
         var inputId = $(this).attr('id'); // Obtém o ID do campo de busca
@@ -1142,7 +1304,7 @@
         activeRow = $(button).closest('tr');
 
         var pacienteId = $(button).data('agenda-id');
-        
+
         // Definir o valor no modal, por exemplo, em um campo hidden ou exibindo na interface
         $('#modalProcedimento1').find('#hiddenAgendaId').val(pacienteId); // Para campos hidden
         $('#modalProcedimento1').find('.agenda-display').text(pacienteId);
@@ -1187,33 +1349,54 @@
     }
 
     function selectProcedimento2(id, codigo, procedimento, valor_proc) {
-        if (activeRow) {
-            // Preenche os campos da linha ativa pelos IDs
-            activeRow.find('#proce_id2').val(id);
-            activeRow.find('#codigo_procedimento_realizado').val(codigo);
-            activeRow.find('#descricao_procedimento_realizado').val(procedimento);
-            activeRow.find('#valor_unitario').val(valor_proc);
+    if (activeRow) {
+        console.log("Preenchendo os campos da linha ativa...");
 
-            // Fecha o modal
-            const modalProcedimento2 = bootstrap.Modal.getInstance(document.getElementById('modalProcedimento2'));
-            modalProcedimento2.hide();
+        // Capturar a data e hora do modal ou usar a data/hora atual como fallback
+        var data_atendimento = $('#modalProcedimento2').attr('data-data-atendimento') || new Date().toISOString().split('T')[0];
+        var hora_atendimento = $('#modalProcedimento2').attr('data-hora-atendimento') || new Date().toTimeString().slice(0, 5);
 
-            // Opcional: Reabre outro modal, se necessário
-            setTimeout(() => {
-                const modalSADT = new bootstrap.Modal(document.getElementById('modalSADT'));
-                modalSADT.show();
-            }, 500);
-        } else {
-            console.error('Nenhuma linha ativa encontrada para preencher os campos.');
-        }
+        // Preenchendo os campos corretamente usando os seletores de name[]
+        activeRow.find('input[name="codigo_procedimento_realizado[]"]').val(codigo);
+        activeRow.find('input[name="descricao_procedimento_realizado[]"]').val(procedimento);
+        activeRow.find('input[name="valor_unitario[]"]').val(valor_proc);
+
+        // Preenchendo os novos campos com data e hora
+        activeRow.find('input[name="data_real[]"]').val(new Date().toLocaleDateString('pt-BR')); // Data atual formatada
+        activeRow.find('input[name="hora_inicio_atendimento[]"]').val(hora_atendimento + ':00'); // Hora inicial com segundos
+        activeRow.find('input[name="hora_fim_atendimento[]"]').val(hora_atendimento + ':00'); // Hora final com segundos
+
+        // Debug para verificar se os dados foram preenchidos corretamente
+        console.log("Código:", activeRow.find('input[name="codigo_procedimento_realizado[]"]').val());
+        console.log("Descrição:", activeRow.find('input[name="descricao_procedimento_realizado[]"]').val());
+        console.log("Valor Unitário:", activeRow.find('input[name="valor_unitario[]"]').val());
+        console.log("Data Atendimento:", activeRow.find('input[name="data_real[]"]').val());
+        console.log("Hora Inicial:", activeRow.find('input[name="hora_inicio_atendimento[]"]').val());
+        console.log("Hora Final:", activeRow.find('input[name="hora_fim_atendimento[]"]').val());
+
+        // Fecha o modal
+        const modalProcedimento2 = bootstrap.Modal.getInstance(document.getElementById('modalProcedimento2'));
+        modalProcedimento2.hide();
+
+        // Opcional: Reabre outro modal, se necessário
+        setTimeout(() => {
+            const modalSADT = new bootstrap.Modal(document.getElementById('modalSADT'));
+            modalSADT.show();
+        }, 500);
+    } else {
+        console.error('Nenhuma linha ativa encontrada para preencher os campos.');
+        alert('Nenhuma linha ativa foi selecionada para preenchimento!');
     }
+}
+
+
 
     function setRow3(button) {
         // Identifica a linha correspondente ao botão clicado
         activeRow = $(button).closest('tr');
 
         var pacienteId = $(button).data('agenda-id');
-        
+
         // Definir o valor no modal, por exemplo, em um campo hidden ou exibindo na interface
         $('#modalProcedimento1').find('#hiddenAgendaId').val(pacienteId); // Para campos hidden
         $('#modalProcedimento1').find('.agenda-display').text(pacienteId);
@@ -1258,27 +1441,178 @@
     }
 
     function selectProcedimento3(id, codigo, medicamento, preco) {
-        if (activeRow) {
-            // Preenche os campos da linha ativa pelos IDs
-            activeRow.find('#medicamento_id').val(id);
-            activeRow.find('#codigo').val(codigo);
-            activeRow.find('#nome_medicamento').val(medicamento);
-            activeRow.find('#valor').val(preco);
+    if (activeRow) {
+        console.log("Preenchendo os campos da linha ativa...");
 
-            // Fecha o modal
-            const modalProcedimento3 = bootstrap.Modal.getInstance(document.getElementById('modalProcedimento3'));
-            modalProcedimento3.hide();
+        // Preenche os campos da linha ativa pelos IDs
+        activeRow.find('input[name="medicamento_id[]"]').val(id);
+        activeRow.find('input[name="codigo[]"]').val(codigo);
+        activeRow.find('input[name="nome_medicamento[]"]').val(medicamento);
+        activeRow.find('input[name="valor[]"]').val(preco);
 
-            // Opcional: Reabre outro modal, se necessário
-            setTimeout(() => {
-                const modalSADT = new bootstrap.Modal(document.getElementById('modalSADT'));
-                modalSADT.show();
-            }, 500);
-        } else {
-            console.error('Nenhuma linha ativa encontrada para preencher os campos.');
+        // Define um valor padrão para quantidade (1) caso esteja vazio
+        let quantidadeInput = activeRow.find('input[name="quantidade[]"]');
+        if (!quantidadeInput.val()) {
+            quantidadeInput.val(1);
         }
+
+        // Calcula o valor total inicial (quantidade * preço)
+        let valorTotal = parseFloat(preco) * parseInt(quantidadeInput.val());
+        activeRow.find('input[name="valor_total[]"]').val(valorTotal.toFixed(2));
+
+        // Evento para recalcular o valor total quando a quantidade for alterada
+        quantidadeInput.on('input', function () {
+            let quantidade = parseInt($(this).val()) || 0;
+            let novoValorTotal = quantidade * parseFloat(preco);
+            activeRow.find('input[name="valor_total[]"]').val(novoValorTotal.toFixed(2));
+        });
+
+        // Calcula o valor total inicial (quantidade * preço)
+        activeRow.find('#valor_total').val(parseFloat(preco).toFixed(2));
+
+        // Preenche novos campos adicionais
+        var data_atendimento = $('#modalProcedimento3').attr('data-data-atendimento') || new Date().toISOString().split('T')[0];
+        var hora_atendimento = $('#modalProcedimento3').attr('data-hora-atendimento') || new Date().toTimeString().slice(0, 5);
+
+        activeRow.find('input[name="created_at[]"]').val('{{ \Carbon\Carbon::now()->format('d/m/Y') }}'); // Data atual formatada
+        activeRow.find('input[name="hora_inicial[]"]').val(hora_atendimento + ':00'); // Hora inicial com segundos
+        activeRow.find('input[name="hora_final[]"]').val(hora_atendimento + ':00'); // Hora final com segundos (pode ser ajustada conforme necessário)
+        activeRow.find('input[name="tabela[]').val('20'); // Valor fixo para tabela
+        activeRow.find('input[name="cd[]').val('02'); // Código fixo 03
+
+        // Debug para garantir que os valores estão corretos
+        console.log("Linha preenchida:");
+        console.log("Código:", activeRow.find('#codigo').val());
+        console.log("Nome:", activeRow.find('#nome_medicamento').val());
+        console.log("Valor:", activeRow.find('#valor').val());
+        console.log("Quantidade:", activeRow.find('#quantidade').val());
+        console.log("Total:", activeRow.find('#valor_total').val());
+        console.log("Data:", activeRow.find('#created_at').val());
+        console.log("Hora Inicial:", activeRow.find('#hora_inicial').val());
+        console.log("Hora Final:", activeRow.find('#hora_final').val());
+        console.log("Tabela:", activeRow.find('#tabela').val());
+
+        // Fecha o modal
+        const modalProcedimento3 = bootstrap.Modal.getInstance(document.getElementById('modalProcedimento3'));
+        modalProcedimento3.hide();
+
+        // Opcional: Reabre outro modal, se necessário
+        setTimeout(() => {
+            const modalSADT = new bootstrap.Modal(document.getElementById('modalSADT'));
+            modalSADT.show();
+        }, 500);
+    } else {
+        console.error('Nenhuma linha ativa encontrada para preencher os campos.');
+    }
+}
+
+    function setRow4(button) {
+    activeRow = $(button).closest('tr');
+
+    var pacienteId = $(button).data('agenda-id');
+
+    console.log("Paciente ID encontrado:", pacienteId); // <-- TESTE AQUI!
+
+    $('#modalProcedimento4').find('#hiddenAgendaId').val(pacienteId);
+    $('#modalProcedimento4').find('.agenda-display').text(pacienteId);
+
+    if (!pacienteId || pacienteId === "undefined" || pacienteId === "null") {
+        alert('Paciente ID não encontrado!');
+        return;
     }
 
+    fetch(`/api/get-materiais/${pacienteId}`)
+    .then(response => response.json())
+    .then(data => {
+        console.log("Dados recebidos:", data); // <-- Veja a estrutura dos dados no Console do Navegador
+
+        const tableBody = document.getElementById('procTableBody4');
+        tableBody.innerHTML = '';
+
+        if (data.length > 0) {
+            data.forEach(material => {
+                console.log("Material recebido:", material); // <-- Depuração
+
+                const row = `
+                    <tr>
+                        <td>${material.codigo}</td>
+                        <td>${material.material ?? 'Nome não encontrado'}</td>
+                        <td>
+                            <button class="btn btn-primary" type="button"
+                            onclick="selectProcedimento4('${material.id}', '${material.codigo}', '${material.material ?? ''}', '${material.preco}')">Selecionar</button>
+                        </td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            });
+        } else {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="3" class="text-center">Nenhum material disponível.</td>
+                </tr>
+            `;
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao buscar materiais:', error);
+        alert('Erro ao buscar materiais!');
+    });
+
+}
+
+
+function selectProcedimento4(id, codigo, material, preco) {
+    if (activeRow) {
+        console.log("Preenchendo os campos da linha ativa...");
+
+        // Pegamos a data e horário da agenda diretamente do modal (caso necessário)
+        var data_atendimento = $('#modalProcedimento4').attr('data-data-atendimento') || new Date().toISOString().split('T')[0]; // Pega a data da agenda ou a data atual
+        var hora_atendimento = $('#modalProcedimento4').attr('data-hora-atendimento') || new Date().toTimeString().slice(0, 5); // Pega a hora da agenda ou a hora atual
+
+        // Preenche os campos dentro da linha ativa
+        activeRow.find('input[name="codigo[]"]').val(codigo);
+        activeRow.find('input[name="nome_material[]"]').val(material);
+        activeRow.find('input[name="valor[]"]').val(preco);
+        activeRow.find('input[name="material_id[]"]').val(id);
+
+        // Define a quantidade como 1 por padrão
+        activeRow.find('input[name="quantidade[]"]').val(1);
+
+        // Calcula o valor total com base na quantidade (inicialmente 1)
+        activeRow.find('input[name="valor_total[]"]').val(parseFloat(preco).toFixed(2));
+
+        // Preenchendo os novos campos
+        activeRow.find('input[name="created_at[]"]').val('{{ \Carbon\Carbon::now()->format('d/m/Y') }}'); // Data atual formatada
+        activeRow.find('input[name="hora_inicial[]"]').val(hora_atendimento); // Hora inicial
+        activeRow.find('input[name="hora_final[]"]').val(hora_atendimento); // Hora final (pode ser ajustada conforme necessário)
+        activeRow.find('input[name="tabela[]"]').val('19'); // Tabela fixa 19
+        activeRow.find('input[name="cd[]"]').val('03'); // Código fixo 03
+
+        // Evento para recalcular o valor total quando a quantidade mudar
+        activeRow.find('input[name="quantidade[]"]').on('input', function () {
+            var quantidade = parseInt($(this).val()) || 0;
+            var novoValorTotal = quantidade * parseFloat(preco);
+            activeRow.find('input[name="valor_total[]"]').val(novoValorTotal.toFixed(2));
+        });
+
+        // Debug para garantir que os valores estão sendo atribuídos
+        console.log("Linha preenchida:");
+        console.log("Código:", activeRow.find('input[name="codigo[]"]').val());
+        console.log("Nome:", activeRow.find('input[name="nome_material[]"]').val());
+        console.log("Valor:", activeRow.find('input[name="valor[]"]').val());
+        console.log("Total:", activeRow.find('input[name="valor_total[]"]').val());
+        console.log("Data:", activeRow.find('input[name="created_at[]"]').val());
+        console.log("Hora Inicial:", activeRow.find('input[name="hora_inicial[]"]').val());
+        console.log("Hora Final:", activeRow.find('input[name="hora_final[]"]').val());
+        console.log("Tabela:", activeRow.find('input[name="tabela[]"]').val());
+
+        // Fecha o modal
+        const modalProcedimento4 = bootstrap.Modal.getInstance(document.getElementById('modalProcedimento4'));
+        modalProcedimento4.hide();
+    } else {
+        console.error('Nenhuma linha ativa encontrada para preencher os campos.');
+    }
+}
 </script>
 
 @endsection

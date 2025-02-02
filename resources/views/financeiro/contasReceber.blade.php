@@ -358,7 +358,17 @@
 
                                         <div class="mb-3" id="valor_pagamento_div_{{ $conta->id }}" style="display: none;">
                                             <label for="valor_pagamento" class="form-label">Valor que foi pago</label>
-                                            <input type="text" class="form-control" id="valor_pagamento_{{ $conta->id }}" name="valor_pagamento">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="valor_pagamento_{{ $conta->id }}"
+                                                name="valor_pagamento"
+                                                data-valor-total="{{ $conta->valor }}"
+                                                oninput="verificarValorPagamento({{ $conta->id }})"
+                                            >
+                                            <small id="error_msg_{{ $conta->id }}" class="text-danger" style="display: none;">
+                                                O valor pago não pode ser maior que o valor total (R$ {{ number_format($conta->valor, 2, ',', '.') }})!
+                                            </small>
                                         </div>
 
                                         @if ($conta->tipo_guia)
@@ -426,6 +436,28 @@
 </main>
 
 <script>
+function verificarValorPagamento(contaId) {
+    const input = document.getElementById(`valor_pagamento_${contaId}`);
+    const errorMsg = document.getElementById(`error_msg_${contaId}`);
+
+    // Obter o valor total diretamente do atributo data-valor-total
+    const valorTotal = parseFloat(input.getAttribute('data-valor-total').replace(',', '.')) || 0;
+
+    // Converter o valor inserido para número (substituindo vírgulas por pontos)
+    const valorPago = parseFloat(input.value.replace(',', '.')) || 0;
+
+    // Validação
+    if (valorPago > valorTotal) {
+        // Exibir mensagem de erro e adicionar classe de erro
+        errorMsg.style.display = 'block';
+        input.classList.add('is-invalid');
+    } else {
+        // Ocultar mensagem de erro e remover classe de erro
+        errorMsg.style.display = 'none';
+        input.classList.remove('is-invalid');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     @foreach ($contasReceber as $conta)
     document.getElementById('tipo_pagamento_{{ $conta->id }}').addEventListener('change', function () {

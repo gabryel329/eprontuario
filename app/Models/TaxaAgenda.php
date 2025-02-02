@@ -14,6 +14,7 @@ class TaxaAgenda extends Model
     protected $fillable = [
         'agenda_id',
         'paciente_id',
+        'guia_sps_id',
         'taxa_id',
     ];
 
