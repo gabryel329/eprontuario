@@ -1,4 +1,4 @@
-<div class="messages">
+<div class="messages" id="messageContainer">
     @if ($messages->isEmpty())
         <p class="text-muted text-center">Nenhuma mensagem ainda.</p>
     @else
@@ -15,6 +15,12 @@
         @endforeach
     @endif
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var messageContainer = document.getElementById("messageContainer");
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+    });
+</script>
 <script>
     function recargarPage() {
         location.reload();  // Recarrega a página

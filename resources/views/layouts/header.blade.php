@@ -39,17 +39,17 @@
                 <h5 class="modal-title">Chat</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <ul class="nav nav-tabs" id="chatTabs" role="tablist">
+            <div class="modal-body d-flex">
+                <div class="nav flex-column nav-pills me-3" id="chatTabs" role="tablist">
                     @foreach ($users as $user)
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link @if ($loop->first) active @endif" id="tab-{{ $user->id }}" data-bs-toggle="tab" data-bs-target="#chat-{{ $user->id }}" type="button" role="tab">
-                                {{ $user->name }}
-                            </button>
-                        </li>
+                        @if ($user->id !== auth()->id())
+                                <button class="nav-link @if ($loop->first) active @endif" id="tab-{{ $user->id }}" data-bs-toggle="tab" data-bs-target="#chat-{{ $user->id }}" type="button" role="tab">
+                                    {{ $user->name }}
+                                </button>
+                        @endif
                     @endforeach
-                </ul>
-                <div class="tab-content" id="chatTabContent">
+                </div>
+                <div class="tab-content" id="chatTabContent" style="width: 650px;">
                     @foreach ($users as $user)
                         <div class="tab-pane fade @if ($loop->first) show active @endif" id="chat-{{ $user->id }}" role="tabpanel">
                             <iframe class="chat-iframe" id="chat-iframe-{{ $user->id }}" data-user-id="{{ $user->id }}" width="100%" height="400px" frameborder="0"></iframe>
@@ -69,6 +69,7 @@
 
 
 <script>
+    
     // Função para formatar a data e hora de forma mais limpa
     function updateDateTime() {
         const dateTimeElement = document.getElementById('current-date-time');
@@ -91,6 +92,18 @@
     // Atualiza a cada segundo
     setInterval(updateDateTime, 1000);
     updateDateTime(); // Atualiza imediatamente ao carregar a página
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("textarea[name='messagem']").forEach(function (textarea) {
+            textarea.addEventListener("keydown", function (event) {
+                if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault(); // Evita quebra de linha
+                    let form = this.closest("form"); // Encontra o formulário mais próximo
+                    form.querySelector("button[type='submit']").click(); // Simula clique no botão enviar
+                }
+            });
+        });
+    });
 
 
     document.addEventListener("DOMContentLoaded", function () {
