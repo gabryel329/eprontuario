@@ -41,6 +41,7 @@
             </div>
             <div class="modal-body d-flex">
                 <div class="nav flex-column nav-pills me-3" id="chatTabs" role="tablist">
+                    <h3>Usuários</h3>
                     @foreach ($users as $user)
                         @if ($user->id !== auth()->id())
                                 <button class="nav-link @if ($loop->first) active @endif" id="tab-{{ $user->id }}" data-bs-toggle="tab" data-bs-target="#chat-{{ $user->id }}" type="button" role="tab">
