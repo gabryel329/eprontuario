@@ -101,7 +101,7 @@
         @endif
 
         @if (Auth::user()->permissoes->pluck('id')->intersect([3])->isNotEmpty())
-            <li class="treeview {{ request()->is('permisoes*', 'especialidades*', 'usuarios*','listausuarios*', 'profissional*','listaprofissional*', 'tipoprof*', 'convenio','listaconvenio*', 'taxa*') ? 'is-expanded' : '' }}">
+            <li class="treeview {{ request()->is('permisoes*', 'especialidades*', 'usuarios*','honorario*','listausuarios*', 'profissional*','listaprofissional*', 'tipoprof*', 'convenio','listaconvenio*', 'taxa*', 'importar-excel*','convenios/procedures') ? 'is-expanded' : '' }}">
                 <a class="app-menu__item" href="#" data-toggle="treeview">
                     <i class="app-menu__icon bi bi bi-gear"></i>
                     <span class="app-menu__label">Cadastros</span>
@@ -143,15 +143,6 @@
                             <i class="icon bi bi-building-fill-add"></i> Taxa
                         </a>
                     </li>
-                </ul>
-            </li>
-            <li class="treeview {{ request()->is('TabelaProcedimento*','honorario*', 'convenioProcedimento*', 'relatorioFinanceiro*', 'importar-excel*','convenios/procedures', 'contasPagar', 'contasReceber', 'fornecedores*', 'listafornecedores*', 'bancos*') ? 'is-expanded' : '' }}">
-                <a class="app-menu__item" href="#" data-toggle="treeview">
-                    <i class="app-menu__icon bi bi-bank"></i>
-                    <span class="app-menu__label">Financeiro</span>
-                    <i class="treeview-indicator bi bi-chevron-right"></i>
-                </a>
-                <ul class="treeview-menu">
                     <li>
                         <a class="treeview-item {{ request()->is('honorario*') ? 'active' : '' }}" href="{{ route('Honorario.index') }}">
                             <i class="icon bi bi-building-fill-add"></i> Honorario Médico
@@ -172,6 +163,16 @@
                             <i class="icon bi bi-building-fill-add"></i> Importar Tabelas
                         </a>
                     </li>
+                </ul>
+            </li>
+            <li class="treeview {{ request()->is('TabelaProcedimento*','relatorioGuia*', 'convenioProcedimento*', 'relatorioFinanceiro*', 'contasPagar', 'contasReceber', 'fornecedores*', 'listafornecedores*', 'bancos*') ? 'is-expanded' : '' }}">
+                <a class="app-menu__item" href="#" data-toggle="treeview">
+                    <i class="app-menu__icon bi bi-bank"></i>
+                    <span class="app-menu__label">Financeiro</span>
+                    <i class="treeview-indicator bi bi-chevron-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    
                     {{-- <li>
                         <a class="treeview-item {{ request()->is('TabelaProcedimento*') ? 'active' : '' }}" href="{{ route('TabelaProcedimento.index') }}">
                             <i class="icon bi bi-table"></i> Tabelas
@@ -185,6 +186,11 @@
                             <li>
                                 <a class="treeview-item {{ request()->is('relatorioFinanceiro*') ? 'active' : '' }}" href="{{ route('relatorioFinanceiro.index') }}">
                                     <i class="icon bi bi-cash"></i> Honorários Médico
+                                </a>
+                            </li>
+                            <li>
+                                <a class="treeview-item {{ request()->is('relatorioGuia*') ? 'active' : '' }}" href="{{ route('relatorioGuia.index') }}">
+                                    <i class="icon bi bi-cash"></i> Relatório de Guias
                                 </a>
                             </li>
                         </ul>

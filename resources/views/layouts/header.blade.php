@@ -12,7 +12,7 @@
                 <i class="bi bi-person fs-4"></i>
             </a>
             <ul class="dropdown-menu settings-menu dropdown-menu-right">
-                <li><a class="dropdown-item open-chat-modal" href="#"><i class="bi bi-chat-dots"></i> êProntuário Chat</a></li>
+                
                 <li><a class="dropdown-item" href="http://esuporte.com.br:8090"><i class="bi bi-headset"></i> Suporte</a></li>
                 @if (Auth::user()->permissoes->contains('id', 3))
                     <li><a type="button" onclick="abrirNovaJanela1();" class="dropdown-item"><i class="bi bi-person-vcard"></i> Tela de Chamado</a></li>
@@ -28,6 +28,26 @@
                 </li>
             </ul>
         </li>
+        <li class="dropdown">
+            <a class="app-nav__item position-relative" href="#" data-bs-toggle="dropdown" aria-label="Show notifications">
+                <i class="bi bi-bell fs-5"></i>
+                @if($messagesNaoVisualizadas > 0)
+                    <span class="position-absolute bg-danger rounded-circle p-1" 
+                          style="width: 8px; height: 8px; top: 5px; right: 5px;">
+                    </span>
+                @endif
+            </a>
+            
+            <ul class="app-notification dropdown-menu dropdown-menu-right">
+                @if($messagesNaoVisualizadas > 0)
+                    <li class="app-notification__title">Você {{ $messagesNaoVisualizadas }} novas messagens.</li>
+                @endif
+                <div class="app-notification__content">
+                    <li><a class="dropdown-item open-chat-modal" href="#"><i class="bi bi-chat-dots"></i> êProntuário Chat</a></li>
+                </div>
+            </ul>
+        </li>
+        
     </ul>
 </header>
 
@@ -41,15 +61,36 @@
             </div>
             <div class="modal-body d-flex">
                 <div class="nav flex-column nav-pills me-3" id="chatTabs" role="tablist">
-                    <h3>Usuários</h3>
+                    <input type="text" id="userSearch" class="form-control mb-3" placeholder="Buscar usuário..." />
+                    
                     @foreach ($users as $user)
                         @if ($user->id !== auth()->id())
-                                <button class="nav-link @if ($loop->first) active @endif" id="tab-{{ $user->id }}" data-bs-toggle="tab" data-bs-target="#chat-{{ $user->id }}" type="button" role="tab">
-                                    {{ $user->name }}
-                                </button>
+                            @php
+                                // Verifica se há mensagens não visualizadas do user autenticado para este remetente
+                                $messagesNaoVisualizadas = $messages->where('remetente_id', $user->id)
+                                                                    ->where('destinatario_id', auth()->id())
+                                                                    ->whereNull('visualizar')
+                                                                    ->count();
+                            @endphp
+                
+                            <button class="nav-link @if ($loop->first) active @endif position-relative user-item" 
+                                    id="tab-{{ $user->id }}" 
+                                    data-bs-toggle="tab" 
+                                    data-bs-target="#chat-{{ $user->id }}" 
+                                    type="button" 
+                                    role="tab">
+                                {{ $user->name }}
+                                
+                                @if($messagesNaoVisualizadas > 0)
+                                    <span class="position-absolute bg-danger rounded-circle p-1" 
+                                        style="width: 8px; height: 8px; top: 5px; right: 5px;">
+                                    </span>
+                                @endif
+                            </button>
                         @endif
                     @endforeach
                 </div>
+                
                 <div class="tab-content" id="chatTabContent" style="width: 650px;">
                     @foreach ($users as $user)
                         <div class="tab-pane fade @if ($loop->first) show active @endif" id="chat-{{ $user->id }}" role="tabpanel">
@@ -171,6 +212,56 @@
             }
         });
     });
+
+    document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".nav-link").forEach(button => {
+        button.addEventListener("click", function () {
+            let userId = this.id.replace("tab-", ""); // Obtém o ID do usuário
+            let unreadIndicator = this.querySelector(".bg-danger"); // Indicador de mensagens não lidas
+            console.log("Usuário clicado: ", userId);
+            if (unreadIndicator) { // Só faz a requisição se houver indicador vermelho
+                fetch("/chat2", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+                    },
+                    body: JSON.stringify({
+                        remetente_id: userId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        unreadIndicator.remove(); // Remove o indicador após a atualização
+                    }
+                })
+                .catch(error => console.error("Erro ao atualizar mensagens:", error));
+            }
+        });
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("userSearch");
+
+    // Filtra os usuários ao digitar
+    searchInput.addEventListener("input", function() {
+        const filter = searchInput.value.toLowerCase();
+        const userItems = document.querySelectorAll(".user-item"); // Seleciona os botões com a classe "user-item"
+
+        userItems.forEach(item => {
+            const userName = item.textContent.toLowerCase(); // Obtém o nome do usuário
+            if (userName.includes(filter)) {
+                item.style.display = ""; // Exibe o usuário
+            } else {
+                item.style.display = "none"; // Oculta o usuário
+            }
+        });
+    });
+});
+
+
 </script>
 
 <style>

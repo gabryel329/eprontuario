@@ -2,7 +2,7 @@
     @if ($messages->isEmpty())
         <p class="text-muted text-center">Nenhuma mensagem ainda.</p>
     @else
-        @foreach ($messages as $message)
+        @foreach ($messages->sortBy('id') as $message)
             <div class="message-wrapper {{ $message->remetente_id == auth()->id() ? 'sent' : 'received' }}">
                 <div class="message-bubble">
                     <span class="message-sender">

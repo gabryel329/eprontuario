@@ -308,6 +308,10 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::get('/relatorioFinanceiro', [HonorarioController::class, 'relatorioFinanceiroIndex'])->name('relatorioFinanceiro.index');
     Route::post('/relatorioFinanceiro', [HonorarioController::class, 'relatorioFinanceiroIndex']);
 
+    Route::get('/relatorioGuia', [HonorarioController::class, 'relatorioGuiaIndex'])->name('relatorioGuia.index');
+    Route::post('/relatorioGuia', [HonorarioController::class, 'relatorioGuiaResult'])->name('relatorioGuia.result');
+
+
     Route::get('/TabelaProcedimento', [TabelaController::class, 'TabelaProcedimento'])->name('TabelaProcedimento.index');
     Route::post('/TabelaProcedimento', [TabelaController::class, 'store'])->name('TabelaProcedimento.store');
     Route::put('/TabelaProcedimento/{id}', [TabelaController::class, 'update'])->name('TabelaProcedimento.update');
@@ -378,6 +382,7 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::get('/chat', [MessageController::class, 'index'])->name('chat.index');
     Route::get('/chat/{id}', [MessageController::class, 'show'])->name('chat.show');
     Route::post('/chat', [MessageController::class, 'store'])->name('chat.store');
+    Route::post('/chat2', [MessageController::class, 'update'])->name('chat.update');
 
 
     Route::middleware(['auth', 'check.question'])->group(function () {

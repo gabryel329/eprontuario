@@ -9,6 +9,7 @@ use App\Models\Procedimentos;
 use App\Models\Profissional;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class HonorarioController extends Controller
@@ -214,6 +215,83 @@ class HonorarioController extends Controller
         }
 
         return view('financeiro.relatorio', compact('convenios', 'profissionals', 'resultados'));
+    }
+
+    public function relatorioGuiaIndex(Request $request)
+    {
+        $profissionais = Profissional::all()->whereNotNull('conselho_1');
+
+        return view('guias.rel_guias', compact('profissionais'));
+    }
+
+    public function relatorioGuiaResult(Request $request)
+    {
+        $resultados = null;
+        if ($request->isMethod('post')) {
+            $dataInicio = $request->input('data_inicio');
+            $dataFim = $request->input('data_fim');
+            $convenioId = $request->input('convenio_id');
+            $profissionalId = $request->input('profissional_id');
+            $tipo_guia = $request->input('tipo_guia');
+            Log::info($request->all());
+
+            if ($tipo_guia == 1){
+                $query = DB::table('agendas as ag')
+                    ->select('ag.hora', 'ag.data', 'prof.name', 'proc.procedimento', 'conv.nome', 'hon.porcentagem', 'conpro.valor')
+                    ->join('procedimentos as proc', 'proc.procedimento', '=', 'ag.procedimento_id')
+                    ->join('profissionals as prof', 'prof.id', '=', 'ag.profissional_id')
+                    ->join('pacientes as pac', 'pac.id', '=', 'ag.paciente_id')
+                    ->leftJoin('convenios as conv', 'conv.id', '=', 'pac.convenio_id')
+                    ->leftJoin('convenio_procedimento as conpro', 'conpro.procedimento_id', '=', 'proc.id')
+                    ->leftJoin('honorarios as hon', 'hon.procedimento_id', '=', 'proc.id')
+                    ->distinct();
+
+                if ($dataInicio) {
+                    $query->whereDate('ag.data', '>=', $dataInicio);
+                }
+
+                if ($dataFim) {
+                    $query->whereDate('ag.data', '<=', $dataFim);
+                }
+
+                if ($convenioId) {
+                    $query->where('conv.id', '=', $convenioId);
+                }
+
+                if ($profissionalId) {
+                    $query->where('prof.id', '=', $profissionalId);
+                }
+            }else{
+                $query = DB::table('agendas as ag')
+                    ->select('ag.hora', 'ag.data', 'prof.name', 'proc.procedimento', 'conv.nome', 'hon.porcentagem', 'conpro.valor')
+                    ->join('procedimentos as proc', 'proc.procedimento', '=', 'ag.procedimento_id')
+                    ->join('profissionals as prof', 'prof.id', '=', 'ag.profissional_id')
+                    ->join('pacientes as pac', 'pac.id', '=', 'ag.paciente_id')
+                    ->leftJoin('convenios as conv', 'conv.id', '=', 'pac.convenio_id')
+                    ->leftJoin('convenio_procedimento as conpro', 'conpro.procedimento_id', '=', 'proc.id')
+                    ->leftJoin('honorarios as hon', 'hon.procedimento_id', '=', 'proc.id')
+                    ->distinct();
+
+                if ($dataInicio) {
+                    $query->whereDate('ag.data', '>=', $dataInicio);
+                }
+
+                if ($dataFim) {
+                    $query->whereDate('ag.data', '<=', $dataFim);
+                }
+
+                if ($convenioId) {
+                    $query->where('conv.id', '=', $convenioId);
+                }
+
+                if ($profissionalId) {
+                    $query->where('prof.id', '=', $profissionalId);
+                }
+            }
+            $resultados = $query->get();
+        }
+
+        return response()->json($resultados);
     }
 
     public function getHonorariosByProfissional($profissionalId)
