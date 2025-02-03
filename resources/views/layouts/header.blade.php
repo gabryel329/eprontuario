@@ -40,7 +40,7 @@
                     </span>
                 @endif
             </a>
-            <ul class="app-notification dropdown-menu dropdown-menu-end">
+            <ul class="app-notification dropdown-menu dropdown-menu-right">
                 @if($messagesNaoVisualizadas > 0)
                     <li class="app-notification__title">{{ $messagesNaoVisualizadas }} novas mensagens.</li>
                 @endif
