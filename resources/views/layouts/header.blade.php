@@ -8,6 +8,9 @@
     <ul class="app-nav">
         <li class="dropdown d-flex align-items-center">
             <span id="current-date-time" class="me-3 text-white"></span>
+        </li>
+        <li class="dropdown position-relative">
+            {{-- <span id="current-date-time" class="me-3 text-white"></span> --}}
             <a class="app-nav__item" href="#" data-bs-toggle="dropdown" aria-label="Open Profile Menu">
                 <i class="bi bi-person fs-4"></i>
             </a>
@@ -28,8 +31,8 @@
                 </li>
             </ul>
         </li>
-        <li>
-            <a class="app-nav__item position-relative open-chat-modal" href="#" aria-label="Open Chat">
+        <li class="dropdown position-relative">
+            <a class="app-nav__item position-relative open-chat-modal" href="#" aria-label="Open Chat" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-chat-dots fs-4"></i>
                 @if($messagesNaoVisualizadas > 0)
                     <span class="position-absolute bg-danger rounded-circle p-1" 
@@ -37,6 +40,11 @@
                     </span>
                 @endif
             </a>
+            <ul class="app-notification dropdown-menu dropdown-menu-end">
+                @if($messagesNaoVisualizadas > 0)
+                    <li class="app-notification__title">{{ $messagesNaoVisualizadas }} novas mensagens.</li>
+                @endif
+            </ul>
         </li>
 
         {{-- <li class="dropdown">
@@ -279,6 +287,11 @@ document.addEventListener("DOMContentLoaded", function () {
     #current-date-time {
         color: white; /* Define o texto em branco */
         font-size: 14px; /* Ajusta o tamanho do texto */
+    }
+    .dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0;
+        visibility: visible;
     }
 </style>
 ''
