@@ -172,7 +172,7 @@
                     <i class="treeview-indicator bi bi-chevron-right"></i>
                 </a>
                 <ul class="treeview-menu">
-                    
+
                     {{-- <li>
                         <a class="treeview-item {{ request()->is('TabelaProcedimento*') ? 'active' : '' }}" href="{{ route('TabelaProcedimento.index') }}">
                             <i class="icon bi bi-table"></i> Tabelas
@@ -265,7 +265,7 @@
                     </li> --}}
                     <li>
                         <a class="treeview-item {{ request()->is('faturamentoGlosa*') ? 'active' : '' }}" href="{{ route('faturamentoGlosa.index') }}">
-                            <i class="icon bi bi-piggy-bank-fill"></i> Glosa das Guias
+                            <i class="icon bi bi-piggy-bank-fill"></i> Glosas
                         </a>
                     </li>
                 </ul>
