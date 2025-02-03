@@ -28,7 +28,18 @@
                 </li>
             </ul>
         </li>
-        <li class="dropdown">
+        <li>
+            <a class="app-nav__item position-relative open-chat-modal" href="#" aria-label="Open Chat">
+                <i class="bi bi-chat-dots fs-4"></i>
+                @if($messagesNaoVisualizadas > 0)
+                    <span class="position-absolute bg-danger rounded-circle p-1" 
+                          style="width: 8px; height: 8px; top: 5px; right: 5px;">
+                    </span>
+                @endif
+            </a>
+        </li>
+
+        {{-- <li class="dropdown">
             <a class="app-nav__item position-relative" href="#" data-bs-toggle="dropdown" aria-label="Show notifications">
                 <i class="bi bi-bell fs-5"></i>
                 @if($messagesNaoVisualizadas > 0)
@@ -40,13 +51,13 @@
             
             <ul class="app-notification dropdown-menu dropdown-menu-right">
                 @if($messagesNaoVisualizadas > 0)
-                    <li class="app-notification__title">Você {{ $messagesNaoVisualizadas }} novas messagens.</li>
+                    <li class="app-notification__title">{{ $messagesNaoVisualizadas }} novas messagens.</li>
                 @endif
                 <div class="app-notification__content">
                     <li><a class="dropdown-item open-chat-modal" href="#"><i class="bi bi-chat-dots"></i> êProntuário Chat</a></li>
                 </div>
             </ul>
-        </li>
+        </li> --}}
         
     </ul>
 </header>
