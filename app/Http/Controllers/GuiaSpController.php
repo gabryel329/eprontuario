@@ -2900,8 +2900,16 @@ class GuiaSpController extends Controller
                 'uf_profissional2' => $request->input('uf_profissional2'),
                 'codigo_cbo_profissional2' => $request->input('codigo_cbo_profissional2'),
                 'observacao' => $request->input('observacao') ?? 'N/A',
-                'identificador' => 'GLOSADA'
+                'identificador' => 'GLOSADA',
             ]);
+
+            $maiorNumeracao = GuiaSp::max('numeracao');
+
+            // Incrementar a maior numeração para a nova guia
+            $novaNumeracao = $maiorNumeracao ? $maiorNumeracao + 1 : 1;
+
+            // Atualizar a guia com a nova numeração
+            $guia->update(['numeracao' => $novaNumeracao]);
 
             // Substituir valores de conselhos e UF por códigos
             if (array_key_exists($request->input('sigla_conselho'), $conselhos)) {
