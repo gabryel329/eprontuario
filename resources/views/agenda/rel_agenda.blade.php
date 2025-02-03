@@ -132,8 +132,8 @@
                     $('#disponibilidades-agenda').html(disponibilidadeHtml);
 
                     // Mostrar as agendas filtradas em tabela
-                    let agendaHtml = '<h4>Resultados da Agenda:</h4>';
-                    agendaHtml += '<table class="table table-bordered"><thead><tr><th>Data</th><th>Hora</th><th>Paciente</th></tr></thead><tbody>';
+                    let agendaHtml = '<br>';
+                    agendaHtml += '<table class="table table-bordered"><thead><tr><th>Data/Hora</th><th>Paciente</th><th>Procedimento</th><th>Convênio</th></tr></thead><tbody>';
                     if (response.agendas.length > 0) {
                         response.agendas.forEach(function(agenda) {
                             const dataFormatada = new Date(agenda.data).toLocaleDateString('pt-BR', {
@@ -142,7 +142,8 @@
                                 year: 'numeric'
                             });
                             const pacienteNome = agenda.paciente_nome ? agenda.paciente_nome : 'Paciente não encontrado';
-                            agendaHtml += '<tr><td>' + dataFormatada + '</td><td>' + agenda.hora + '</td><td>' + pacienteNome + '</td></tr>';
+                            const convenioNome = agenda.convenio_id ? agenda.convenio_id : 'Convênio não encontrado';
+                            agendaHtml += '<tr><td>' + dataFormatada+' - '+agenda.hora + '</td><td>' + pacienteNome + '</td><td>' + agenda.procedimento_id + '</td><td>' + convenioNome + '</td></tr>';
                         });
                     } else {
                         agendaHtml += '<tr><td colspan="3">Nenhuma agenda encontrada.</td></tr>';

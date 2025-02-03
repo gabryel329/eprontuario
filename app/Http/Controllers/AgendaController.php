@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Agenda;
 use App\Models\Convenio;
 use App\Models\Disponibilidade;
+use App\Models\Empresas;
 use App\Models\Especialidade;
 use App\Models\Exames;
 use App\Models\ExamesSadt;
@@ -1202,14 +1203,18 @@ class AgendaController extends Controller
         // Buscar as agendas ordenadas por hora
         $agendas = $query->orderBy('data', 'asc')->orderBy('hora', 'asc')->get();
 
-        // Adicionar o nome do paciente a cada agenda
+        // Adicionar o nome do paciente e do convênio a cada agenda
         foreach ($agendas as $agenda) {
             $agenda->paciente_nome = $agenda->paciente ? $agenda->paciente->name : 'Paciente não encontrado';
+            $agenda->convenio_id = $agenda->paciente->convenio->nome ?: 'Convênio não encontrado';
         }
+
+        $empresas = Empresas::all();
         // Retornar os resultados
         return response()->json([
             'disponibilidades' => $disponibilidades,
-            'agendas' => $agendas
+            'agendas' => $agendas,
+            'empresas' => $empresas
         ]);
     }
 
