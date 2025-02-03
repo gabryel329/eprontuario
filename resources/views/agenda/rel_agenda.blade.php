@@ -161,15 +161,168 @@
     });
 
     function imprimirAgenda() {
-        var conteudo = document.getElementById('resultados-agenda').innerHTML;
-        var janelaImpressao = window.open('', '', 'width=800,height=600');
-        janelaImpressao.document.write('<html><head><title>Imprimir Agenda</title>');
-        janelaImpressao.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">');
-        janelaImpressao.document.write('</head><body>');
-        janelaImpressao.document.write(conteudo);
-        janelaImpressao.document.write('</body></html>');
-        janelaImpressao.document.close();
-        janelaImpressao.print();
-    }
+    var conteudo = document.getElementById('resultados-agenda').innerHTML;
+    var janelaImpressao = window.open('', '', 'width=900,height=650');
+
+    janelaImpressao.document.write(`
+        <html>
+        <head>
+            <title>Ficha de Agenda Médica</title>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+            <style>
+                body {
+                    font-family: 'Arial', sans-serif;
+                    color: #333;
+                    padding: 30px;
+                    background: #fff;
+                    line-height: 1.6;
+                }
+
+                .print-header {
+                    text-align: center;
+                    font-size: 24px;
+                    font-weight: bold;
+                    margin-bottom: 20px;
+                    padding: 15px;
+                    border-bottom: 3px solid #007bff;
+                    color: #007bff;
+                }
+
+                .medico-info {
+                    text-align: center;
+                    font-size: 18px;
+                    font-weight: bold;
+                    margin-bottom: 20px;
+                    color: #555;
+                }
+
+                .agenda-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 20px;
+                }
+
+                .agenda-table th, .agenda-table td {
+                    border: 1px solid #ddd;
+                    padding: 10px;
+                    text-align: left;
+                    font-size: 14px;
+                }
+
+                .agenda-table thead th {
+                    background-color: #007bff !important;
+                    color: white;
+                    font-size: 16px;
+                    text-transform: uppercase;
+                    position: sticky;
+                    top: 0;
+                    z-index: 1000;
+                }
+
+                .agenda-table tr:nth-child(even) {
+                    background-color: #f9f9f9;
+                }
+
+                .agenda-table tr:hover {
+                    background-color: #f1f1f1;
+                }
+
+                .rodape {
+                    margin-top: 40px;
+                    text-align: center;
+                    font-size: 14px;
+                    color: #777;
+                    border-top: 2px solid #ddd;
+                    padding-top: 10px;
+                }
+
+                .assinatura {
+                    margin-top: 50px;
+                    text-align: center;
+                    font-size: 16px;
+                    font-weight: bold;
+                }
+
+                .assinatura .linha {
+                    margin-top: 40px;
+                    border-top: 2px solid #333;
+                    width: 250px;
+                    margin-left: auto;
+                    margin-right: auto;
+                    padding-top: 5px;
+                }
+
+                @media print {
+                    body {
+                        margin: 0;
+                        padding: 10px;
+                    }
+
+                    .print-header {
+                        position: relative;
+                        top: 0;
+                        width: 100%;
+                        background: white;
+                        padding: 10px;
+                        font-size: 22px;
+                        font-weight: bold;
+                        margin-bottom: 20px;
+                    }
+
+                    .agenda-table {
+                        margin-top: 60px;
+                    }
+
+                    .agenda-table thead {
+                        display: table-header-group;
+                    }
+
+                    .agenda-table tbody tr:first-child td {
+                        border-top: 2px solid #007bff;
+                    }
+
+                    .assinatura {
+                        page-break-before: always;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="print-header">Ficha de Atendimento Médico</div>
+
+            <div class="medico-info">
+                <p><strong>Data da Agenda:</strong> ${new Date().toLocaleDateString()}</p>
+            </div>
+
+            <table class="agenda-table">
+                <thead>
+                    <tr>
+                        <th>Paciente</th>
+                        <th>Data</th>
+                        <th>Horário</th>
+                        <th>Procedimento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${conteudo}
+                </tbody>
+            </table>
+
+            <div class="assinatura">
+                <p class="linha"></p>
+                <p>Assinatura do Médico</p>
+            </div>
+
+            <div class="rodape">
+                <p>Ficha gerada automaticamente pelo sistema</p>
+            </div>
+        </body>
+        </html>
+    `);
+
+    janelaImpressao.document.close();
+    janelaImpressao.print();
+}
+
 </script>
 @endsection
