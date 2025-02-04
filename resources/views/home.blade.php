@@ -60,7 +60,7 @@
                             href="{{ url('/lista?_token=' . csrf_token() . '&data=' . now()->format('Y-m-d')) }}">
                             <div class="card-body">
                                 <i class="bi bi-calendar-check fs-1 text-primary"></i>
-                                <p class="card-text mt-3 text-dark">Agenda do Dia</p>
+                                <p class="card-text mt-3 text-dark">Agenda</p>
                             </div>
                         </a>
                     </div>
