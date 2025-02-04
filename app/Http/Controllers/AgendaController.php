@@ -667,6 +667,7 @@ class AgendaController extends Controller
             $existeAgenda = Agenda::where('data', $data)
                 ->where('hora', $hora)
                 ->where('profissional_id', $profissionalId)
+                ->where('status', '=', "MARCADO")
                 ->first();
 
             if ($existeAgenda) {
@@ -1084,7 +1085,8 @@ class AgendaController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+    {   
+        log::info($request->all());
         // Capitalize the input
         $data = $request->input('data');
         $hora = $request->input('hora');
