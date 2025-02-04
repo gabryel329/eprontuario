@@ -26,21 +26,22 @@
                         @endphp
                         @if($remetente)
                             <li>
-                                <span class="app-notification__item open-chat-modal" href="javascript:;">
-                                    <span class="app-notification__icon"><i class="bi bi-bell fs-4 text-primary"></i></span>
+                                <a class="app-notification__item open-chat-modal" href="javascript:void(0);" data-bs-target="#chat-{{ $remetente->id }}" data-bs-toggle="tab">
+                                    <span class="app-notification__icon"><i class="bi bi-chat fs-4 text-primary"></i></span>
                                     <div>
                                         <p class="app-notification__message">
                                             <strong>{{ $remetente->name }}</strong> enviou {{ $remetenteData->total }} mensagem(ns).
                                         </p>
                                         <p class="app-notification__meta">{{ $remetenteData->tempo }} atrás</p>
                                     </div>
-                                </span>
+                                </a>
                             </li>
                         @endif
                     @endforeach
                 </div>
             </ul>
         </li>
+        
         <li class="dropdown position-relative">
             {{-- <span id="current-date-time" class="me-3 text-white"></span> --}}
             <a class="app-nav__item" href="#" data-bs-toggle="dropdown" aria-label="Open Profile Menu">
@@ -82,12 +83,13 @@
                     @foreach ($users as $user)
                         @if ($user->id !== auth()->id())
                             @php
-                                // Verifica se há mensagens não visualizadas do user autenticado para este remetente
-                                $messagesNaoVisualizadas = $messages->where('remetente_id', $user->id)
-                                                                    ->where('destinatario_id', auth()->id())
-                                                                    ->whereNull('visualizar')
-                                                                    ->count();
+                                // Verifica se há mensagens não visualizadas do usuário autenticado para este remetente
+                                $messagesNaoVisualizadas = \App\Models\Message::where('remetente_id', $user->id)
+                                                                            ->where('destinatario_id', auth()->id())
+                                                                            ->whereNull('visualizar')
+                                                                            ->count();
                             @endphp
+                    
                 
                             <button class="nav-link @if ($loop->first) active @endif position-relative user-item" 
                                     id="tab-{{ $user->id }}" 
