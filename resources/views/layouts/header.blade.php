@@ -10,6 +10,38 @@
             <span id="current-date-time" class="me-3 text-white"></span>
         </li>
         <li class="dropdown position-relative">
+            <a class="app-nav__item position-relative open-chat-modal" href="#" aria-label="Open Chat" data-bs-toggle="dropdown">
+                <i class="bi bi-chat-dots fs-4"></i>
+                @if($messagesNaoVisualizadas > 0)
+                    <span class="position-absolute bg-danger rounded-circle p-1" 
+                            style="width: 8px; height: 8px; top: 5px; right: 5px;">
+                    </span>
+                @endif
+            </a>
+            <ul class="app-notification dropdown-menu dropdown-menu-right">
+                <div class="app-notification__content">
+                    @foreach($remetentesNaoVisualizados as $remetenteData)
+                        @php
+                            $remetente = \App\Models\User::find($remetenteData->remetente_id);
+                        @endphp
+                        @if($remetente)
+                            <li>
+                                <span class="app-notification__item open-chat-modal" href="javascript:;">
+                                    <span class="app-notification__icon"><i class="bi bi-bell fs-4 text-primary"></i></span>
+                                    <div>
+                                        <p class="app-notification__message">
+                                            <strong>{{ $remetente->name }}</strong> enviou {{ $remetenteData->total }} mensagem(ns).
+                                        </p>
+                                        <p class="app-notification__meta">{{ $remetenteData->tempo }} atrás</p>
+                                    </div>
+                                </span>
+                            </li>
+                        @endif
+                    @endforeach
+                </div>
+            </ul>
+        </li>
+        <li class="dropdown position-relative">
             {{-- <span id="current-date-time" class="me-3 text-white"></span> --}}
             <a class="app-nav__item" href="#" data-bs-toggle="dropdown" aria-label="Open Profile Menu">
                 <i class="bi bi-person fs-4"></i>
@@ -31,41 +63,6 @@
                 </li>
             </ul>
         </li>
-        <li class="dropdown position-relative">
-            <a class="app-nav__item position-relative open-chat-modal" href="#" aria-label="Open Chat" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-chat-dots fs-4"></i>
-                @if($messagesNaoVisualizadas > 0)
-                    <span class="position-absolute bg-danger rounded-circle p-1" 
-                          style="width: 8px; height: 8px; top: 5px; right: 5px;">
-                    </span>
-                @endif
-            </a>
-            <ul class="app-notification dropdown-menu dropdown-menu-right">
-                @if($messagesNaoVisualizadas > 0)
-                    <li class="app-notification__title">{{ $messagesNaoVisualizadas }} novas mensagens.</li>
-                @endif
-            </ul>
-        </li>
-
-        {{-- <li class="dropdown">
-            <a class="app-nav__item position-relative" href="#" data-bs-toggle="dropdown" aria-label="Show notifications">
-                <i class="bi bi-bell fs-5"></i>
-                @if($messagesNaoVisualizadas > 0)
-                    <span class="position-absolute bg-danger rounded-circle p-1" 
-                          style="width: 8px; height: 8px; top: 5px; right: 5px;">
-                    </span>
-                @endif
-            </a>
-            
-            <ul class="app-notification dropdown-menu dropdown-menu-right">
-                @if($messagesNaoVisualizadas > 0)
-                    <li class="app-notification__title">{{ $messagesNaoVisualizadas }} novas messagens.</li>
-                @endif
-                <div class="app-notification__content">
-                    <li><a class="dropdown-item open-chat-modal" href="#"><i class="bi bi-chat-dots"></i> êProntuário Chat</a></li>
-                </div>
-            </ul>
-        </li> --}}
         
     </ul>
 </header>

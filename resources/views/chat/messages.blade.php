@@ -16,24 +16,23 @@
     @endif
 </div>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var messageContainer = document.getElementById("messageContainer");
-        messageContainer.scrollTop = messageContainer.scrollHeight;
+    document.addEventListener('DOMContentLoaded', function() {
+        const messageContainer = document.getElementById('messageContainer');
+        const lastMessage = messageContainer.lastElementChild;
+        if (lastMessage) {
+            lastMessage.scrollIntoView({ behavior: 'smooth' });
+        }
     });
-</script>
-<script>
-    function recargarPage() {
-        location.reload();  // Recarrega a página
-    }
 
-    // Define o intervalo de 3 segundos para chamar a função recargarPage
-    setInterval(recargarPage, 3000);  // A cada 3000 milissegundos (3 segundos)
+    function recargarPage() {
+        location.reload(); // Recarrega a página
+    }
+    setInterval(recargarPage, 3000);
 </script>
 <style>
-/* Estilização do container principal do chat */
 .chat-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Mantém a ordem normal */
     padding: 15px;
     max-height: 400px;
     overflow-y: auto;
@@ -101,5 +100,4 @@
     display: block;
     margin-top: 5px;
 }
-
 </style>
