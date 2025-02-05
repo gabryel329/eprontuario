@@ -119,7 +119,7 @@
                         <a id="btn-relatorio-agenda" class="card hover-card text-center shadow-sm h-100 text-decoration-none" href="#">
                             <div class="card-body">
                                 <i class="bi bi-calendar-week fs-1 text-primary"></i>
-                                <p class="card-text mt-3 text-dark">Relatório de Agendas</p>
+                                <p class="card-text mt-3 text-dark">Agenda</p>
                             </div>
                         </a>
                     </div>
@@ -129,7 +129,7 @@
                             href="{{ route('faturamentoGlosa.index') }}">
                             <div class="card-body">
                                 <i class="icon bi bi-piggy-bank-fill fs-1 text-primary"></i>
-                                <p class="card-text mt-3 text-dark">Glosa das Guias</p>
+                                <p class="card-text mt-3 text-dark">Glosas</p>
                             </div>
                         </a>
                     </div>
