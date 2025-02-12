@@ -305,7 +305,7 @@
                     .then(data => {
                         var horariosContainer = document.getElementById('horariosDisponiveis');
                         horariosContainer.innerHTML = ''; // Limpar horários anteriores
-                        console.log(data.horarios);
+                        console.log('disponivel:',data.horarios);
                         // Exibir os dias disponíveis
                         var diasDisponiveis = [];
                         if (data.diasdisponivel) {

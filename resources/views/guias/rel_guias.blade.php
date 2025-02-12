@@ -37,24 +37,28 @@
                                 <form id="filtro-agenda" method="POST">
                                     @csrf
                                     <div class="row">
-                                        <div class="mb-3 col-md-3">
+                                        <div class="mb-3 col-md-2">
                                             <label for="data_inicio">Data Início:</label>
                                             <input type="date" name="data_inicio" id="data_inicio" class="form-control">
                                         </div>
-                                        <div class="mb-3 col-md-3">
+                                        <div class="mb-3 col-md-2">
                                             <label for="data_fim">Data Fim:</label>
                                             <input type="date" name="data_fim" id="data_fim" class="form-control">
                                         </div>
                                         <div class="mb-3 col-md-3">
-                                            <label for="profissional_id">Profissional:</label>
-                                            <select name="profissional_id" id="profissional_id" class="form-control">
-                                                <option value="">Selecione um Profissional</option>
-                                                @foreach ($profissionais as $profissional)
-                                                    <option value="{{ $profissional->id }}"> {{ $profissional->name }} </option>
+                                            <label for="lote">Lote:</label>
+                                            <input type="text" name="lote" id="lote" class="form-control">
+                                        </div>
+                                        <div class="mb-3 col-md-3">
+                                            <label for="convenio_id">Convênio:</label>
+                                            <select name="convenio_id" id="convenio_id" class="form-control">
+                                                <option value="">Selecione um convenio</option>
+                                                @foreach ($convenios as $convenio)
+                                                    <option value="{{ $convenio->id }}"> {{ $convenio->nome }} </option>
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="mb-3 col-md-3">
+                                        <div class="mb-3 col-md-2">
                                             <label for="especialidade_id">Tipo de Guia</label>
                                             <select name="tipo_guia" id="tipo_guia" class="form-control">
                                                 <option value="" selected>Selecione um Tipo</option>
@@ -113,7 +117,8 @@
                 _token: "{{ csrf_token() }}",
                 data_inicio: $("#data_inicio").val(),
                 data_fim: $("#data_fim").val(),
-                profissional_id: $("#profissional_id").val(),
+                lote: $("#lote").val(),
+                convenio_id: $("#convenio_id").val(),
                 tipo_guia: $("#tipo_guia").val()
             };
 
@@ -129,7 +134,11 @@
                         response.forEach(item => {
                             let linha = `
                                 <tr>
-                                    <td>${item.profissional}</td>
+                                    <td>${item.id}</td> <!-- Exemplo de ID -->
+                                    <td>${item.data}</td> <!-- Exemplo de Data -->
+                                    <td>${item.profissional}</td> <!-- Exemplo de Profissional -->
+                                    <td>${item.especialidade || 'N/A'}</td> <!-- Exemplo de Especialidade (assumindo que o campo seja "especialidade") -->
+                                    <td>${item.tipo_guia || 'N/A'}</td> <!-- Exemplo de Tipo de Guia (assumindo que o campo seja "tipo_guia") -->
                                 </tr>
                             `;
                             tabela.append(linha);
@@ -145,5 +154,6 @@
         });
     });
 </script>
+
 
 @endsection

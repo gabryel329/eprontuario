@@ -220,8 +220,9 @@ class HonorarioController extends Controller
     public function relatorioGuiaIndex(Request $request)
     {
         $profissionais = Profissional::all()->whereNotNull('conselho_1');
+        $convenios = Convenio::where('nome', '!=', 'Particular')->get();
 
-        return view('guias.rel_guias', compact('profissionais'));
+        return view('guias.rel_guias', compact('profissionais', 'convenios'));
     }
 
     public function relatorioGuiaResult(Request $request)
@@ -231,68 +232,96 @@ class HonorarioController extends Controller
             $dataInicio = $request->input('data_inicio');
             $dataFim = $request->input('data_fim');
             $convenioId = $request->input('convenio_id');
-            $profissionalId = $request->input('profissional_id');
+            $lote = $request->input('lote');
             $tipo_guia = $request->input('tipo_guia');
             Log::info($request->all());
-
-            if ($tipo_guia == 1){
-                $query = DB::table('agendas as ag')
-                    ->select('ag.hora', 'ag.data', 'prof.name', 'proc.procedimento', 'conv.nome', 'hon.porcentagem', 'conpro.valor')
-                    ->join('procedimentos as proc', 'proc.procedimento', '=', 'ag.procedimento_id')
-                    ->join('profissionals as prof', 'prof.id', '=', 'ag.profissional_id')
-                    ->join('pacientes as pac', 'pac.id', '=', 'ag.paciente_id')
-                    ->leftJoin('convenios as conv', 'conv.id', '=', 'pac.convenio_id')
-                    ->leftJoin('convenio_procedimento as conpro', 'conpro.procedimento_id', '=', 'proc.id')
-                    ->leftJoin('honorarios as hon', 'hon.procedimento_id', '=', 'proc.id')
+    
+            if ($tipo_guia == 1) {
+                $query = DB::table('guia_sps as g')
+                    ->select(
+                        'g.id',
+                        'g.data_autorizacao as data',
+                        'g.nome_profissional as profissional', 
+                        'g.identificador', 
+                        'g.numeracao', 
+                        'conv.nome as convenio',
+                        DB::raw('COUNT(DISTINCT e_sol.id) as qtd_ExamesSol'),
+                        DB::raw('COUNT(DISTINCT e_aut.id) as qtd_ExamesAut'),
+                        DB::raw('COUNT(DISTINCT mat.id) as qtd_Materiais'),
+                        DB::raw('COUNT(DISTINCT med.id) as qtd_Medicamentos'),
+                        DB::raw('(
+                            COALESCE(SUM(CAST(mat.valor_total AS numeric)), 0) 
+                            + COALESCE(SUM(CAST(med.valor_total AS numeric)), 0) 
+                            + COALESCE(SUM(CAST(e_aut.valor_total AS numeric)), 0)
+                        ) as valortotal')
+                    )
+                    ->join('exames_aut_sadt as e_aut', 'e_aut.guia_sps_id', '=', 'g.id')
+                    ->join('exames_sadt as e_sol', 'e_sol.guia_sps_id', '=', 'g.id')
+                    ->leftJoin('mat_agendas as mat', 'mat.guia_sps_id', '=', 'g.id')
+                    ->leftJoin('med_agendas as med', 'med.guia_sps_id', '=', 'g.id')
+                    ->join('convenios as conv', 'conv.id', '=', 'g.convenio_id')
+                    ->groupBy('g.data_autorizacao','g.id', 'g.nome_profissional', 'g.identificador', 'g.numeracao', 'conv.nome')
                     ->distinct();
-
+    
                 if ($dataInicio) {
-                    $query->whereDate('ag.data', '>=', $dataInicio);
+                    $query->where("g.data_autorizacao", '>=', $dataInicio);
                 }
-
+    
                 if ($dataFim) {
-                    $query->whereDate('ag.data', '<=', $dataFim);
+                    $query->where("g.data_autorizacao", '<=', $dataFim);
                 }
-
+    
                 if ($convenioId) {
-                    $query->where('conv.id', '=', $convenioId);
+                    $query->where('g.convenio_id', '=', $convenioId);
                 }
-
-                if ($profissionalId) {
-                    $query->where('prof.id', '=', $profissionalId);
+    
+                if ($lote) {
+                    $query->where('g.numeracao', '=', $lote);
                 }
-            }else{
-                $query = DB::table('agendas as ag')
-                    ->select('ag.hora', 'ag.data', 'prof.name', 'proc.procedimento', 'conv.nome', 'hon.porcentagem', 'conpro.valor')
-                    ->join('procedimentos as proc', 'proc.procedimento', '=', 'ag.procedimento_id')
-                    ->join('profissionals as prof', 'prof.id', '=', 'ag.profissional_id')
-                    ->join('pacientes as pac', 'pac.id', '=', 'ag.paciente_id')
-                    ->leftJoin('convenios as conv', 'conv.id', '=', 'pac.convenio_id')
-                    ->leftJoin('convenio_procedimento as conpro', 'conpro.procedimento_id', '=', 'proc.id')
-                    ->leftJoin('honorarios as hon', 'hon.procedimento_id', '=', 'proc.id')
-                    ->distinct();
-
+            } else {
+                $query = DB::table('guia_consulta as g')
+                    ->select(
+                        'g.id',
+                        'g.data_atendimento as data',
+                        'g.nome_profissional_executante  as profissional', 
+                        'g.identificador', 
+                        'g.numeracao',
+                        'g.valor_procedimento as valortotal',
+                        'conv.nome as convenio'
+                    )
+                    ->join('convenios as conv', 'conv.id', '=', 'g.convenio_id')
+                    ->groupBy('g.data_atendimento','g.id', 'g.nome_profissional_executante', 'g.identificador', 'g.numeracao', 'conv.nome');
+    
                 if ($dataInicio) {
-                    $query->whereDate('ag.data', '>=', $dataInicio);
+                    $query->where('g.data_atendimento', '>=', $dataInicio);
                 }
-
+    
                 if ($dataFim) {
-                    $query->whereDate('ag.data', '<=', $dataFim);
+                    $query->where('g.data_atendimento', '<=', $dataFim);
                 }
-
+    
                 if ($convenioId) {
-                    $query->where('conv.id', '=', $convenioId);
+                    $query->where('g.convenio_id', '=', $convenioId);
                 }
-
-                if ($profissionalId) {
-                    $query->where('prof.id', '=', $profissionalId);
+    
+                if ($lote) {
+                    $query->where('g.numeracao', '=', $lote);
                 }
             }
+    
+            // Log the SQL query
+            $sql = $query->toSql();
+            $bindings = $query->getBindings();
+            $fullSql = vsprintf(str_replace('?', '%s', $sql), $bindings);
+            Log::info('SQL Query: ' . $fullSql);
+    
             $resultados = $query->get();
         }
-
+    
         return response()->json($resultados);
     }
+    
+
 
     public function getHonorariosByProfissional($profissionalId)
     {
