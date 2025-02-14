@@ -128,7 +128,7 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::post('/get-procedimentos', [AgendaController::class, 'getProcedimentos'])->name('get.procedimentos');
         Route::get('/api/get-medicamentos/{guia_sps_id}', [GuiaSpController::class, 'getMedicamentos']);
         Route::get('/api/get-materiais/{guia_sps_id}', [GuiaSpController::class, 'getMateriais']);
-        
+
         Route::get('/api/get-procedimentos/{pacienteId}', [GuiaSpController::class, 'getProcedimentos']);
 
         Route::get('/gerar-guia-sadt/{id}', [GuiaSpController::class, 'gerarGuiaSADTMODAL']);
@@ -150,7 +150,7 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::post('/gerar-zip-guia-consulta/{id}', [GuiaConsultaController::class, 'gerarZipGuiaConsulta']);
         Route::get('/guias-consulta/{guiaConsulta}/editar', [GuiaConsultaController::class, 'edit'])->name('guias-consulta.editar');
         Route::put('/guias-consulta/{guiaConsulta}/update', [GuiaConsultaController::class, 'updateGuiaConsulta'])->name('guias-consulta.update');
-        Route::put('/guias-consulta/{guiaConsulta}', [GuiaConsultaController::class, 'update'])->name('guias-consulta.update');
+        // Route::put('/guias-consulta/{guiaConsulta}', [GuiaConsultaController::class, 'update'])->name('guias-consulta.update');
         #GuiaSadt
         Route::post('/verificar-numeracao-sadt', [GuiaSpController::class, 'verificarNumeracao'])->name('guias.verificarNumeracaoSadt');
         Route::post('/gerar-zip-guia-sadt-em-lote', [GuiaSpController::class, 'gerarZipGuiasadtEmLote'])->name('guias.gerarZipEmLote');
