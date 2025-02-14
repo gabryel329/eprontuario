@@ -159,7 +159,6 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::post('/gerar-zip-guia-sadt/{id}', [GuiaSpController::class, 'gerarZipGuiasadt']);
         Route::get('/guias-sadt/{guiaSadt}/editar', [GuiaSpController::class, 'edit'])->name('guias-sadt.editar');
         Route::put('/guias-sadt/{guiaSadt}/update', [GuiaSpController::class, 'updateGuiasadt'])->name('guias-sadt.update');
-        Route::put('/guias-sadt/{guiaSadt}', [GuiaSpController::class, 'update'])->name('guias-sadt.update');
 
         Route::get('/convenios/procedures', [ConvenioController::class, 'getProceduresIndex'])->name('convenios.index');
         Route::get('/convenios/procedures/{id}', [ConvenioController::class, 'getProcedures'])->name('convenios.getProcedures');
