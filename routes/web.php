@@ -181,8 +181,8 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::post('/guia_consulta', [GuiaConsultaController::class, 'store'])->name('guiaconsulta.store');
     Route::post('/guia_tiss', [GuiaTissController::class, 'store'])->name('guiatiss.store');
     Route::post('/guia_sp', [GuiaSpController::class, 'store'])->name('guiasp.store');
-    Route::post('/guia_honorario', [GuiaHonorarioController::class, 'store'])->name('guiahonorario.store');
-    Route::post('/guias', [GuiaHonorarioController::class, 'store'])->name('guiahonorario.store');
+    // Route::post('/guia_honorario', [GuiaHonorarioController::class, 'store'])->name('guiahonorario.store');
+    // Route::post('/guias', [GuiaHonorarioController::class, 'store'])->name('guiahonorario.store');
 
 
     Route::get('/convenioProcedimento', [ConvenioController::class, 'convenioProcedimentoIndex'])->name('convenioProcedimento.index');

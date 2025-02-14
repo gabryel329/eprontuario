@@ -32,54 +32,54 @@ class GuiaHonorarioController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-{
-    try {
-        $user_id = auth()->id();
+//     public function store(Request $request)
+// {
+//     try {
+//         $user_id = auth()->id();
 
-        GuiaHonorario::create([
-            'user_id' => $user_id,
-            'convenio_id' => $request->input('convenio_id'),
-            'registro_ans' => $request->input('registro_ans'),
-            'numero_guia_solicitacao' => $request->input('numero_guia_solicitacao'),
-            'numero_guia_prestador' => $request->input('numero_guia_prestador'),
-            'senha' => $request->input('senha'),
-            'numero_guia_operadora' => $request->input('numero_guia_operadora'),
-            'numero_carteira' => $request->input('numero_carteira'),
-            'nome_social' => $request->input('nome_social'),
-            'atendimento_rn' => $request->input('atendimento_rn', false), // booleano
-            'nome_beneficiario' => $request->input('nome_beneficiario'),
-            'codigo_operadora_contratado' => $request->input('codigo_operadora_contratado'),
-            'nome_hospital_local' => $request->input('nome_hospital_local'),
-            'codigo_cnes_contratado' => $request->input('codigo_cnes_contratado'),
-            'nome_contratado' => $request->input('nome_contratado'),
-            'codigo_operadora_executante' => $request->input('codigo_operadora_executante'),
-            'codigo_cnes_executante' => $request->input('codigo_cnes_executante'),
-            'data_inicio_faturamento' => $request->input('data_inicio_faturamento'),
-            'data_fim_faturamento' => $request->input('data_fim_faturamento'),
-            'observacoes' => $request->input('observacoes'),
-            'valor_total_honorarios' => $request->input('valor_total_honorarios'),
-            'data_emissao' => $request->input('data_emissao'),
-            'assinatura_profissional_executante' => $request->input('assinatura_profissional_executante'),
-        ]);
+//         GuiaHonorario::create([
+//             'user_id' => $user_id,
+//             'convenio_id' => $request->input('convenio_id'),
+//             'registro_ans' => $request->input('registro_ans'),
+//             'numero_guia_solicitacao' => $request->input('numero_guia_solicitacao'),
+//             'numero_guia_prestador' => $request->input('numero_guia_prestador'),
+//             'senha' => $request->input('senha'),
+//             'numero_guia_operadora' => $request->input('numero_guia_operadora'),
+//             'numero_carteira' => $request->input('numero_carteira'),
+//             'nome_social' => $request->input('nome_social'),
+//             'atendimento_rn' => $request->input('atendimento_rn', false), // booleano
+//             'nome_beneficiario' => $request->input('nome_beneficiario'),
+//             'codigo_operadora_contratado' => $request->input('codigo_operadora_contratado'),
+//             'nome_hospital_local' => $request->input('nome_hospital_local'),
+//             'codigo_cnes_contratado' => $request->input('codigo_cnes_contratado'),
+//             'nome_contratado' => $request->input('nome_contratado'),
+//             'codigo_operadora_executante' => $request->input('codigo_operadora_executante'),
+//             'codigo_cnes_executante' => $request->input('codigo_cnes_executante'),
+//             'data_inicio_faturamento' => $request->input('data_inicio_faturamento'),
+//             'data_fim_faturamento' => $request->input('data_fim_faturamento'),
+//             'observacoes' => $request->input('observacoes'),
+//             'valor_total_honorarios' => $request->input('valor_total_honorarios'),
+//             'data_emissao' => $request->input('data_emissao'),
+//             'assinatura_profissional_executante' => $request->input('assinatura_profissional_executante'),
+//         ]);
 
-        return redirect()->back()->with('success', 'Guia de Honorário criada com sucesso!');
-    } catch (\Exception $e) {
-        return redirect()->back()->with('error', 'Erro ao criar a guia: ' . $e->getMessage());
-    }
-}
+//         return redirect()->back()->with('success', 'Guia de Honorário criada com sucesso!');
+//     } catch (\Exception $e) {
+//         return redirect()->back()->with('error', 'Erro ao criar a guia: ' . $e->getMessage());
+//     }
+// }
 
     public function impressaoGuia($id)
     {
-        
+
         $guia = GuiaHonorario::find($id);
-        $empresa = Empresas::first(); 
+        $empresa = Empresas::first();
         $convenio = Convenio::find($guia->convenio_id);
-        
+
         if (!$guia) {
             return redirect()->back()->with('error', 'Guia não encontrada.');
         }
-        
+
 
         return view('formulario.guiahonorario', compact('guia', 'empresa', 'convenio'));
     }
