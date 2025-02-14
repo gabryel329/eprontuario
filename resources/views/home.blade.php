@@ -114,6 +114,15 @@
                             </div>
                         </a>
                     </div>
+                    <!-- Card 7 -->
+                    <div class="col-md-6 col-lg-3">
+                        <a id="btn-relatorio-agenda" class="card hover-card text-center shadow-sm h-100 text-decoration-none" href="#">
+                            <div class="card-body">
+                                <i class="bi bi-calendar-week fs-1 text-primary"></i>
+                                <p class="card-text mt-3 text-dark">Agenda</p>
+                            </div>
+                        </a>
+                    </div>
                     <!-- Card 8 -->
                     <div class="col-md-6 col-lg-3">
                         <a class="card hover-card text-center shadow-sm h-100 text-decoration-none"
