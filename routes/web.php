@@ -122,7 +122,7 @@ Route::middleware(['check.session.expired'])->group(function () {
         Route::post('/agendar', [AgendaController::class, 'agendar']);
         Route::get('/rel-agenda', [AgendaController::class, 'consultaAgenda'])->name('agenda.consulta');
         Route::post('/filtrar-agenda', [AgendaController::class, 'filtrarAgenda'])->name('agenda.filtrar');
-        Route::get('/agenda/{id}/guia-tiss', [GuiaTissController::class, 'gerarGuiaTiss'])->name('guia.tiss');
+        // Route::get('/agenda/{id}/guia-tiss', [GuiaTissController::class, 'gerarGuiaTiss'])->name('guia.tiss');
         Route::get('/agenda/{id}/guia-sadt', [GuiaSpController::class, 'gerarGuiaSadt'])->name('guia.sadt');
 
         Route::post('/get-procedimentos', [AgendaController::class, 'getProcedimentos'])->name('get.procedimentos');
@@ -283,7 +283,7 @@ Route::middleware(['check.session.expired'])->group(function () {
     Route::get('/guia/honorario/{id}', [GuiaHonorarioController::class, 'impressaoGuia'])->name('guia.honorario');
     Route::get('/guia/sp/{id}', [GuiaSpController::class, 'impressaoGuia'])->name('guia.sp');
     Route::get('/guia/consulta/{id}', [GuiaConsultaController::class, 'impressaoGuia'])->name('guia.consulta');
-    Route::get('/guia/tiss/{id}', [GuiaTissController::class, 'impressaoGuia'])->name('guia.tiss');
+    // Route::get('/guia/tiss/{id}', [GuiaTissController::class, 'impressaoGuia'])->name('guia.tiss');
 
 
     Route::get('/ficha_atendimento', [AtendimentosController::class, 'processarFormulario'])->name('processarFormulario');

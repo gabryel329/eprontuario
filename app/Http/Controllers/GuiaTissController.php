@@ -38,7 +38,7 @@ class GuiaTissController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    
+
 
     /**
      * Store a newly created resource in storage.
@@ -94,20 +94,20 @@ class GuiaTissController extends Controller
         return redirect()->back()->with('success', 'Guia TISS criada com sucesso')->with('guiaTiss', $guiaTiss);
     }
 
-    public function impressaoGuia($id)
-    {
+    // public function impressaoGuia($id)
+    // {
 
-        $guia = GuiaTiss::find($id);
-        $empresa = Empresas::first();
-        $convenio = Convenio::find($guia->convenio_id);
+    //     $guia = GuiaTiss::find($id);
+    //     $empresa = Empresas::first();
+    //     $convenio = Convenio::find($guia->convenio_id);
 
-        if (!$guia) {
-            return redirect()->back()->with('error', 'Guia não encontrada.');
-        }
+    //     if (!$guia) {
+    //         return redirect()->back()->with('error', 'Guia não encontrada.');
+    //     }
 
 
-        return view('formulario.guiatiss', compact('guia', 'empresa', 'convenio'));
-    }
+    //     return view('formulario.guiatiss', compact('guia', 'empresa', 'convenio'));
+    // }
 
     public function visualizarTiss($id)
     {
