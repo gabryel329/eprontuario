@@ -150,9 +150,7 @@
                                         <th>Medico</th>
                                         <th>Guias</th>
                                         <th>Status</th>
-                                        <th>Editar</th>
-                                        <th>Chamar</th>
-                                        <th>Excluir</th>
+                                        <th colspan="4">Ação</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -171,7 +169,7 @@
                                             <td>{{ $item->procedimento_id }}</td>
                                             <td>{{ optional($item->profissional)->name ?? '-' }}</td>
                                             <td>
-                                                <select class="form-control guia-select" 
+                                                <select {{ $item->convenio_id == 1 ? 'disabled' : '' }} class="form-control guia-select" 
                                                         data-id="{{ $item->id }}" 
                                                         data-paciente-id="{{ $item->paciente_id }}" 
                                                         data-profissional-id="{{ $item->profissional_id }}" 
@@ -215,6 +213,11 @@
                                                     data-paciente-nome="{{ $item->paciente->nome ?? null }}">
                                                     <i class="bi bi-volume-up"></i>
                                                 </a>
+                                            </td>
+                                            <td>
+                                                <button {{ $item->status == 'FINALIZADO' && $item->convenio_id == '1' ? '' : 'disabled' }}
+                                                    type="button" class="btn btn-success"
+                                                    onclick="openNotaModal('{{ $item->id }}')"><i class="bi bi-card-heading"></i></button>
                                             </td>
                                             <td>
                                                 <button {{ $item->status == 'FINALIZADO' ? 'disabled' : '' }}
@@ -2568,5 +2571,29 @@
 
             fetchAgenda(data, profissionalId);
         }
+
+        $(document).ready(function() {
+            $('.emitir-nfe').click(function() {
+                var id = $(this).data('id');
+                
+                $.ajax({
+                    url: '/emitir-nfe/' + id,
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.status === 'sucesso') {
+                            alert('NF-e emitida com sucesso!');
+                        } else {
+                            alert('Erro ao emitir NF-e: ' + response.mensagem);
+                        }
+                    },
+                    error: function(xhr) {
+                        alert('Erro na requisição: ' + xhr.responseText);
+                    }
+                });
+            });
+        });
     </script>
 @endsection
