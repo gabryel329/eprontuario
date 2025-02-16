@@ -86,11 +86,12 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>Guia</th>
                                             <th>Data</th>
                                             <th>Profissional</th>
-                                            <th>Especialidade</th>
-                                            <th>Tipo de Guia</th>
+                                            <th>Lote</th>
+                                            <th>Paciente</th>
+                                            <th>Visualizar</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tabela-resultados">
@@ -103,56 +104,77 @@
                 </div>
             </div>
         </div>
-    </div>
-                                
+    </div>                           
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function () {
-        $("#filtrar-btn").click(function () {
-            let formData = {
-                _token: "{{ csrf_token() }}",
-                data_inicio: $("#data_inicio").val(),
-                data_fim: $("#data_fim").val(),
-                lote: $("#lote").val(),
-                convenio_id: $("#convenio_id").val(),
-                tipo_guia: $("#tipo_guia").val()
-            };
+$(document).ready(function () {
+    $("#filtrar-btn").click(function () {
+        let tipoGuia = $("#tipo_guia").val();
+        
+        let formData = {
+            _token: "{{ csrf_token() }}",
+            data_inicio: $("#data_inicio").val(),
+            data_fim: $("#data_fim").val(),
+            lote: $("#lote").val(),
+            convenio_id: $("#convenio_id").val(),
+            tipo_guia: tipoGuia
+        };
 
-            $.ajax({
-                url: "{{ route('relatorioGuia.result') }}", // Defina a rota no Laravel
-                type: "POST",
-                data: formData,
-                success: function (response) {
-                    let tabela = $("#tabela-resultados");
-                    tabela.empty(); // Limpa os resultados antigos
+        $.ajax({
+            url: "{{ route('relatorioGuia.result') }}", // Defina a rota no Laravel
+            type: "POST",
+            data: formData,
+            success: function (response) {
+                let tabela = $("#tabela-resultados");
+                tabela.empty(); // Limpa os resultados antigos
 
-                    if (response.length > 0) {
-                        response.forEach(item => {
-                            let linha = `
-                                <tr>
-                                    <td>${item.id}</td> <!-- Exemplo de ID -->
-                                    <td>${item.data}</td> <!-- Exemplo de Data -->
-                                    <td>${item.profissional}</td> <!-- Exemplo de Profissional -->
-                                    <td>${item.especialidade || 'N/A'}</td> <!-- Exemplo de Especialidade (assumindo que o campo seja "especialidade") -->
-                                    <td>${item.tipo_guia || 'N/A'}</td> <!-- Exemplo de Tipo de Guia (assumindo que o campo seja "tipo_guia") -->
-                                </tr>
-                            `;
-                            tabela.append(linha);
-                        });
-                    } else {
-                        tabela.append(`<tr><td colspan="5" class="text-center">Nenhum resultado encontrado</td></tr>`);
-                    }
-                },
-                error: function (xhr) {
-                    alert("Erro ao buscar dados. Tente novamente.");
+                if (response.length > 0) {
+                    response.forEach(item => {
+                        let dataFormatada = new Date(item.data).toLocaleDateString('pt-BR');
+                        let guiaUrl = tipoGuia == 1 
+                            ? `{{ route('guia.sadt', ['id' => '__ID__']) }}`.replace('__ID__', item.agenda_id)
+                            : `{{ route('guia.consulta2', ['id' => '__ID__']) }}`.replace('__ID__', item.agenda_id);
+
+                        let linha = `
+                            <tr>
+                                <td>${item.id}</td>
+                                <td>${dataFormatada}</td>
+                                <td>${item.profissional}</td>
+                                <td>${item.numeracao || 'N/A'}</td>
+                                <td>${item.paciente || 'N/A'}</td>
+                                <td>
+                                    <a href="#" class="btn btn-success open-window" data-url="${guiaUrl}">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        `;
+                        tabela.append(linha);
+                    });
+                } else {
+                    tabela.append(`<tr><td colspan="6" class="text-center">Nenhum resultado encontrado</td></tr>`);
                 }
-            });
+            },
+            error: function () {
+                alert("Erro ao buscar dados. Tente novamente.");
+            }
         });
     });
+
+    // Ao clicar no link, abrir em uma nova janela separada
+    $(document).on('click', '.open-window', function (e) {
+        e.preventDefault(); // Impede o comportamento padrão do link
+        let url = $(this).data('url');
+
+        // Abrir em uma nova janela com tamanho específico
+        window.open(url, '_blank', 'width=900,height=600,top=100,left=100');
+    });
+});
+
 </script>
 
 
