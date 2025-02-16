@@ -243,7 +243,9 @@ class HonorarioController extends Controller
                         'g.data_autorizacao as data',
                         'g.nome_profissional as profissional', 
                         'g.identificador', 
-                        'g.numeracao', 
+                        'g.nome_beneficiario as paciente', 
+                        'g.numeracao',
+                        'g.agenda_id',
                         'conv.nome as convenio',
                         DB::raw('COUNT(DISTINCT e_sol.id) as qtd_ExamesSol'),
                         DB::raw('COUNT(DISTINCT e_aut.id) as qtd_ExamesAut'),
@@ -286,6 +288,8 @@ class HonorarioController extends Controller
                         'g.nome_profissional_executante  as profissional', 
                         'g.identificador', 
                         'g.numeracao',
+                        'g.agenda_id',
+                        'g.nome_beneficiario as paciente', 
                         'g.valor_procedimento as valortotal',
                         'conv.nome as convenio'
                     )
