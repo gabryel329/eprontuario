@@ -64,22 +64,46 @@
                 </div>
             </div>
         </div>
+        <!-- Modal de Carregando -->
+        <div id="loadingModal" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body text-center">
+                        <h4>Carregando...</h4>
+                        {{-- <img src="loading.gif" alt="Carregando..." /> <!-- Imagem ou ícone de carregamento --> --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Função para exibir o modal de carregamento
+            function showLoadingModal() {
+                $('#loadingModal').modal('show');
+            }
+    
+            // Função para esconder o modal de carregamento
+            function hideLoadingModal() {
+                $('#loadingModal').modal('hide');
+            }
+    
+            // Função para carregar os procedimentos quando o convênio for alterado
             $('#convenio').change(function() {
                 const convenioId = $(this).val();
                 if (convenioId) {
+                    showLoadingModal();  // Exibe o modal de carregamento
+    
                     $.ajax({
                         url: `/convenios/procedures/${convenioId}`,
                         type: 'GET',
                         success: function(data) {
                             const tableBody = $('#proceduresTable tbody');
-                            tableBody
-                                .empty(); // Limpa a tabela antes de adicionar os novos dados
+                            tableBody.empty();  // Limpa a tabela antes de adicionar os novos dados
                             console.log(data);
-
+    
                             data.forEach(function(procedure) {
                                 tableBody.append(`
                                     <tr>
@@ -89,39 +113,45 @@
                                     </tr>
                                 `);
                             });
+    
+                            hideLoadingModal();  // Esconde o modal de carregamento após os dados serem carregados
                         },
                         error: function() {
                             alert('Erro ao carregar os procedimentos.');
+                            hideLoadingModal();  // Esconde o modal de carregamento em caso de erro
                         }
                     });
                 } else {
-                    $('#proceduresTable tbody')
-                        .empty(); // Limpa a tabela se nenhum convênio estiver selecionado
+                    $('#proceduresTable tbody').empty();  // Limpa a tabela se nenhum convênio estiver selecionado
+                }
+            });
+    
+            // Função para atualizar os valores dos procedimentos
+            $('#refreshButton').click(function() {
+                const convenioId = $('#convenio').val();
+                if (convenioId) {
+                    showLoadingModal();  // Exibe o modal de carregamento
+    
+                    $.ajax({
+                        url: `/convenios/update-procedures-values/${convenioId}`,
+                        type: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            alert('Valores dos procedimentos atualizados com sucesso.');
+                            hideLoadingModal();  // Esconde o modal de carregamento
+                        },
+                        error: function() {
+                            alert('Erro ao atualizar os valores dos procedimentos.');
+                            hideLoadingModal();  // Esconde o modal de carregamento em caso de erro
+                        }
+                    });
+                } else {
+                    alert('Por favor, selecione um convênio primeiro.');
                 }
             });
         });
-
-        $(document).ready(function() {
-        $('#refreshButton').click(function() {
-            const convenioId = $('#convenio').val();
-            if (convenioId) {
-                $.ajax({
-                    url: `/convenios/update-procedures-values/${convenioId}`,
-                    type: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        alert('Valores dos procedimentos atualizados com sucesso.');
-                    },
-                    error: function() {
-                        alert('Erro ao atualizar os valores dos procedimentos.');
-                    }
-                });
-            } else {
-                alert('Por favor, selecione um convênio primeiro.');
-            }
-        });
-    });
     </script>
+    
 @endsection
