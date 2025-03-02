@@ -215,9 +215,10 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                <button {{ $item->status == 'FINALIZADO' && $item->convenio_id == '1' ? '' : 'disabled' }}
-                                                    type="button" class="btn btn-success"
-                                                    onclick="openNotaModal('{{ $item->id }}')"><i class="bi bi-card-heading"></i></button>
+                                                {{-- {{ $item->status == 'FINALIZADO' && $item->convenio_id == '1' ? '' : 'disabled' }} --}}
+                                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#openNotaModal{{ $item->id }}">
+                                                    <i class="bi bi-card-heading"></i>
+                                                </button>
                                             </td>
                                             <td>
                                                 <button {{ $item->status == 'FINALIZADO' ? 'disabled' : '' }}
@@ -328,6 +329,28 @@
                             <button type="submit" class="btn btn-primary">Atualizar</button>
                         </form>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="openNotaModal{{ $item->id }}" tabindex="-1"
+            aria-labelledby="openNotaModalLabel{{ $item->id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="openNotaModalLabel{{ $item->id }}">Gerar NFe</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" action="#" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <div class="modal-body">
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Gerar</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

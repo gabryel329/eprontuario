@@ -53,6 +53,9 @@ class EmpresasController extends Controller
         $imagem = $request->file('imagem');
         $contrato = $request->input('contrato');
         $licenca = $request->input('licenca');
+        $insc_est = $request->input('insc_est');
+        $codigo_municipio = $request->input('codigo_municipio');
+        $codigo_uf = $request->input('codigo_uf');
 
         // Verifica se uma nova imagem foi enviada e é válida
         if ($imagem && $imagem->isValid()) {
@@ -91,6 +94,9 @@ class EmpresasController extends Controller
         $empresa->crm = $crm;
         $empresa->licenca = $licenca;
         $empresa->contrato = $contrato;
+        $empresa->insc_est = $insc_est;
+        $empresa->codigo_municipio = $codigo_municipio;
+        $empresa->codigo_uf = $codigo_uf;
 
         // Salva os dados atualizados da empresa
         $empresa->save();

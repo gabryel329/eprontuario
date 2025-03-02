@@ -37,6 +37,9 @@ class Empresas extends Model
         'imagem',
         'licenca',
         'contrato',
+        'insc_est',
+        'codigo_municipio',
+        'codigo_uf',
     ];
     protected $dates=['deleted_at'];
 }

@@ -132,13 +132,27 @@
                                         <label class="form-label">Cidade</label>
                                         <input class="form-control" type="text" id="cidade" name="cidade" value="{{ $empresa->cidade }}">
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-5">
                                         <label class="form-label">Complemento</label>
                                         <input class="form-control" type="text" id="complemento" name="complemento" value="{{ $empresa->complemento }}">
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <label class="form-label">Nº</label>
                                         <input class="form-control" type="text" id="numero" name="numero" value="{{ $empresa->numero }}">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="form-label">Cód. Municipio</label>
+                                        <input class="form-control" type="text" id="codigo_municipio" name="codigo_municipio" value="{{ $empresa->codigo_municipio }}">
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label class="form-label">Inscrição Estadual</label>
+                                        <input class="form-control" type="text" id="insc_est" name="insc_est" value="{{ $empresa->insc_est }}">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Cód. UF</label>
+                                        <input class="form-control" type="text" id="codigo_uf" name="codigo_uf" value="{{ $empresa->codigo_uf }}">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -180,6 +194,17 @@ function limpa_formulário_cep() {
             document.getElementById('bairro').value = ("");
             document.getElementById('cidade').value = ("");
             document.getElementById('uf').value = ("");
+            document.getElementById('codigo_municipio').value=("");
+            document.getElementById('codigo_uf').value = "";
+        }
+
+        function getCodigoUF(uf) {
+            const codigosUF = {
+                "AC": 12, "AL": 27, "AP": 16, "AM": 13, "BA": 29, "CE": 23, "DF": 53, "ES": 32, "GO": 52,
+                "MA": 21, "MT": 51, "MS": 50, "MG": 31, "PA": 15, "PB": 25, "PR": 41, "PE": 26, "PI": 22,
+                "RJ": 33, "RN": 24, "RS": 43, "RO": 11, "RR": 14, "SC": 42, "SP": 35, "SE": 28, "TO": 17
+            };
+            return codigosUF[uf] || "";
         }
 
         function meu_callback(conteudo) {
@@ -189,6 +214,8 @@ function limpa_formulário_cep() {
                 document.getElementById('bairro').value = (conteudo.bairro);
                 document.getElementById('cidade').value = (conteudo.localidade);
                 document.getElementById('uf').value = (conteudo.uf);
+                document.getElementById('codigo_municipio').value=(conteudo.ibge);
+                document.getElementById('codigo_uf').value = getCodigoUF(conteudo.uf);
             } else {
                 //CEP não Encontrado.
                 limpa_formulário_cep();
@@ -212,6 +239,8 @@ function limpa_formulário_cep() {
                     document.getElementById('bairro').value = "...";
                     document.getElementById('cidade').value = "...";
                     document.getElementById('uf').value = "...";
+                    document.getElementById('codigo_municipio').value="...";
+                    document.getElementById('codigo_uf').value = "...";
 
                     //Cria um elemento javascript.
                     var script = document.createElement('script');

@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\Empresas;
+use App\Models\NfeParticula;
 use Exception;
 use NFePHP\Common\Certificate;
 use NFePHP\NFe\Common\Standardize;
@@ -15,12 +17,20 @@ class NFeService
     private $tools;
     public function __construct($config){
         $this->config = $config;
-        $certificadoDigital = file_get_contents('teste.pfx');
-        $this->tools = new Tools(json_encode($config), Certificate::readPfx($certificadoDigital, '1234'));
+        $certificadoDigital = file_get_contents('eprontuario.pfx');
+        $this->tools = new Tools(json_encode($config), Certificate::readPfx($certificadoDigital, '019609'));
         
     }
     public function gerarNFe()
     {
+        $empresa = Empresas::first();
+
+        // Obtém o maior ID registrado na tabela
+        $ultimaNFe = NfeParticula::orderBy('id', 'desc')->first();
+
+        // Se existir um registro, pega o último nNF, converte para inteiro e soma 1
+        $numeroNFe = $ultimaNFe ? ((int) $ultimaNFe->nNF + 1) : 1;
+
         // Criar uma nota vazia
         $nfe = new Make();
 
@@ -33,7 +43,7 @@ class NFeService
         $infNFe = $nfe->taginfNFe($stdInNFe);
 
         $stdIde = new stdClass();
-        $stdIde->cUF = 43;//29; // Código da UF do emitente do Documento Fiscal. Utilizar a Tabela do IBGE
+        $stdIde->cUF = $empresa->codigo_uf;//29; // Código da UF do emitente do Documento Fiscal. Utilizar a Tabela do IBGE
         $stdIde->cNF = rand(11111111, 99999999); // Código Interno do documento, número aleatório
         $stdIde->natOp = 'REVENDA DE MERCADORIAS SIMPLES NACIONAL'; // Descrição da Natureza da Operação
 
@@ -42,12 +52,12 @@ class NFeService
         /** IDE **/
         $stdIde->mod = 55; //55=NF-e emitida em substituição ao modelo 1/1A
         $stdIde->serie = 1; //Série da NF-e
-        $stdIde->nNF = 2;  //Número da NF-e
+        $stdIde->nNF = $numeroNFe;  //Número da NF-e
         $stdIde->dhEmi = date("Y-m-d\TH:i:sP"); //Obrigatória informar a data e hora no formato AAAA-MM-DDThh:mm:ssTZD
         $stdIde->dhSaiEnt = date("Y-m-d\TH:i:sP"); //Obrigatória informar a data e hora no formato AAAA-MM-DDThh:mm:ssTZD
         $stdIde->tpNF = 1; //0-entrada; 1-saída
         $stdIde->idDest = 1; //1-Operação interna; 2-Operação interestadual; 3-Operação com exterior
-        $stdIde->cMunFG = 3518800; //2927408 //Código do município de ocorrência do fato gerador
+        $stdIde->cMunFG = $empresa->codigo_municipio; //2927408 //Código do município de ocorrência do fato gerador
         $stdIde->tpImp = 1; //1=Retrato; 2=Paisagem
         $stdIde->tpEmis = 1; //1=Emissão normal (não em contingência); 2=Contingência FS-IA, com impressão do DANFE em formulário de segurança; 3=Contingência SCAN (Sistema de Contingência do Ambiente Nacional); 4=Contingência DPEC (Declaração Prévia da Emissão em Contingência); 5=Contingência FS-DA, com impressão do DANFE em formulário de segurança; 6=Contingência SVC-AN (SEFAZ Virtual de Contingência do AN); 7=Contingência SVC-RS (SEFAZ Virtual de Contingência do RS)
         $stdIde->cDV = 2; //Dígito Verificador da Chave de Acesso da NF-e
@@ -55,42 +65,39 @@ class NFeService
         $stdIde->finNFe = 1; //1=NF-e normal; 2=NF-e complementar; 3=NF-e de ajuste
         $stdIde->indFinal = 1; //0=Normal; 1=Consumidor final
         $stdIde->indPres = 1; //0=Não se aplica; 1=Operação presencial; 2=Operação não presencial, pela Internet; 3=Operação não presencial, Teleatendimento; 4=NFC-e em operação com entrega em domicílio; 9=Operação não presencial, outros
-        //$std->indIntermed = null; //NÃO EXISTE MAIS NA VERSÃO 4.00
         $stdIde->procEmi = 0; //0=Emissão de NF-e com aplicativo do contribuinte; 1=Emissão de NF-e avulsa pelo Fisco; 2=Emissão de NF-e avulsa, pelo contribuinte com seu certificado digital, através do site do Fisco; 3=Emissão NF-e pelo contribuinte com aplicativo fornecido pelo Fisco
         $stdIde->verProc = '1.0'; //Versão do aplicativo emissor
-        //$std->dhCont = null; //NÃO EXISTE MAIS NA VERSÃO 4.00
-        //$std->xJust = null; //NÃO EXISTE MAIS NA VERSÃO 4.00
 
         $tagide = $nfe->tagide($stdIde);
 
         /** EMITENTE **/
 
         $stdEmit = new stdClass();
-        $stdEmit->xNome = "E-Sales Solucoes Oobj"; //
-        $stdEmit->xFant = "Oobj";
-        $stdEmit->IE = "0963233556";
+        $stdEmit->xNome = $empresa->name; //
+        $stdEmit->xFant = $empresa->fantasia; //
+        $stdEmit->IE = $empresa->insc_est;
         //$stdEmit->IEST;
         //$stdEmit->IM;
         //$stdEmit->CNAE = "";
         $stdEmit->CRT = "1";
-        $stdEmit->CNPJ = "07385111000102"; //indicar apenas um CNPJ ou CPF
+        $stdEmit->CNPJ = $empresa->cnpj; //indicar apenas um CNPJ ou CPF
         //$stdEmit->CPF; 
 
         $emit =$nfe->tagemit($stdEmit);
 
         //** ENDEREÇO DO EMITENTE */
         $stdEnderEmit = new stdClass();
-        $stdEnderEmit->xLgr = "PROF ALGACYR MUNHOZ MADER";
-        $stdEnderEmit->nro = "2800";
+        $stdEnderEmit->xLgr = $empresa->rua;
+        $stdEnderEmit->nro = $empresa->numero;
         //$stdEnderEmit->xCpl = "CIC";
-        $stdEnderEmit->xBairro = "CIC";
-        $stdEnderEmit->cMun = "4314902";
-        $stdEnderEmit->xMun = "Porto Alegre";
-        $stdEnderEmit->UF = "RS";
-        $stdEnderEmit->CEP ="81310020";
+        $stdEnderEmit->xBairro = $empresa->bairro;
+        $stdEnderEmit->cMun = $empresa->codigo_municipio;
+        $stdEnderEmit->xMun = $empresa->cidade;
+        $stdEnderEmit->UF = $empresa->uf;
+        $stdEnderEmit->CEP =$empresa->cep;
         $stdEnderEmit->cPais = "1058";
         $stdEnderEmit->xPais = "BRASIL";
-        $stdEnderEmit->fone = "0963233556";
+        $stdEnderEmit->fone = preg_replace('/\D/', '', $empresa->telefone);
 
         $enderEmit = $nfe->tagenderEmit($stdEnderEmit);
 
@@ -98,12 +105,12 @@ class NFeService
         $stdDest = new stdClass();
         $stdDest->xNome ="NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL";
         $stdDest->indIEDest = "2";
-        $stdDest->IE = "0963233556";
+        $stdDest->IE = "";
         //$stdDest->ISUF;
-        $stdDest->IM = "InsMun";
+        $stdDest->IM = "InsMun"; 
         $stdDest->email = "teste-sustentacao@oobj.com.br";
-        $stdDest->CNPJ = "07385111000102"; //indicar apenas um CNPJ ou CPF ou idEstrangeiro
-        //$stdDest->CPF;
+        //$stdDest->CNPJ = "07385111000102"; //indicar apenas um CNPJ ou CPF ou idEstrangeiro
+        $stdDest->CPF = "86098588554";
         //$stdDest->idEstrangeiro;
 
         $dest = $nfe->tagdest($stdDest);
@@ -114,7 +121,7 @@ class NFeService
         $stdEnderDest->nro = "1162";
         $stdEnderDest->xCpl = "SALA 201";
         $stdEnderDest->xBairro = "NAVEGANTES";
-        $stdEnderDest->cMun = "4314902";
+        $stdEnderDest->cMun = 4314902;
         $stdEnderDest->xMun = "PORTO ALEGRE";
         $stdEnderDest->UF = "RS";
         $stdEnderDest->CEP = "90230220";
@@ -131,7 +138,7 @@ class NFeService
         $stdProd->cEAN = "7897534826649";
         $stdProd->xProd = "LIMPA TELA 120ML";
         $stdProd->NCM = "44170010";
-        $stdProd->CFOP = "5102";
+        $stdProd->CFOP = "5405";
         $stdProd->uCom = "UN";
         $stdProd->qCom = 10; // Correct: integer
         $stdProd->vUnCom = 6.99; // Correct: float
@@ -168,20 +175,20 @@ class NFeService
         $stdICMS = new stdClass();
         $stdICMS->item = 1;
         $stdICMS->orig = 0;
-        $stdICMS->CST = "00";
+        $stdICMS->CST = "40";
         $stdICMS->modBC = "0";
-        $stdICMS->vBC = $stdProd->vProd; // Base calculation (vProd)
+        $stdICMS->vBC = 0; // $stdProd->vProd; // Base calculation (vProd)
         $stdICMS->pICMS = 18.00; // ICMS percentage (adjust if different)
-        $stdICMS->vICMS = floatval($stdICMS->vBC * ($stdICMS->pICMS / 100));  // Calculate ICMS value
+        $stdICMS->vICMS = 0; //floatval($stdICMS->vBC * ($stdICMS->pICMS / 100));  // Calculate ICMS value
 
         $icms = $nfe->tagICMS($stdICMS);
 
         /** PIS */
         $stdPIS = new stdClass();
         $stdPIS->item = 1; //item da NFe
-        $stdPIS->CST = '99';
+        $stdPIS->CST = '01';
         $stdPIS->vBC = $stdProd->vProd;
-        $stdPIS->pPIS = 1.65;
+        $stdPIS->pPIS = 0.65;
         $stdPIS->vPIS = $stdPIS->vBC * ($stdPIS->pPIS / 100);
         //$stdPIS->qBCProd = null;
         //$stdPIS->vAliqProd = null;
@@ -191,9 +198,9 @@ class NFeService
         /** COFINS */
         $stdCOFINS = new stdClass();
         $stdCOFINS->item = 1; //item da NFe
-        $stdCOFINS->CST = '99';
+        $stdCOFINS->CST = '01';
         $stdCOFINS->vBC = $stdProd->vProd;
-        $stdCOFINS->pCOFINS = 0.65;
+        $stdCOFINS->pCOFINS = 3.00;
         $stdCOFINS->vCOFINS = $stdCOFINS->vBC * ($stdCOFINS->pCOFINS / 100);
 
         $cofins = $nfe->tagCOFINS($stdCOFINS);
@@ -240,7 +247,7 @@ class NFeService
 
         /** PAGAMENTO */
         $stdPag = new stdClass();
-        $stdPag->vTroco = 0.00; //incluso no layout 4.00, obrigatório informar para NFCe (65)
+        $stdPag->vTroco = ""; //incluso no layout 4.00, obrigatório informar para NFCe (65)
         
         $pagamento = $nfe->tagpag($stdPag);
 
@@ -248,8 +255,8 @@ class NFeService
         $stdDetPag = new stdClass();
         //$stdDetPag->indPag = '0'; //0= Pagamento à Vista 1= Pagamento à Prazo
         $stdDetPag->tPag = '01';
-        $stdDetPag->vPag = $stdProd->vProd; //Obs: deve ser informado o valor pago pelo cliente
-        $stdDetPag->CNPJ = '12345678901234'; //CNPJ da aut
+        $stdDetPag->vPag = $stdProd->vProd + $stdICMS->vICMS; //Obs: deve ser informado o valor pago pelo cliente
+        //$stdDetPag->CNPJ = '12345678901234'; //CNPJ da aut
         $stdDetPag->tBand = '01'; //Bandeira
         $stdDetPag->cAut = '3333333'; //codigo aut da via do estabelecimento
         $stdDetPag->tpIntegra = 1; //incluso na NT 2015/002 (se Tipo de Integração do processo de pagamento com o
@@ -278,11 +285,29 @@ class NFeService
         $stdinfNFeSupl->urlChave = "";
 
         $infNFeSupl = $nfe->taginfNFeSupl($stdinfNFeSupl);
+
         // $erros = $nfe->getErrors();
         // dd($erros); // Exibe os erros na tela
+        // Criando a instância do modelo
 
         //Monta a nota
         if($nfe->montaNFe()){
+            $nfeparticula = new NfeParticula();
+
+            // Atribuindo os valores (com verificações)
+            $nfeparticula->nNF = $stdIde->nNF ?? null;
+            $nfeparticula->dhEmi = $stdIde->dhEmi ?? null;
+            $nfeparticula->xNome = $stdDest->xNome ?? 'Nome não informado';
+            $nfeparticula->CPF = $stdDest->CPF ?? null;
+            $nfeparticula->tPag = $stdDetPag->tPag ?? null;
+            $nfeparticula->vPag = $stdDetPag->vPag ?? null; // Certifique-se de que a coluna existe na tabela
+            $nfeparticula->tBand = $stdDetPag->tBand ?? null;
+            $nfeparticula->cAut = $stdDetPag->cAut ?? null;
+            $nfeparticula->xml_gerado = $nfe->getXML() ?? null;
+    
+            // Salvando no banco de dados
+            $nfeparticula->save();
+
             return $nfe->getXML();
         }else{
             throw new Exception("Erro ao montar a NFe: " . implode(", ", $nfe->getErrors()));
@@ -298,12 +323,29 @@ class NFeService
     //** Transmitir */
     public function transmitir($assinar)
     {
-        $resp = $this->tools->sefazEnviaLote([$assinar], 1);
+        $resp = $this->tools->sefazEnviaLote([$assinar], 1, 0);
         $st = new Standardize();
         $stdResposta = $st->toStd($resp);
         // return $this->tools->sefazEnviaLote($aXml, $idLote, $indStnc, $compactar);
         return $stdResposta;
     }
+
+    public function convertToXML($resultado)
+    {
+        // Implement the conversion logic here
+        // This is a placeholder implementation
+        return '<xml>' . json_encode($resultado) . '</xml>';
+    }
+
+    public function consultarLote($numeroRecibo)
+    {
+        $resp = $this->tools->sefazConsultaRecibo($numeroRecibo);
+        $st = new Standardize();
+        $stdResposta = $st->toStd($resp);
+
+        return $stdResposta;
+    }
+
 }
 
 
